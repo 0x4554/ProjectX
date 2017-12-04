@@ -4,6 +4,13 @@
 package server;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import ocsf.server.*;
 import ocsf.*;
@@ -14,40 +21,81 @@ import ocsf.*;
  */
 public class ProjectServer extends AbstractServer 
 {
-  //Class variables *************************************************
-  
-  /**
-   * The default port to listen on.
-   */
+	private static Connection con;
+	private static String driver="com.mysql.jdbc.Driver";
   final public static int DEFAULT_PORT = 5555;
   
-  //Constructors ****************************************************
   
-  /**
-   * Constructs an instance of the echo server.
-   *
-   * @param port The port number to connect on.
-   */
+  // * Constructs an instance of the echo server.
+  
   public ProjectServer(int port) 
   {
     super(port);
   }
+  
+  //method for connecting to DB
+  protected static  Connection connectToDB() throws SQLException
+  {
+ 	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","projectx");	//connect to the sql database
+  }
 
   
-  //Instance methods ************************************************
   
-  /**
-   * This method handles any messages received from the client.
+   /* This method handles any messages received from the client.
    *
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
+  public void setProduct(Object msg, ConnectionToClient client) throws SQLException
   {
+	  ArrayList<String> msg1 = new ArrayList<String>(); 
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	      
+	    }
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
 	    System.out.println("Message received: " + msg + " from " + client);
 	    this.sendToAllClients(msg);
+	    PreparedStatement ps = con.prepareStatement("INSERT INTO product (?,?,?)");	//prepare a statement
+	    ps.setString(1,msg1.get(0));	//insert parameters into the statement
+	    ps.setString(2, msg1.get(1));
+	    ps.setString(3, msg1.get(2));
+	    ps.executeUpdate();
+	    
 	  }
+  
+  public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException
+  {
+	  ArrayList<String> msg1 = new ArrayList<String>();
+	  Statement stmt;
+	  int i=0;
+	  String str = (String) asked;
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	      
+	    }
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
+	  stmt = con.createStatement();
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID LIKE 'asked'");	//query for extracting a prodcut's details
+	  
+	  while(rs.next())	//run for the extracted data and add it to an arraylist of strings
+	  {
+		  msg1.add(rs.getString(i));
+		  i++;
+	  }
+	 
+	  
+	  return msg1; 
+	  
+  }
 
     
   /**
@@ -82,7 +130,8 @@ public class ProjectServer extends AbstractServer
   public static void main(String[] args) 
   {
     int port = 0; //Port to listen on
-
+    
+    
     try
     {
       port = Integer.parseInt(args[0]); //Get port from command line
@@ -103,5 +152,11 @@ public class ProjectServer extends AbstractServer
       System.out.println("ERROR - Could not listen for clients!");
     }
   }
+
+@Override
+protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+	// TODO Auto-generated method stub
+	
+}
 }
 //End of EchoServer class
