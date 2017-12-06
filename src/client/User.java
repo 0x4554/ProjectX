@@ -7,13 +7,16 @@ import javafx.fxml.FXML;
 import javafx.stage.Stage;
 //import common.*;
 import ocsf.client.AbstractClient;
+
+import ocsf.client.*;
+
 public class User extends AbstractClient {
 
 	//ChatIF clientUI; 
 	
 	public User(String host, int port) throws IOException 
 		  {
-		    super(host, port); //Call the superclass constructor
+		    super(host, port); 			//Call the superclass constructor
 		//    this.clientUI = clientUI;
 		    openConnection();
 		  }

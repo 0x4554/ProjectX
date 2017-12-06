@@ -1,6 +1,7 @@
 package GUI;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import client.User;
 import javafx.application.Application;
@@ -9,48 +10,62 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import ocsf.client.*;
+
+import javafx.*;
+
 public class UserGUI extends Application {
 	
-	private static final int DEFAULT_PORT = 5555;
+	final public static int DEFAULT_PORT = 5555;
 	
-	@FXML
-	private TextField srchIDfld;
-	@FXML
-	private AnchorPane root;
+	private String id="1234";
+	private User usr;
+	
+	@FXML private TextField srchIDfld;
+	@FXML private AnchorPane root;
+	@FXML private Label srchLbl;
+	@FXML private Label prdLbl;
+	@FXML private Button srchProd;
+	
+	public UserGUI() {super();}
 	
 	public UserGUI(String host,int port) throws IOException {
-		User usr=new User(host,port);
-		 
-	}
+		usr=new User(host,port);
+	}		
 	
 	/**
 	 * method for searching for an item in the data base
-	 */
-/*	public String idToSearch() {
-		String str=srchIDfld.getText();
-		System.out.println("Tal the.... ha! gayyyyy" + str);
-		
-		return str;
-	}	*/
+	 */	
 	
 	
 	private void accept() {
 		// TODO Auto-generated method stub
-		String str=srchIDfld.getText();
-		System.out.println("<User> Tal the.... ha! gayyyyy" + str);
+	
+		try {
+		usr.handleMessageFromClientUI(this.id);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
 		
-		//return str;
 	}
+	
+	public void insertedID() throws IOException {	
+		this.id = srchIDfld.getText();
+		 UserGUI chat= new UserGUI("localhost", DEFAULT_PORT);
+	      chat.accept();  //Wait for console data	
+	}				
 
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		Parent root= FXMLLoader.load(getClass().getResource("Fgui.fxml"));
+		Parent root= FXMLLoader.load(getClass().getResource("ClientGUI.fxml"));
 		Scene scene=new Scene(root);
 		
 		primaryStage.setTitle("Search for Product");
@@ -60,22 +75,21 @@ public class UserGUI extends Application {
 	
 	public static void main(String[] args) throws IOException {
 		String host = "";
-	    int port = 0;  //The port number
-
+	    int port = 0;  //The port number		
+	    
+	    launch(args);
+	    
 	    try
 	    {
 	      host = args[0];
 	    }
 	    catch(ArrayIndexOutOfBoundsException e)
 	    {
-	      host = "10.10.6.116";
+	      host = "localhost";
 	    }
-	   UserGUI chat= new UserGUI(host, DEFAULT_PORT);
-	    chat.accept();  //Wait for console data
+	  /* UserGUI chat= new UserGUI(host, DEFAULT_PORT);
+	      chat.accept();  //Wait for console data	*/			
 		
-		launch(args);
-		
-	}
+	}		
 
-	
 }

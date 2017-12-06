@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import ocsf.server.*;
 import ocsf.*;
-
 /**
  * This class overrides some of the methods in the abstract 
  * superclass in order to give more functionality to the server.
@@ -123,6 +122,7 @@ public class ProjectServer extends AbstractServer
 	// TODO Auto-generated method stub
 		String str = (String) msg;
 		try {
+		System.out.println(str);
 		this.insertProduct(str, client);
 		}
 		catch(Exception ex) {ex.printStackTrace();}

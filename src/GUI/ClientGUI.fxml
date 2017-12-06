@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="root" onDragDetected="#UserGUI" prefHeight="275.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="275.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.UserGUI">
    <children>
       <Label fx:id="srchLbl" alignment="TOP_CENTER" layoutX="66.0" layoutY="44.0" text="Search for Product">
          <font>
@@ -15,6 +15,6 @@
       </Label>
       <Label fx:id="prdLbl" layoutX="49.0" layoutY="152.0" text="Product ID" />
       <TextField fx:id="srchIDfld" layoutX="157.0" layoutY="147.0" prefHeight="31.0" prefWidth="216.0" />
-      <Button fx:id="srchProd" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="226.0" layoutY="221.0" mnemonicParsing="false" text="Search" />
+      <Button fx:id="srchProd" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="226.0" layoutY="221.0" mnemonicParsing="false" onAction="#insertedID" text="Search" />
    </children>
 </AnchorPane>
