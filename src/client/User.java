@@ -11,8 +11,7 @@ public class User extends AbstractClient {
 
 	//ChatIF clientUI; 
 	
-	public User(String host, int port)		//, ChatIF clientUI) 
-		    throws IOException 
+	public User(String host, int port) throws IOException 
 		  {
 		    super(host, port); //Call the superclass constructor
 		//    this.clientUI = clientUI;

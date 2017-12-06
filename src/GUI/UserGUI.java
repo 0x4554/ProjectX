@@ -68,7 +68,7 @@ public class UserGUI extends Application {
 	    }
 	    catch(ArrayIndexOutOfBoundsException e)
 	    {
-	      host = "10.10.5.191";
+	      host = "10.10.6.116";
 	    }
 	   UserGUI chat= new UserGUI(host, DEFAULT_PORT);
 	    chat.accept();  //Wait for console data
