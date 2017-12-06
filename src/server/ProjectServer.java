@@ -118,6 +118,16 @@ public class ProjectServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
   
+  @Override
+	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+	// TODO Auto-generated method stub
+		String str = (String) msg;
+		try {
+		this.insertProduct(str, client);
+		}
+		catch(Exception ex) {ex.printStackTrace();}
+	}
+  
   //Class methods ***************************************************
   
   /**
@@ -127,7 +137,7 @@ public class ProjectServer extends AbstractServer
    * @param args[0] The port number to listen on.  Defaults to 5555 
    *          if no argument is entered.
    */
-  public static void main(String[] args) 
+	 public static void main(String[] args) 
   {
     int port = 0; //Port to listen on
     
@@ -151,16 +161,8 @@ public class ProjectServer extends AbstractServer
     {
       System.out.println("ERROR - Could not listen for clients!");
     }
-  }
+  }			
 
-@Override
-	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
-	// TODO Auto-generated method stub
-		String str = (String) msg;
-		try {
-		this.insertProduct(str, client);
-		}
-		catch(Exception ex) {ex.printStackTrace();}
-	}
+
 }
 //End of EchoServer class
