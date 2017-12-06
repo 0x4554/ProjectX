@@ -46,7 +46,7 @@ public class ProjectServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void setProduct(Object msg, ConnectionToClient client) throws SQLException
+  public void insertProduct(String msg, ConnectionToClient client) throws SQLException
   {
 	  ArrayList<String> msg1 = new ArrayList<String>(); 
 	  try
@@ -154,9 +154,13 @@ public class ProjectServer extends AbstractServer
   }
 
 @Override
-protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
-	
-}
+		String str = (String) msg;
+		try {
+		this.insertProduct(str, client);
+		}
+		catch(Exception ex) {ex.printStackTrace();}
+	}
 }
 //End of EchoServer class
