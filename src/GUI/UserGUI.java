@@ -23,7 +23,7 @@ public class UserGUI extends Application {
 	
 	final public static int DEFAULT_PORT = 5555;
 	
-	private String id="1234";
+	private String id;
 	private User usr;
 	
 	@FXML private TextField srchIDfld;
@@ -57,8 +57,8 @@ public class UserGUI extends Application {
 	
 	public void insertedID() throws IOException {	
 		this.id = srchIDfld.getText();
-		 UserGUI chat= new UserGUI("localhost", DEFAULT_PORT);
-	      chat.accept();  //Wait for console data	
+		 UserGUI chat= new UserGUI("10.10.0.76", DEFAULT_PORT);
+	      chat.accept(); 	 //Wait for console data	
 	}				
 
 
