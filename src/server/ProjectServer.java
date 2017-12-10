@@ -71,19 +71,20 @@ public class ProjectServer extends AbstractServer
   {
 	  ArrayList<String> msg1 = new ArrayList<String>();
 	  Statement stmt;
-	  int i=0;
+	  int i=1;
 	  String str = (String) asked;
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	      
+	    if(con!=null)
+	    System.out.println("Connection to Data Base succeeded");  
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
 	    }
 	  stmt = con.createStatement();
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID LIKE 'asked'");	//query for extracting a prodcut's details
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = "+str);	//query for extracting a prodcut's details
 	  
 	  while(rs.next())	//run for the extracted data and add it to an arraylist of strings
 	  {
@@ -91,7 +92,10 @@ public class ProjectServer extends AbstractServer
 		  i++;
 	  }
 	 
+	  for(String s:msg1)
+		System.out.println(s.toString()+" ");
 	  
+	  System.out.println("Finished printing");
 	  return msg1; 
 	  
   }
@@ -120,12 +124,14 @@ public class ProjectServer extends AbstractServer
   @Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
-		String str = (String) msg;
+		ArrayList<String>retval=new ArrayList<String>();
 		try {
-		System.out.println(str);
-		this.insertProduct(str, client);
+		System.out.println("<user>"+(String)msg);
+		retval = this.getProduct(client,(String)msg);
 		}
 		catch(Exception ex) {ex.printStackTrace();}
+		
+		sendToAllClients(retval);
 	}
   
   //Class methods ***************************************************

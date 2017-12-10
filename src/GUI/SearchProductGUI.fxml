@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="root" prefHeight="275.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.UserGUI">
+<AnchorPane fx:id="root" prefHeight="275.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.UserBoundary">
    <children>
       <Label fx:id="srchLbl" alignment="TOP_CENTER" layoutX="66.0" layoutY="44.0" text="Search for Product">
          <font>

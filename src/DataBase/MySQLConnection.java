@@ -8,37 +8,54 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 public class MySQLConnection {
 
 	public static Connection con;
 	
-	public static void main(String[] args) 
+/*	public static void main(String[] args) 
 	{
 		try 
 		{
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (Exception ex) {/* handle the error*/}
+        } catch (Exception ex) {/* handle the error}
         
         try 
         {
-            con = DriverManager.getConnection("jdbc:mysql://localhost/test","root","Braude");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/test","root","projectx");
 
             System.out.println("SQL connection succeed");
           
             
             
-            printCourses(con);
+           // printCourses(con);
      	} catch (SQLException ex) 
-     	    {/* handle any errors*/
+     	    {// handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
             }
-   	}
+   	}													*/
 	
-	public static void printCourses(Connection con)
+	
+	public static ArrayList<String> getProductDetails(Connection con,String prdctID) throws SQLException {
+		ArrayList<String> dtls=new ArrayList<String>();
+		
+		Statement stmt=con.createStatement();
+		
+		ResultSet rslt=stmt.executeQuery("SELECT * FROM Product where ProductID LIKE ProductID");
+		dtls.add(rslt.getString("ProductID"));
+		dtls.add(rslt.getString("ProductName"));
+		dtls.add(rslt.getString("ProductType"));
+		
+		return dtls;
+	}
+	
+	
+	
+/*	public static void printCourses(Connection con)
 	{
 		Statement stmt;
 		try 
@@ -65,7 +82,7 @@ public class MySQLConnection {
 	 		
 		} catch (SQLException e) {	e.printStackTrace();}
 		 		
-	}
+	}				*/
 	
 	
 	

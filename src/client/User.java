@@ -1,8 +1,9 @@
 package client;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import GUI.UserGUI;
+import GUI.UserBoundary;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 //import common.*;
@@ -11,12 +12,15 @@ import ocsf.client.AbstractClient;
 import ocsf.client.*;
 
 public class User extends AbstractClient {
-
+	
+	private String fromUI;
+	private static ArrayList<String> fromSrvr;
 	//ChatIF clientUI; 
 	
-	public User(String host, int port) throws IOException 
+	public User(String host, int port,Object obj) throws IOException 
 		  {
 		    super(host, port); 			//Call the superclass constructor
+		    fromUI=(String)obj;
 		//    this.clientUI = clientUI;
 		    openConnection();
 		  }
@@ -32,7 +36,11 @@ public class User extends AbstractClient {
 	   */
 	  public void handleMessageFromServer(Object msg) 
 	  {
-	    //clientUI.display(msg.toString());
+	    fromSrvr=(ArrayList<String>)msg;
+	  }
+	  
+	  public static ArrayList<String> getValuesFromServer(){
+		  return fromSrvr;
 	  }
 
 	  /**
@@ -53,6 +61,19 @@ public class User extends AbstractClient {
 	      quit();
 	    }
 	  }
+	  
+	  
+		public void accept() {
+			// TODO Auto-generated method stub
+		
+			try {
+			this.handleMessageFromClientUI(this.fromUI);
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			
+		}
 	  
 	  /**
 	   * This method terminates the client.
