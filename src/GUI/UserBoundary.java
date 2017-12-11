@@ -45,6 +45,9 @@ public class UserBoundary extends Application {
 	@FXML private Button srchagnBtn;
 	
 	@FXML private Button okerrBtn;
+	@FXML private Label errMsgLbl;
+	@FXML private Label errLbl;
+//	@FXML private Ic errIcn;
 	
 	
 	public void setID(String s) {
@@ -53,13 +56,16 @@ public class UserBoundary extends Application {
 
 	
 	public void insertedID(ActionEvent event) throws IOException {	
+		
 		if(srchIDfld.getText().trim().isEmpty())  {
-			Parent root= FXMLLoader.load(getClass().getResource("/GUI/ErrorInputGUI.fxml"));
+			//((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			Stage secondaryStage=new Stage();
+			
+			Parent root= FXMLLoader.load(getClass().getResource("/GUI/ErrorInputGUI.fxml"));
 			
 			Scene scene=new Scene(root);
 			
-			secondaryStage.setTitle("Product");
+			secondaryStage.setTitle("Error");
 			secondaryStage.setScene(scene);
 			secondaryStage.show();
 			}
@@ -68,11 +74,13 @@ public class UserBoundary extends Application {
 		else {
 			this.setID(srchIDfld.getText());
 			User chat = new User("localhost", DEFAULT_PORT,this.id);
-			chat.accept(); 	 //Wait for console data	
-	    // ArrayList<String> vals=User.getValuesFromServer();
-	    // prdIDLbl.setText(vals.get(0));
-	    // prdNmLbl.setText(vals.get(1));
-	     //prdTpLbl.setText(vals.get(2));
+			chat.accept(); 	 //Wait for console data
+			ArrayList<String> vals = null;
+			chat.handleMessageFromServer(vals);
+			vals=chat.getValuesFromServer();
+	    /* 	prdIDLbl.setText(vals.get(0));
+	     	prdNmLbl.setText(vals.get(1));
+	     	prdTpLbl.setText(vals.get(2));	*/
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			Stage primaryStage=new Stage();
 			Parent root= FXMLLoader.load(getClass().getResource("ProductFromDBGUI.fxml"));

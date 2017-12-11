@@ -14,7 +14,7 @@ import ocsf.client.*;
 public class User extends AbstractClient {
 	
 	private String fromUI;
-	private static ArrayList<String> fromSrvr;
+	private  ArrayList<String> fromSrvr;
 	//ChatIF clientUI; 
 	
 	public User(String host, int port,Object obj) throws IOException 
@@ -27,20 +27,23 @@ public class User extends AbstractClient {
 	
 	//Instance methods ************************************************
     
-	
+	public void setDataFromSever(ArrayList<String> al) {
+		this.fromSrvr=al;
+	}
 	
 	  /**
 	   * This method handles all data that comes in from the server.
 	   *
 	   * @param msg The message from the server.
 	   */
+	@Override
 	  public void handleMessageFromServer(Object msg) 
 	  {
-	    fromSrvr=(ArrayList<String>)msg;
+	    this.setDataFromSever((ArrayList<String>)msg);
 	  }
 	  
-	  public static ArrayList<String> getValuesFromServer(){
-		  return fromSrvr;
+	  public  ArrayList<String> getValuesFromServer(){
+		  return this.fromSrvr;
 	  }
 
 	  /**

@@ -84,20 +84,20 @@ public class ProjectServer extends AbstractServer
 	      System.out.println("SQLException: " + e.getMessage() );
 	    }
 	  stmt = con.createStatement();
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = "+str);	//query for extracting a prodcut's details
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID = "+str);	//query for extracting a prodcut's details
 	  
-	  while(rs.next())	//run for the extracted data and add it to an arraylist of strings
-	  {
-		  msg1.add(rs.getString(i));
-		  i++;
+	  while(rs.next()) {	//run for the extracted data and add it to an arraylist of strings  
+		  msg1.add(rs.getString(1));
+		  msg1.add(rs.getString(2));
+		  msg1.add(rs.getString(3));
 	  }
+		  
+	  
 	 
 	  for(String s:msg1)
 		System.out.println(s.toString()+" ");
 	  
-	  System.out.println("Finished printing");
 	  return msg1; 
-	  
   }
 
     
@@ -131,7 +131,9 @@ public class ProjectServer extends AbstractServer
 		}
 		catch(Exception ex) {ex.printStackTrace();}
 		
+	
 		sendToAllClients(retval);
+		
 	}
   
   //Class methods ***************************************************
