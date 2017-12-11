@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="438.0" prefWidth="408.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="GUI.ProductFromDBGUI">
+   <children>
+      <AnchorPane layoutX="-117.0" layoutY="-182.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextField id="ID" fx:id="txtfldID" layoutX="139.0" layoutY="72.0" />
+      <TextField fx:id="txtfldNm" layoutX="139.0" layoutY="162.0" />
+      <TextField fx:id="txtfldTp" layoutX="149.0" layoutY="272.0" />
+   </children>
+</AnchorPane>

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import com.mysql.jdbc.Connection;
 
 import client.User;
+//import gui.StudentFormController;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +20,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+//import logic.Test;
 import javafx.scene.Node;
 
 import ocsf.client.*;
@@ -43,6 +46,13 @@ public class UserBoundary extends Application {
 	@FXML private Label prdNmLbl;
 	@FXML private Label prdTpLbl;
 	@FXML private Button srchagnBtn;
+	
+	@FXML
+	public TextField txtfldID;
+	@FXML
+	public TextField txtfldNm;
+	@FXML
+	public TextField txtfldTp;
 	
 	@FXML private Button okerrBtn;
 	@FXML private Label errMsgLbl;
@@ -75,20 +85,46 @@ public class UserBoundary extends Application {
 			this.setID(srchIDfld.getText());
 			User chat = new User("localhost", DEFAULT_PORT,this.id);
 			chat.accept(); 	 //Wait for console data
-			ArrayList<String> vals = null;
-			chat.handleMessageFromServer(vals);
-			vals=chat.getValuesFromServer();
-	    /* 	prdIDLbl.setText(vals.get(0));
-	     	prdNmLbl.setText(vals.get(1));
-	     	prdTpLbl.setText(vals.get(2));	*/
-			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+			ArrayList<String> details = null;
+			details=chat.fromSrvr;
+			
+			((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
+			
+			ProductFromDBGUI productView = new ProductFromDBGUI();
+			productView.showProductDetails(details);
+			
+			
+			/*this.txtfldID.setText(vals.get(0));
+			this.txtfldNm.setText(vals.get(1));
+			this.txtfldTp.setText(vals.get(2));*/
+			
+/*			Stage secondaryStage = new Stage();
+			FXMLLoader loader = new FXMLLoader();
+			Pane root2 = loader.load(getClass().getResource("/GUI/ProductFromDBGUI.fxml").openStream());
+			
+			Scene scene2 = new Scene(root2);	
+			secondaryStage.setScene(scene2);		
+			secondaryStage.show();
+			
+			UserBoundary boundary = loader.getController();		
+			boundary.txtfldID.setText(details.get(0));
+			boundary.txtfldNm.setText(details.get(1));
+			boundary.txtfldTp.setText(details.get(2));		*/
+				
+			//scene.getStylesheets().add(getClass().getResource("/gui/StudentForm.css").toExternalForm());
+			
+			
+/*	     	prdIDLbl.setText(vals.get(0));
+     		prdNmLbl.setText(vals.get(1));
+     		prdTpLbl.setText(vals.get(2));	*/
+/*			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			Stage primaryStage=new Stage();
 			Parent root= FXMLLoader.load(getClass().getResource("ProductFromDBGUI.fxml"));
 			Scene scene=new Scene(root);
 			
 			primaryStage.setTitle("Product");
 			primaryStage.setScene(scene);
-			primaryStage.show();
+			primaryStage.show();	*/
 		}
 	}			
 	
