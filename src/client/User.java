@@ -3,7 +3,7 @@ package client;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import GUI.UserBoundary;
+import GUI.MainBoundary;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 //import common.*;
@@ -14,22 +14,24 @@ import ocsf.client.*;
 public class User extends AbstractClient {
 	
 	private String fromUI;
-	private  ArrayList<String> fromSrvr;
+	private int operation;
+	public  ArrayList<String> fromSrvr;
 	//ChatIF clientUI; 
 	
-	public User(String host, int port,Object obj) throws IOException 
+	public User(String host, int port,Object obj,int opr) throws IOException 
 		  {
 		    super(host, port); 			//Call the superclass constructor
 		    fromUI=(String)obj;
+		    operation=opr;
 		//    this.clientUI = clientUI;
 		    openConnection();
 		  }
 	
 	//Instance methods ************************************************
     
-	public void setDataFromSever(ArrayList<String> al) {
+	/*public void setDataFromSever(ArrayList<String> al) {
 		this.fromSrvr=al;
-	}
+	}*/
 	
 	  /**
 	   * This method handles all data that comes in from the server.
@@ -39,12 +41,18 @@ public class User extends AbstractClient {
 	@Override
 	  public void handleMessageFromServer(Object msg) 
 	  {
-	    this.setDataFromSever((ArrayList<String>)msg);
+		/*ArrayList<String>data;
+		data=(ArrayList)msg;*/
+		this.fromSrvr=(ArrayList<String>)msg;
 	  }
-	  
-	  public  ArrayList<String> getValuesFromServer(){
+	
+	/*  public  ArrayList<Object> getValuesFromServer(){
+		/*  ArrayList<String> ret=new ArrayList<String>();
+		  for(Object obj:this.fromSrvr)
+			  ret.add((String)obj);		
+		  
 		  return this.fromSrvr;
-	  }
+	  }			*/
 
 	  /**
 	   * This method handles all data coming from the UI            
@@ -68,7 +76,14 @@ public class User extends AbstractClient {
 	  
 		public void accept() {
 			// TODO Auto-generated method stub
-		
+			if(this.operation==1) {
+				this.fromUI="create "+this.fromUI;
+			}
+			if(this.operation==2) {
+				this.fromUI="find "+this.fromUI;
+			}
+			
+			
 			try {
 			this.handleMessageFromClientUI(this.fromUI);
 			}

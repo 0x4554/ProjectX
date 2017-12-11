@@ -91,6 +91,7 @@ public class ProjectServer extends AbstractServer
 		  msg1.add(rs.getString(2));
 		  msg1.add(rs.getString(3));
 	  }
+	  
 		  
 	  
 	 
@@ -124,10 +125,18 @@ public class ProjectServer extends AbstractServer
   @Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
+	  String s=(String)msg;
+	  
+	  	s=s.substring(0,s.indexOf(" "));
+	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		try {
 		System.out.println("<user>"+(String)msg);
-		retval = this.getProduct(client,(String)msg);
+		if(s.equals("find"))
+			retval = this.getProduct(client,(String)msg);
+		if(s.equals("create")) {
+			
+			}
 		}
 		catch(Exception ex) {ex.printStackTrace();}
 		
