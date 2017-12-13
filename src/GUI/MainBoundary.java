@@ -92,16 +92,20 @@ public class MainBoundary extends Application {
 			dtls=chat.fromSrvr;
 
 			
-			pdb=new ProductFromDBBoundary();
-			pdb.showProductDetails(event);
+			pdb=new ProductFromDBBoundary(dtls);
+			
+			
+			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+			pdb.showProductDetails();
 			
 	
 		}
 	}	
 	
-	public void showSearchResults(ActionEvent event) throws IOException {
-		pdb.showProductDetails(event);
-	}
+/*	public void showSearchResults(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		pdb.showProductDetails();
+	}			*/
 	
 	
 	public void hideError(ActionEvent event) {
@@ -130,7 +134,9 @@ public class MainBoundary extends Application {
 		primaryStage.setTitle("Search for Product");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-	}								
+	}			
+	
+	
 
 	public void insertProduct(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window

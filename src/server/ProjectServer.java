@@ -126,6 +126,8 @@ public class ProjectServer extends AbstractServer
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
 	  String s=(String)msg;
+	  String mess=(String)msg;
+	  mess=mess.substring(mess.indexOf(" "),mess.length());
 	  
 	  	s=s.substring(0,s.indexOf(" "));
 	  	
@@ -133,7 +135,7 @@ public class ProjectServer extends AbstractServer
 		try {
 		System.out.println("<user>"+(String)msg);
 		if(s.equals("find"))
-			retval = this.getProduct(client,(String)msg);
+			retval = this.getProduct(client,mess);
 		if(s.equals("create")) {
 			
 			}
