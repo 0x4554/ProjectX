@@ -20,7 +20,7 @@ public class CreateProductBoundary {
 	
 	public void getProductDetails() {
 		if(idFld.getText().trim().isEmpty() || nmFld.getText().trim().isEmpty() || typFld.getText().trim().isEmpty()) {
-			
+			System.out.print("please enter ");
 		}
 		
 		else {
