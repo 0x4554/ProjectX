@@ -88,7 +88,8 @@ public class MainBoundary extends Application {
 			chat.accept(); 	 //Wait for console data
 			
 			ArrayList <String> dtls=null;
-			dtls=chat.fromSrvr;
+			//dtls=chat.fromSrvr;
+			
 
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			
@@ -99,7 +100,7 @@ public class MainBoundary extends Application {
 			
 			ProductFromDBBoundary pdb = loader.getController();
 			
-			pdb.setLabels(dtls);
+			pdb.setLabels(chat.getfromSrvr());
 			
 			primaryStage.setTitle("Product Details");
 			primaryStage.setScene(scene);

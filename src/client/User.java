@@ -15,7 +15,7 @@ public class User extends AbstractClient {
 	
 	private String fromUI;
 	private int operation;
-	public  ArrayList<String> fromSrvr;
+	private  ArrayList<String> fromSrvr;
 	//ChatIF clientUI; 
 	
 	public User(String host, int port,Object obj,int opr) throws IOException 
@@ -105,6 +105,15 @@ public class User extends AbstractClient {
 	    }
 	    catch(IOException e) {}
 	    System.exit(0);
+	  }
+	  
+	  public ArrayList<String> getfromSrvr()
+	  {
+		  ArrayList<String>dtls=new ArrayList<String>();
+			for(String n:fromSrvr)
+				dtls.add(n);
+			
+		return dtls;
 	  }
 
 }
