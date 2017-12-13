@@ -92,7 +92,7 @@ public class MainBoundary extends Application {
 			dtls=chat.fromSrvr;
 
 			
-			pdb=new ProductFromDBBoundary(dtls);
+			pdb=new ProductFromDBBoundary();
 			
 			
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window

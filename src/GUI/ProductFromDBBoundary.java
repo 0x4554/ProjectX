@@ -37,7 +37,6 @@ public class ProductFromDBBoundary implements Initializable{
 	}
 	
 	public void showProductDetails() throws IOException {
-			
 		Stage primaryStage=new Stage();
 		Parent root= FXMLLoader.load(getClass().getResource("ProductFromDBGUI.fxml"));
 		Scene scene=new Scene(root);
