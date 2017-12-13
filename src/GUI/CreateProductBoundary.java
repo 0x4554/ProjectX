@@ -2,11 +2,17 @@ package GUI;
 
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class CreateProductBoundary {
 	
@@ -15,23 +21,18 @@ public class CreateProductBoundary {
 	@FXML private TextField nmFld;
 	@FXML private TextField typFld;
 	
-	ArrayList <String>newDetails=new ArrayList<String>();
-	
-	
-	public void getProductDetails() {
-		if(idFld.getText().trim().isEmpty() || nmFld.getText().trim().isEmpty() || typFld.getText().trim().isEmpty()) {
-			System.out.print("please enter ");
-		}
+
+	public void showNewProductGUI() throws IOException {
 		
-		else {
+		 Parent root= FXMLLoader.load(getClass().getResource("NewProductGUI.fxml"));
+			Stage primaryStage=new Stage();
+			Scene scene=new Scene(root);
 			
-		}
+			primaryStage.setTitle("Search for Product");
+			primaryStage.setScene(scene);
+			primaryStage.show();
 	}
-
-
-	public void showNewProductGUI() {
-		
-	}
+	
 }
 
 

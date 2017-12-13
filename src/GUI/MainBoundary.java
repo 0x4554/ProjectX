@@ -59,6 +59,13 @@ public class MainBoundary extends Application {
 	@FXML private Label errMsgLbl;
 	@FXML private Label errLbl;
 	
+	@FXML private Button crtBtn;
+	@FXML private TextField idFld;
+	@FXML private TextField nmFld;
+	@FXML private TextField typFld;
+	
+	CreateProductBoundary cpd;
+	
 	
 	public void setID(String s) {
 		this.id=s;
@@ -88,7 +95,6 @@ public class MainBoundary extends Application {
 			chat.accept(); 	 //Wait for console data
 			
 			ArrayList <String> dtls=null;
-			//dtls=chat.fromSrvr;
 			
 
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -109,11 +115,6 @@ public class MainBoundary extends Application {
 	
 		}
 	}	
-	
-/*	public void showSearchResults(ActionEvent event) throws IOException {
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		pdb.showProductDetails();
-	}			*/
 	
 	
 	public void hideError(ActionEvent event) {
@@ -146,17 +147,21 @@ public class MainBoundary extends Application {
 	
 	
 
-	public void insertProduct(ActionEvent event) throws IOException {
+	public void showNewProductGUI(ActionEvent event) throws IOException {
+		
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		 Parent root= FXMLLoader.load(getClass().getResource("SearchProductGUI.fxml"));
-			Stage primaryStage=new Stage();
-			Scene scene=new Scene(root);
-			
-			primaryStage.setTitle("Search for Product");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		 
+		cpd=new CreateProductBoundary();
+		cpd.showNewProductGUI();
 	}
+	
+	public void getNewData(ActionEvent event) throws IOException {
+		String newData="";
+		newData=newData+idFld.getText()+" "+nmFld.getText()+" "+typFld.getText();
+		User chat = new User("localhost", DEFAULT_PORT,newData,1);
+		chat.accept();
+	}
+	
+	
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {

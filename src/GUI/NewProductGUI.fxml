@@ -6,10 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="538.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainBoundary">
    <children>
-      <Label layoutX="192.0" layoutY="50.0" text="New Product Details">
+      <Label layoutX="161.0" layoutY="40.0" text="New Product Details">
          <font>
             <Font size="24.0" />
          </font>
@@ -20,6 +19,6 @@
       <Label layoutX="105.0" layoutY="134.0" text="Product ID" />
       <Label layoutX="85.0" layoutY="220.0" text="Product Name" />
       <Label layoutX="88.0" layoutY="305.0" text="Product Type" />
-      <Button fx:id="crtBtn" layoutX="274.0" layoutY="350.0" mnemonicParsing="false" text="Create" />
+      <Button fx:id="crtBtn" layoutX="244.0" layoutY="352.0" mnemonicParsing="false" onAction="#getNewData" text="Create" />
    </children>
 </AnchorPane>

@@ -13,6 +13,6 @@
          </font>
       </Label>
       <Button fx:id="mnuFndBtn" layoutX="209.0" layoutY="203.0" mnemonicParsing="false" onAction="#searchProduct" text="Find Product" />
-      <Button fx:id="insrtBtn" layoutX="192.0" layoutY="124.0" mnemonicParsing="false" onAction="#insertProduct" text="Insert New Product" />
+      <Button fx:id="insrtBtn" layoutX="192.0" layoutY="124.0" mnemonicParsing="false" onAction="#showNewProductGUI" text="Insert New Product" />
    </children>
 </AnchorPane>

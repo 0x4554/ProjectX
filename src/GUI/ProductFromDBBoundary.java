@@ -29,12 +29,12 @@ public class ProductFromDBBoundary implements Initializable{
 	@FXML private Label rsltTpLbl;
 	@FXML private Button srchagnBtn;
 	
-	private ArrayList<String>results=new ArrayList<String>();
+//	private ArrayList<String>results=new ArrayList<String>();
 	
-	public void setData(ArrayList<String>str) {
+	/*public void setData(ArrayList<String>str) {
 		for(String s:str)
 			results.add(s);
-	}
+	}*/
 	
 	/*public void showProductDetails() throws IOException {
 		Stage primaryStage=new Stage();
@@ -52,7 +52,7 @@ public class ProductFromDBBoundary implements Initializable{
 		this.rsltTpLbl.setText(res.get(2));
 	}
 	
-	public void searchAgain(ActionEvent event) throws IOException {
+/*	public void searchAgain(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		Stage primaryStage=new Stage();
 		Parent root= FXMLLoader.load(getClass().getResource("SeaerchProductGUI.fxml"));
@@ -61,12 +61,13 @@ public class ProductFromDBBoundary implements Initializable{
 		primaryStage.setTitle("Search Product");
 		primaryStage.setScene(scene);
 		primaryStage.show();	
-	}
+	}				*/
 
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
+		
 	}
 
 

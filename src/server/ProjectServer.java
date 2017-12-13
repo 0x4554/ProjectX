@@ -47,7 +47,7 @@ public class ProjectServer extends AbstractServer
    */
   public void insertProduct(String msg, ConnectionToClient client) throws SQLException
   {
-	  ArrayList<String> msg1 = new ArrayList<String>(); 
+	  String [] data= msg.split(" ");
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -59,10 +59,10 @@ public class ProjectServer extends AbstractServer
 	    }
 	    System.out.println("Message received: " + msg + " from " + client);
 	    this.sendToAllClients(msg);
-	    PreparedStatement ps = con.prepareStatement("INSERT INTO product (?,?,?)");	//prepare a statement
-	    ps.setString(1,msg1.get(0));	//insert parameters into the statement
-	    ps.setString(2, msg1.get(1));
-	    ps.setString(3, msg1.get(2));
+	    PreparedStatement ps = con.prepareStatement("INSERT INTO product (ProductID,ProductName,ProductType) VALUES (?,?,?)");	//prepare a statement
+	    ps.setString(1,data[0]);	//insert parameters into the statement
+	    ps.setString(2, data[1]);
+	    ps.setString(3, data[2]);
 	    ps.executeUpdate();
 	    
 	  }
@@ -137,7 +137,8 @@ public class ProjectServer extends AbstractServer
 		if(s.equals("find"))
 			retval = this.getProduct(client,mess);
 		if(s.equals("create")) {
-			
+			mess=mess.substring(1,mess.length());
+			this.insertProduct((String)mess, client);
 			}
 		}
 		catch(Exception ex) {ex.printStackTrace();}
