@@ -37,7 +37,6 @@ public class MainBoundary extends Application {
 	
 	private String id="";
 	private String host="";
-	ProductFromDBBoundary pdb;
 
 	
 	@FXML private TextField srchIDfld;
@@ -91,12 +90,20 @@ public class MainBoundary extends Application {
 			ArrayList <String> dtls=null;
 			dtls=chat.fromSrvr;
 
-			
-			pdb=new ProductFromDBBoundary();
-			
-			
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			pdb.showProductDetails();
+			
+			Stage primaryStage=new Stage();
+			FXMLLoader loader = new FXMLLoader();
+			Parent root= loader.load(getClass().getResource("ProductFromDBGUI.fxml").openStream());
+			Scene scene=new Scene(root);
+			
+			ProductFromDBBoundary pdb = loader.getController();
+			
+			pdb.setLabels(dtls);
+			
+			primaryStage.setTitle("Product Details");
+			primaryStage.setScene(scene);
+			primaryStage.show();
 			
 	
 		}

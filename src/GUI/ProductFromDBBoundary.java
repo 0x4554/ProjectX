@@ -36,16 +36,16 @@ public class ProductFromDBBoundary implements Initializable{
 			results.add(s);
 	}
 	
-	public void showProductDetails() throws IOException {
+	/*public void showProductDetails() throws IOException {
 		Stage primaryStage=new Stage();
 		Parent root= FXMLLoader.load(getClass().getResource("ProductFromDBGUI.fxml"));
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Product Details");
 		primaryStage.setScene(scene);
 		primaryStage.show();	
-	}
+	}*/
 	
-	void setLabels(ArrayList<String>res)
+	public void setLabels(ArrayList<String>res)
 	{
 		this.rsltIDLbl.setText(res.get(0));
 		this.rsltNmLbl.setText(res.get(1));
@@ -67,7 +67,6 @@ public class ProductFromDBBoundary implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
-		setLabels(this.results);
 	}
 
 
