@@ -41,6 +41,7 @@ public class User extends AbstractClient {
 	@Override
 	  public void handleMessageFromServer(Object msg) 
 	  {
+
 		/*ArrayList<String>data;
 		data=(ArrayList)msg;*/
 		this.fromSrvr=(ArrayList<String>)msg;
