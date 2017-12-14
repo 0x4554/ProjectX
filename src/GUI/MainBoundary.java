@@ -2,6 +2,7 @@ package GUI;
 
 import java.io.IOException;
 
+
 import java.io.InputStreamReader;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import com.mysql.jdbc.Connection;
 
 import client.User;
-//import gui.StudentFormController;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -37,6 +38,7 @@ public class MainBoundary extends Application {
 	
 	private String id="";
 	private String host="";
+	private ProductFromDBBoundary pdb;
 
 	
 	@FXML private TextField srchIDfld;
@@ -76,7 +78,7 @@ public class MainBoundary extends Application {
 	}
 
 	
-	public void searchProductID(ActionEvent event) throws IOException {	
+	public void searchProductID(ActionEvent event) throws IOException {		//if pressed "Search"
 		
 		if(srchIDfld.getText().trim().isEmpty())  {
 			
@@ -93,26 +95,34 @@ public class MainBoundary extends Application {
 			this.setID(srchIDfld.getText());
 			User chat = new User("localhost", DEFAULT_PORT,this.id,2);
 			chat.accept(); 	 //Wait for console data
-			
-			ArrayList <String> dtls=null;
-			
+			if(!(chat.getfromSrvr().isEmpty()))
+					{
+						((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+						
+						Stage secondaryStage=new Stage();
+						FXMLLoader loader = new FXMLLoader();	//create an FXMLLoader
+						Parent root= loader.load(getClass().getResource("ProductFromDBGUI.fxml").openStream());
+						Scene scene=new Scene(root);
+						
+						ProductFromDBBoundary pdb = (ProductFromDBBoundary)loader.getController();	//get the FXMLLoader controller for use in the pdb (for using it's functions as a controller)
+						
+						pdb.setMainBoundary(this);	//set reference of (this) mainBoundary to the pdb controller
+						pdb.setLabels(chat.getfromSrvr());	//set the labels as returned from the DB
+						
+						secondaryStage.setTitle("Product Details");
+						secondaryStage.setScene(scene);
+						secondaryStage.show();	//show ProductFromDBBoundary
+					}
+			else
+			{
+				Stage secondaryStage=new Stage();
+				Parent root= FXMLLoader.load(getClass().getResource("ErrorInputGUI.fxml"));
+				Scene scene=new Scene(root);
+				secondaryStage.setTitle("Error");
+				secondaryStage.setScene(scene);
+				secondaryStage.show();
+			}
 
-			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			
-			Stage primaryStage=new Stage();
-			FXMLLoader loader = new FXMLLoader();
-			Parent root= loader.load(getClass().getResource("ProductFromDBGUI.fxml").openStream());
-			Scene scene=new Scene(root);
-			
-			ProductFromDBBoundary pdb = loader.getController();
-			
-			pdb.setLabels(chat.getfromSrvr());
-			
-			primaryStage.setTitle("Product Details");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-			
-	
 		}
 	}	
 	
@@ -122,7 +132,7 @@ public class MainBoundary extends Application {
 	}
 	
 	
-	public void searchAgain(ActionEvent event) throws IOException {
+	public void searchAgain(ActionEvent event) throws IOException {		//load window for searching an item in the DB
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 	      Stage primaryStage=new Stage();
 	      Parent root= FXMLLoader.load(getClass().getResource("SearchProductGUI.fxml"));
@@ -136,7 +146,9 @@ public class MainBoundary extends Application {
 	
 	public void searchProduct(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		Parent root= FXMLLoader.load(getClass().getResource("SearchProductGUI.fxml"));
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("SearchProductGUI.fxml").openStream());
+//		Parent root= FXMLLoader.load(getClass().getResource("SearchProductGUI.fxml"));
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		

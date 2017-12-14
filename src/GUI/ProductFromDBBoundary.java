@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import client.User;
 ///
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +30,12 @@ public class ProductFromDBBoundary implements Initializable{
 	@FXML private Label rsltTpLbl;
 	@FXML private Button srchagnBtn;
 	
-//	private ArrayList<String>results=new ArrayList<String>();
+	private MainBoundary main;
+
+	public void setMainBoundary(MainBoundary main)	//set the main boundary to this controller (used for returning to the previous menu)
+	{
+		this.main=main;
+	}
 	
 	/*public void setData(ArrayList<String>str) {
 		for(String s:str)
@@ -45,28 +51,32 @@ public class ProductFromDBBoundary implements Initializable{
 		primaryStage.show();	
 	}*/
 	
-	public void setLabels(ArrayList<String>res)
+	
+	public void setLabels(ArrayList<String>res)	//set the labels to the details returned from the DB
 	{
 		this.rsltIDLbl.setText(res.get(0));
 		this.rsltNmLbl.setText(res.get(1));
 		this.rsltTpLbl.setText(res.get(2));
 	}
 	
-/*	public void searchAgain(ActionEvent event) throws IOException {
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+	public void searchAgain(ActionEvent event) throws IOException {			//in case pressed "back"
+		this.main.searchProduct(event);		//call func of main boundary for conducting another search
+		
+	/*	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		Stage primaryStage=new Stage();
 		Parent root= FXMLLoader.load(getClass().getResource("SeaerchProductGUI.fxml"));
 		Scene scene=new Scene(root);
 		
 		primaryStage.setTitle("Search Product");
 		primaryStage.setScene(scene);
-		primaryStage.show();	
-	}				*/
+		primaryStage.show();	*/
+	}				
 
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
+		
 		
 	}
 

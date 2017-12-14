@@ -86,6 +86,7 @@ public class ProjectServer extends AbstractServer
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID = "+str);	//query for extracting a prodcut's details
 	  
+	  
 	  while(rs.next()) {	//run for the extracted data and add it to an arraylist of strings  
 		  msg1.add(rs.getString(1));
 		  msg1.add(rs.getString(2));
