@@ -104,7 +104,7 @@ public class MainBoundary extends Application {
 			User chat = new User("localhost", DEFAULT_PORT,this.id,2);
 			chat.accept(); 	 //Wait for console data
 			ArrayList<String> dets=null;
-			Thread.sleep(2000);
+			Thread.sleep(500);
 			dets=chat.getfromSrvr();
 				
 			/*try {
