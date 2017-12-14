@@ -70,7 +70,19 @@ public class ProductFromDBBoundary implements Initializable{
 		primaryStage.setTitle("Search Product");
 		primaryStage.setScene(scene);
 		primaryStage.show();	*/
-	}				
+	}	
+	
+	
+	public void backToMainMenu(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		Stage primaryStage=new Stage();
+		Parent root= FXMLLoader.load(getClass().getResource("MenuGUI.fxml"));
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("Search Product");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 
 
 	@Override

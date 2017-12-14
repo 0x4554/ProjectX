@@ -67,7 +67,7 @@ public class ProjectServer extends AbstractServer
 	    
 	  }
   
-  public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException
+  public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException, InterruptedException
   {
 	  ArrayList<String> msg1 = new ArrayList<String>();
 	  Statement stmt;
@@ -98,7 +98,6 @@ public class ProjectServer extends AbstractServer
 	 
 	  for(String s:msg1)
 		System.out.println(s.toString()+" ");
-	  
 	  return msg1; 
   }
 

@@ -15,7 +15,7 @@ public class User extends AbstractClient {
 	
 	private String fromUI;
 	private int operation;
-	private  ArrayList<String> fromSrvr;
+	private  ArrayList<String> fromSrvr=null;
 	//ChatIF clientUI; 
 	
 	public User(String host, int port,Object obj,int opr) throws IOException 
@@ -41,9 +41,6 @@ public class User extends AbstractClient {
 	@Override
 	  public void handleMessageFromServer(Object msg) 
 	  {
-
-		/*ArrayList<String>data;
-		data=(ArrayList)msg;*/
 		this.fromSrvr=(ArrayList<String>)msg;
 	  }
 	
@@ -107,13 +104,16 @@ public class User extends AbstractClient {
 	    System.exit(0);
 	  }
 	  
-	  public ArrayList<String> getfromSrvr()
+	  public ArrayList<String> getfromSrvr() throws InterruptedException
 	  {
 		  ArrayList<String>dtls=new ArrayList<String>();
-			for(String n:fromSrvr)
-				dtls.add(n);
-			
+		  
+		for(String str:this.fromSrvr) 
+				dtls.add((String)str);
+				
 		return dtls;
 	  }
 
-}
+
+}	
+	

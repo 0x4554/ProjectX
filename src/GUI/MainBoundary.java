@@ -45,17 +45,13 @@ public class MainBoundary extends Application {
 	@FXML private AnchorPane root;
 	@FXML private Label srchLbl;
 	@FXML private Label prdLbl;
-	@FXML private Button srchProd;
+	@FXML private Button srchProdBtn;
 	
 	
 	@FXML private Button insrtBtn;
 	@FXML private Button mnuFndBtn;
 	@FXML private Label myFlwrLbl;
 
-/*	@FXML private Label rsltIDLbl;
-	@FXML private Label rsltNmLbl;
-	@FXML private Label rsltTpLbl;
-	@FXML private Button srchagnBtn;		*/
 	
 	@FXML private Button okerrBtn;
 	@FXML private Label errMsgLbl;
@@ -66,7 +62,15 @@ public class MainBoundary extends Application {
 	@FXML private TextField nmFld;
 	@FXML private TextField typFld;
 	
-	CreateProductBoundary cpd;
+	@FXML private Button bckMnuBtn;
+	
+	private CreateProductBoundary cpd;
+	private ProductFromDBBoundary pfdb;
+	
+	public MainBoundary() {
+		this.cpd=new CreateProductBoundary();
+		this.pfdb=new ProductFromDBBoundary();
+	}
 	
 	
 	public void setID(String s) {
@@ -78,7 +82,11 @@ public class MainBoundary extends Application {
 	}
 
 	
-	public void searchProductID(ActionEvent event) throws IOException {		//if pressed "Search"
+	public void backMenu(ActionEvent event) throws IOException{
+		this.pfdb.backToMainMenu(event);
+	}
+	
+	public void searchProductID(ActionEvent event) throws IOException, InterruptedException {		//if pressed "Search"
 		
 		if(srchIDfld.getText().trim().isEmpty())  {
 			
@@ -95,7 +103,17 @@ public class MainBoundary extends Application {
 			this.setID(srchIDfld.getText());
 			User chat = new User("localhost", DEFAULT_PORT,this.id,2);
 			chat.accept(); 	 //Wait for console data
-			if(!(chat.getfromSrvr().isEmpty()))
+			ArrayList<String> dets=null;
+			Thread.sleep(2000);
+			dets=chat.getfromSrvr();
+				
+			/*try {
+				//System.out.println("Failed loading array exception");
+				dets=new ArrayList<String>();
+				for(Object obj:chat.getfromSrvr())
+					dets.add((String)obj);*/
+			
+			if(!(dets.isEmpty()))
 					{
 						((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 						
@@ -107,7 +125,7 @@ public class MainBoundary extends Application {
 						ProductFromDBBoundary pdb = (ProductFromDBBoundary)loader.getController();	//get the FXMLLoader controller for use in the pdb (for using it's functions as a controller)
 						
 						pdb.setMainBoundary(this);	//set reference of (this) mainBoundary to the pdb controller
-						pdb.setLabels(chat.getfromSrvr());	//set the labels as returned from the DB
+						pdb.setLabels(dets);	//set the labels as returned from the DB
 						
 						secondaryStage.setTitle("Product Details");
 						secondaryStage.setScene(scene);
@@ -146,8 +164,8 @@ public class MainBoundary extends Application {
 	
 	public void searchProduct(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("SearchProductGUI.fxml").openStream());
+		// FXMLLoader loader = new FXMLLoader();
+		 Parent root = FXMLLoader.load(getClass().getResource("SearchProductGUI.fxml"));
 //		Parent root= FXMLLoader.load(getClass().getResource("SearchProductGUI.fxml"));
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
