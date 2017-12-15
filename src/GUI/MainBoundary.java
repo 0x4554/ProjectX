@@ -101,7 +101,7 @@ public class MainBoundary extends Application {
 			
 		else {
 			this.setID(srchIDfld.getText());
-			User chat = new User("localhost", DEFAULT_PORT,this.id,2);
+			User chat = new User(this.host, DEFAULT_PORT,this.id,2);
 			chat.accept(); 	 //Wait for console data
 			ArrayList<String> dets=null;
 			Thread.sleep(2000);
@@ -187,7 +187,7 @@ public class MainBoundary extends Application {
 	public void getNewData(ActionEvent event) throws IOException {
 		String newData="";
 		newData=newData+idFld.getText()+" "+nmFld.getText()+" "+typFld.getText();
-		User chat = new User("localhost", DEFAULT_PORT,newData,1);
+		User chat = new User(this.host, DEFAULT_PORT,newData,1);
 		chat.accept();
 	}
 	
