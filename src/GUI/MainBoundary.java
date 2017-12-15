@@ -77,8 +77,8 @@ public class MainBoundary extends Application {
 		this.id=s;
 	}
 	
-	public void setHost(String s) {
-		this.host=s;
+	public void setHost(String parameters) {
+		this.host=parameters;
 	}
 
 	
@@ -104,7 +104,7 @@ public class MainBoundary extends Application {
 			User chat = new User("localhost", DEFAULT_PORT,this.id,2);
 			chat.accept(); 	 //Wait for console data
 			ArrayList<String> dets=null;
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 			dets=chat.getfromSrvr();
 				
 			/*try {
@@ -197,6 +197,15 @@ public class MainBoundary extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		
+		 try
+		    {
+			 this.setHost(getParameters().toString());		  
+			 }
+		    catch(ArrayIndexOutOfBoundsException e)
+		    {
+		      this.host = "localhost";
+		    }			
+		
 		Parent root= FXMLLoader.load(getClass().getResource("MenuGUI.fxml"));
 		
 		Scene scene=new Scene(root);
@@ -214,20 +223,7 @@ public class MainBoundary extends Application {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		String host = "";
-	    int port = 0;  //The port number		
-	    
 	    launch(args);
-	    
-	    try
-	    {
-	      host=args[0];
-	    }
-	    catch(ArrayIndexOutOfBoundsException e)
-	    {
-	      host = "localhost";
-	    }			
-		
 	}		
 
 }
