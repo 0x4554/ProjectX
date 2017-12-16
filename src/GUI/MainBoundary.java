@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.mysql.jdbc.Connection;
 
@@ -37,6 +38,7 @@ public class MainBoundary extends Application {
 	
 	private String id="";
 	private String host="";
+	private Parameters params;
 	private ProductFromDBBoundary pdb;
 	private Stage primaryStage;
 
@@ -47,22 +49,10 @@ public class MainBoundary extends Application {
 	@FXML private Label prdLbl;
 	@FXML private Button srchProdBtn;
 	
-/*	
-	@FXML private Button insrtBtn;
-	@FXML private Button mnuFndBtn;
-	@FXML private Label myFlwrLbl;
-	*/
 	
 	@FXML private Button okerrBtn;
 	@FXML private Label errMsgLbl;
 	@FXML private Label errLbl;
-	
-/*	@FXML private Button crtBtn;
-	@FXML private TextField idFld;
-	@FXML private TextField nmFld;
-	@FXML private TextField typFld;	*/
-
-//	@FXML private Button bckMnuBtn;
 	
 	
 	
@@ -70,7 +60,7 @@ public class MainBoundary extends Application {
 	private ProductFromDBBoundary pfdb;
 	
 	public MainBoundary() {
-//		this.cpd=new CreateProductBoundary();
+
 		this.pfdb=new ProductFromDBBoundary();
 	}
 	
@@ -84,11 +74,6 @@ public class MainBoundary extends Application {
 	}
 
 	
-/*	public void backMenu(ActionEvent event) throws IOException{
-		showMainMenu(event);
-	//	this.pfdb.backToMainMenu(event);
-	}	*/
-	
 	public void searchProductID(ActionEvent event) throws IOException, InterruptedException {		//if pressed "Search"
 		
 		if(srchIDfld.getText().trim().isEmpty())  {	//check if the search field is empty
@@ -96,12 +81,7 @@ public class MainBoundary extends Application {
 			GeneralMessageBoundary message = new GeneralMessageBoundary();
 			message.showGeneralMessage("Search field is empty.\nPlease insert ID to search.");		//show a message 
 			
-			/*Stage secondaryStage=new Stage();
-			Parent root= FXMLLoader.load(getClass().getResource("ErrorInputGUI.fxml"));
-			Scene scene=new Scene(root);
-			secondaryStage.setTitle("Error");
-			secondaryStage.setScene(scene);
-			secondaryStage.show();*/
+
 			}
 			
 			
@@ -110,7 +90,7 @@ public class MainBoundary extends Application {
 			User chat = new User(this.host, DEFAULT_PORT,this.id,2);
 			chat.accept(); 	 //Wait for console data
 			ArrayList<String> data=null;
-			Thread.sleep(2000);	//wait for server's message
+			Thread.sleep(3000);			//wait for server's message
 			data=chat.getArrayListfromSrvr();	//get the message returned from the server
 				
 			
@@ -121,20 +101,6 @@ public class MainBoundary extends Application {
 						this.pfdb=new ProductFromDBBoundary();
 						this.pfdb.showProductDetails(data, this);	//send the data and main instance to the product view window
 						
-					/*	Stage secondaryStage=new Stage();
-						FXMLLoader loader = new FXMLLoader();	//create an FXMLLoader
-						Parent root= loader.load(getClass().getResource("ProductFromDBGUI.fxml").openStream());
-						Scene scene=new Scene(root);
-						
-						ProductFromDBBoundary pdb = (ProductFromDBBoundary)loader.getController();	//get the FXMLLoader controller for use in the pdb (for using it's functions as a controller)
-						
-						pdb.setMainBoundary(this);	//set reference of (this) mainBoundary to the pdb controller
-						pdb.setLabels(dets);	//set the labels as returned from the DB
-						
-						secondaryStage.setTitle("Product Details");
-						secondaryStage.setScene(scene);
-						secondaryStage.show();	//show ProductFromDBBoundary
-						*/
 					}
 			else	//if no such ID found show error
 			{
@@ -142,12 +108,6 @@ public class MainBoundary extends Application {
 				GeneralMessageBoundary message = new GeneralMessageBoundary();
 				message.showGeneralMessage("There is no such ID in the DataBase.\nPlease try again.");		//show a message 
 				
-				/*Stage secondaryStage=new Stage();
-				Parent root= FXMLLoader.load(getClass().getResource("ErrorInputGUI.fxml"));
-				Scene scene=new Scene(root);
-				secondaryStage.setTitle("Error");
-				secondaryStage.setScene(scene);
-				secondaryStage.show();*/
 			}
 
 		}
@@ -158,19 +118,6 @@ public class MainBoundary extends Application {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 	}
 	
-
-	
-	
-/*	public void searchAgain(ActionEvent event) throws IOException {		//load window for searching an item in the DB
-		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	      Stage primaryStage=new Stage();
-	      Parent root= FXMLLoader.load(getClass().getResource("SearchProductGUI.fxml"));
-			Scene scene=new Scene(root);
-			
-			primaryStage.setTitle("Product");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-	}	*/
 	
 	
 	public void searchProduct(ActionEvent event) throws IOException {
@@ -192,13 +139,7 @@ public class MainBoundary extends Application {
 		cpd=new CreateProductBoundary(this.host,DEFAULT_PORT,this);
 		cpd.showNewProductGUI();	//call method to show the add new product menu
 	}
-	
-/*	public void getNewData(ActionEvent event) throws IOException {
-		String newData="";
-		newData=newData+idFld.getText()+" "+nmFld.getText()+" "+typFld.getText();
-		User chat = new User(this.host, DEFAULT_PORT,newData,1);
-		chat.accept();
-	}	*/
+
 	
 	public void showMainMenu(ActionEvent event) throws IOException	//show the main menu
 	{
@@ -216,13 +157,13 @@ public class MainBoundary extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		
-//		this.host = "localhost";
+		params=getParameters();
+		List<String> lst=params.getRaw();
 		 try
 		    {
-			 this.setHost(getParameters().toString());		//set the host IP from command prompt input  
+			 this.setHost(lst.get(0));		//set the host IP from command prompt input  
 			 }
-		    catch(ArrayIndexOutOfBoundsException e)
+		    catch(IndexOutOfBoundsException e)
 		    {
 		      this.host = "localhost";						//set the host IP to localhost
 		    }			

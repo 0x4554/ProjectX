@@ -37,11 +37,6 @@ public class ProductFromDBBoundary implements Initializable{
 		this.main=main;
 	}
 	
-	/*public void setData(ArrayList<String>str) {
-		for(String s:str)
-			results.add(s);
-	}*/
-	
 	public void showProductDetails(ArrayList<String> data,MainBoundary main) throws IOException {
 		Stage secondaryStage=new Stage();
 		FXMLLoader loader = new FXMLLoader();	//create an FXMLLoader
@@ -70,18 +65,6 @@ public class ProductFromDBBoundary implements Initializable{
 		this.main.searchProduct(event);		//call method of main boundary for conducting another search
 	}	
 	
-	
-/*	public void backToMainMenu(ActionEvent event) throws IOException {
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		Stage primaryStage=new Stage();
-		Parent root= FXMLLoader.load(getClass().getResource("MenuGUI.fxml"));
-		Scene scene=new Scene(root);
-		
-		primaryStage.setTitle("Search Product");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-*/
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

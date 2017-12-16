@@ -30,10 +30,6 @@ public class User extends AbstractClient {
 		  }
 	
 	//Instance methods ************************************************
-    
-	/*public void setDataFromSever(ArrayList<String> al) {
-		this.fromSrvr=al;
-	}*/
 	
 	  /**
 	   * This method handles all data that comes in from the server.
@@ -46,19 +42,6 @@ public class User extends AbstractClient {
 		this.messageFromServer =msg;	//save the message 
 	}
 	
-/*	@Override
-	  public void handleMessageFromServer(Object msg) 
-	  {
-		this.ArrayListFromSrvr=(ArrayList<String>)msg;
-	  }	*/
-	
-	/*  public  ArrayList<Object> getValuesFromServer(){
-		/*  ArrayList<String> ret=new ArrayList<String>();
-		  for(Object obj:this.fromSrvr)
-			  ret.add((String)obj);		
-		  
-		  return this.fromSrvr;
-	  }			*/
 
 	  /**
 	   * This method handles all data coming from the UI            
@@ -73,8 +56,6 @@ public class User extends AbstractClient {
 	    }
 	    catch(IOException e)
 	    {
-	    /* clientUI.display
-	        ("Could not send message to server.  Terminating client.");			*/
 	      quit();
 	    }
 	  }
