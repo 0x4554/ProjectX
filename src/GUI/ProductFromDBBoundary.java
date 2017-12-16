@@ -42,14 +42,21 @@ public class ProductFromDBBoundary implements Initializable{
 			results.add(s);
 	}*/
 	
-	/*public void showProductDetails() throws IOException {
-		Stage primaryStage=new Stage();
-		Parent root= FXMLLoader.load(getClass().getResource("ProductFromDBGUI.fxml"));
+	public void showProductDetails(ArrayList<String> data,MainBoundary main) throws IOException {
+		Stage secondaryStage=new Stage();
+		FXMLLoader loader = new FXMLLoader();	//create an FXMLLoader
+		Parent root= loader.load(getClass().getResource("ProductFromDBGUI.fxml").openStream());
 		Scene scene=new Scene(root);
-		primaryStage.setTitle("Product Details");
-		primaryStage.setScene(scene);
-		primaryStage.show();	
-	}*/
+		
+		ProductFromDBBoundary pdb = (ProductFromDBBoundary)loader.getController();	//get the FXMLLoader controller for use in the pdb (for using it's functions as a controller)
+		
+		pdb.setMainBoundary(main);	//set reference of (this) mainBoundary to the pdb controller
+		pdb.setLabels(data);	//set the labels as returned from the DB
+		
+		secondaryStage.setTitle("Product Details");
+		secondaryStage.setScene(scene);
+		secondaryStage.show();	//show ProductFromDBBoundary
+	}
 	
 	
 	public void setLabels(ArrayList<String>res)	//set the labels to the details returned from the DB
@@ -60,20 +67,11 @@ public class ProductFromDBBoundary implements Initializable{
 	}
 	
 	public void searchAgain(ActionEvent event) throws IOException {			//in case pressed "back"
-		this.main.searchProduct(event);		//call func of main boundary for conducting another search
-		
-	/*	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		Stage primaryStage=new Stage();
-		Parent root= FXMLLoader.load(getClass().getResource("SeaerchProductGUI.fxml"));
-		Scene scene=new Scene(root);
-		
-		primaryStage.setTitle("Search Product");
-		primaryStage.setScene(scene);
-		primaryStage.show();	*/
+		this.main.searchProduct(event);		//call method of main boundary for conducting another search
 	}	
 	
 	
-	public void backToMainMenu(ActionEvent event) throws IOException {
+/*	public void backToMainMenu(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		Stage primaryStage=new Stage();
 		Parent root= FXMLLoader.load(getClass().getResource("MenuGUI.fxml"));
@@ -83,7 +81,7 @@ public class ProductFromDBBoundary implements Initializable{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-
+*/
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

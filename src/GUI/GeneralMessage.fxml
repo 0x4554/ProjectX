@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="269.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.GeneralMessageBoundary">
+   <children>
+      <AnchorPane layoutX="-118.0" layoutY="-302.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label fx:id="generaMsglLabel" layoutX="60.0" layoutY="118.0" text="Label" />
+      <Button fx:id="generalMsgButton" layoutX="119.0" layoutY="182.0" mnemonicParsing="false" onAction="#hideGeneralMessage" text="exit" />
+   </children>
+</AnchorPane>

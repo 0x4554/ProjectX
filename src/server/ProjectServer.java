@@ -45,9 +45,10 @@ public class ProjectServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void insertProduct(String msg, ConnectionToClient client) throws SQLException
+  public String insertProduct(String msg, ConnectionToClient client) throws SQLException
   {
 	  String [] data= msg.split(" ");
+	  Statement stmt;
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -59,11 +60,22 @@ public class ProjectServer extends AbstractServer
 	    }
 	    System.out.println("Message received: " + msg + " from " + client);
 	    this.sendToAllClients(msg);
-	    PreparedStatement ps = con.prepareStatement("INSERT INTO product (ProductID,ProductName,ProductType) VALUES (?,?,?)");	//prepare a statement
-	    ps.setString(1,data[0]);	//insert parameters into the statement
-	    ps.setString(2, data[1]);
-	    ps.setString(3, data[2]);
-	    ps.executeUpdate();
+	    								//first check if the ID already exists in the DB
+	    stmt = con.createStatement();
+	    ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = " +data[0]);	//prepare a statement
+	    if(!(rs.next()))	//if no such ID exists in the DB, Insert the new data
+	    {
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO product (ProductID,ProductName,ProductType) VALUES (?,?,?)");	//prepare a statement
+		    ps.setString(1,data[0]);	//insert parameters into the statement
+		    ps.setString(2, data[1]);
+		    ps.setString(3, data[2]);
+		    ps.executeUpdate();
+		    
+		    return "Success";
+	    }
+	    
+	    else	//if such Id already exists return failed String
+	    	return "Failed";
 	    
 	  }
   
@@ -95,7 +107,8 @@ public class ProjectServer extends AbstractServer
 	  
 		  
 	  
-	 
+	 if(msg1.isEmpty())
+		 System.out.println("No data found");
 	  for(String s:msg1)
 		System.out.println(s.toString()+" ");
 	  return msg1; 
@@ -125,6 +138,7 @@ public class ProjectServer extends AbstractServer
   @Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
+	  String generalMessage;
 	  String s=(String)msg;
 	  String mess=(String)msg;
 	  mess=mess.substring(mess.indexOf(" "),mess.length());
@@ -134,17 +148,29 @@ public class ProjectServer extends AbstractServer
 		ArrayList<String>retval=new ArrayList<String>();
 		try {
 		System.out.println("<user>"+(String)msg);
-		if(s.equals("find"))
-			retval = this.getProduct(client,mess);
-		if(s.equals("create")) {
+		if(s.equals("find"))	//check if asked to find an existing product
+		{
+			retval = this.getProduct(client,mess);	//get the product's details
+			sendToAllClients(retval);	//send arraylist back to client
+		}
+		if(s.equals("create"))
+		{
 			mess=mess.substring(1,mess.length());
-			this.insertProduct((String)mess, client);
+			if((this.insertProduct((String)mess, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
+			{
+				generalMessage = new String("Product was successfully added to the DataBase");
 			}
+			else
+			{
+				generalMessage = new String("Product was not added to the DataBase.\n(Product ID already exists)");
+			}
+			sendToAllClients(generalMessage);	//send string back to client
+		}
 		}
 		catch(Exception ex) {ex.printStackTrace();}
 		
 	
-		sendToAllClients(retval);
+//		sendToAllClients(retval);
 		
 	}
   

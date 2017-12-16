@@ -15,7 +15,9 @@ public class User extends AbstractClient {
 	
 	private String fromUI;
 	private int operation;
-	private  ArrayList<String> fromSrvr=null;
+	private Object messageFromServer;
+	private  ArrayList<String> ArrayListFromSrvr=null;
+	private String stringFromServer;
 	//ChatIF clientUI; 
 	
 	public User(String host, int port,Object obj,int opr) throws IOException 
@@ -39,10 +41,16 @@ public class User extends AbstractClient {
 	   * @param msg The message from the server.
 	   */
 	@Override
+	public void handleMessageFromServer(Object msg)	//Receive the message sent from the server
+	{
+		this.messageFromServer =msg;	//save the message 
+	}
+	
+/*	@Override
 	  public void handleMessageFromServer(Object msg) 
 	  {
-		this.fromSrvr=(ArrayList<String>)msg;
-	  }
+		this.ArrayListFromSrvr=(ArrayList<String>)msg;
+	  }	*/
 	
 	/*  public  ArrayList<Object> getValuesFromServer(){
 		/*  ArrayList<String> ret=new ArrayList<String>();
@@ -104,14 +112,22 @@ public class User extends AbstractClient {
 	    System.exit(0);
 	  }
 	  
-	  public ArrayList<String> getfromSrvr() throws InterruptedException
+	  public ArrayList<String> getArrayListfromSrvr() throws InterruptedException	//method for when the message returned from the server is an ArrayList
 	  {
 		  ArrayList<String>dtls=new ArrayList<String>();
-		  
-		for(String str:this.fromSrvr) 
+		  this.ArrayListFromSrvr = (ArrayList<String>)this.messageFromServer;
+		for(String str:this.ArrayListFromSrvr) 
 				dtls.add((String)str);
 				
 		return dtls;
+	  }
+	  
+	  public String getStringFromServer()	//method for when the message form the server is a String
+	  {
+		  String retMessage;;
+		  this.stringFromServer = (String)this.messageFromServer;
+		  retMessage = new String(this.stringFromServer);
+		  return retMessage;
 	  }
 
 
