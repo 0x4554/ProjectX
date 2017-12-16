@@ -187,7 +187,6 @@ public class ProjectServer extends AbstractServer
   {
     int port = 0; //Port to listen on
     
-    
     try
     {
       port = Integer.parseInt(args[0]); //Get port from command line
