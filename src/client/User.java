@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import GUI.MainBoundary;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 //import common.*;
@@ -16,6 +18,8 @@ public class User extends AbstractClient {
 	private String fromUI;
 	private int operation;
 	private Object messageFromServer;
+//	private final BooleanProperty newMessageFromServer;
+	private  Boolean confirmationFromServer;
 	private  ArrayList<String> ArrayListFromSrvr=null;
 	private String stringFromServer;
 	//ChatIF clientUI; 
@@ -26,6 +30,8 @@ public class User extends AbstractClient {
 		    fromUI=(String)obj;
 		    operation=opr;
 		//    this.clientUI = clientUI;
+//		    newMessageFromServer = new SimpleBooleanProperty(false);
+		    confirmationFromServer=false;
 		    openConnection();
 		  }
 	
@@ -40,6 +46,8 @@ public class User extends AbstractClient {
 	public void handleMessageFromServer(Object msg)	//Receive the message sent from the server
 	{
 		this.messageFromServer =msg;	//save the message 
+		confirmationFromServer = true;
+//		newMessageFromServer.setValue(true);
 	}
 	
 
@@ -105,11 +113,23 @@ public class User extends AbstractClient {
 	  
 	  public String getStringFromServer()	//method for when the message form the server is a String
 	  {
-		  String retMessage;;
+		  String retMessage;
 		  this.stringFromServer = (String)this.messageFromServer;
 		  retMessage = new String(this.stringFromServer);
 		  return retMessage;
 	  }
+	  
+//	  public BooleanProperty getNewMessageFromServer()
+//	  {
+//		  return newMessageFromServer;
+//	  }
+	  
+	  public Boolean getConfirmationFromServer()
+	  {
+		  return confirmationFromServer;
+	  }
+	  
+	  
 
 
 }	

@@ -4,10 +4,7 @@ package GUI;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import client.User;
 
 import client.User;
 import javafx.event.ActionEvent;
@@ -29,12 +26,10 @@ public class CreateProductBoundary implements Initializable{
 	@FXML private TextField nmFld;
 	@FXML private TextField typFld;
 	
-	private String host ="";
 	private int port;
 	private MainBoundary main;
-	public CreateProductBoundary(String host,int port,MainBoundary main)	
+	public CreateProductBoundary(int port,MainBoundary main)	
 	{
-		this.host=host;
 		this.port=port;
 		this.main = main;
 	}
@@ -52,7 +47,7 @@ public class CreateProductBoundary implements Initializable{
 			Scene scene=new Scene(root);
 			
 			CreateProductBoundary cpb = loader.getController();	//get controller
-			cpb.setConnectionData(this.host,this.port,this.main);	//set the host port and previous window for the controller
+			cpb.setConnectionData(this.port,this.main);	//set the host port and previous window for the controller
 			primaryStage.setTitle("Search for Product");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -64,11 +59,32 @@ public class CreateProductBoundary implements Initializable{
 		{
 			String newData="";
 			newData=newData+idFld.getText()+" "+nmFld.getText()+" "+typFld.getText();	//set the new data as string
-			User chat = new User(this.host, port,newData,1);
+			User chat = new User(MainBoundary.getHost(), port,newData,1);
 			chat.accept();	//send and receive form server
+			while(!chat.getConfirmationFromServer());
+//			chat.getNewMessageFromServer().addListener(new ChangeListener<Object>() {
+//
+//				@Override
+//				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+//					// TODO Auto-generated method stub
+//					String data=null;
+//					data=chat.getStringFromServer();		//get the message returned from the DB via the server
+//					GeneralMessageBoundary message = new GeneralMessageBoundary();
+//					try {
+//						message.showGeneralMessage(data);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}		//show a message if succeeded or failed
+//					
+//
+//					
+//				}
+//				
+//			});
 			
 			String data=null;
-			Thread.sleep(2000);
+//			Thread.sleep(4000);
 			data=chat.getStringFromServer();		//get the message returned from the DB via the server
 			GeneralMessageBoundary message = new GeneralMessageBoundary();
 			message.showGeneralMessage(data);		//show a message if succeeded or failed
@@ -81,19 +97,12 @@ public class CreateProductBoundary implements Initializable{
 		{
 			GeneralMessageBoundary message = new GeneralMessageBoundary();
 			message.showGeneralMessage("One or more of the fields are missing.\nPlease fill all fields.");		//show a message 
-			/*
-			Stage secondaryStage=new Stage();
-			Parent root= FXMLLoader.load(getClass().getResource("ErrorInputGUI.fxml"));
-			Scene scene=new Scene(root);
-			secondaryStage.setTitle("Error");
-			secondaryStage.setScene(scene);
-			secondaryStage.show();	*/
+			
 		}
 	}
 	
-	public void setConnectionData(String host,int port,MainBoundary main)	//set the host port and the previous window for the controller
+	public void setConnectionData(int port,MainBoundary main)	//set the host port and the previous window for the controller
 	{
-		this.host=host;
 		this.port=port;
 		this.main = main;
 	}

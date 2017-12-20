@@ -4,6 +4,8 @@
 package server;
 
 import java.io.*;
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -33,9 +35,10 @@ public class ProjectServer extends AbstractServer
   }
   
   //method for connecting to DB
-  protected static  Connection connectToDB() throws SQLException
+  protected static  Connection connectToDB() throws SQLException, ClassNotFoundException
   {
- 	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","projectx");	//connect to the sql database
+	// Class.forName("com.mysql.jdbc.Driver");
+ 	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","Braude");	//connect to the sql database
   }
 
   
@@ -45,7 +48,7 @@ public class ProjectServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public String insertProduct(String msg, ConnectionToClient client) throws SQLException
+  public String insertProduct(String msg, ConnectionToClient client) throws SQLException, ClassNotFoundException
   {
 	  String [] data= msg.split(" ");
 	  Statement stmt;
@@ -59,7 +62,6 @@ public class ProjectServer extends AbstractServer
 	      System.out.println("SQLException: " + e.getMessage() );
 	    }
 	    System.out.println("Message received: " + msg + " from " + client);
-	    this.sendToAllClients(msg);
 	    								//first check if the ID already exists in the DB
 	    stmt = con.createStatement();
 	    ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = " +data[0]);	//prepare a statement
@@ -79,7 +81,7 @@ public class ProjectServer extends AbstractServer
 	    
 	  }
   
-  public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException, InterruptedException
+  public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException, InterruptedException, ClassNotFoundException
   {
 	  ArrayList<String> msg1 = new ArrayList<String>();
 	  Statement stmt;
