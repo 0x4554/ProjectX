@@ -62,7 +62,7 @@ public class CreateProductBoundary implements Initializable{
 			User chat = new User(MainBoundary.getHost(), port,newData,1);
 			chat.accept();	//send and receive form server
 			while(!chat.getConfirmationFromServer());
-//			chat.getNewMessageFromServer().addListener(new ChangeListener<Object>() {
+///			chat.getNewMessageFromServer().addListener(new ChangeListener<Object>() {
 //
 //				@Override
 //				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
