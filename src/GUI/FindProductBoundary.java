@@ -17,7 +17,7 @@ public class FindProductBoundary implements Initializable{
 	@FXML private Button srchProdBtn;
 	@FXML private TextField srchIDfld;
 	@FXML private Button bckMnuBtn;
-	
+	//
 	private int port;
 	private MainBoundary main;
 	

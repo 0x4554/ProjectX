@@ -35,7 +35,7 @@ public class User extends AbstractClient {
 		    openConnection();
 		  }
 	
-	//Instance methods ************************************************
+	///Instance methods ************************************************
 	
 	  /**
 	   * This method handles all data that comes in from the server.

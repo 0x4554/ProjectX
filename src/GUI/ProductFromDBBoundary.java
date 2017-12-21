@@ -22,7 +22,7 @@ public class ProductFromDBBoundary implements Initializable{
 	@FXML private Label rsltNmLbl;
 	@FXML private Label rsltTpLbl;
 	@FXML private Button srchagnBtn;
-	
+	//
 	private MainBoundary main;
 
 	public void setMainBoundary(MainBoundary main)	//set the main boundary to this controller (used for returning to the previous menu)

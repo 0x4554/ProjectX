@@ -27,7 +27,7 @@ public class ProjectServer extends AbstractServer
   final public static int DEFAULT_PORT = 5555;
   
   
-  // * Constructs an instance of the echo server.
+  /// * Constructs an instance of the echo server.
   
   public ProjectServer(int port) 
   {

@@ -35,7 +35,7 @@ public class MainBoundary extends Application {
 	@FXML private Label errMsgLbl;
 	@FXML private Label errLbl;
 	
-	
+//	
 	private static String host;
 	private CreateProductBoundary cpd;
 	

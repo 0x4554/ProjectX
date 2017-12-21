@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 public class GeneralMessageBoundary implements Initializable {
 
-	//general message
+	///general message
 	@FXML private Label generaMsglLabel;
 	@FXML private Button generalMsgButton;
 		
