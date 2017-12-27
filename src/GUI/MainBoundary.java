@@ -59,7 +59,7 @@ public class MainBoundary extends Application {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("SearchProductGUI.fxml").openStream());
-		 FindProductBoundary fnd = loader.getController();
+		 FindProductBoundary fnd = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		 fnd.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
@@ -95,7 +95,7 @@ public class MainBoundary extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		params=getParameters();
+		params=getParameters();				//collect parameters from cmd prompt - host
 		List<String> lst=params.getRaw();
 		 try
 		    {

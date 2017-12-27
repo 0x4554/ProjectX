@@ -46,10 +46,11 @@ public void searchProductID(ActionEvent event) throws IOException, InterruptedEx
 			
 		else {
 			this.setID(srchIDfld.getText());	//collect the ID entered
-			User chat = new User(MainBoundary.getHost(), this.port,this.id,2);
+			User chat = new User(MainBoundary.getHost(), this.port,this.id,2);		//last parameter (2) is for telling if we inserting product or searching product (1-insert ; 2-search)
 			chat.accept(); 	 //Wait for console data
 			ArrayList<String> data=null;
-			Thread.sleep(3000);			//wait for server's message
+			while(!chat.getConfirmationFromServer())
+				Thread.sleep(100);			//wait for server's message
 			data=chat.getArrayListfromSrvr();	//get the message returned from the server
 				
 			
