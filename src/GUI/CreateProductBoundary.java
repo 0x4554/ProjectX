@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import client.User;
+import client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,7 +59,7 @@ public class CreateProductBoundary implements Initializable{
 		{
 			String newData="";
 			newData=newData+idFld.getText()+" "+nmFld.getText()+" "+typFld.getText();	//set the new data as string
-			User chat = new User(MainBoundary.getHost(), port,newData,1);
+			Client chat = new Client(MainBoundary.getHost(), port,newData,2);
 			chat.accept();	//send and receive form server
 			while(!chat.getConfirmationFromServer())
 				Thread.sleep(100);

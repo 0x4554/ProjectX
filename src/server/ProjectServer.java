@@ -40,10 +40,80 @@ public class ProjectServer extends AbstractServer
 	// Class.forName("com.mysql.jdbc.Driver");
  	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","Braude");	//connect to the sql database
   }
+  
+  /** This method handles any login attempt messages received from the client.
+  *
+  * @param msg The message received from the client.
+  * @param client The connection from which the message originated.
+ * @throws ClassNotFoundException 
+ * @throws SQLException 
+  */
+	public ArrayList<String> login(ConnectionToClient client, String loginInfo)
+			throws ClassNotFoundException, SQLException {
+		ArrayList<String> returnMessage = new ArrayList<String>();
+		String[] data = loginInfo.split("~");
+		int attempts;
+		Statement stmt;
+		try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+		stmt = con.createStatement();
 
+		ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE Username = " + data[0]); //query to check if such a user exists
+		if (!(rs.next())) //if user does not exists
+		{
+			returnMessage.add("failed"); //state failed to log in
+			returnMessage.add("user does not exists"); //reason for failure
+			return returnMessage;
+		} else //if user name was found
+		{
+			if (data[1].equals(rs.getString(2))) //if password received matches the data base 
+			{
+				if (rs.getInt(4) == 3)
+				{ //if user is already blocked from too many login attempts
+					returnMessage.add("failed"); //state failed to log in
+					returnMessage.add("user is blocked"); //reason for failure
+					return returnMessage;
+				} else
+				{
+					returnMessage.add("success"); //state succeeded to login
+					returnMessage.add(rs.getString(3)); //add the type of user (customer,worker...)
+					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0 WHERE Username = ?"); //prepare a statement
+					ps.setString(1, data[0]); //reset the user's login attempts to 0
+					return returnMessage;
+				}
+			} else if (!(data[1].equals(rs.getString(2)))) //if password received does not match the data base 
+			{
+				if (rs.getInt(4) == 3)
+				{ //if user is already blocked from too many login attempts
+					returnMessage.add("failed"); //state failed to log in
+					returnMessage.add("user is blocked"); //reason for failure
+					return returnMessage;
+				} else
+				{
+					returnMessage.add("failed"); //state failed to log in
+					returnMessage.add("password does not match"); //reason for failure
+					attempts = rs.getInt(4) + 1; //increment number of attempts made
+					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
+					ps.setString(2, data[0]);
+					ps.setInt(1, attempts); //update the number of attempts made to log in 
+					returnMessage.add(Integer.toString(attempts)); //add the number of attempts left
+					return returnMessage;
+				}
+			}
+		}
+		return returnMessage;
+
+	}
   
   
-   /* This method handles any messages received from the client.
+   /** This method handles any product creation messages received from the client.
    *
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
@@ -81,6 +151,12 @@ public class ProjectServer extends AbstractServer
 	    
 	  }
   
+  
+  /** This method handles product search messages received from the client.
+  *
+  * @param msg The message received from the client.
+  * @param client The connection from which the message originated.
+  */
   public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException, InterruptedException, ClassNotFoundException
   {
 	  ArrayList<String> msg1 = new ArrayList<String>();
@@ -143,13 +219,18 @@ public class ProjectServer extends AbstractServer
 	  String generalMessage;
 	  String s=(String)msg;
 	  String mess=(String)msg;
-	  mess=mess.substring(mess.indexOf(" "),mess.length());
+	  mess=mess.substring(mess.indexOf(" ")+1,mess.length());
 	  
 	  	s=s.substring(0,s.indexOf(" "));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		try {
 		System.out.println("<user>"+(String)msg);
+		if(s.equals("login"))
+		{
+			retval = this.login(client,mess);
+			sendToAllClients(retval);	//send arraylist back to client
+		}
 		if(s.equals("find"))	//check if asked to find an existing product
 		{
 			retval = this.getProduct(client,mess);	//get the product's details

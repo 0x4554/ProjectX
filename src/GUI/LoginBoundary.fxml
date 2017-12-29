@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="454.0" prefWidth="374.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.LoginBoundary">
+   <children>
+      <AnchorPane layoutX="-134.0" layoutY="-180.0" prefHeight="200.0" prefWidth="200.0" />
+      <Label layoutX="14.0" layoutY="42.0" prefHeight="21.0" prefWidth="78.0" text="UserName" />
+      <Label layoutX="17.0" layoutY="102.0" prefHeight="21.0" prefWidth="72.0" text="Password" />
+      <Label layoutX="24.0" layoutY="210.0" text="Server IP" />
+      <TextField id="usrNmTxtFld" fx:id="usrNmTxtFld" layoutX="100.0" layoutY="37.0" />
+      <TextField id="psswrdTxtFld" fx:id="psswrdTxtFld" layoutX="100.0" layoutY="97.0" />
+      <TextField id="srvrIPTxtFld" fx:id="srvrIPTxtFld" layoutX="100.0" layoutY="205.0" />
+      <Button id="lgnBtn" fx:id="lgnBtn" layoutX="159.0" layoutY="256.0" mnemonicParsing="false" text="Login" />
+      <Button id="CrtNwAccntBtn" fx:id="crtNwAccntBtn" layoutX="187.0" layoutY="382.0" mnemonicParsing="false" text="Create a new account" />
+      <Label layoutX="5.0" layoutY="387.0" text="Don't have an account?" />
+   </children>
+</AnchorPane>
