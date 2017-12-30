@@ -12,7 +12,7 @@
       <Label layoutX="17.0" layoutY="102.0" prefHeight="21.0" prefWidth="72.0" text="Password" />
       <Label layoutX="24.0" layoutY="210.0" text="Server IP" />
       <TextField id="usrNmTxtFld" fx:id="usrNmTxtFld" layoutX="100.0" layoutY="37.0" />
-      <TextField id="psswrdTxtFld" fx:id="psswrdTxtFld" layoutX="100.0" layoutY="97.0" />
+      <PasswordField id="psswrdTxtFld" fx:id="psswrdTxtFld" layoutX="100.0" layoutY="97.0" />
       <TextField id="srvrIPTxtFld" fx:id="srvrIPTxtFld" layoutX="100.0" layoutY="205.0" />
       <Button id="lgnBtn" fx:id="lgnBtn" layoutX="159.0" layoutY="256.0" mnemonicParsing="false" onAction="#pressedLogin" text="Login" />
       <Button id="CrtNwAccntBtn" fx:id="crtNwAccntBtn" layoutX="187.0" layoutY="382.0" mnemonicParsing="false" text="Create a new account" />

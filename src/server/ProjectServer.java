@@ -65,44 +65,57 @@ public class ProjectServer extends AbstractServer
 		}
 		stmt = con.createStatement();
 
-		ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE Username = " + data[0]); //query to check if such a user exists
+		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.users WHERE Username = '" + data[0] + "'"); //query to check if such a user exists
 		if (!(rs.next())) //if user does not exists
 		{
+			//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 			returnMessage.add("failed"); //state failed to log in
 			returnMessage.add("user does not exists"); //reason for failure
 			return returnMessage;
 		} else //if user name was found
 		{
-			if (data[1].equals(rs.getString(2))) //if password received matches the data base 
+			if (rs.getBoolean(5) == true)	//if the user is already logged in to the system
+			{
+				//failed - ArrayList<String> to return in form of ["failed",reason of failure]
+				returnMessage.add("failed"); //state failed to log in
+				returnMessage.add("user is already logged in"); //reason for failure
+				return returnMessage;
+			} else if (data[1].equals(rs.getString(2))) //if password received matches the data base 
 			{
 				if (rs.getInt(4) == 3)
 				{ //if user is already blocked from too many login attempts
+					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 					returnMessage.add("failed"); //state failed to log in
 					returnMessage.add("user is blocked"); //reason for failure
 					return returnMessage;
 				} else
 				{
+					//success - ArrayList<String> to return in form of ["success",user's type]
 					returnMessage.add("success"); //state succeeded to login
 					returnMessage.add(rs.getString(3)); //add the type of user (customer,worker...)
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0 WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0 ,LoggedIn = 1 WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
+					ps.executeUpdate();
 					return returnMessage;
 				}
 			} else if (!(data[1].equals(rs.getString(2)))) //if password received does not match the data base 
 			{
 				if (rs.getInt(4) == 3)
 				{ //if user is already blocked from too many login attempts
+					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 					returnMessage.add("failed"); //state failed to log in
 					returnMessage.add("user is blocked"); //reason for failure
 					return returnMessage;
 				} else
 				{
+					//failed - ArrayList<String> to return in form of ["failed",reason of failure,number of attempts made]
 					returnMessage.add("failed"); //state failed to log in
 					returnMessage.add("password does not match"); //reason for failure
 					attempts = rs.getInt(4) + 1; //increment number of attempts made
 					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
 					ps.setString(2, data[0]);
 					ps.setInt(1, attempts); //update the number of attempts made to log in 
+					ps.executeUpdate();
 					returnMessage.add(Integer.toString(attempts)); //add the number of attempts left
 					return returnMessage;
 				}
@@ -134,7 +147,7 @@ public class ProjectServer extends AbstractServer
 	    System.out.println("Message received: " + msg + " from " + client);
 	    								//first check if the ID already exists in the DB
 	    stmt = con.createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = " +data[0]);	//prepare a statement
+	    ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = '" +data[0]+"'");	//prepare a statement
 	    if(!(rs.next()))	//if no such ID exists in the DB, Insert the new data
 	    {
 		    PreparedStatement ps = con.prepareStatement("INSERT INTO product (ProductID,ProductName,ProductType) VALUES (?,?,?)");	//prepare a statement

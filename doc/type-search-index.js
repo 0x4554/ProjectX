@@ -1,1 +1,1 @@
-typeSearchIndex = [{"p":"logic","l":"MainLaunch"}]
+typeSearchIndex = [{"p":"GUI","l":"LoginController"}]
