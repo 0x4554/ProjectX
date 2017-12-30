@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class ProductFromDBBoundary implements Initializable{
+public class ProductFromDBController implements Initializable{
 	
 	@FXML private Label rsltIDLbl;
 	@FXML private Label rsltNmLbl;
@@ -36,7 +36,7 @@ public class ProductFromDBBoundary implements Initializable{
 		Parent root= loader.load(getClass().getResource("ProductFromDBGUI.fxml").openStream());
 		Scene scene=new Scene(root);
 		
-		ProductFromDBBoundary pdb = (ProductFromDBBoundary)loader.getController();	//get the FXMLLoader controller for use in the pdb (for using it's functions as a controller)
+		ProductFromDBController pdb = (ProductFromDBController)loader.getController();	//get the FXMLLoader controller for use in the pdb (for using it's functions as a controller)
 		
 		pdb.setMainBoundary(main);	//set reference of (this) mainBoundary to the pdb controller
 		pdb.setLabels(data);	//set the labels as returned from the DB

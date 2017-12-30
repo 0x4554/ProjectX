@@ -18,7 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class CreateProductBoundary implements Initializable{
+public class CreateProductController implements Initializable{
 	
 	@FXML private Button bckBtn;
 	@FXML private Button crtBtn;
@@ -28,13 +28,13 @@ public class CreateProductBoundary implements Initializable{
 	
 	private int port;
 	private MainBoundary main;
-	public CreateProductBoundary(int port,MainBoundary main)	
+	public CreateProductController(int port,MainBoundary main)	
 	{
 		this.port=port;
 		this.main = main;
 	}
 	
-	public CreateProductBoundary()	//necessary empty constructor
+	public CreateProductController()	//necessary empty constructor
 	{
 		
 	}
@@ -46,7 +46,7 @@ public class CreateProductBoundary implements Initializable{
 			Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
-			CreateProductBoundary cpb = loader.getController();	//get controller
+			CreateProductController cpb = loader.getController();	//get controller
 			cpb.setConnectionData(this.port,this.main);	//set the host port and previous window for the controller
 			primaryStage.setTitle("Search for Product");
 			primaryStage.setScene(scene);
@@ -87,7 +87,7 @@ public class CreateProductBoundary implements Initializable{
 			String data=null;
 //			Thread.sleep(4000);
 			data=chat.getStringFromServer();		//get the message returned from the DB via the server
-			GeneralMessageBoundary message = new GeneralMessageBoundary();
+			GeneralMessageController message = new GeneralMessageController();
 			message.showGeneralMessage(data);		//show a message if succeeded or failed
 			
 			this.idFld.clear();	//clear all text fields after insert
@@ -96,7 +96,7 @@ public class CreateProductBoundary implements Initializable{
 		}
 		else	//if a field is empty show error msg
 		{
-			GeneralMessageBoundary message = new GeneralMessageBoundary();
+			GeneralMessageController message = new GeneralMessageController();
 			message.showGeneralMessage("One or more of the fields are missing.\nPlease fill all fields.");		//show a message 
 			
 		}

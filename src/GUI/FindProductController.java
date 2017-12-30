@@ -13,7 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class FindProductBoundary implements Initializable{
+public class FindProductController implements Initializable{
 	@FXML private Button srchProdBtn;
 	@FXML private TextField srchIDfld;
 	@FXML private Button bckMnuBtn;
@@ -22,7 +22,7 @@ public class FindProductBoundary implements Initializable{
 	private MainBoundary main;
 	
 	private String id="";
-	private ProductFromDBBoundary pfdb;
+	private ProductFromDBController pfdb;
 	
 	public void setConnectionData(int port,MainBoundary main)	//set the host port and the previous window for the controller
 	{
@@ -37,7 +37,7 @@ public void searchProductID(ActionEvent event) throws IOException, InterruptedEx
 		
 		if(srchIDfld.getText().trim().isEmpty())  {	//check if the search field is empty
 			
-			GeneralMessageBoundary message = new GeneralMessageBoundary();
+			GeneralMessageController message = new GeneralMessageController();
 			message.showGeneralMessage("Search field is empty.\nPlease insert ID to search.");		//show a message 
 			
 
@@ -58,14 +58,14 @@ public void searchProductID(ActionEvent event) throws IOException, InterruptedEx
 					{
 						((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 						
-						this.pfdb=new ProductFromDBBoundary();
+						this.pfdb=new ProductFromDBController();
 						this.pfdb.showProductDetails(data, this.main);	//send the data and main instance to the product view window
 						
 					}
 			else	//if no such ID found show error
 			{
 				
-				GeneralMessageBoundary message = new GeneralMessageBoundary();
+				GeneralMessageController message = new GeneralMessageController();
 				message.showGeneralMessage("There is no such ID in the DataBase.\nPlease try again.");		//show a message 
 				
 			}

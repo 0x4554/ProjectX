@@ -15,7 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class GeneralMessageBoundary implements Initializable {
+public class GeneralMessageController implements Initializable {
 
 	///general message
 	@FXML private Label generaMsglLabel;
@@ -27,7 +27,7 @@ public class GeneralMessageBoundary implements Initializable {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/GUI/GeneralMessage.fxml").openStream());	//load the general message page
 		Scene scene = new Scene(root);
-		GeneralMessageBoundary gmb = loader.getController();
+		GeneralMessageController gmb = loader.getController();
 		gmb.setLabel(msg);	//set the label for specific message
 		
 		secondaryStage.setTitle("Message");

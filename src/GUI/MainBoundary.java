@@ -37,7 +37,7 @@ public class MainBoundary extends Application {
 	
 //	
 	private static String host;
-	private CreateProductBoundary cpd;
+	private CreateProductController cpd;
 	
 	public void setHost(String parameters) {	//set the host's IP to static String
 		MainBoundary.host=parameters;
@@ -59,7 +59,7 @@ public class MainBoundary extends Application {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("SearchProductGUI.fxml").openStream());
-		 FindProductBoundary fnd = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		 FindProductController fnd = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		 fnd.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
@@ -74,7 +74,7 @@ public class MainBoundary extends Application {
 	public void showNewProductGUI(ActionEvent event) throws IOException {	//when click the add new product in main menu
 		
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		cpd=new CreateProductBoundary(DEFAULT_PORT,this);
+		cpd=new CreateProductController(DEFAULT_PORT,this);
 		cpd.showNewProductGUI();	//call method to show the add new product menu
 	}
 

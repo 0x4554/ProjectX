@@ -175,7 +175,7 @@ public class LoginController implements Initializable {
 	 */
 	private void showMessage(String message) throws IOException
 	{
-		GeneralMessageBoundary msg = new GeneralMessageBoundary();
+		GeneralMessageController msg = new GeneralMessageController();
 		msg.showGeneralMessage(message);
 	}
 	
