@@ -25,11 +25,18 @@ import javafx.stage.Stage;
 public class MainLaunch extends Application {
 
 	private Stage primaryStage;
-
+	/**
+	 * The main method for the application.
+	 * Calls the launch() to start the application
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
-
+	
+	/**
+	 * This method loads the first window in the application, the login window
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
