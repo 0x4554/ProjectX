@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import logic.ConnectedClients;
 
 /**
  * This class uses as the controller to the log in menu and the log in process
@@ -41,6 +42,7 @@ public class LoginController implements Initializable {
 	private Button crtNwAccntBtn;
 	
 	public static String hostIP;
+	private Client clnt;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -59,6 +61,7 @@ public class LoginController implements Initializable {
 		return LoginController.hostIP;
 	}
 	
+		
 	/**
 	 * This method handles the logging in processes
 	 * starts when the user presses the log in button
@@ -87,14 +90,20 @@ public class LoginController implements Initializable {
 			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();	//set the new data as string
 			try {
 			ArrayList<String> dataFromServer = null;
-			Client chat = new Client(LoginController.getHost(), DEFAULT_PORT, username_password, 1);	//attempt to create a connection from client to server
-			chat.accept();	//sends to server
-			while(!chat.getConfirmationFromServer())	//wait until server replies
+			this.clnt = new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText());	//attempt to create a connection from client to server
+			this.clnt.setDataFromUI(username_password, 1);	//set the data and the operation to send from the client to the server
+			this.clnt.accept();	//sends to server
+			while(!this.clnt.getConfirmationFromServer())	//wait until server replies
 				Thread.sleep(100);
-			dataFromServer = chat.getArrayListfromSrvr();	//get the returned ArrayList from the server
+			dataFromServer = this.clnt.getArrayListfromSrvr();	//get the returned ArrayList from the server
 			if(dataFromServer.get(0).equals("success"))//if login info matches the data base
 			{	
+//				try
+//				{
 				toUserMenu(Integer.parseInt(dataFromServer.get(1)));	//call method to sort the user's type
+//				}finally {	//finally close connection to the server from the client
+//					chat.quit();	//close connection
+//				}
 			}
 			else	//check for reason of failure
 			{
@@ -168,6 +177,15 @@ public class LoginController implements Initializable {
 		}
 	}
 	
+	/**
+	 * This method handling the signaling of a closing connection from the client to the server
+	 */
+	public void signalAppClose()
+	{
+		this.clnt.setDataFromUI(this.clnt.getUsername(), -1);
+		this.clnt.accept();
+		this.clnt.quit();
+	}
 	/**
 	 * This method creates a general message to display to the UI
 	 * @param message the message to be displayed to the UI

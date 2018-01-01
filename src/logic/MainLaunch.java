@@ -1,6 +1,6 @@
 package logic;
 
-import GUI.LoginController;
+import gui.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 public class MainLaunch extends Application {
 
 	private Stage primaryStage;
+	private LoginController login;
 	/**
 	 * The main method for the application.
 	 * Calls the launch() to start the application
@@ -44,7 +45,7 @@ public class MainLaunch extends Application {
 		this.primaryStage = primaryStage;	//get the primary Stage
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/GUI/LoginGUI.fxml").openStream());	//load the login window
-//		LoginBoundary login = loader.getController();
+		this.login = loader.getController();
 
 		Scene scene = new Scene(root);
 
@@ -52,5 +53,11 @@ public class MainLaunch extends Application {
 		this.primaryStage.setScene(scene);
 		this.primaryStage.show();
 
+	}
+	
+	@Override
+	public void stop() throws Exception
+	{
+		this.login.signalAppClose();
 	}
 }
