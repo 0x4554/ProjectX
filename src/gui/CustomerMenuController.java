@@ -35,15 +35,27 @@ public class CustomerMenuController {
 	@FXML private Button complBtn;
 	@FXML private Button backBtn;
 	
-	
+	public CustomerMenuController(int port,Client clnt)
+	{
+		this.port=port;
+		this.clnt=clnt;
+	}
 	public void setConnectionData(int port,Client clnt)
 	{
 		this.port=port;
 		this.clnt=clnt;
 	}
-	public void showCustomerMenu()
+	public void showCustomerMenu() throws IOException
 	{
-		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("CustomerMenuController.fxml").openStream());
+		 CustomerMenuController Cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		 Cmc.setConnectionData(DEFAULT_PORT,this.clnt);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Customer's main menu");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
