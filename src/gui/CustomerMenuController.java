@@ -1,5 +1,7 @@
 package gui;
 import java.io.IOException;
+
+import client.Client;
 import javafx.application.Application.Parameters;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +23,9 @@ public class CustomerMenuController {
 	private Parameters params;
 	private Stage primaryStage;
 	
+	private int port;
+	private Client clnt;
+	
 	//*buttons of the customer menu*//
 	@FXML private Label mmlbl;
 	@FXML private Button ordBtn;
@@ -31,6 +36,14 @@ public class CustomerMenuController {
 	@FXML private Button backBtn;
 	
 	
+	public void setConnectionData(int port,Client clnt)
+	{
+		
+	}
+	public void showCustomerMenu()
+	{
+		
+	}
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window

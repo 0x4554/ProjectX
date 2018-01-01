@@ -8,10 +8,15 @@ import java.util.ResourceBundle;
 import client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import logic.ConnectedClients;
 
 /**
@@ -100,6 +105,7 @@ public class LoginController implements Initializable {
 			{	
 //				try
 //				{
+				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 				toUserMenu(Integer.parseInt(dataFromServer.get(1)));	//call method to sort the user's type
 //				}finally {	//finally close connection to the server from the client
 //					chat.quit();	//close connection
@@ -152,7 +158,16 @@ public class LoginController implements Initializable {
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
+			FXMLLoader loader = new FXMLLoader();
+			 Parent root = loader.load(getClass().getResource("CustomerMenuController.fxml").openStream());
+		//	 CustomerMenuController fnd = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		//	 fnd.setConnectionData(DEFAULT_PORT, this);
+			Stage primaryStage=new Stage();
+			Scene scene=new Scene(root);
 			
+			primaryStage.setTitle("Customer's main menu");
+			primaryStage.setScene(scene);
+			primaryStage.show();
 			break;
 		case 3:	//store worker
 			showMessage("Logged in as a store worker");
