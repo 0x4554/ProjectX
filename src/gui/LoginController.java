@@ -158,10 +158,12 @@ public class LoginController implements Initializable {
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
+			CustomerMenuController Cmc = new CustomerMenuController();
+			Cmc.setConnectionData(DEFAULT_PORT,this.clnt);
 			FXMLLoader loader = new FXMLLoader();
 			 Parent root = loader.load(getClass().getResource("CustomerMenuController.fxml").openStream());
 			 CustomerMenuController Cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-			 Cmc.setConnectionData(DEFAULT_PORT, this,this.clnt);
+			 Cmc.setConnectionData(DEFAULT_PORT,this.clnt);
 			Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			primaryStage.setTitle("Customer's main menu");

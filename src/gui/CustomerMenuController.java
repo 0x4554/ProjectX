@@ -38,7 +38,8 @@ public class CustomerMenuController {
 	
 	public void setConnectionData(int port,Client clnt)
 	{
-		
+		this.port=port;
+		this.clnt=clnt;
 	}
 	public void showCustomerMenu()
 	{
