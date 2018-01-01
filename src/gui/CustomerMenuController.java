@@ -48,7 +48,7 @@ public class CustomerMenuController {
 	public void showCustomerMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("CustomerMenuController.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("CustomerMenu.fxml").openStream());
 		 CustomerMenuController Cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		 Cmc.setConnectionData(DEFAULT_PORT,this.clnt);
 		Stage primaryStage=new Stage();
