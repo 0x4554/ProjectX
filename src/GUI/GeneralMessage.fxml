@@ -8,6 +8,6 @@
    <children>
       <AnchorPane layoutX="-118.0" layoutY="-302.0" prefHeight="200.0" prefWidth="200.0" />
       <Label fx:id="generaMsglLabel" layoutX="56.0" layoutY="43.0" text="Label" />
-      <Button fx:id="generalMsgButton" layoutX="117.0" layoutY="121.0" mnemonicParsing="false" onAction="#hideGeneralMessage" text="exit" />
+      <Button fx:id="generalMsgButton" layoutX="116.0" layoutY="121.0" mnemonicParsing="false" onAction="#hideGeneralMessage" text="exit" />
    </children>
 </AnchorPane>
