@@ -25,7 +25,7 @@ public class GeneralMessageController implements Initializable {
 	{
 		Stage secondaryStage = new Stage();
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/GUI/GeneralMessage.fxml").openStream());	//load the general message page
+		Parent root = loader.load(getClass().getResource("/gui/GeneralMessage.fxml").openStream());	//load the general message page
 		Scene scene = new Scene(root);
 		GeneralMessageController gmb = loader.getController();
 		gmb.setLabel(msg);	//set the label for specific message

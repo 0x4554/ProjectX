@@ -55,10 +55,14 @@ public class CustomerMenuController implements Initializable{
 		
 	}
 	
+	
 	public void setConnectionData(Client clnt)
 	{
 		this.clnt=clnt;
 	}
+	
+	
+	
 	public void showCustomerMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
@@ -72,6 +76,9 @@ public class CustomerMenuController implements Initializable{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
+	
+	
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -132,13 +139,34 @@ public class CustomerMenuController implements Initializable{
 					primaryStage.show();
 				}			
 		
-		/*jhkjjh*/
+				/**
+				 * this method sends you back to the previous window
+				 * 
+				 * 
+				 * @param event
+				 * @throws IOException
+				 */
 				public void backToMainMenu(ActionEvent event) throws IOException	//when click "Back" return to main menu
 				{
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					//this.main.showMainMenu(event);
+					///////////////********To Implement*********///////////////
+				}
+				
+				
+				public void startComplaint(ActionEvent event) throws IOException {
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					 FXMLLoader loader = new FXMLLoader();
+					 Parent root = loader.load(getClass().getResource(".fxml").openStream());
+					 UpdateAccountController upac= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+				//	 ord.setConnectionData(DEFAULT_PORT, this);
+					Stage primaryStage=new Stage();
+					Scene scene=new Scene(root);
+					primaryStage.setTitle("Complaint");
+					primaryStage.setScene(scene);
+					primaryStage.show();
 				}
 
+				
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
 			// TODO Auto-generated method stub
