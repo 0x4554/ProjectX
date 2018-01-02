@@ -1,5 +1,6 @@
 package logic;
 
+import client.Client;
 import gui.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -46,7 +47,7 @@ public class MainLaunch extends Application {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/LoginGUI.fxml").openStream());	//load the login window
 		this.login = loader.getController();
-
+		
 		Scene scene = new Scene(root);
 
 		this.primaryStage.setTitle("Login");	/**set the title**/

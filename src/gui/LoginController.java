@@ -66,8 +66,7 @@ public class LoginController implements Initializable {
 	{
 		return LoginController.hostIP;
 	}
-	
-		
+			
 	/**
 	 * This method handles the logging in processes
 	 * starts when the user presses the log in button
@@ -197,9 +196,11 @@ public class LoginController implements Initializable {
 	 */
 	public void signalAppClose()
 	{
+		if(this.clnt!=null) {
 		this.clnt.setDataFromUI(this.clnt.getUsername(), -1);
 		this.clnt.accept();
 		this.clnt.quit();
+		}
 	}
 	/**
 	 * This method creates a general message to display to the UI
