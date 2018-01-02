@@ -48,6 +48,7 @@ public class LoginController implements Initializable {
 	
 	public static String hostIP;
 	private Client clnt;
+	private CustomerMenuController Cmc;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -93,9 +94,14 @@ public class LoginController implements Initializable {
 		{
 			String username_password = "";
 			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();	//set the new data as string
-			try {
+		//	try {
 			ArrayList<String> dataFromServer = null;
+			try
+			{
 			this.clnt = new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText());	//attempt to create a connection from client to server
+			}catch(IOException e){	//if there were a connection exception
+				showMessage("Failed connecting to the server.\nCheck entered IP");
+			}
 			this.clnt.setDataFromUI(username_password, 1);	//set the data and the operation to send from the client to the server
 			this.clnt.accept();	//sends to server
 			while(!this.clnt.getConfirmationFromServer())	//wait until server replies
@@ -103,13 +109,14 @@ public class LoginController implements Initializable {
 			dataFromServer = this.clnt.getArrayListfromSrvr();	//get the returned ArrayList from the server
 			if(dataFromServer.get(0).equals("success"))//if login info matches the data base
 			{	
-//				try
-//				{
+				try
+				{
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 				toUserMenu(Integer.parseInt(dataFromServer.get(1)));	//call method to sort the user's type
-//				}finally {	//finally close connection to the server from the client
-//					chat.quit();	//close connection
-//				}
+				}catch(Exception e) {	//finally close connection to the server from the client
+					e.printStackTrace();
+					signalAppClose();	//close connection
+				}
 			}
 			else	//check for reason of failure
 			{
@@ -135,10 +142,10 @@ public class LoginController implements Initializable {
 					showMessage("The user is already logged in to the system.");
 				}
 			}
-			}
-			catch(IOException e){	//if there were a connection exception
-				showMessage("Failed connecting to the server.\nCheck entered IP");
-			}
+		//	}
+//			catch(IOException e){	//if there were a connection exception
+//				showMessage("Failed connecting to the server.\nCheck entered IP");
+//			}
 		}
 	}
 	
@@ -158,7 +165,7 @@ public class LoginController implements Initializable {
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
-			CustomerMenuController Cmc = new CustomerMenuController(DEFAULT_PORT,this.clnt);
+			Cmc = new CustomerMenuController(DEFAULT_PORT,this.clnt);
 			//Cmc.setConnectionData(DEFAULT_PORT,this.clnt);
 			Cmc.showCustomerMenu();
 			
