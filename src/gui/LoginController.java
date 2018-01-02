@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import java.io.IOException;
 import java.net.URL;
@@ -187,5 +187,6 @@ public class LoginController implements Initializable {
 		// TODO Auto-generated method stub
 		this.srvrIPTxtFld.setText("localhost");	//set the default server's ip to local host
 	}
+
 
 }

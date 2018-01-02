@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManagerMenuController">
+   <children>
+      <Label layoutX="230.0" layoutY="32.0" text="Main Menu">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="140.0" layoutY="81.0" text="Hello Manager! what would you like to do today?" />
+      <Button fx:id="newAcntBtn" layoutX="105.0" layoutY="136.0" mnemonicParsing="false" onAction="#newAccount" text="Open new account" />
+      <Button fx:id="gnrtRprtBtn" layoutX="105.0" layoutY="200.0" mnemonicParsing="false" onAction="#generateReport" text="Generate new report" />
+      <Button fx:id="edtPrmsnsBtn" layoutX="105.0" layoutY="332.0" mnemonicParsing="false" text="Edit users permissions " />
+      <Button fx:id="shwCnclBtn" layoutX="105.0" layoutY="265.0" mnemonicParsing="false" text="Show cancelation requests" />
+   </children>
+</Pane>

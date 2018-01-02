@@ -3,7 +3,7 @@ package client;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import GUI.MainBoundary;
+import gui.MainBoundary;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
