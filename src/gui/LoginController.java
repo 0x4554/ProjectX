@@ -24,7 +24,7 @@ import logic.ConnectedClients;
  * LoginController.java
  *
  * @author Eliran Toledano
- * @author Lana Kricheli
+ * @author Lana Krikheli
  * @author Katya Yaakovlev
  * @author Tal Gross
  *
@@ -48,7 +48,7 @@ public class LoginController implements Initializable {
 	
 	public static String hostIP;
 	private Client clnt;
-	private CustomerMenuController Cmc;
+	private CustomerMenuController cmc;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -164,8 +164,8 @@ public class LoginController implements Initializable {
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
-			Cmc = new CustomerMenuController(this.clnt);
-			Cmc.showCustomerMenu();
+			cmc = new CustomerMenuController(this.clnt);
+			cmc.showCustomerMenu();
 			
 			break;
 		case 3:	//store worker

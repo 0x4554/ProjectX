@@ -38,15 +38,23 @@ public class CustomerMenuController implements Initializable{
 	@FXML private Button complBtn;
 	@FXML private Button backBtn;
 	
+	/**
+	 * This method is the constructor for this class
+	 * @param clnt	the connected client
+	 */
 	public CustomerMenuController(Client clnt)
 	{
 		this.clnt=clnt;
 	}
 	
+	/**
+	 * A necessary constructor for the App
+	 */
 	public CustomerMenuController()
 	{
 		
 	}
+	
 	public void setConnectionData(Client clnt)
 	{
 		this.clnt=clnt;
@@ -58,8 +66,8 @@ public class CustomerMenuController implements Initializable{
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		CustomerMenuController Cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		Cmc.setConnectionData(this.clnt);
+		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		cmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();

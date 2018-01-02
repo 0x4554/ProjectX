@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  * The start method will load the login page which is the first window in the client's application
  * 
  * @author Eliran Toledano
- * @author Lana Kricheli
+ * @author Lana Krikheli
  * @author Katya Yaakovlev
  * @author Tal Gross
  *
@@ -56,6 +56,9 @@ public class MainLaunch extends Application {
 
 	}
 	
+	/**
+	 * This method uses to call another method to close connection if user is logged in to the server
+	 */
 	@Override
 	public void stop() throws Exception
 	{
