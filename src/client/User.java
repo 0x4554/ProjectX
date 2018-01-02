@@ -13,7 +13,7 @@ import ocsf.client.AbstractClient;
 
 import ocsf.client.*;
 
-public class Client extends AbstractClient {
+public class User extends AbstractClient {
 	
 	private String fromUI;
 	private int operation;
@@ -24,7 +24,7 @@ public class Client extends AbstractClient {
 	private String stringFromServer;
 	//ChatIF clientUI; 
 	
-	public Client(String host, int port,Object obj,int opr) throws IOException 
+	public User(String host, int port,Object obj,int opr) throws IOException 
 		  {
 		    super(host, port); 			//Call the superclass constructor
 		    fromUI=(String)obj;
@@ -47,6 +47,7 @@ public class Client extends AbstractClient {
 	{
 		this.messageFromServer =msg;	//save the message 
 		confirmationFromServer = true;
+//		newMessageFromServer.setValue(true);
 	}
 	
 
@@ -70,13 +71,10 @@ public class Client extends AbstractClient {
 	  
 		public void accept() {
 			// TODO Auto-generated method stub
-			if(this.operation == 1) {
-				this.fromUI = "login "+this.fromUI;
-			}
-			if(this.operation==2) {
+			if(this.operation==1) {
 				this.fromUI="create "+this.fromUI;
 			}
-			if(this.operation==3) {
+			if(this.operation==2) {
 				this.fromUI="find "+this.fromUI;
 			}
 			
@@ -103,9 +101,6 @@ public class Client extends AbstractClient {
 	    System.exit(0);
 	  }
 	  
-	  /**
-	   * This method returns the message from the server as an ArrayList
-	   */
 	  public ArrayList<String> getArrayListfromSrvr() throws InterruptedException	//method for when the message returned from the server is an ArrayList
 	  {
 		  ArrayList<String>dtls=new ArrayList<String>();
@@ -116,9 +111,6 @@ public class Client extends AbstractClient {
 		return dtls;
 	  }
 	  
-	  /**
-	   * This method returns the message from the server as a String
-	   */
 	  public String getStringFromServer()	//method for when the message form the server is a String
 	  {
 		  String retMessage;
@@ -127,10 +119,11 @@ public class Client extends AbstractClient {
 		  return retMessage;
 	  }
 	  
-	  /**
-	   * This method returns the confirmation from the server
-	   * true if message received
-	   */
+//	  public BooleanProperty getNewMessageFromServer()
+//	  {
+//		  return newMessageFromServer;
+//	  }
+	  
 	  public Boolean getConfirmationFromServer()
 	  {
 		  return confirmationFromServer;

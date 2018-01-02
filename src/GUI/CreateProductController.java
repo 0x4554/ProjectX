@@ -1,4 +1,4 @@
-package gui;
+package GUI;
 
 
 
@@ -17,31 +17,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import logic.ConnectedClients;
 
 public class CreateProductController implements Initializable{
 	
-	@FXML
-	private Button bckBtn;
-	@FXML
-	private Button crtBtn;
-	@FXML
-	private TextField idFld;
-	@FXML
-	private TextField nmFld;
-	@FXML
-	private TextField typFld;
+	@FXML private Button bckBtn;
+	@FXML private Button crtBtn;
+	@FXML private TextField idFld;
+	@FXML private TextField nmFld;
+	@FXML private TextField typFld;
 	
 	private int port;
 	private MainBoundary main;
-	private String username;
-	private Client clnt;
-	
-	public CreateProductController(int port,MainBoundary main,Client clnt)	
+	public CreateProductController(int port,MainBoundary main)	
 	{
 		this.port=port;
 		this.main = main;
-		this.clnt = clnt;
 	}
 	
 	public CreateProductController()	//necessary empty constructor
@@ -69,19 +59,38 @@ public class CreateProductController implements Initializable{
 		{
 			String newData="";
 			newData=newData+idFld.getText()+" "+nmFld.getText()+" "+typFld.getText();	//set the new data as string
-//			Client chat = new Client(MainBoundary.getHost(), port,newData,2);
-			this.clnt.setDataFromUI(newData, 2);				//set the data and the operation using the connected client
-			this.clnt.accept();									//send and receive form server
-//			chat.accept();										//send and receive form server
-			while(!this.clnt.getConfirmationFromServer())		//wait for confirmation from the server
+			Client chat = new Client(MainBoundary.getHost(), port,newData,2);
+			chat.accept();	//send and receive form server
+			while(!chat.getConfirmationFromServer())
 				Thread.sleep(100);
-			this.clnt.setConfirmationFromServer(); 				//set the confirmation back to false for next use
+////		chat.getNewMessageFromServer().addListener(new ChangeListener<Object>() {
+//
+//				@Override
+//				public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+//					// TODO Auto-generated method stub
+//					String data=null;
+//					data=chat.getStringFromServer();		//get the message returned from the DB via the server
+//					GeneralMessageBoundary message = new GeneralMessageBoundary();
+//					try {
+//						message.showGeneralMessage(data);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}		//show a message if succeeded or failed
+//					
+//
+//					
+//				}
+//				
+//			});
+			
 			String data=null;
-			data=this.clnt.getStringFromServer();				//get the message returned from the DB via the server
+//			Thread.sleep(4000);
+			data=chat.getStringFromServer();		//get the message returned from the DB via the server
 			GeneralMessageController message = new GeneralMessageController();
-			message.showGeneralMessage(data);					//show a message if succeeded or failed
-				
-			this.idFld.clear();									//clear all text fields after insert
+			message.showGeneralMessage(data);		//show a message if succeeded or failed
+			
+			this.idFld.clear();	//clear all text fields after insert
 			this.nmFld.clear();
 			this.typFld.clear();
 		}

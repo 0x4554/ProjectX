@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import logic.ConnectedClients;
 import ocsf.server.*;
 import ocsf.*;
 /**
@@ -42,14 +41,6 @@ public class ProjectServer extends AbstractServer
  	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","Braude");	//connect to the sql database
   }
   
-  /**
-   * This method removes the connection of the user from the connceted client list
-   * @param username
-   */
-  private void terminateConnection(String username)
-  {
-	  ConnectedClients.removeConnectedClient(username);
-  }
   /** This method handles any login attempt messages received from the client.
   *
   * @param msg The message received from the client.
@@ -83,7 +74,7 @@ public class ProjectServer extends AbstractServer
 			return returnMessage;
 		} else //if user name was found
 		{
-			if (ConnectedClients.isConnected(data[0]))	//if the user is already logged in to the system
+			if (rs.getBoolean(5) == true)	//if the user is already logged in to the system
 			{
 				//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 				returnMessage.add("failed"); //state failed to log in
@@ -102,10 +93,9 @@ public class ProjectServer extends AbstractServer
 					//success - ArrayList<String> to return in form of ["success",user's type]
 					returnMessage.add("success"); //state succeeded to login
 					returnMessage.add(rs.getString(3)); //add the type of user (customer,worker...)
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0 ,LoggedIn = 1 WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
-					ConnectedClients.insertNewConnection(data[0]);
 					return returnMessage;
 				}
 			} else if (!(data[1].equals(rs.getString(2)))) //if password received does not match the data base 
@@ -249,10 +239,6 @@ public class ProjectServer extends AbstractServer
 		ArrayList<String>retval=new ArrayList<String>();
 		try {
 		System.out.println("<user>"+(String)msg);
-		if(s.equals("close"))
-		{
-			this.terminateConnection(mess);
-		}
 		if(s.equals("login"))
 		{
 			retval = this.login(client,mess);

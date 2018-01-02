@@ -1,7 +1,5 @@
-package gui;
+package GUI;
 import java.io.IOException;
-
-import client.Client;
 import javafx.application.Application.Parameters;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,9 +21,6 @@ public class CustomerMenuController {
 	private Parameters params;
 	private Stage primaryStage;
 	
-	private int port;
-	private Client clnt;
-	
 	//*buttons of the customer menu*//
 	@FXML private Label mmlbl;
 	@FXML private Button ordBtn;
@@ -35,28 +30,7 @@ public class CustomerMenuController {
 	@FXML private Button complBtn;
 	@FXML private Button backBtn;
 	
-	public CustomerMenuController(int port,Client clnt)
-	{
-		this.port=port;
-		this.clnt=clnt;
-	}
-	public void setConnectionData(int port,Client clnt)
-	{
-		this.port=port;
-		this.clnt=clnt;
-	}
-	public void showCustomerMenu() throws IOException
-	{
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("CustomerMenu.fxml").openStream());
-		 CustomerMenuController Cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		 Cmc.setConnectionData(DEFAULT_PORT,this.clnt);
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
-		primaryStage.setTitle("Customer's main menu");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
+	
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -83,9 +57,13 @@ public class CustomerMenuController {
 		primaryStage.setTitle("Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		int n;
+		int a;
+		int b;
+		//kuhlkjhlkuh;u;oiu
 	}			
 	
-	//*Open  catalog  menu from customer main menu*//
+	//*Open  Account details  menu from customer main menu*//
 		public void enterToAccount(ActionEvent event) throws IOException {
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
@@ -99,7 +77,26 @@ public class CustomerMenuController {
 			primaryStage.show();
 		}			
 		
+		//*Open  Update details Window from customer main menu*//
+				public void enterToUpdateDetails(ActionEvent event) throws IOException {
+					 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					 FXMLLoader loader = new FXMLLoader();
+					 Parent root = loader.load(getClass().getResource("UpdateAccount.fxml").openStream());
+					 UpdateAccountController upac= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+				//	 ord.setConnectionData(DEFAULT_PORT, this);
+					Stage primaryStage=new Stage();
+					Scene scene=new Scene(root);
+					primaryStage.setTitle("Details");
+					primaryStage.setScene(scene);
+					primaryStage.show();
+				}			
 		
-		
+		/*jhkjjh*/
+				public void backToMainMenu(ActionEvent event) throws IOException	//when click "Back" return to main menu
+				{
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					//this.main.showMainMenu(event);
+				}
+
 		
 }

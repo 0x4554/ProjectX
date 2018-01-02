@@ -1,4 +1,4 @@
-package gui;
+package GUI;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,16 +20,14 @@ public class FindProductController implements Initializable{
 	//
 	private int port;
 	private MainBoundary main;
-	private Client clnt;
 	
 	private String id="";
 	private ProductFromDBController pfdb;
 	
-	public void setConnectionData(int port,MainBoundary main,Client clnt)	//set the host port and the previous window for the controller
+	public void setConnectionData(int port,MainBoundary main)	//set the host port and the previous window for the controller
 	{
 		this.port=port;
 		this.main = main;
-		this.clnt= clnt;
 	}
 	
 	public void setID(String s) {
@@ -48,13 +46,12 @@ public void searchProductID(ActionEvent event) throws IOException, InterruptedEx
 			
 		else {
 			this.setID(srchIDfld.getText());	//collect the ID entered
-//			Client chat = new Client(MainBoundary.getHost(), this.port,this.id,3);		//last parameter (2) is for telling if we inserting product or searching product (1-insert ; 2-search)
-			this.clnt.setDataFromUI(this.id, 2);				//set the data and the operation using the connected client
-			this.clnt.accept(); 	 //Wait for console data
+			Client chat = new Client(MainBoundary.getHost(), this.port,this.id,3);		//last parameter (2) is for telling if we inserting product or searching product (1-insert ; 2-search)
+			chat.accept(); 	 //Wait for console data
 			ArrayList<String> data=null;
-			while(!this.clnt.getConfirmationFromServer())
+			while(!chat.getConfirmationFromServer())
 				Thread.sleep(100);			//wait for server's message
-			data=this.clnt.getArrayListfromSrvr();	//get the message returned from the server
+			data=chat.getArrayListfromSrvr();	//get the message returned from the server
 				
 			
 			if(!(data.isEmpty()))	//check if product ID is found in the Data Base
