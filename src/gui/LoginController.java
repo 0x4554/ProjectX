@@ -165,8 +165,7 @@ public class LoginController implements Initializable {
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
-			Cmc = new CustomerMenuController(DEFAULT_PORT,this.clnt);
-			//Cmc.setConnectionData(DEFAULT_PORT,this.clnt);
+			Cmc = new CustomerMenuController(this.clnt);
 			Cmc.showCustomerMenu();
 			
 			break;
