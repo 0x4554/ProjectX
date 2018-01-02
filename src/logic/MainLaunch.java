@@ -49,6 +49,7 @@ public class MainLaunch extends Application {
 		this.login = loader.getController();
 		
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		this.primaryStage.setTitle("Login");	/**set the title**/
 		this.primaryStage.setScene(scene);
