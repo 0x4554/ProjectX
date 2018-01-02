@@ -68,7 +68,7 @@ public class CreateProductController implements Initializable{
 		if(!(this.idFld.getText().isEmpty()	||	this.nmFld.getText().isEmpty()	||	this.typFld.getText().isEmpty()))	//if all fields are properly filled
 		{
 			String newData="";
-			newData=newData+idFld.getText()+" "+nmFld.getText()+" "+typFld.getText();	//set the new data as string
+			newData=newData+idFld.getText()+"~"+nmFld.getText()+"~"+typFld.getText();	//set the new data as string
 //			Client chat = new Client(MainBoundary.getHost(), port,newData,2);
 			this.clnt.setDataFromUI(newData, 2);				//set the data and the operation using the connected client
 			this.clnt.accept();									//send and receive form server
