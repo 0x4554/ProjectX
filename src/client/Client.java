@@ -16,6 +16,7 @@ import ocsf.client.*;
 public class Client extends AbstractClient {
 	
 	private String fromUI;
+	private String username;
 	private int operation;
 	private Object messageFromServer;
 //	private final BooleanProperty newMessageFromServer;
@@ -24,15 +25,17 @@ public class Client extends AbstractClient {
 	private String stringFromServer;
 	//ChatIF clientUI; 
 	
-	public Client(String host, int port,Object obj,int opr) throws IOException 
+	public Client(String host, int port,String username) throws IOException 
 		  {
 		    super(host, port); 			//Call the superclass constructor
-		    fromUI=(String)obj;
-		    operation=opr;
+		    this.username=username;
+//		    fromUI=(String)obj;
+//		    operation=opr;
 		//    this.clientUI = clientUI;
 //		    newMessageFromServer = new SimpleBooleanProperty(false);
 		    confirmationFromServer=false;
 		    openConnection();
+		  
 		  }
 	
 	///Instance methods ************************************************
@@ -67,9 +70,24 @@ public class Client extends AbstractClient {
 	    }
 	  }
 	  
+	  /**
+	   * This method sets the requested data and the wanted operation
+	   * 
+	   * @param data	requested data
+	   * @param op	wanted operation
+	   */
+	  public void setDataFromUI(String data,int op)
+	  {
+		  this.fromUI= data;
+		  this.operation=op;
+	  }
+	  
 	  
 		public void accept() {
 			// TODO Auto-generated method stub
+			if(this.operation == -1) {
+				this.fromUI = "close "+ this.fromUI;
+			}
 			if(this.operation == 1) {
 				this.fromUI = "login "+this.fromUI;
 			}
@@ -135,9 +153,25 @@ public class Client extends AbstractClient {
 	  {
 		  return confirmationFromServer;
 	  }
+	  /**
+	   * This method sets the confirmation from the server to false after confirmation received
+	   * true if message received
+	   */
+	  public void setConfirmationFromServer()
+	  {
+		  confirmationFromServer=false;
+	  }
+	  
+	  /**
+	   * This method returns the username of the connection
+	   * @return
+	   */
+	  public String getUsername()
+	  {
+		  return this.username;
+	  }
 	  
 	  
 
 
 }	
-	
