@@ -45,10 +45,13 @@ public class MainLaunch extends Application {
 
 		this.primaryStage = primaryStage;	//get the primary Stage
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/LoginGUI.fxml").openStream());	//load the login window 
+
+		Parent root = loader.load(getClass().getResource("/gui/LoginGUI.fxml").openStream());	//load the login window(the login fxml file is in a different package /gui/)
+		
 		this.login = loader.getController();
 		
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		this.primaryStage.setTitle("Login");	/**set the title**/
 		this.primaryStage.setScene(scene);
@@ -56,9 +59,12 @@ public class MainLaunch extends Application {
 
 	}
 	
+	/**
+	 * This method uses to call another method (in the loginController) to close connection if user is logged in to the server
+	 */
 	@Override
 	public void stop() throws Exception
 	{
-		this.login.signalAppClose();
+		this.login.signalAppClose();	
 	}
 }

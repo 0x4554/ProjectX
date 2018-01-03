@@ -48,7 +48,8 @@ public class LoginController implements Initializable {
 	
 	public static String hostIP;
 	private Client clnt;
-	private CustomerMenuController Cmc;
+	private CustomerMenuController cmc;
+	private ManagerMenuController mmc;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -164,8 +165,8 @@ public class LoginController implements Initializable {
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
-			Cmc = new CustomerMenuController(this.clnt);
-			Cmc.showCustomerMenu();
+			cmc = new CustomerMenuController(this.clnt);
+			cmc.showCustomerMenu();
 			
 			break;
 		case 3:	//store worker
@@ -174,7 +175,8 @@ public class LoginController implements Initializable {
 			break;
 		case 4:	//store manager
 			showMessage("Logged in as a store manager");
-			
+			mmc=new ManagerMenuController(this.clnt);
+			mmc.showManagerMenu();
 			break;
 		case 5:	//customer service worker
 			showMessage("Logged in as a customer service worker");

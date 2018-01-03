@@ -23,23 +23,22 @@ public class Client extends AbstractClient {
 	private  ArrayList<String> ArrayListFromSrvr=null;
 	private String stringFromServer;
 	
-	/***
+	/**
 	 * This is the constructor for the client
-	 *The connection is opened using the openConnection from the ocsf
-	 * @param host the Ip of the server
-	 * @param port for the connection
-	 * @param username of the client
-	 * @throws IOException  throw if there is a connection error
+	 * the connection is opened using the openConnection from the ocsf
+	 * @param host	the IP of the server
+	 * @param port	the port for the connection
+	 * @param username	the userName of the client
+	 * @throws IOException	throw if there is connection error
 	 */
-	public Client(String host, int port,String username) throws IOException 
-		  {
-		    super(host, port); 			           //Call the superclass constructor
-		    this.username=username;          //save the user name
-		    confirmationFromServer=false;  //set the confirmation from the server to false--> changed to true when the server replies after conducting an action
-		    openConnection();                       //connect to server
-		  
-		  }
-	
+	public Client(String host, int port, String username) throws IOException {
+		super(host, port); //Call the superclass constructor
+		this.username = username; //save the userName 
+		confirmationFromServer = false; //set the confirmation from the server to false --> changed to true when server replies after conducting an action
+		openConnection(); //connect to server
+
+	}
+
 	///Instance methods ************************************************
 	
 	  /**
@@ -84,7 +83,9 @@ public class Client extends AbstractClient {
 		  this.operation=op;
 	  }
 	  
-	  
+	  /**
+	   * This method recognizes the wanted operation and calls the handleMessageFromClientUI to send the data to the server.
+	   */
 		public void accept() {
 			// TODO Auto-generated method stub
 			if(this.operation == -1) {
