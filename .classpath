@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
@@ -13,7 +12,7 @@
 	<classpathentry kind="lib" path="/home/mdhttr/mysql-connector-java-5.1.19-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
-=======
+
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
@@ -24,4 +23,3 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Driver"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
->>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
