@@ -68,6 +68,7 @@ public class ManagerMenuController implements Initializable {
 		primaryStage.setTitle("Manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
 	}
 	
 	private void setConnectionData(Client clnt2) {
@@ -77,7 +78,7 @@ public class ManagerMenuController implements Initializable {
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/*****ToImplement*****/.fxml").openStream());				//new window to open
+		 Parent root = loader.load(getClass().getResource("CreateNewAccountBoundary.fxml").openStream());				//new window to open
 		 /*load here needed controller*/
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
