@@ -23,6 +23,7 @@ import ocsf.*;
  */
 public class ProjectServer extends AbstractServer 
 {
+	//do not touch//
 	private static Connection con;
 	private static String driver="com.mysql.jdbc.Driver";
   final public static int DEFAULT_PORT = 5555;
@@ -113,6 +114,7 @@ public class ProjectServer extends AbstractServer
 					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
+
 					ConnectedClients.insertNewConnection(data[0]);	//insert the userName to the connected list of users
 					return returnMessage;
 				}

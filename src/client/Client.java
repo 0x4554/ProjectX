@@ -38,7 +38,7 @@ public class Client extends AbstractClient {
 		openConnection(); //connect to server
 
 	}
-	
+
 	///Instance methods ************************************************
 	
 	  /**

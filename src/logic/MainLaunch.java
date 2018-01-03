@@ -45,7 +45,9 @@ public class MainLaunch extends Application {
 
 		this.primaryStage = primaryStage;	//get the primary Stage
 		FXMLLoader loader = new FXMLLoader();
+
 		Parent root = loader.load(getClass().getResource("/gui/LoginGUI.fxml").openStream());	//load the login window(the login fxml file is in a different package /gui/)
+		
 		this.login = loader.getController();
 		
 		Scene scene = new Scene(root);

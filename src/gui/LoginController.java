@@ -25,7 +25,7 @@ import logic.ConnectedClients;
  *
  * @author Eliran Toledano
  * @author Lana Krikheli
- * @author Katya Yaakovlev
+ * @author Katya Yakovlev
  * @author Tal Gross
  *
  * Project Name gitProjectX
