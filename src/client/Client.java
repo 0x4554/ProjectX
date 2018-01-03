@@ -19,22 +19,24 @@ public class Client extends AbstractClient {
 	private String username;
 	private int operation;
 	private Object messageFromServer;
-//	private final BooleanProperty newMessageFromServer;
 	private  Boolean confirmationFromServer;
 	private  ArrayList<String> ArrayListFromSrvr=null;
 	private String stringFromServer;
-	//ChatIF clientUI; 
 	
+	/***
+	 * This is the constructor for the client
+	 *The connection is opened using the openConnection from the ocsf
+	 * @param host the Ip of the server
+	 * @param port for the connection
+	 * @param username of the client
+	 * @throws IOException  throw if there is a connection error
+	 */
 	public Client(String host, int port,String username) throws IOException 
 		  {
-		    super(host, port); 			//Call the superclass constructor
-		    this.username=username;
-//		    fromUI=(String)obj;
-//		    operation=opr;
-		//    this.clientUI = clientUI;
-//		    newMessageFromServer = new SimpleBooleanProperty(false);
-		    confirmationFromServer=false;
-		    openConnection();
+		    super(host, port); 			           //Call the superclass constructor
+		    this.username=username;          //save the user name
+		    confirmationFromServer=false;  //set the confirmation from the server to false--> changed to true when the server replies after conducting an action
+		    openConnection();                       //connect to server
 		  
 		  }
 	

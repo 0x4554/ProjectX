@@ -24,8 +24,8 @@ import logic.ConnectedClients;
  * LoginController.java
  *
  * @author Eliran Toledano
- * @author Lana Kricheli
- * @author Katya Yaakovlev
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
  * @author Tal Gross
  *
  * Project Name gitProjectX

@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  * The start method will load the login page which is the first window in the client's application
  * 
  * @author Eliran Toledano
- * @author Lana Kricheli
+ * @author Lana Krikheli
  * @author Katya Yaakovlev
  * @author Tal Gross
  *
@@ -45,7 +45,7 @@ public class MainLaunch extends Application {
 
 		this.primaryStage = primaryStage;	//get the primary Stage
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/LoginGUI.fxml").openStream());	//load the login window
+		Parent root = loader.load(getClass().getResource("/gui/LoginGUI.fxml").openStream());	//load the login window 
 		this.login = loader.getController();
 		
 		Scene scene = new Scene(root);
