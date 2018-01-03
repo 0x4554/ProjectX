@@ -27,12 +27,24 @@ public class GeneralMessageController implements Initializable {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/GeneralMessageBoundary.fxml").openStream());	//load the general message page
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/GeneralMessageStyle.css");
 		GeneralMessageController gmb = loader.getController();
 		gmb.setLabel(msg);	//set the label for specific message
-		
+			
 		secondaryStage.setTitle("Message");
 		secondaryStage.setScene(scene);
 		secondaryStage.show();
+	}
+	
+	/**
+	 * This method creates a general message to display to the UI
+	 * @param message the message to be displayed to the UI
+	 * @throws IOException	for the FXMLLoader in GeneralMessageController
+	 */
+	public static void showMessage(String message) throws IOException
+	{
+		GeneralMessageController msg = new GeneralMessageController();
+		msg.showGeneralMessage(message);
 	}
 	
 	public void setLabel(String msg)	//set the label for the specific message

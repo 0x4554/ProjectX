@@ -68,6 +68,10 @@ public class ManagerMenuController implements Initializable {
 		primaryStage.setTitle("Manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
+		
+		GeneralMessageController gmc=new GeneralMessageController();
+		gmc.showGeneralMessage("");
 	}
 	
 	private void setConnectionData(Client clnt2) {
