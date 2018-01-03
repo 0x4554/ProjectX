@@ -131,7 +131,7 @@ public class LoginController implements Initializable {
 				}
 				else if (dataFromServer.get(1).equals("user is blocked"))	//user is blocked
 				{
-					GeneralMessageController.showMessage("The user is blocked from to many failed attempts to login.\nPlease contact a store.");
+					GeneralMessageController.showMessage("Too many logins - user is blocked\nPlease contact a store.");
 				}
 				else if (dataFromServer.get(1).equals("password does not match"))	//password does not match
 				{
@@ -144,7 +144,7 @@ public class LoginController implements Initializable {
 				} 
 				else if (dataFromServer.get(1).equals("user is already logged in"))	//user is already logged in
 				{
-					GeneralMessageController.showMessage("The user is already logged in to the system.");
+					GeneralMessageController.showMessage("User is already connected to the system.");
 				}
 			}
 		//	}
@@ -165,9 +165,9 @@ public class LoginController implements Initializable {
 		switch (userType)
 		{
 		case 1:	//system administrator (system manager)
-			GeneralMessageController.showMessage("Logged in as an administrator");
 			amc = new AdministratorMenuController(this.clnt);
 			amc.showAdministratorMenu();
+			GeneralMessageController.showMessage("Logged in as an administrator");
 			break;
 		case 2:	//customer
 			cmc = new CustomerMenuController(this.clnt);
@@ -175,29 +175,29 @@ public class LoginController implements Initializable {
 			GeneralMessageController.showMessage("Logged in as a customer");
 			break;
 		case 3:	//store worker
-			GeneralMessageController.showMessage("Logged in as a store worker");
 			swmc = new StoreWorkerMenuController(this.clnt);
 			swmc.showStoreWorkerMenu();
+			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
 		case 4:	//store manager
-			GeneralMessageController.showMessage("Logged in as a store manager");
 			mmc=new ManagerMenuController(this.clnt);
 			mmc.showManagerMenu();
+			GeneralMessageController.showMessage("Logged in as a store manager");
 			break;
 		case 5:	//customer service worker
-			GeneralMessageController.showMessage("Logged in as a customer service worker");
 			cswmc = new CustomerServiceWorkerMenuController(this.clnt);
 			cswmc.showCostumerServiceWorkerMenu();
+			GeneralMessageController.showMessage("Logged in as a customer service worker");
 			break;
 		case 6:	//chain store manager
-			GeneralMessageController.showMessage("Logged in as a chain store manager");
 			csmmc = new ChainStoreManagerMenuController(this.clnt);
 			csmmc.showChainStoreManagerMenu();
+			GeneralMessageController.showMessage("Logged in as a chain store manager");
 			break;
 		case 7:	//customer service expert
-			GeneralMessageController.showMessage("Logged in as a customer service expert");
 			csemc = new CustomerServiceExpertMenuController(this.clnt);
 			csemc.showCustomerServiceExpertMenu();
+			GeneralMessageController.showMessage("Logged in as a customer service expert");
 			break;
 		}
 	}
