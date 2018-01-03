@@ -54,7 +54,10 @@ public class CustomerMenuController implements Initializable{
 	{
 		
 	}
-	
+	/**
+	 * This method saves the client connection to the controller
+	 * @param clnt	the connection client
+	 */
 	
 	public void setConnectionData(Client clnt)
 	{
@@ -66,7 +69,7 @@ public class CustomerMenuController implements Initializable{
 	public void showCustomerMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("CustomerMenu.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("CustomerMenuBoundary.fxml").openStream());
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
@@ -83,7 +86,7 @@ public class CustomerMenuController implements Initializable{
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("VOrder.fxml").openStream());
+		 Parent root = loader.load(getClass().getResource("OrderMenuBoundary.fxml").openStream());
 		 OrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 	//	 ord.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
@@ -97,7 +100,7 @@ public class CustomerMenuController implements Initializable{
 	public void enterCatalog(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("Catalog.fxml").openStream());
+		 Parent root = loader.load(getClass().getResource("CatalogBoundary.fxml").openStream());
 		 CatalogController catg = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 	//	 ord.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
@@ -115,7 +118,7 @@ public class CustomerMenuController implements Initializable{
 		public void enterToAccount(ActionEvent event) throws IOException {
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
-			 Parent root = loader.load(getClass().getResource("AccountD.fxml").openStream());
+			 Parent root = loader.load(getClass().getResource("AccountDetailsBoundary.fxml").openStream());
 			 AccountController acc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		//	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
@@ -129,7 +132,7 @@ public class CustomerMenuController implements Initializable{
 				public void enterToUpdateDetails(ActionEvent event) throws IOException {
 					 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					 FXMLLoader loader = new FXMLLoader();
-					 Parent root = loader.load(getClass().getResource("UpdateAccount.fxml").openStream());
+					 Parent root = loader.load(getClass().getResource("UpdateAccountBoundary.fxml").openStream());
 					 UpdateAccountController upac= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 				//	 ord.setConnectionData(DEFAULT_PORT, this);
 					Stage primaryStage=new Stage();
@@ -156,7 +159,7 @@ public class CustomerMenuController implements Initializable{
 				public void startComplaint(ActionEvent event) throws IOException {
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					 FXMLLoader loader = new FXMLLoader();
-					 Parent root = loader.load(getClass().getResource(".fxml").openStream());
+					 Parent root = loader.load(getClass().getResource("CompliantBoundary.fxml").openStream());
 					 UpdateAccountController upac= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 				//	 ord.setConnectionData(DEFAULT_PORT, this);
 					Stage primaryStage=new Stage();
