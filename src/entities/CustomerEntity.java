@@ -6,6 +6,6 @@ public class CustomerEntity extends UserEntity {
 	private String address;
 	private long customerID;
 	private double subscriptionDiscount;
-	private  accountStatus;
+	
 		
 }
