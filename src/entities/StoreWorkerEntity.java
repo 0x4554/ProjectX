@@ -12,6 +12,8 @@ package entities;
  *
  */
 public class StoreWorkerEntity extends UserEntity {
+	private int branchID;
+	private int workerid;
 	/**
 	 * Constructor for the StoreWorkerEntity.java class
 	 * invokes the UserEntity constructor for the store worker
@@ -30,8 +32,6 @@ public class StoreWorkerEntity extends UserEntity {
 	{
 		super(type);
 	}
-	private int branchID;
-	private int workerid;
 	/**
 	 * Getter for the branch
 	 * @return the branch

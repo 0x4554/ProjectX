@@ -39,7 +39,7 @@ public abstract class  UserEntity implements UserInterface{
 	 * @param phoneNumber the new phone number
 	 */
 	public void setPhoneNumber(long phoneNumber) {
-		phoneNumber = phoneNumber;
+		this.phoneNumber = phoneNumber;
 	}
 	/**
 	 * Getter for the Email address
@@ -53,7 +53,7 @@ public abstract class  UserEntity implements UserInterface{
 	 * @param emailAddress the new Email address
 	 */
 	public void setEmailAddress(String emailAddress) {
-		EmailAddress = emailAddress;
+		this.EmailAddress = emailAddress;
 	}
 	/**
 	 * Getter for the userName
@@ -67,7 +67,7 @@ public abstract class  UserEntity implements UserInterface{
 	 * @param userName the userName
 	 */
 	public void setUserName(String userName) {
-		userName = userName;
+		this.userName = userName;
 	}
 	/**
 	 * Getter for the password
@@ -81,7 +81,7 @@ public abstract class  UserEntity implements UserInterface{
 	 * @param password the password
 	 */
 	public void setPassword(String password) {
-		password = password;
+		this.password = password;
 	}
 	/**
 	 * Getter for the user type
@@ -95,7 +95,7 @@ public abstract class  UserEntity implements UserInterface{
 	 * @param userType	the user type
 	 */
 	public void setUserType(String userType) {
-		userType = userType;
+		this.userType = userType;
 	}
 	
 	
