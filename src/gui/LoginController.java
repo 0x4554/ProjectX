@@ -85,7 +85,7 @@ public class LoginController implements Initializable {
 	{
 		if(this.usrNmTxtFld.getText().isEmpty()&& this.psswrdTxtFld.getText().isEmpty() && this.srvrIPTxtFld.getText().isEmpty())	//check if all fields are empty
 		{
-			showMessage("All fields are Empty.\nPlease fill all fields.");
+			showMessage("All fields are Empty.\nPlease fill all fields."); 
 		} 
 		else if (this.usrNmTxtFld.getText().isEmpty() || this.psswrdTxtFld.getText().isEmpty())	//check if user's login info fields are empty
 		{	
