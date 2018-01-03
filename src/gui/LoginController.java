@@ -85,11 +85,7 @@ public class LoginController implements Initializable {
 	{
 		if(this.usrNmTxtFld.getText().isEmpty()&& this.psswrdTxtFld.getText().isEmpty() && this.srvrIPTxtFld.getText().isEmpty())	//check if all fields are empty
 		{
-<<<<<<< HEAD
-			showMessage("All fields are Empty.\nPlease fill all fields."); 
-=======
 			GeneralMessageController.showMessage("All fields are Empty.\nPlease fill all fields.");
->>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 		} 
 		else if (this.usrNmTxtFld.getText().isEmpty() || this.psswrdTxtFld.getText().isEmpty())	//check if user's login info fields are empty
 		{	
@@ -181,10 +177,6 @@ public class LoginController implements Initializable {
 			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
 		case 4:	//store manager
-<<<<<<< HEAD
-			//showMessage("Logged in as a store manager");
-=======
->>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 			mmc=new ManagerMenuController(this.clnt);
 			mmc.showManagerMenu();
 			GeneralMessageController.showMessage("Logged in as a store manager");
