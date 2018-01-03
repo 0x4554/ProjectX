@@ -85,15 +85,15 @@ public class LoginController implements Initializable {
 	{
 		if(this.usrNmTxtFld.getText().isEmpty()&& this.psswrdTxtFld.getText().isEmpty() && this.srvrIPTxtFld.getText().isEmpty())	//check if all fields are empty
 		{
-			showMessage("All fields are Empty.\nPlease fill all fields.");
+			GeneralMessageController.showMessage("All fields are Empty.\nPlease fill all fields.");
 		} 
 		else if (this.usrNmTxtFld.getText().isEmpty() || this.psswrdTxtFld.getText().isEmpty())	//check if user's login info fields are empty
 		{	
-			showMessage("Please fill all user's login information fields");
+			GeneralMessageController.showMessage("Please fill all user's login information fields");
 		} 
 		else if (this.srvrIPTxtFld.getText().isEmpty()) //check if server's ip field is empty
 		{	
-			showMessage("Server IP is missing.\nMust fill server's IP for connecting");
+			GeneralMessageController.showMessage("Server IP is missing.\nMust fill server's IP for connecting");
 		} 
 		else 
 		{
@@ -104,8 +104,9 @@ public class LoginController implements Initializable {
 			{
 			this.clnt = new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText());	//attempt to create a connection from client to server
 			}catch(IOException e){	//if there were a connection exception
-				showMessage("Failed connecting to the server.\nCheck entered IP");
-				return;
+
+				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
+
 			}
 			this.clnt.setDataFromUI(username_password, 1);	//set the data and the operation to send from the client to the server
 			this.clnt.accept();	//sends to server
@@ -127,11 +128,11 @@ public class LoginController implements Initializable {
 			{
 				if(dataFromServer.get(1).equals("user does not exists"))	//user does not exists
 				{
-					showMessage("User does not exists in the system.\nPlease check the entered username or contact a store for creating a new user.");
+					GeneralMessageController.showMessage("User does not exists in the system.\nPlease check the entered username or contact a store for creating a new user.");
 				}
 				else if (dataFromServer.get(1).equals("user is blocked"))	//user is blocked
 				{
-					showMessage("The user is blocked from to many failed attempts to login.\nPlease contact a store.");
+					GeneralMessageController.showMessage("Too many logins - user is blocked\nPlease contact a store.");
 				}
 				else if (dataFromServer.get(1).equals("password does not match"))	//password does not match
 				{
@@ -140,11 +141,11 @@ public class LoginController implements Initializable {
 					message = message +"Password entered does not match the username.\nPlease try again.\n" + (3-Integer.parseInt(dataFromServer.get(2))) + "/3 attempts left before blocking account!!!";
 					if(dataFromServer.get(2).equals("3"))	//check if the attempt was the third attempt
 						message += "\nThe user is now blocked.Please contact a store.";
-					showMessage(message);
+					GeneralMessageController.showMessage(message);
 				} 
 				else if (dataFromServer.get(1).equals("user is already logged in"))	//user is already logged in
 				{
-					showMessage("The user is already logged in to the system.");
+					GeneralMessageController.showMessage("User is already connected to the system.");
 				}
 			}
 		}
@@ -161,40 +162,39 @@ public class LoginController implements Initializable {
 		switch (userType)
 		{
 		case 1:	//system administrator (system manager)
-			showMessage("Logged in as an administrator");
 			amc = new AdministratorMenuController(this.clnt);
 			amc.showAdministratorMenu();
+			GeneralMessageController.showMessage("Logged in as an administrator");
 			break;
 		case 2:	//customer
-			showMessage("Logged in as a customer");
 			cmc = new CustomerMenuController(this.clnt);
 			cmc.showCustomerMenu();
-			
+			GeneralMessageController.showMessage("Logged in as a customer");
 			break;
 		case 3:	//store worker
-			showMessage("Logged in as a store worker");
 			swmc = new StoreWorkerMenuController(this.clnt);
 			swmc.showStoreWorkerMenu();
+			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
 		case 4:	//store manager
-			showMessage("Logged in as a store manager");
 			mmc=new ManagerMenuController(this.clnt);
 			mmc.showManagerMenu();
+			GeneralMessageController.showMessage("Logged in as a store manager");
 			break;
 		case 5:	//customer service worker
-			showMessage("Logged in as a customer service worker");
 			cswmc = new CustomerServiceWorkerMenuController(this.clnt);
 			cswmc.showCostumerServiceWorkerMenu();
+			GeneralMessageController.showMessage("Logged in as a customer service worker");
 			break;
 		case 6:	//chain store manager
-			showMessage("Logged in as a chain store manager");
 			csmmc = new ChainStoreManagerMenuController(this.clnt);
 			csmmc.showChainStoreManagerMenu();
+			GeneralMessageController.showMessage("Logged in as a chain store manager");
 			break;
 		case 7:	//customer service expert
-			showMessage("Logged in as a customer service expert");
 			csemc = new CustomerServiceExpertMenuController(this.clnt);
 			csemc.showCustomerServiceExpertMenu();
+			GeneralMessageController.showMessage("Logged in as a customer service expert");
 			break;
 		}
 	}
@@ -210,16 +210,7 @@ public class LoginController implements Initializable {
 		this.clnt.quit();
 		}
 	}
-	/**
-	 * This method creates a general message to display to the UI
-	 * @param message the message to be displayed to the UI
-	 * @throws IOException	for the FXMLLoader in GeneralMessageController
-	 */
-	private void showMessage(String message) throws IOException
-	{
-		GeneralMessageController msg = new GeneralMessageController();
-		msg.showGeneralMessage(message);
-	}
+
 	
 	/**
 	 * This is an implementation of the initialize method for implementing Initializable
