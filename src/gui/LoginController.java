@@ -25,7 +25,7 @@ import logic.ConnectedClients;
  *
  * @author Eliran Toledano
  * @author Lana Krikheli
- * @author Katya Yaakovlev
+ * @author Katya Yakovlev
  * @author Tal Gross
  *
  * Project Name gitProjectX
@@ -49,6 +49,12 @@ public class LoginController implements Initializable {
 	public static String hostIP;
 	private Client clnt;
 	private CustomerMenuController cmc;
+	private ManagerMenuController mmc;
+	private AdministratorMenuController amc;
+	private StoreWorkerMenuController swmc;
+	private CustomerServiceWorkerMenuController cswmc;
+	private ChainStoreManagerMenuController csmmc;
+	private CustomerServiceExpertMenuController csemc;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -93,13 +99,13 @@ public class LoginController implements Initializable {
 		{
 			String username_password = "";
 			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();	//set the new data as string
-		//	try {
 			ArrayList<String> dataFromServer = null;
 			try
 			{
 			this.clnt = new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText());	//attempt to create a connection from client to server
 			}catch(IOException e){	//if there were a connection exception
 				showMessage("Failed connecting to the server.\nCheck entered IP");
+				return;
 			}
 			this.clnt.setDataFromUI(username_password, 1);	//set the data and the operation to send from the client to the server
 			this.clnt.accept();	//sends to server
@@ -141,10 +147,6 @@ public class LoginController implements Initializable {
 					showMessage("The user is already logged in to the system.");
 				}
 			}
-		//	}
-//			catch(IOException e){	//if there were a connection exception
-//				showMessage("Failed connecting to the server.\nCheck entered IP");
-//			}
 		}
 	}
 	
@@ -160,7 +162,8 @@ public class LoginController implements Initializable {
 		{
 		case 1:	//system administrator (system manager)
 			showMessage("Logged in as an administrator");
-			
+			amc = new AdministratorMenuController(this.clnt);
+			amc.showAdministratorMenu();
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
@@ -170,23 +173,28 @@ public class LoginController implements Initializable {
 			break;
 		case 3:	//store worker
 			showMessage("Logged in as a store worker");
-			
+			swmc = new StoreWorkerMenuController(this.clnt);
+			swmc.showStoreWorkerMenu();
 			break;
 		case 4:	//store manager
 			showMessage("Logged in as a store manager");
-			
+			mmc=new ManagerMenuController(this.clnt);
+			mmc.showManagerMenu();
 			break;
 		case 5:	//customer service worker
 			showMessage("Logged in as a customer service worker");
-			
+			cswmc = new CustomerServiceWorkerMenuController(this.clnt);
+			cswmc.showCostumerServiceWorkerMenu();
 			break;
 		case 6:	//chain store manager
 			showMessage("Logged in as a chain store manager");
-			
+			csmmc = new ChainStoreManagerMenuController(this.clnt);
+			csmmc.showChainStoreManagerMenu();
 			break;
 		case 7:	//customer service expert
 			showMessage("Logged in as a customer service expert");
-			
+			csemc = new CustomerServiceExpertMenuController(this.clnt);
+			csemc.showCustomerServiceExpertMenu();
 			break;
 		}
 	}

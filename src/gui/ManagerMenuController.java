@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,8 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class ManagerMenuController implements Initializable {
+	private Client clnt;
+	
 	
 	@FXML	
 	private Button newAcntBtn;
@@ -32,6 +35,45 @@ public class ManagerMenuController implements Initializable {
 	 * @param event - calling window for hiding it
 	 * @throws IOException
 	 */
+	
+	/**
+	 * necessary constructor for the application
+	 */
+	public ManagerMenuController(){
+		
+	}
+	
+	/**
+	 * 
+	 * Constructor for saving the calling client for moving it to the controller
+	 * @param clnt
+	 */
+	public ManagerMenuController(Client clnt){
+		this.clnt=clnt;
+	}
+	
+	/**
+	 * 
+	 * This method will present the menu for manager user
+	 * @throws IOException
+	 */
+	public void showManagerMenu() throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/ManagerMenuBoundary.fxml").openStream());
+		 
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		ManagerMenuController mmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		mmc.setConnectionData(this.clnt);
+		primaryStage.setTitle("Manager's main menu");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	private void setConnectionData(Client clnt2) {
+		// TODO Auto-generated method stub
+		this.clnt=clnt2;
+	}
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();

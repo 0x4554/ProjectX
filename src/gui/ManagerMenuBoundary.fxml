@@ -13,9 +13,9 @@
          </font>
       </Label>
       <Label layoutX="140.0" layoutY="81.0" text="Hello Manager! what would you like to do today?" />
-      <Button fx:id="newAcntBtn" layoutX="105.0" layoutY="136.0" mnemonicParsing="false" onAction="#newAccount" text="Open new account" />
-      <Button fx:id="gnrtRprtBtn" layoutX="105.0" layoutY="200.0" mnemonicParsing="false" onAction="#generateReport" text="Generate new report" />
-      <Button fx:id="edtPrmsnsBtn" layoutX="105.0" layoutY="332.0" mnemonicParsing="false" text="Edit users permissions " />
-      <Button fx:id="shwCnclBtn" layoutX="105.0" layoutY="265.0" mnemonicParsing="false" text="Show cancelation requests" />
+      <Button fx:id="newAcntBtn" layoutX="227.0" layoutY="137.0" mnemonicParsing="false" onAction="#newAccount" text="Open new account" />
+      <Button fx:id="gnrtRprtBtn" layoutX="223.0" layoutY="200.0" mnemonicParsing="false" onAction="#generateReport" text="Generate new report" />
+      <Button fx:id="edtPrmsnsBtn" layoutX="218.0" layoutY="262.0" mnemonicParsing="false" text="Edit users permissions " />
+      <Button fx:id="shwCnclBtn" layoutX="206.0" layoutY="327.0" mnemonicParsing="false" text="Show cancelation requests" />
    </children>
 </Pane>

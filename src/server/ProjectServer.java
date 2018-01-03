@@ -23,19 +23,28 @@ import ocsf.*;
  */
 public class ProjectServer extends AbstractServer 
 {
+	//do not touch//
 	private static Connection con;
 	private static String driver="com.mysql.jdbc.Driver";
   final public static int DEFAULT_PORT = 5555;
   
   
   /// * Constructs an instance of the echo server.
-  
+  /**
+   * Constructor for the server
+   * @param port the port of the server
+   */
   public ProjectServer(int port) 
   {
     super(port);
   }
   
-  //method for connecting to DB
+  /**
+   * method for connecting to DB
+   * @return	the Connection
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
   protected static  Connection connectToDB() throws SQLException, ClassNotFoundException
   {
 	// Class.forName("com.mysql.jdbc.Driver");
@@ -43,7 +52,7 @@ public class ProjectServer extends AbstractServer
   }
   
   /**
-   * This method removes the connection of the user from the connceted client list
+   * This method removes the connection of the user from the connected client list
    * @param username
    */
   private void terminateConnection(String username)
@@ -52,7 +61,7 @@ public class ProjectServer extends AbstractServer
   }
   /** This method handles any login attempt messages received from the client.
   *
-  * @param msg The message received from the client.
+  * @param msg The message received from the client (the userName and the password)
   * @param client The connection from which the message originated.
  * @throws ClassNotFoundException 
  * @throws SQLException 
@@ -60,7 +69,7 @@ public class ProjectServer extends AbstractServer
 	public ArrayList<String> login(ConnectionToClient client, String loginInfo)
 			throws ClassNotFoundException, SQLException {
 		ArrayList<String> returnMessage = new ArrayList<String>();
-		String[] data = loginInfo.split("~");
+		String[] data = loginInfo.split("~");	//split the userName and the password
 		int attempts;
 		Statement stmt;
 		try
@@ -105,7 +114,8 @@ public class ProjectServer extends AbstractServer
 					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
-					ConnectedClients.insertNewConnection(data[0]);
+
+					ConnectedClients.insertNewConnection(data[0]);	//insert the userName to the connected list of users
 					return returnMessage;
 				}
 			} else if (!(data[1].equals(rs.getString(2)))) //if password received does not match the data base 
@@ -143,7 +153,7 @@ public class ProjectServer extends AbstractServer
    */
   public String insertProduct(String msg, ConnectionToClient client) throws SQLException, ClassNotFoundException
   {
-	  String [] data= msg.split(" ");
+	  String [] data= msg.split("~");	//split the data
 	  Statement stmt;
 	  try
 	    {

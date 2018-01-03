@@ -19,25 +19,26 @@ public class Client extends AbstractClient {
 	private String username;
 	private int operation;
 	private Object messageFromServer;
-//	private final BooleanProperty newMessageFromServer;
 	private  Boolean confirmationFromServer;
 	private  ArrayList<String> ArrayListFromSrvr=null;
 	private String stringFromServer;
-	//ChatIF clientUI; 
 	
-	public Client(String host, int port,String username) throws IOException 
-		  {
-		    super(host, port); 			//Call the superclass constructor
-		    this.username=username;
-//		    fromUI=(String)obj;
-//		    operation=opr;
-		//    this.clientUI = clientUI;
-//		    newMessageFromServer = new SimpleBooleanProperty(false);
-		    confirmationFromServer=false;
-		    openConnection();
-		  
-		  }
-	
+	/**
+	 * This is the constructor for the client
+	 * the connection is opened using the openConnection from the ocsf
+	 * @param host	the IP of the server
+	 * @param port	the port for the connection
+	 * @param username	the userName of the client
+	 * @throws IOException	throw if there is connection error
+	 */
+	public Client(String host, int port, String username) throws IOException {
+		super(host, port); //Call the superclass constructor
+		this.username = username; //save the userName 
+		confirmationFromServer = false; //set the confirmation from the server to false --> changed to true when server replies after conducting an action
+		openConnection(); //connect to server
+
+	}
+
 	///Instance methods ************************************************
 	
 	  /**
@@ -82,7 +83,9 @@ public class Client extends AbstractClient {
 		  this.operation=op;
 	  }
 	  
-	  
+	  /**
+	   * This method recognizes the wanted operation and calls the handleMessageFromClientUI to send the data to the server.
+	   */
 		public void accept() {
 			// TODO Auto-generated method stub
 			if(this.operation == -1) {
