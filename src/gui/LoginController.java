@@ -177,7 +177,7 @@ public class LoginController implements Initializable {
 			swmc.showStoreWorkerMenu();
 			break;
 		case 4:	//store manager
-			showMessage("Logged in as a store manager");
+			//showMessage("Logged in as a store manager");
 			mmc=new ManagerMenuController(this.clnt);
 			mmc.showManagerMenu();
 			break;
