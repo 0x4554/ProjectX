@@ -15,6 +15,10 @@ package entities;
  */
 public interface UserInterface {
 
+	final double monthlySubscriptionDiscount = 0.05 ;
+	final double yearlySubscriptionDiscount = 0.1;
+	
+	public enum accountStatus{confirmed,onHold,unconfirmed};
 	/**
 	 * Getter for the userName
 	 * @return the userName
