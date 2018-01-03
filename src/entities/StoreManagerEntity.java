@@ -1,6 +1,6 @@
 package entities;
 
-public class ManagerEntity extends UserEntity {
+public class StoreManagerEntity extends StoreWorkerEntity {
 	private String branch;
 	private String workerid;
 }
