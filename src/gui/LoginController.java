@@ -50,6 +50,11 @@ public class LoginController implements Initializable {
 	private Client clnt;
 	private CustomerMenuController cmc;
 	private ManagerMenuController mmc;
+	private AdministratorMenuController amc;
+	private StoreWorkerMenuController swmc;
+	private CustomerServiceWorkerMenuController cswmc;
+	private ChainStoreManagerMenuController csmmc;
+	private CustomerServiceExpertMenuController csemc;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -161,7 +166,8 @@ public class LoginController implements Initializable {
 		{
 		case 1:	//system administrator (system manager)
 			showMessage("Logged in as an administrator");
-			
+			amc = new AdministratorMenuController(this.clnt);
+			amc.showAdministratorMenu();
 			break;
 		case 2:	//customer
 			showMessage("Logged in as a customer");
@@ -171,7 +177,8 @@ public class LoginController implements Initializable {
 			break;
 		case 3:	//store worker
 			showMessage("Logged in as a store worker");
-			
+			swmc = new StoreWorkerMenuController(this.clnt);
+			swmc.showStoreWorkerMenu();
 			break;
 		case 4:	//store manager
 			showMessage("Logged in as a store manager");
@@ -180,15 +187,18 @@ public class LoginController implements Initializable {
 			break;
 		case 5:	//customer service worker
 			showMessage("Logged in as a customer service worker");
-			
+			cswmc = new CustomerServiceWorkerMenuController(this.clnt);
+			cswmc.showCostumerServiceWorkerMenu();
 			break;
 		case 6:	//chain store manager
 			showMessage("Logged in as a chain store manager");
-			
+			csmmc = new ChainStoreManagerMenuController(this.clnt);
+			csmmc.showChainStoreManagerMenu();
 			break;
 		case 7:	//customer service expert
 			showMessage("Logged in as a customer service expert");
-			
+			csemc = new CustomerServiceExpertMenuController(this.clnt);
+			csemc.showCustomerServiceExpertMenu();
 			break;
 		}
 	}

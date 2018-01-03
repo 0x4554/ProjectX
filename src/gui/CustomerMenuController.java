@@ -54,7 +54,10 @@ public class CustomerMenuController implements Initializable{
 	{
 		
 	}
-	
+	/**
+	 * This method saves the client connection to the controller
+	 * @param clnt	the connection client
+	 */
 	
 	public void setConnectionData(Client clnt)
 	{
