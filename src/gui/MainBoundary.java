@@ -58,7 +58,7 @@ public class MainBoundary extends Application {
 	public void searchProduct(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("SearchProductGUI.fxml").openStream());
+		 Parent root = loader.load(getClass().getResource("SearchProductBoundary.fxml").openStream());
 		 FindProductController fnd = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 	//	 fnd.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
@@ -83,7 +83,7 @@ public class MainBoundary extends Application {
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		Stage primaryStage=new Stage();
-		Parent root= FXMLLoader.load(getClass().getResource("MenuGUI.fxml"));
+		Parent root= FXMLLoader.load(getClass().getResource("MenuBoundary.fxml"));
 		Scene scene=new Scene(root);
 		
 		primaryStage.setTitle("Search Product");
@@ -108,7 +108,7 @@ public class MainBoundary extends Application {
 		
 		this.primaryStage = primaryStage;
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("MenuGUI.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("MenuBoundary.fxml").openStream());
 //		MainBoundary mainB = loader.getController();
 		
 		Scene scene=new Scene(root);

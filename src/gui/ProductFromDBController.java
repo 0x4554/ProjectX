@@ -33,7 +33,7 @@ public class ProductFromDBController implements Initializable{
 	public void showProductDetails(ArrayList<String> data,MainBoundary main) throws IOException {
 		Stage secondaryStage=new Stage();
 		FXMLLoader loader = new FXMLLoader();	//create an FXMLLoader
-		Parent root= loader.load(getClass().getResource("ProductFromDBGUI.fxml").openStream());
+		Parent root= loader.load(getClass().getResource("ProductFromDBBoundary.fxml").openStream());
 		Scene scene=new Scene(root);
 		
 		ProductFromDBController pdb = (ProductFromDBController)loader.getController();	//get the FXMLLoader controller for use in the pdb (for using it's functions as a controller)
