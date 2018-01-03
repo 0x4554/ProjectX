@@ -12,6 +12,24 @@ package entities;
  *
  */
 public class StoreWorkerEntity extends UserEntity {
+	/**
+	 * Constructor for the StoreWorkerEntity.java class
+	 * invokes the UserEntity constructor for the store worker
+	 * @param userType
+	 */
+	public StoreWorkerEntity() {
+		super("storeWorker");
+		
+	}
+	/**
+	 * 
+	 * Constructor for the StoreManagerEntity class which extends StoreWorkerEntity class
+	 * @param type	storeManager
+	 */
+	public StoreWorkerEntity(String type)
+	{
+		super(type);
+	}
 	private int branchID;
 	private int workerid;
 	/**

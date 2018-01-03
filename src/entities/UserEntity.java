@@ -12,24 +12,34 @@ package entities;
  * This project was made by the ProjectX team
  */
 public abstract class  UserEntity implements UserInterface{
-	private String UserName;
-	private String Password;
-	private String UserType;
-	private long PhoneNumber;
+	private String userName;
+	private String password;
+	private String userType;
+	private long phoneNumber;
 	private String EmailAddress;
+	/**
+	 * 
+	 * Constructor for the UserEntity.java class
+	 * This constructor sets the user's type 
+	 * @param userType the type of the user
+	 */
+	public UserEntity(String userType)
+	{
+		this.userType = userType;
+	}
 	/**
 	 * Getter for the phone number
 	 * @return	the phone number
 	 */
 	public long getPhoneNumber() {
-		return PhoneNumber;
+		return phoneNumber;
 	}
 	/**
 	 * Setter for the phone number
 	 * @param phoneNumber the new phone number
 	 */
 	public void setPhoneNumber(long phoneNumber) {
-		PhoneNumber = phoneNumber;
+		phoneNumber = phoneNumber;
 	}
 	/**
 	 * Getter for the Email address
@@ -50,42 +60,42 @@ public abstract class  UserEntity implements UserInterface{
 	 * @return the userName
 	 */
 	public String getUserName() {
-		return UserName;
+		return userName;
 	}
 	/**
 	 * Setter for the userName
 	 * @param userName the userName
 	 */
 	public void setUserName(String userName) {
-		UserName = userName;
+		userName = userName;
 	}
 	/**
 	 * Getter for the password
 	 * @return	the password
 	 */
 	public String getPassword() {
-		return Password;
+		return password;
 	}
 	/**
 	 * Setter for the password
 	 * @param password the password
 	 */
 	public void setPassword(String password) {
-		Password = password;
+		password = password;
 	}
 	/**
 	 * Getter for the user type
 	 * @return	the user type
 	 */
 	public String getUserType() {
-		return UserType;
+		return userType;
 	}
 	/**
 	 * Setter for the user type
 	 * @param userType	the user type
 	 */
 	public void setUserType(String userType) {
-		UserType = userType;
+		userType = userType;
 	}
 	
 	
