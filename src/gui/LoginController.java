@@ -99,13 +99,14 @@ public class LoginController implements Initializable {
 		{
 			String username_password = "";
 			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();	//set the new data as string
-		//	try {
 			ArrayList<String> dataFromServer = null;
 			try
 			{
 			this.clnt = new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText());	//attempt to create a connection from client to server
 			}catch(IOException e){	//if there were a connection exception
+
 				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
+
 			}
 			this.clnt.setDataFromUI(username_password, 1);	//set the data and the operation to send from the client to the server
 			this.clnt.accept();	//sends to server
@@ -147,10 +148,6 @@ public class LoginController implements Initializable {
 					GeneralMessageController.showMessage("User is already connected to the system.");
 				}
 			}
-		//	}
-//			catch(IOException e){	//if there were a connection exception
-//				showMessage("Failed connecting to the server.\nCheck entered IP");
-//			}
 		}
 	}
 	
