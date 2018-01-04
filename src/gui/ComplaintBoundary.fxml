@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ComplaintController">
    <children>
       <Label layoutX="218.0" layoutY="30.0" text="New Complaint">
          <font>
@@ -17,10 +16,10 @@
       </Label>
       <Label layoutX="141.0" layoutY="76.0" text="Dear customer, we are very sorry for the inconvinience" />
       <Label layoutX="215.0" layoutY="128.0" text="Please tell us what went wrong" />
-      <TextArea layoutX="141.0" layoutY="154.0" prefHeight="200.0" prefWidth="341.0" />
-      <Button layoutX="142.0" layoutY="363.0" mnemonicParsing="false" text="Upload Photo" />
-      <Button layoutX="330.0" layoutY="409.0" mnemonicParsing="false" text="Send" />
-      <Button layoutX="231.0" layoutY="409.0" mnemonicParsing="false" text="Cancel" />
-      <TextField layoutX="261.0" layoutY="363.0" prefHeight="26.0" prefWidth="220.0" />
+      <TextArea fx:id="cmpDtsTxtArea" layoutX="141.0" layoutY="154.0" prefHeight="200.0" prefWidth="341.0" />
+      <Button fx:id="upldBtn" layoutX="142.0" layoutY="363.0" mnemonicParsing="false" onAction="#searchForPhoto" text="Upload Photo" />
+      <Button fx:id="sndBtn" layoutX="330.0" layoutY="409.0" mnemonicParsing="false" onAction="#getComplaintData" text="Send" />
+      <Button fx:id="cnclBtn" layoutX="231.0" layoutY="409.0" mnemonicParsing="false" onAction="#cancelComplaint" text="Cancel" />
+      <TextField fx:id="picPathTxtFld" layoutX="261.0" layoutY="363.0" prefHeight="26.0" prefWidth="220.0" />
    </children>
 </Pane>
