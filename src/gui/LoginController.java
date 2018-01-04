@@ -108,7 +108,7 @@ public class LoginController implements Initializable {
 				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
 
 			}
-			this.clnt.setDataFromUI(username_password, 1);	//set the data and the operation to send from the client to the server
+			this.clnt.setDataFromUI(username_password, "login!");	//set the data and the operation to send from the client to the server
 			this.clnt.accept();	//sends to server
 			while(!this.clnt.getConfirmationFromServer())	//wait until server replies
 				Thread.sleep(100);
@@ -205,7 +205,7 @@ public class LoginController implements Initializable {
 	public void signalAppClose()
 	{
 		if(this.clnt!=null) {
-		this.clnt.setDataFromUI(this.clnt.getUsername(), -1);
+		this.clnt.setDataFromUI(this.clnt.getUsername(), "exitApp!");
 		this.clnt.accept();
 		this.clnt.quit();
 		}

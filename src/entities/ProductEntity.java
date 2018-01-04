@@ -4,7 +4,7 @@ public class ProductEntity {
 	private String productID;
 	private String productName;
 	private String productType;
-	private String productPrice;
+	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
 	/**
@@ -53,14 +53,14 @@ public class ProductEntity {
 	 * Getter for the productPrice
 	 * @return the productPrice
 	 */
-	public String getProductPrice() {
+	public Double getProductPrice() {
 		return productPrice;
 	}
 	/**
 	 * Setter for the productPrice
 	 * @param productPrice the productPrice to set
 	 */
-	public void setProductPrice(String productPrice) {
+	public void setProductPrice(Double productPrice) {
 		this.productPrice = productPrice;
 	}
 	/**

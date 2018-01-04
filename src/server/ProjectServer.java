@@ -305,30 +305,30 @@ public class ProjectServer extends AbstractServer
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
 	  String generalMessage;
-	  String s=(String)msg;
+	  String operation=(String)msg;
 	  String mess=(String)msg;
-	  mess=mess.substring(mess.indexOf(" ")+1,mess.length());
+	  mess=mess.substring(mess.indexOf("!")+1,mess.length());
 	  
-	  	s=s.substring(0,s.indexOf(" "));
+	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		try {
 		System.out.println("<user>"+(String)msg);
-		if(s.equals("close"))
+		if(operation.equals("close"))
 		{
 			this.terminateConnection(mess);
 		}
-		if(s.equals("login"))
+		if(operation.equals("login"))
 		{
 			retval = this.login(client,mess);
 			sendToAllClients(retval);	//send arraylist back to client
 		}
-		if(s.equals("find"))	//check if asked to find an existing product
+		if(operation.equals("find"))	//check if asked to find an existing product
 		{
 			retval = this.getProduct(client,mess);	//get the product's details
 			sendToAllClients(retval);	//send arraylist back to client
 		}
-		if(s.equals("create"))
+		if(operation.equals("create"))
 		{
 			mess=mess.substring(1,mess.length());
 			if((this.insertProduct((String)mess, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
