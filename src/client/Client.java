@@ -100,7 +100,9 @@ public class Client extends AbstractClient {
 			if(this.operation==3) {
 				this.fromUI="find "+this.fromUI;
 			}
-			
+			if(this.operation==4) {						//for create new account
+				this.fromUI="create new account";
+			}
 			
 			try {
 			this.handleMessageFromClientUI(this.fromUI);

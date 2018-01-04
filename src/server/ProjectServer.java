@@ -40,6 +40,61 @@ public class ProjectServer extends AbstractServer
   }
   
   /**
+   * This method receives the file from the client?????????????????????????
+   * @param fileLocation
+   * @param messagePath
+   * @param fileSize
+   * @throws IOException
+   */
+  /*public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
+	{
+
+		int bytesRead=0;
+		int current = 0;
+		FileInputStream fileInputStream = null;
+		FileOutputStream fileOutputStream = null;
+		BufferedOutputStream bufferedOutputStream = null;
+	//	Socket socket = null;
+		try {
+
+			//creating connection.
+	//		socket = new Socket(ipAddress,portNo);
+			System.out.println("connected.");
+			
+			// receive file
+			byte [] byteArray  = new byte [fileSize];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
+			System.out.println("Please wait downloading file");
+			
+			//reading file from socket
+		//	InputStream inputStream = socket.getInputStream();
+			fileInputStream = new FileInputStream(messagePath);
+			fileOutputStream = new FileOutputStream("C:\\Users\\M207user\\Downloads\\new.pdf");
+			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+		
+			bytesRead=fileInputStream.read(byteArray,0,fileSize);
+			
+		//	bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
+			
+
+			current = bytesRead;
+			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
+			bufferedOutputStream.flush();												//flushing buffers
+			
+			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if (fileInputStream != null) fileInputStream.close();
+			if (fileOutputStream != null) fileOutputStream.close();
+			if (bufferedOutputStream != null) bufferedOutputStream.close();
+		//	if (socket != null) socket.close();
+		}
+	}*/
+  
+  
+  /**
    * method for connecting to DB
    * @return	the Connection
    * @throws SQLException
