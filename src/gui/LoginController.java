@@ -167,7 +167,7 @@ public class LoginController implements Initializable {
 			GeneralMessageController.showMessage("Logged in as an administrator");
 			break;
 		case 2:	//customer
-			cmc = new CustomerMenuController(this.clnt);
+			cmc = new CustomerMenuController(this.clnt,this);
 			cmc.showCustomerMenu();
 			GeneralMessageController.showMessage("Logged in as a customer");
 			break;

@@ -15,8 +15,8 @@
       <Button fx:id="ordBtn" layoutX="102.0" layoutY="124.0" mnemonicParsing="false" onAction="#enterToOrder" prefHeight="31.0" prefWidth="121.0" text="Order" />
       <Button fx:id="updeatilsBtn" layoutX="102.0" layoutY="185.0" mnemonicParsing="false" onAction="#enterToUpdateDetails" prefHeight="31.0" prefWidth="121.0" text="Update Details" />
       <Button fx:id="viewcatBtn" layoutX="103.0" layoutY="248.0" mnemonicParsing="false" onAction="#enterCatalog" prefHeight="31.0" prefWidth="121.0" text="View Catalog" />
-      <Button fx:id="complBtn" layoutX="380.0" layoutY="185.0" mnemonicParsing="false" onAction="#startComplaint" prefHeight="31.0" prefWidth="121.0" text="Complaint" />
+      <Button fx:id="cmplntBtn" layoutX="380.0" layoutY="185.0" mnemonicParsing="false" onAction="#startComplaint" prefHeight="31.0" prefWidth="121.0" text="Complaint" />
       <Button fx:id="watchaccBtn" layoutX="380.0" layoutY="124.0" mnemonicParsing="false" onAction="#enterToAccount" text="Watch Account" />
-      <Button fx:id="backBtn" layoutX="275.0" layoutY="335.0" mnemonicParsing="false" text="Back" />
+      <Button fx:id="logoutBtn" layoutX="275.0" layoutY="335.0" mnemonicParsing="false" onAction="#logOutCustomer" text="Log Out" />
    </children>
 </Pane>

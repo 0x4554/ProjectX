@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import logic.ConnectedClients;
 
 public class CustomerMenuController implements Initializable{
 	
@@ -28,6 +29,7 @@ public class CustomerMenuController implements Initializable{
 	private Stage primaryStage;
 	
 	private Client clnt;
+	private LoginController logcon;
 	
 	//*buttons of the customer menu*//
 	@FXML private Label mmlbl;
@@ -35,16 +37,17 @@ public class CustomerMenuController implements Initializable{
 	@FXML private Button updeatilsBtn;
 	@FXML private Button viewcatBtn;
 	@FXML private Button watchaccBtn;
-	@FXML private Button complBtn;
-	@FXML private Button backBtn;
+	@FXML private Button cmplntBtn;
+	@FXML private Button logoutBtn;
 	
 	/**
 	 * This method is the constructor for this class
 	 * @param clnt	the connected client
 	 */
-	public CustomerMenuController(Client clnt)
+	public CustomerMenuController(Client clnt,LoginController lc)
 	{
 		this.clnt=clnt;
+		this.logcon=lc;		
 	}
 	
 	/**
@@ -69,11 +72,11 @@ public class CustomerMenuController implements Initializable{
 	public void showCustomerMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("CustomerMenuBoundary.fxml").openStream());
-		 
+		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
+		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		cmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
@@ -86,7 +89,7 @@ public class CustomerMenuController implements Initializable{
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("OrderMenuBoundary.fxml").openStream());
+		 Parent root = loader.load(getClass().getResource("/gui/OrderMenuBoundary.fxml").openStream());
 		 OrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 	//	 ord.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
@@ -100,7 +103,7 @@ public class CustomerMenuController implements Initializable{
 	public void enterCatalog(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("CatalogBoundary.fxml").openStream());
+		 Parent root = loader.load(getClass().getResource("/gui/CatalogBoundary.fxml").openStream());
 		 CatalogController catg = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 	//	 ord.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
@@ -118,7 +121,7 @@ public class CustomerMenuController implements Initializable{
 		public void enterToAccount(ActionEvent event) throws IOException {
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
-			 Parent root = loader.load(getClass().getResource("AccountDetailsBoundary.fxml").openStream());
+			 Parent root = loader.load(getClass().getResource("/gui/AccountDetailsBoundary.fxml").openStream());
 			 AccountController acc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		//	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
@@ -132,7 +135,7 @@ public class CustomerMenuController implements Initializable{
 				public void enterToUpdateDetails(ActionEvent event) throws IOException {
 					 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					 FXMLLoader loader = new FXMLLoader();
-					 Parent root = loader.load(getClass().getResource("UpdateAccountBoundary.fxml").openStream());
+					 Parent root = loader.load(getClass().getResource("/gui/UpdateAccountBoundary.fxml").openStream());
 					 UpdateAccountController upac= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 				//	 ord.setConnectionData(DEFAULT_PORT, this);
 					Stage primaryStage=new Stage();
@@ -149,19 +152,21 @@ public class CustomerMenuController implements Initializable{
 				 * @param event
 				 * @throws IOException
 				 */
-				public void backToMainMenu(ActionEvent event) throws IOException	//when click "Back" return to main menu
+				public void logOutCustomer(ActionEvent event) throws IOException	//when click "Back" return to main menu
 				{
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					///////////////********To Implement*********///////////////
+					ConnectedClients.removeConnectedClient(this.clnt.getUsername());
+					GeneralMessageController.showMessage("Bye Bye "+this.clnt.getUsername()+" we hope to see you soon");
+					//////////////////Check returning to login page//////////////////////////
 				}
 				
 				
 				public void startComplaint(ActionEvent event) throws IOException {
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					 FXMLLoader loader = new FXMLLoader();
-					 Parent root = loader.load(getClass().getResource("CompliantBoundary.fxml").openStream());
-					 UpdateAccountController upac= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-				//	 ord.setConnectionData(DEFAULT_PORT, this);
+					 Parent root = loader.load(getClass().getResource("/gui/ComplaintBoundary.fxml").openStream());
+					 ComplaintController cmpc= loader.getController();	//set the controller to the ComplaintBoundary to control the SearchProductGUI window
+					 cmpc.setConnectionData(this);
 					Stage primaryStage=new Stage();
 					Scene scene=new Scene(root);
 					primaryStage.setTitle("Complaint");
