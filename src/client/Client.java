@@ -17,7 +17,7 @@ public class Client extends AbstractClient {
 	
 	private String fromUI;
 	private String username;
-	private int operation;
+//	private String operation;
 	private Object messageFromServer;
 	private  Boolean confirmationFromServer;
 	private  ArrayList<String> ArrayListFromSrvr=null;
@@ -77,10 +77,11 @@ public class Client extends AbstractClient {
 	   * @param data	requested data
 	   * @param op	wanted operation
 	   */
-	  public void setDataFromUI(String data,int op)
+	  public void setDataFromUI(String data,String operation)
 	  {
 		  this.fromUI= data;
-		  this.operation=op;
+		//  this.operation=op;
+		  this.fromUI = operation+ this.fromUI;	//set the data together with the wanted operation
 	  }
 	  
 	  /**
@@ -88,21 +89,21 @@ public class Client extends AbstractClient {
 	   */
 		public void accept() {
 			// TODO Auto-generated method stub
-			if(this.operation == -1) {
-				this.fromUI = "close "+ this.fromUI;
-			}
-			if(this.operation == 1) {
-				this.fromUI = "login "+this.fromUI;
-			}
-			if(this.operation==2) {
-				this.fromUI="create "+this.fromUI;
-			}
-			if(this.operation==3) {
-				this.fromUI="find "+this.fromUI;
-			}
-			if(this.operation==4) {						//for create new account
-				this.fromUI="create new account";
-			}
+//			if(this.operation == -1) {
+//				this.fromUI = "close "+ this.fromUI;
+//			}
+//			if(this.operation == 1) {
+//				this.fromUI = "login "+this.fromUI;
+//			}
+//			if(this.operation==2) {
+//				this.fromUI="create "+this.fromUI;
+//			}
+//			if(this.operation==3) {
+//				this.fromUI="find "+this.fromUI;
+//			}
+//			if(this.operation==4) {						//for create new account
+//				this.fromUI="create new account";
+//			}
 			
 			try {
 			this.handleMessageFromClientUI(this.fromUI);
