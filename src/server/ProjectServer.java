@@ -150,21 +150,21 @@ public class ProjectServer extends AbstractServer
 		{
 			if (ConnectedClients.isConnected(data[0]))	//if the user is already logged in to the system
 			{
-				//failed - ArrayList<String> to return in form of ["failed",reason of failure]
-				returnMessage.add("failed"); //state failed to log in
-				returnMessage.add("user is already logged in"); //reason for failure
-				return returnMessage;
-			} else if (data[1].equals(rs.getString(2))) //if password received matches the data base 
-			{
-				if (rs.getInt(4) == 3)
-				{ //if user is already blocked from too many login attempts
 					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
-					returnMessage.add("failed"); //state failed to log in
-					returnMessage.add("user is blocked"); //reason for failure
+				returnMessage.add("failed"); 							//state failed to log in
+				returnMessage.add("user is already logged in"); 		//reason for failure
+				return returnMessage;
+			} else if (data[1].equals(rs.getString(2))) 				//if password received matches the data base 
+			{
+				if (rs.getInt(4) == 3)	//if user is already blocked from too many login attempts
+				{ 
+						//failed - ArrayList<String> to return in form of ["failed",reason of failure]
+					returnMessage.add("failed");						//state failed to log in
+					returnMessage.add("user is blocked"); 				//reason for failure
 					return returnMessage;
 				} else
 				{
-					//success - ArrayList<String> to return in form of ["success",user's type]
+										//----------success - ArrayList<String> to return in form of ["success",user's type]----------//
 					returnMessage.add("success"); //state succeeded to login
 					returnMessage.add(rs.getString(3)); //add the type of user (customer,worker...)
 					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
@@ -184,15 +184,15 @@ public class ProjectServer extends AbstractServer
 					return returnMessage;
 				} else
 				{
-					//failed - ArrayList<String> to return in form of ["failed",reason of failure,number of attempts made]
-					returnMessage.add("failed"); //state failed to log in
-					returnMessage.add("password does not match"); //reason for failure
-					attempts = rs.getInt(4) + 1; //increment number of attempts made
+						//failed - ArrayList<String> to return in form of ["failed",reason of failure,number of attempts made]
+					returnMessage.add("failed"); 							//state failed to log in
+					returnMessage.add("password does not match"); 			//reason for failure
+					attempts = rs.getInt(4) + 1; 							//increment number of attempts made
 					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
 					ps.setString(2, data[0]);
-					ps.setInt(1, attempts); //update the number of attempts made to log in 
+					ps.setInt(1, attempts); 								//update the number of attempts made to log in 
 					ps.executeUpdate();
-					returnMessage.add(Integer.toString(attempts)); //add the number of attempts left
+					returnMessage.add(Integer.toString(attempts));			//add the number of attempts left
 					return returnMessage;
 				}
 			}
@@ -242,9 +242,9 @@ public class ProjectServer extends AbstractServer
   
   /**
    * This method gets all of the products from the catalog
-   * @return returns an Arraylist of all of the products in the catalog
+   * @return returns an ArrayList of all of the products in the catalog
    * @throws ClassNotFoundException	thrown if connecting to DB failed
-   * @throws SQLException	thrown if there was an sql exception
+   * @throws SQLException	thrown if there was an SQL exception
    */
   private ArrayList<ProductEntity> getCatalog() throws ClassNotFoundException, SQLException
   {
@@ -266,13 +266,7 @@ public class ProjectServer extends AbstractServer
 	  
 	  while(rs.next())
 	  {
-		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new istance of a product
-//		 product.setProductID(rs.getString(1));
-//		 product.setProductName(rs.getString(2));
-//		 product.setProductType(rs.getString(3));
-//		 product.setProductPrice(rs.getDouble(4));
-//		 product.setProductDescription(rs.getString(5));
-//		 product.setProductDominantColor(rs.getString(6));
+		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
 		 listOfProducts.add(product);	//add the product from the data base to the list
 	  }
 	  return listOfProducts;
@@ -302,7 +296,7 @@ public class ProjectServer extends AbstractServer
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID = "+str);	//query for extracting a prodcut's details
 	  
 	  
-	  while(rs.next()) {	//run for the extracted data and add it to an arraylist of strings  
+	  while(rs.next()) {	//run for the extracted data and add it to an arrayList of strings  
 		  msg1.add(rs.getString(1));
 		  msg1.add(rs.getString(2));
 		  msg1.add(rs.getString(3));

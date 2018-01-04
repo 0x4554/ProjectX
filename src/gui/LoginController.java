@@ -118,7 +118,7 @@ public class LoginController implements Initializable {
 				try
 				{
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-				toUserMenu(Integer.parseInt(dataFromServer.get(1)));	//call method to sort the user's type
+				toUserMenu(dataFromServer.get(1));	//call method to sort the user's type
 				}catch(Exception e) {	//finally close connection to the server from the client
 					e.printStackTrace();
 					signalAppClose();	//close connection
@@ -156,42 +156,42 @@ public class LoginController implements Initializable {
 	 * @param userType the type of the user who logged in
 	 * @throws IOException for the FXMLLoader in GeneralMessageController
 	 */
-	private void toUserMenu(int userType) throws IOException
+	private void toUserMenu(String userType) throws IOException
 	{
 		//Depending on the user's type (customer,store manager...) choose which menu to present to the UI
 		switch (userType)
 		{
-		case 1:	//system administrator (system manager)
+		case "AD":	//system administrator (system manager)
 			amc = new AdministratorMenuController(this.clnt);
 			amc.showAdministratorMenu();
 			GeneralMessageController.showMessage("Logged in as an administrator");
 			break;
-		case 2:	//customer
+		case "C":	//customer
 			cmc = new CustomerMenuController(this.clnt,this);
 			cmc.showCustomerMenu();
 			GeneralMessageController.showMessage("Logged in as a customer");
 			break;
-		case 3:	//store worker
+		case "SW":	//store worker
 			swmc = new StoreWorkerMenuController(this.clnt);
 			swmc.showStoreWorkerMenu();
 			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
-		case 4:	//store manager
+		case "SM":	//store manager
 			mmc=new ManagerMenuController(this.clnt);
 			mmc.showManagerMenu();
 			GeneralMessageController.showMessage("Logged in as a store manager");
 			break;
-		case 5:	//customer service worker
+		case "CSW":	//customer service worker
 			cswmc = new CustomerServiceWorkerMenuController(this.clnt);
 			cswmc.showCostumerServiceWorkerMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service worker");
 			break;
-		case 6:	//chain store manager
+		case "CSM":	//chain store manager
 			csmmc = new ChainStoreManagerMenuController(this.clnt);
 			csmmc.showChainStoreManagerMenu();
 			GeneralMessageController.showMessage("Logged in as a chain store manager");
 			break;
-		case 7:	//customer service expert
+		case "CSE":	//customer service expert
 			csemc = new CustomerServiceExpertMenuController(this.clnt);
 			csemc.showCustomerServiceExpertMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service expert");
