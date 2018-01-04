@@ -75,7 +75,7 @@ public class Client extends AbstractClient {
 	   * This method sets the requested data and the wanted operation
 	   * 
 	   * @param data	requested data
-	   * @param op	wanted operation
+	   * @param op	wanted operation ends with ! : "<operation>!"
 	   */
 	  public void setDataFromUI(String data,String operation)
 	  {

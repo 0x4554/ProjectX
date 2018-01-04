@@ -7,6 +7,27 @@ public class ProductEntity {
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+	
+	/**
+	 * Constructor for the ProductEntity.java class
+	 * @param productID	the product's id
+	 * @param productName	the name
+	 * @param productType	the type
+	 * @param productPrice	the base price
+	 * @param productDescription	description
+	 * @param productDominantColor	dominant color
+	 */
+	public ProductEntity(String productID, String productName, String productType, Double productPrice,
+			String productDescription, String productDominantColor) {
+		super();
+		this.productID = productID;
+		this.productName = productName;
+		this.productType = productType;
+		this.productPrice = productPrice;
+		this.productDescription = productDescription;
+		this.productDominantColor = productDominantColor;
+	}
+	
 	/**
 	 * Getter for the productID
 	 * @return the productID

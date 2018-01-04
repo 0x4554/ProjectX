@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import entities.ProductEntity;
 import logic.ConnectedClients;
 import ocsf.server.*;
 import ocsf.*;
@@ -93,7 +94,6 @@ public class ProjectServer extends AbstractServer
 		}
 	}*/
   
-  
   /**
    * method for connecting to DB
    * @return	the Connection
@@ -114,6 +114,7 @@ public class ProjectServer extends AbstractServer
   {
 	  ConnectedClients.removeConnectedClient(username);
   }
+  
   /** This method handles any login attempt messages received from the client.
   *
   * @param msg The message received from the client (the userName and the password)
@@ -239,6 +240,43 @@ public class ProjectServer extends AbstractServer
 	    
 	  }
   
+  /**
+   * This method gets all of the products from the catalog
+   * @return returns an Arraylist of all of the products in the catalog
+   * @throws ClassNotFoundException	thrown if connecting to DB failed
+   * @throws SQLException	thrown if there was an sql exception
+   */
+  private ArrayList<ProductEntity> getCatalog() throws ClassNotFoundException, SQLException
+  {
+	  ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
+	  ProductEntity product;
+	  Statement stmt;
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	    if(con!=null)
+	    System.out.println("Connection to Data Base succeeded");  
+	    }
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
+	  stmt = con.createStatement();
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.catalog");	//get all the products in the catalog table from the data base
+	  
+	  while(rs.next())
+	  {
+		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new istance of a product
+//		 product.setProductID(rs.getString(1));
+//		 product.setProductName(rs.getString(2));
+//		 product.setProductType(rs.getString(3));
+//		 product.setProductPrice(rs.getDouble(4));
+//		 product.setProductDescription(rs.getString(5));
+//		 product.setProductDominantColor(rs.getString(6));
+		 listOfProducts.add(product);	//add the product from the data base to the list
+	  }
+	  return listOfProducts;
+  }
   
   /** This method handles product search messages received from the client.
   *
@@ -249,8 +287,7 @@ public class ProjectServer extends AbstractServer
   {
 	  ArrayList<String> msg1 = new ArrayList<String>();
 	  Statement stmt;
-	  int i=1;
-	  String str = (String) asked;
+	  String str = (String) asked;	/**The asked Product**/
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -300,38 +337,50 @@ public class ProjectServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
-  
+  /**
+   * This method handles the message received from the client
+   */
   @Override
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
 	  String generalMessage;
 	  String operation=(String)msg;
-	  String mess=(String)msg;
-	  mess=mess.substring(mess.indexOf("!")+1,mess.length());
+	  String messageFromClient=(String)msg;
+	  
+	  messageFromClient=messageFromClient.substring(messageFromClient.indexOf("!")+1,messageFromClient.length());	/**set apart the operation from the message from the client**/
 	  
 	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		try {
 		System.out.println("<user>"+(String)msg);
-		if(operation.equals("close"))
+		if(operation.equals("getCatalog"))
 		{
-			this.terminateConnection(mess);
+			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
+			listOfProducts = getCatalog();
+		}
+//		if(operation.equals("addNewProdcutToCatalog"))
+//		{
+//			retval = this.addNewProductToCatalog(messageFromClient);
+//		}
+		if(operation.equals("exitApp"))
+		{
+			this.terminateConnection(messageFromClient);	//calls a method to remove the user from the connected list
 		}
 		if(operation.equals("login"))
 		{
-			retval = this.login(client,mess);
+			retval = this.login(client,messageFromClient);
 			sendToAllClients(retval);	//send arraylist back to client
 		}
-		if(operation.equals("find"))	//check if asked to find an existing product
+		if(operation.equals("getProduct"))	//check if asked to find an existing product
 		{
-			retval = this.getProduct(client,mess);	//get the product's details
+			retval = this.getProduct(client,messageFromClient);	//get the product's details
 			sendToAllClients(retval);	//send arraylist back to client
 		}
-		if(operation.equals("create"))
+		if(operation.equals("createProduct"))
 		{
-			mess=mess.substring(1,mess.length());
-			if((this.insertProduct((String)mess, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
+			messageFromClient=messageFromClient.substring(1,messageFromClient.length());
+			if((this.insertProduct((String)messageFromClient, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
 			}
