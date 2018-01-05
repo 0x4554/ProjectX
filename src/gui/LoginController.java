@@ -219,6 +219,8 @@ public class LoginController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
 		this.srvrIPTxtFld.setText("localhost");	//set the default server's ip to local host
+		this.usrNmTxtFld.setText("katya");
+		this.psswrdTxtFld.setText("123");
 	}
 
 }

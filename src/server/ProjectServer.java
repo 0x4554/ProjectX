@@ -41,6 +41,26 @@ public class ProjectServer extends AbstractServer
   }
   
   /**
+   * method for connecting to DB
+   * @return	the Connection
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
+  protected static  Connection connectToDB() throws SQLException, ClassNotFoundException
+  {
+	// Class.forName("com.mysql.jdbc.Driver");
+ 	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","Braude");	//connect to the sql database
+  }
+  
+  /**
+   * This method removes the connection of the user from the connected client list
+   * @param username
+   */
+  private void terminateConnection(String username)
+  {
+	  ConnectedClients.removeConnectedClient(username);
+  }
+  /**
    * This method receives the file from the client?????????????????????????
    * @param fileLocation
    * @param messagePath
@@ -94,25 +114,13 @@ public class ProjectServer extends AbstractServer
 		}
 	}*/
   
-  /**
-   * method for connecting to DB
-   * @return	the Connection
-   * @throws SQLException
-   * @throws ClassNotFoundException
-   */
-  protected static  Connection connectToDB() throws SQLException, ClassNotFoundException
+  private ArrayList<String> createNewOrder(String newOrderDetails)
   {
-	// Class.forName("com.mysql.jdbc.Driver");
- 	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","Braude");	//connect to the sql database
-  }
-  
-  /**
-   * This method removes the connection of the user from the connected client list
-   * @param username
-   */
-  private void terminateConnection(String username)
-  {
-	  ConnectedClients.removeConnectedClient(username);
+	  ArrayList<String> returnMessage = new ArrayList<String>();
+	  String[] data = newOrderDetails.split("~");	//split the userName and the password
+	  
+	  
+	  return returnMessage;
   }
   
   /** This method handles any login attempt messages received from the client.
@@ -353,6 +361,14 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
 		}
+		if(operation.equals("createNewOrder"))
+		{
+			retval = createNewOrder(messageFromClient);
+		}
+//		if(operation.equals("addProductToCatalog"))
+//		{
+//			
+//		}
 //		if(operation.equals("addNewProdcutToCatalog"))
 //		{
 //			retval = this.addNewProductToCatalog(messageFromClient);
