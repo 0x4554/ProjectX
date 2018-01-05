@@ -32,16 +32,23 @@ public class OrderController implements Initializable {
 		this.clnt=clnt;
 	}
 	
-	public void CreateNewOrder(ActionEvent event) throws IOException {
+	/**
+	 * This method handles when the create new order has been pressed
+	 * @param event
+	 * @throws IOException
+	 * @throws InterruptedException 
+	 */
+	public void CreateNewOrder(ActionEvent event) throws IOException, InterruptedException {
 		((Node)event.getSource()).getScene().getWindow().hide();	//hide last window
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
-		CreateNewOrderController nom = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-
+		Parent root = loader.load(getClass().getResource("/gui/SelectStoreBoundary.fxml").openStream());
+		SelectStoreController scc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		
+		scc.showStores();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		nom.setConnectionData(this.clnt);
-		primaryStage.setTitle("New order");
+//		scc.setConnectionData(this.clnt);
+		primaryStage.setTitle("Select store");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
