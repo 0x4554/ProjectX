@@ -67,7 +67,9 @@ public class CustomerMenuController implements Initializable{
 		this.clnt=clnt;
 	}
 	
-	
+	public Client getClient() {
+		return this.clnt;
+	}
 	
 	public void showCustomerMenu() throws IOException
 	{
@@ -130,6 +132,7 @@ public class CustomerMenuController implements Initializable{
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}			
+		
 		
 		//*Open  Update details Window from customer main menu*//
 				public void enterToUpdateDetails(ActionEvent event) throws IOException {

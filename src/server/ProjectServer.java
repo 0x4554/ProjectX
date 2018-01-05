@@ -4,8 +4,7 @@
 package server;
 
 import java.io.*;
-
-
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -272,6 +271,59 @@ public class ProjectServer extends AbstractServer
 	  return listOfProducts;
   }
   
+  /**this method handles file received from user
+   * 
+   * 
+   * @param ipAddress - ip of the client
+   * @param portNo - open port for sending/receiving the file
+   * @param fileLocation - Path to where file would be saved on server side
+   * @throws IOException - IOException might be thrown during the process
+   */
+  public void receiveFileFromClient(String ipAddress,int portNo) throws IOException
+  {
+	  	String fileLocation="/home/mdhttr/Desktop";
+		int bytesRead=0;
+		int current = 0;
+		FileOutputStream fileOutputStream = null;
+		BufferedOutputStream bufferedOutputStream = null;
+		Socket socket = null;
+		try {
+
+			//creating connection.
+			socket = new Socket(ipAddress,portNo);
+			System.out.println("connected.");
+			
+			// receive file
+			byte [] byteArray  = new byte [6022386];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
+			System.out.println("Please wait downloading file");
+			
+			//reading file from socket
+			InputStream inputStream = socket.getInputStream();
+			fileOutputStream = new FileOutputStream(fileLocation);
+			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+			bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
+
+			current = bytesRead;
+			do {
+				bytesRead =inputStream.read(byteArray, current, (byteArray.length-current));
+				if(bytesRead >= 0) current += bytesRead;
+			} while(bytesRead > -1);
+			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
+			bufferedOutputStream.flush();												//flushing buffers
+			
+			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if (fileOutputStream != null) fileOutputStream.close();
+			if (bufferedOutputStream != null) bufferedOutputStream.close();
+			if (socket != null) socket.close();
+		}
+	}
+  
+  
   /** This method handles product search messages received from the client.
   *
   * @param msg The message received from the client.
@@ -346,31 +398,38 @@ public class ProjectServer extends AbstractServer
 	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
+		
 		try {
 		System.out.println("<user>"+(String)msg);
+		
 		if(operation.equals("getCatalog"))
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
 		}
+		
 //		if(operation.equals("addNewProdcutToCatalog"))
 //		{
 //			retval = this.addNewProductToCatalog(messageFromClient);
 //		}
+		
 		if(operation.equals("exitApp"))
 		{
 			this.terminateConnection(messageFromClient);	//calls a method to remove the user from the connected list
 		}
+		
 		if(operation.equals("login"))
 		{
 			retval = this.login(client,messageFromClient);
 			sendToAllClients(retval);	//send arraylist back to client
 		}
+		
 		if(operation.equals("getProduct"))	//check if asked to find an existing product
 		{
 			retval = this.getProduct(client,messageFromClient);	//get the product's details
 			sendToAllClients(retval);	//send arraylist back to client
 		}
+		
 		if(operation.equals("createProduct"))
 		{
 			messageFromClient=messageFromClient.substring(1,messageFromClient.length());
@@ -378,14 +437,23 @@ public class ProjectServer extends AbstractServer
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
 			}
+			
 			else
 			{
 				generalMessage = new String("Product was not added to the DataBase.\n(Product ID already exists)");
 			}
+			
 			sendToAllClients(generalMessage);	//send string back to client
 		}
+		
+		if(operation.equals("downloadFile")) {
+			this.receiveFileFromClient("localhost", this.getPort());
+			}
 		}
-		catch(Exception ex) {ex.printStackTrace();}
+		
+		catch(Exception ex) {
+			ex.printStackTrace();
+			}
 		
 	
 //		sendToAllClients(retval);
