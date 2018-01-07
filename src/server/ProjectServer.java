@@ -281,7 +281,11 @@ public class ProjectServer extends AbstractServer
    */
   public void receiveFileFromClient(String ipAddress,int portNo) throws IOException
   {
-	  	String fileLocation="/home/mdhttr/Desktop";
+	  	this.stopListening();
+	  	this.setPort(5556);
+	  	this.listen();
+	  
+	  	String fileLocation="/home/mdhttr/Pictures/top.png";
 		int bytesRead=0;
 		int current = 0;
 		FileOutputStream fileOutputStream = null;
@@ -298,7 +302,7 @@ public class ProjectServer extends AbstractServer
 			System.out.println("Please wait downloading file");
 			
 			//reading file from socket
-			InputStream inputStream = socket.getInputStream();
+			InputStream inputStream = new FileInputStream("/home/mdhttr/Pictures/top.png");		//socket.getInputStream();
 			fileOutputStream = new FileOutputStream(fileLocation);
 			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
 			bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
@@ -447,7 +451,7 @@ public class ProjectServer extends AbstractServer
 		}
 		
 		if(operation.equals("downloadFile")) {
-			this.receiveFileFromClient("localhost", this.getPort());
+			this.receiveFileFromClient("localhost", 5556);
 			}
 		}
 		
