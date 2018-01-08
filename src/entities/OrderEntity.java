@@ -1,10 +1,11 @@
 package entities;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 
-public class OrderEntity {
+public class OrderEntity implements Serializable{
 	public enum SelfOrDelivery{selfPickup,delivery};
 	public enum OrderStatus{active,cancelled};
 	public enum CashOrCredit{cash,credit};

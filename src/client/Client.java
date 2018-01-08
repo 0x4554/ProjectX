@@ -3,6 +3,7 @@ package client;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import entities.StoreEntity;
 import gui.MainBoundary;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,6 +22,7 @@ public class Client extends AbstractClient {
 	private Object messageFromServer;
 	private  Boolean confirmationFromServer;
 	private  ArrayList<String> ArrayListFromSrvr=null;
+	private ArrayList<StoreEntity> arrayListOfStoreEntityFromServer;
 	private String stringFromServer;
 	
 	/**
@@ -149,6 +151,20 @@ public class Client extends AbstractClient {
 		  this.stringFromServer = (String)this.messageFromServer;
 		  retMessage = new String(this.stringFromServer);
 		  return retMessage;
+	  }
+	  
+	  /**
+	   * This method return the message from the server as an ArrayList of StoreEntities
+	   * @return	ArrayList of StoreEntities
+	   */
+	  public ArrayList<StoreEntity> getArrayListOfStoreEntityFromServer()
+	  {
+		  ArrayList<StoreEntity>dtls=new ArrayList<StoreEntity>();
+		  this.arrayListOfStoreEntityFromServer = (ArrayList<StoreEntity>) this.messageFromServer;
+		for(StoreEntity store:this.arrayListOfStoreEntityFromServer) 
+				dtls.add((StoreEntity)store);
+				
+		return dtls;
 	  }
 	  
 	  /**
