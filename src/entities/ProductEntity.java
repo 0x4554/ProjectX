@@ -1,22 +1,40 @@
 package entities;
 
+import java.io.Serializable;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.Serializable;
-
 public class ProductEntity implements Serializable{
-
 	private String productID;
 	private String productName;
 	private String productType;
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
-	private ImageView productImage;
+	private Image productImage;
 	//private ImageView productImageView;
 	
+	public ProductEntity()
+	{
+		
+	}
+	/**
+	 * Getter for the productImage
+	 * @return the productImage
+	 */
+	public Image getProductImage() {
+		return productImage;
+	}
+
+	/**
+	 * Setter for the productImage
+	 * @param productImage the productImage to set
+	 */
+	public void setProductImage(Image productImage) {
+		this.productImage = productImage;
+	}
+
 	/**
 	 * Constructor for the ProductEntity.java class
 	 * @param productID	the product's id
@@ -26,14 +44,8 @@ public class ProductEntity implements Serializable{
 	 * @param productDescription	description
 	 * @param productDominantColor	dominant color
 	 */
-	
-	public ProductEntity()
-	{
-		
-	}
-	
 	public ProductEntity(String productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,ImageView plV) {
+			String productDescription, String productDominantColor,Image productImage) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -41,7 +53,7 @@ public class ProductEntity implements Serializable{
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-		this.productImage=plV;
+		this.productImage = productImage;
 	}
 	
 	/**
@@ -72,14 +84,15 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	public ImageView getProductImage() {
-		return productImage;
-	}
-
-	public void setProductImage(ImageView productImage) {
-		this.productImage = productImage;
-	}
-
+	///////////////////////////////////////
+//	public ImageView getProductImage() {
+//		return productImage;
+//	}
+//
+//	public void setProductImage(ImageView productImage) {
+//		this.productImage = productImage;
+//	}
+///////////////////////////////////////////////
 	/**
 	 * Getter for the productType
 	 * @return the productType
@@ -138,4 +151,3 @@ public class ProductEntity implements Serializable{
 	}
 
 }
-

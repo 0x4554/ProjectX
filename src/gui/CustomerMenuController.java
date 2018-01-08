@@ -269,7 +269,7 @@ public class CustomerMenuController implements Initializable{
 		ObservableList<ProductEntity> products=FXCollections.observableArrayList();
 		ImageView im=new ImageView((new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
 	//	if(im==null)System.out.println("its null");
-		products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue",new ImageView("/images/pic1.jpg")));
+		products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue",new Image("/images/pic1.jpg")));
 	//	products.add(new ProductEntity("124","lili","boquet",(double) 15,"bridal","red"));
 		return products;
 	}
