@@ -112,6 +112,7 @@ public class LoginController implements Initializable {
 			this.clnt.accept();	//sends to server
 			while(!this.clnt.getConfirmationFromServer())	//wait until server replies
 				Thread.sleep(100);
+			this.clnt.setConfirmationFromServer();		//reset confirmation to false
 			dataFromServer = this.clnt.getArrayListfromSrvr();	//get the returned ArrayList from the server
 			if(dataFromServer.get(0).equals("success"))//if login info matches the data base
 			{	

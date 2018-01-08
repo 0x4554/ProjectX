@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
  * Project Name gitProjectX
  *
  */
-public class StoreEntity {
+public class StoreEntity extends Object implements Serializable{
 	private int branchID;
 	private String BranchName;
 	private int storeManagerWorkerID;
@@ -35,7 +36,7 @@ public class StoreEntity {
 		this.branchID = branchID;
 		this.BranchName = branchName;
 		this.storeManagerWorkerID=storeManager;
-	//	this.storeWorkers= new ArrayList<Integer>(workers);
+		this.storeWorkers= new ArrayList<Integer>();
 		this.storeDiscoutsSales = new HashMap<String,Double>();
 	}
 	/**

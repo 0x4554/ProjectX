@@ -5,6 +5,11 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
+
+
+
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,8 +17,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import entities.ProductEntity;
+import entities.StoreEntity;
 import logic.ConnectedClients;
 import ocsf.server.*;
 import ocsf.*;
@@ -200,6 +208,79 @@ public class ProjectServer extends AbstractServer
 	    
 	  }
   
+  	/**
+  	 * This method gets the list of stores from the DB
+  	 * @return	arrayList of StoreEntity
+  	 * @throws SQLException		thrown if there was an SQL exception
+  	 * @throws ClassNotFoundException	ClassNotFoundException	thrown if connecting to DB failed
+  	 */
+	private ArrayList<StoreEntity> getAllstoresFromDB() throws SQLException, ClassNotFoundException {
+		ArrayList<StoreEntity> listOfStoresFromDB = new ArrayList<StoreEntity>();
+		StoreEntity store;
+		Statement stmt;
+		try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+		stmt = con.createStatement();
+		ResultSet rs1 = stmt.executeQuery("SELECT BranchID,BranchName,BranchManager FROM projectx.store"); //get all the stores (ID,Name,managerID) in the stores table from the data base
+
+		while (rs1.next())
+		{
+			store = new StoreEntity(rs1.getInt(1), rs1.getString(2), rs1.getInt(3)); //create a new instance of a store
+			listOfStoresFromDB.add(store); //add the product from the data base to the list
+		}
+
+		stmt = con.createStatement();
+		ResultSet rs2;
+		Map<String,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
+		for (StoreEntity store2 : listOfStoresFromDB)
+		{
+			rs2 = stmt.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+ store2.getBranchID()); //get all the discounts for each store
+			if(!(rs2.next()))						//if the store has no discounts
+			{
+				store2.setStoreDiscoutsSales(null);
+			} else
+			{
+				storeDiscoutsSales = new HashMap<String, Double>();			//create  a new hashMap for discounts
+				while (rs2.next())
+				{
+					storeDiscoutsSales.put(rs2.getString(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
+				}
+				store2.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
+			}
+		}
+		
+		stmt = con.createStatement();
+		ResultSet rs3;
+		ArrayList<Integer> listOfStoreWorkers;			//holds the list of store workers for the store entity
+		for (StoreEntity store2 : listOfStoresFromDB)
+		{
+			rs3 = stmt.executeQuery("SELECT WorkerID FROM projectx.storeemployee WHERE BranchID = "+ store2.getBranchID()); //get all the discounts for each store
+			if(!(rs3.next()))						//if the store has no workers
+			{
+				store2.setStoreWorkers(null);;
+			} else
+			{
+				listOfStoreWorkers = new ArrayList<Integer>();			//create  a new arrayList for workers
+				while (rs3.next())
+				{
+					if(rs3.getInt(1) == store2.getStoreManagerWorkerID()) {		//if the worker is the manager 
+						store2.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
+					}else													//if a simple store worker
+						listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
+				}
+				store2.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
+			}
+		}
+
+		return listOfStoresFromDB;
+	}
   /**
    * This method gets all of the products from the catalog
    * @return returns an ArrayList of all of the products in the catalog
@@ -413,16 +494,35 @@ public class ProjectServer extends AbstractServer
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
+			sendToAllClients(listOfProducts);
 		}
 
 		if(operation.equals("createNewOrder"))
 		{
 			retval = createNewOrder(messageFromClient);
+
 		}
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
 //		}
+
+			sendToAllClients(retval);
+		
+		////////////////Need to split it to store names, store details ,store workers.....////////
+		if(operation.equals("getAllStores"))
+		{
+			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
+			listOfAllStores = getAllstoresFromDB();
+			sendToAllClients(listOfAllStores);
+	//		sendToAllClients(new ArrayList<StoreEntity>);
+		}
+//		if(operation.equals("addProductToCatalog"))
+//		{
+//			
+//		}
+
+
 //		if(operation.equals("addNewProdcutToCatalog"))
 //		{
 //			retval = this.addNewProductToCatalog(messageFromClient);

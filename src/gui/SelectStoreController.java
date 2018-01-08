@@ -27,6 +27,7 @@ public class SelectStoreController implements Initializable{
 	private Integer branchID;
 	public ObservableList<String> list;
 	private Map<String,StoreEntity> listOfStoresEntities;
+	private ArrayList<String> storeNames;
 
 	@FXML
 	private ComboBox strCmb;
@@ -41,34 +42,38 @@ public class SelectStoreController implements Initializable{
 		this.clnt=clnt;
 	}
 	/**
-	 * This method inserts all the stores into the combobox
+	 * This method inserts all the store names into the combobox
+	 * @throws InterruptedException
+	 */
+	public void loadStoresIntoComboBox()
+	{
+		this.list = FXCollections.observableArrayList(storeNames);	//set to an observableArrayList
+		this.strCmb.setItems(this.list);							//set the list to the comboBox
+	}
+	
+	/**
+	 * This method gets the list of stores Entities from the server into ListOfStoresEntities
+	 * and creates a list of store names
 	 * @throws InterruptedException
 	 */
 	public void showStores() throws InterruptedException
 	{
-//		this.clnt.setDataFromUI("", "getAllStores!");
-//		this.clnt.accept();
-//		while(!(this.clnt.getConfirmationFromServer()))
-//			Thread.sleep(100);
-		ArrayList<String> listOfStores = new ArrayList<String>();
-		listOfStores.add("1");
-		listOfStores.add("koko");
-		listOfStores.add("1");
-//		listOfStores=this.clnt.getArrayListfromSrvr();
-		ArrayList<String> storeNames = new ArrayList<String>();		//an arrayList of the store names
-
-		for(int i=0;i<listOfStores.size();i+=3)
-		{
-			StoreEntity store = new StoreEntity(Integer.parseInt(listOfStores.get(i)), listOfStores.get(i+1),Integer.parseInt(listOfStores.get(i+2)));		//get a store
-			storeNames.add(store.getBranchName());	//add the store name to the list of names
-			this.listOfStoresEntities.put(store.getBranchName(),store);	//add the store to the storeEntity list
-		}
-//		for(int i=1;i<listOfStores.size();i+=3)
-//			storeNames.add(listOfStores.get(i));	//add all the store names to the list
-		list = FXCollections.observableArrayList(storeNames);	//set to an observableArrayList
-		this.strCmb.setItems(list);		//set the list to the comboBox
-
+		this.clnt.setDataFromUI("", "getAllStores!");	//set operation to get all stores from DB
+		this.clnt.accept();
+		while(!(this.clnt.getConfirmationFromServer()))		//wait for server response
+			Thread.sleep(100);
+		this.clnt.setConfirmationFromServer(); 				//reset to false
+		ArrayList<StoreEntity> listOfStoresFromDB = new ArrayList<StoreEntity>();
+		listOfStoresFromDB=this.clnt.getArrayListOfStoreEntityFromServer();		//get the list from the server's response
 		
+		this.storeNames = new ArrayList<String>();		//an arrayList of the store names
+		this.listOfStoresEntities = new HashMap<String,StoreEntity>();		//a hashMap to hold the stores 
+
+		for(StoreEntity store : listOfStoresFromDB)
+		{
+			this.listOfStoresEntities.put(store.getBranchName(), store);		//add the store to the storeEntity list
+			storeNames.add(store.getBranchName());		//add the store name to the list of names
+		}
 	}
 	/**
 	 * This method handles the when pressed the selected store
@@ -80,7 +85,8 @@ public class SelectStoreController implements Initializable{
 		((Node)event.getSource()).getScene().getWindow().hide();	//hide last window
 		
 		String selectedStoreName="";
-		selectedStoreName = this.strCmb.getSelectionModel().toString();
+		
+		selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem();		//get the selected store name from the comboBox
 		
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
@@ -97,7 +103,7 @@ public class SelectStoreController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		listOfStoresEntities = new HashMap<String,StoreEntity>();		
+		loadStoresIntoComboBox();			//call method to load the store name into the comboBox
 	}
 
 }

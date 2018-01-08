@@ -91,9 +91,9 @@ public class CustomerMenuController implements Initializable{
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/gui/OrderMenuBoundary.fxml").openStream());
-		 OrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-	//	 ord.setConnectionData(DEFAULT_PORT, this);
+		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
+		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		 ord.setConnectionData(this.clnt);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Order");

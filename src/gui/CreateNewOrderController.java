@@ -24,6 +24,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import sun.reflect.generics.tree.Tree;
 
@@ -114,56 +115,22 @@ public class CreateNewOrderController implements Initializable {
 	
 	
 	public void viewCart(ActionEvent event) throws IOException {
-//		String lbl ="";
-//		TreeItem<String> root;
-//		root = new TreeItem<>();	//set the root for the prodcuts in cart tree
-//		root.setExpanded(true);		//set it to expanded by default  
-//		
-//		if (this.newOrder.getProductsInOrder() != null)
-//		{
-//			////////////////// a made up list of products for testing ///////////////////
-//			for(int i=0;i<5;i++)
-//			{
-//				this.newOrder.addProductToCart(new ProductEntity("a"+i,"b"+i,"c"+i,1.1+i,"e"+i,"f"+i));
-//			}
-//			////////////////////////////////////////////////////////////////////////////
-//			lbl="Your cart";
-//			for (ProductEntity product : this.newOrder.getProductsInOrder())
-//			{
-//				TreeItem<String> productName = new TreeItem<>(product.getProductName()); //set the branch as the product's name to be the parent of it's details
-//				/* Set all the product's details to be leaves on the branch */
-//				TreeItem<String> productID = new TreeItem<>(product.getProductID()); //create a new leaf
-//				productName.getChildren().add(productID); //set as a child 
-//				TreeItem<String> productType = new TreeItem<>(product.getProductType());
-//				productName.getChildren().add(productType);
-//				TreeItem<String> productPrice = new TreeItem<>(product.getProductPrice().toString());
-//				productName.getChildren().add(productPrice);
-//				TreeItem<String> productDescription = new TreeItem<>(product.getProductDescription());
-//				productName.getChildren().add(productDescription);
-//				if (product.getProductDominantColor() != null)
-//				{
-//					TreeItem<String> productDominantColor = new TreeItem<>(product.getProductDominantColor());
-//					productName.getChildren().add(productDominantColor);
-//				}
-//				root.getChildren().add(productName);
-//			}
-//			
-//		}else lbl = "Your Cart is empty";
+	/*	CartController controller = new CartController();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/CartBoundary.fxml"));
+		loader.setController(controller);
+		controller.setOrder(this.newOrder);
+		Parent pRoot = loader.load();
+		*/
+		
 		FXMLLoader loader = new FXMLLoader();
-		BorderPane pRoot = loader.load(getClass().getResource("/gui/CartBoundary.fxml").openStream());
-		CartController cc = loader.getController();
-		cc.setOrder(this.newOrder,pRoot);
-//		cc.showCart();
-//		pRoot.getChildren().add(cc.showCart());
-//		CreateNewOrderController cnoc = loader.getController();
-//		this.PrdctsTrVw = new TreeView<>(root);
-//		cnoc.PrdctsTrVw = new TreeView<>(root);
-//		cnoc.PrdctsTrVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-//		cnoc.PrdctsTrVw.setRoot(root);
-//		cnoc.PrdctsTrVw.setShowRoot(false);	//make root expanded every time it starts
-//		cnoc.crtEmptLbl.setText(lbl);
+		Pane root = loader.load(getClass().getResource("/gui/CartBoundary.fxml").openStream());
+		
+		CartController cc = loader.getController();	
+		cc.setOrder(this.newOrder);
+		cc.showCart();
+		
 		Stage primaryStage=new Stage();
-		Scene scene=new Scene(pRoot);
+		Scene scene=new Scene(root);
 		primaryStage.setTitle("Your cart");
 		primaryStage.setScene(scene);
 		primaryStage.show();
