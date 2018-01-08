@@ -179,13 +179,11 @@ public class CustomerMenuController implements Initializable{
 			colorcolumn.setCellValueFactory(new PropertyValueFactory<>("productDominantColor"));
 			
 			//TableColumn<ProductEntity,ImageView> imagecolumn=new TableColumn<>("productImageView");
-			TableColumn<ProductEntity,String> imagecolumn=new TableColumn<>("productImageView");
+			TableColumn<ProductEntity,ImageView> imagecolumn=new TableColumn<>("productImageView");
 			imagecolumn.setMaxWidth(500);
 			imagecolumn.setCellValueFactory(new PropertyValueFactory<>("productImageView"));
 			
 			TableCell<ProductEntity, Image> cell = new TableCell<ProductEntity,Image>(); 
-
-			
 			
 			productID=new TextField();
 			productID.setPromptText("Enter Id");
@@ -238,19 +236,6 @@ public class CustomerMenuController implements Initializable{
 			primaryStage.setScene(sc);
 		    primaryStage.show();
 			
-			 
-			/* CatalogController catlg=new CatalogController();
-			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/CatalogBoundary.fxml"));
-			loader.setController(catlg);
-			catlg.setConnectionData(this);
-			Parent root = loader.load();
-		
-			Stage primaryStage=new Stage();
-			Scene scene=new Scene(root);
-			primaryStage.setTitle("Catalog");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-			*/
 			
 		}			
 		public void AddToList()
@@ -281,34 +266,10 @@ public class CustomerMenuController implements Initializable{
 
 	public ObservableList<ProductEntity> getProduct()
 	{   
-		/*public void initialize(URL url, ResourceBundle rb) {
-		    KiwiImageCol.setCellFactory(param -> {
-		       //Set up the ImageView
-		       final ImageView imageview = new ImageView();
-		       imageview.setFitHeight(50);
-		       imageview.setFitWidth(50);
-
-		       //Set up the Table
-		       TableCell<NewBeautifulKiwi, Image> cell = new TableCell<NewBeautifulKiwi, Image>() {
-		           public void updateItem(Image item, boolean empty) {
-		             if (item != null) {
-		                  imageview.setImage(item);
-		             }
-		           }
-		        };
-		        // Attach the imageview to the cell
-		        cell.setGraphic(imageview);
-		        return cell;
-		   });
-		   KiwiImageCol.setCellValueFactory(new PropertyValueFactory<NewBeautifulKiwi, Image>("kiwiImage"));
-		
-		*/
-		
-		
 		ObservableList<ProductEntity> products=FXCollections.observableArrayList();
-		ImageView im=new ImageView((new Image(getClass().getResourceAsStream("/gui/pic1.jpg"),(double)100,(double)100,true,true)));
+		ImageView im=new ImageView((new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
 	//	if(im==null)System.out.println("its null");
-		products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue",im));
+		products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue",new ImageView("/images/pic1.jpg")));
 	//	products.add(new ProductEntity("124","lili","boquet",(double) 15,"bridal","red"));
 		return products;
 	}
