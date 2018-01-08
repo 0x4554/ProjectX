@@ -44,7 +44,6 @@ public class Client extends AbstractClient {
 		this.username = username; //save the userName 
 		confirmationFromServer = false; //set the confirmation from the server to false --> changed to true when server replies after conducting an action
 		openConnection(); //connect to server
-
 	}
 
 	///Instance methods ************************************************
@@ -128,8 +127,9 @@ public class Client extends AbstractClient {
 		 * @param portNo - port for working in front of the server
 		 * @param filePath - location of the file in client side
 		 * @throws IOException - IOException may be thrown
+		 * @throws InterruptedException 
 		 */
-		public void uploadFileToServer(int portNo,String filePath) throws IOException
+		public void uploadFileToServer(int portNo,String filePath) throws IOException, InterruptedException
 		{
 			FileInputStream fileInputStream = null;
 			BufferedInputStream bufferedInputStream = null;
@@ -140,8 +140,11 @@ public class Client extends AbstractClient {
 
 			//creating connection between sender and receiver
 			try {
-				//this.closeConnection();
+				
 				serverSocket = new ServerSocket(portNo);
+				while(!this.getConfirmationFromServer())
+					Thread.sleep(100);
+				this.setConfirmationFromServer();
 				System.out.println("Waiting for receiver...");
 					try {
 							socket = serverSocket.accept();
@@ -170,6 +173,7 @@ public class Client extends AbstractClient {
 				} catch (IOException e) {
 					
 					// TODO Auto-generated catch block
+					System.out.println("connection failed");
 					e.printStackTrace();
 				}
 				finally {
@@ -206,13 +210,17 @@ public class Client extends AbstractClient {
 	  
 	  /**
 	   * This method returns the message from the server as a String
+	 * @throws InterruptedException 
 	   */
-	  public String getStringFromServer()	//method for when the message form the server is a String
+	  public String getStringFromServer() throws InterruptedException	//method for when the message form the server is a String
 	  {
-		  String retMsg = "";
-		 for(String s: (ArrayList<String>)this.messageFromServer)
-			 retMsg+=s;
-		 // retMessage = new String(this.stringFromServer);
+		  /*String retMessage;
+		  this.stringFromServer = (String)this.messageFromServer;
+		  retMessage = new String(this.stringFromServer);
+		  return retMessage;*/
+		  String retMsg=(String)this.messageFromServer;
+//		  for(Object obj:(ArrayList)this.getArrayListfromSrvr()) 
+//			  retMsg+=(String)obj;
 		  return retMsg;
 	  }
 	  

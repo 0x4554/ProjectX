@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.security.auth.callback.ConfirmationCallback;
+
 import entities.ProductEntity;
 import entities.StoreEntity;
 import logic.ConnectedClients;
@@ -372,6 +374,7 @@ public class ProjectServer extends AbstractServer
 	  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
 	  int orderNum = Integer.parseInt(num);
 	  String desc=details.substring(details.indexOf("|")+1,details.length());
+	  desc=desc.replace("~", " ");
 	  Statement stmt;
 	  
 	  try
@@ -425,6 +428,7 @@ public class ProjectServer extends AbstractServer
 			
 			
 			socket = new Socket(ipAddress,portNo);
+			sendToAllClients("downloading");
 			System.out.println("connected.");
 			
 			// receive file
@@ -521,7 +525,7 @@ public class ProjectServer extends AbstractServer
    * This method handles the message received from the client
    */
   @Override
-	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
+	protected synchronized void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
 	  String generalMessage;
 	  String operation=(String)msg;
@@ -610,22 +614,22 @@ public class ProjectServer extends AbstractServer
 		if(operation.equals("complaint")) {
 			if(this.complaint((String)msg).equals("Success")) {
 				System.out.println("complaint added");
-				generalMessage = new String("Added");
-				sendToAllClients(generalMessage);
+			//	generalMessage = (String)("Added");
+				sendToAllClients("Added");
 			}
 			else {
 				System.out.println("complaint failed");
-				generalMessage = new String("failed");
-				sendToAllClients(generalMessage);
+			//	generalMessage = (String)("failed");
+				sendToAllClients("failed");
 			}
 		}
 		
 		if(operation.equals("downloadFile")) {
+			//this.stopListening();
 			System.out.println("Server downloading file sent from client");
 			String filePath=(String)msg;
 			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
-			this.stopListening();
-			sendToAllClients("downloading");
+			//sendToAllClients("downloading");
 			this.receiveFileFromClient("localhost", 5556);
 			}
 		}

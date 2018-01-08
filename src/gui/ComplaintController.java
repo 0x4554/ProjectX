@@ -76,16 +76,23 @@ public class ComplaintController implements Initializable{
 		details=details.replaceAll(" ", "~");						//for handling the message later
 		complaintDetails+=details;
 		
-		if(!picPathTxtFld.getText().isEmpty()) 						//if path to picture uploaded for sending it as avidence
-				pctr=picPathTxtFld.getText();
+		
 				
 				Client c=this.cstmc.getClient();
 				c.setDataFromUI(complaintDetails, "complaint!");
 				c.accept();
-				if(c.getStringFromServer().equals("failed"))				
+				while(!c.getConfirmationFromServer())
+					Thread.sleep(100);
+				c.setConfirmationFromServer();
+				String reply=c.getStringFromServer();
+				if(reply.equals("failed"))				
 					GeneralMessageController.showMessage("Order does not exist");
 			
-				else if(c.getStringFromServer().equals("Added")){
+				else if(reply.equals("Added")){
+					if(!picPathTxtFld.getText().isEmpty()) { 						//if path to picture uploaded for sending it as avidence
+						pctr=picPathTxtFld.getText();
+						this.uploadPhoto(pctr);
+					}
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		this.cstmc.showCustomerMenu();								//back to main menu
 		GeneralMessageController.showMessage("Dear customer, we got your complaint\nand we are doing everything we can\nto make it up to you");			//message to present when complaint succeeded
@@ -122,8 +129,8 @@ public class ComplaintController implements Initializable{
 		Client c = this.cstmc.getClient();
 		c.setDataFromUI(path, "downloadFile!");
 		c.accept();
-		while(!c.getConfirmationFromServer())
-			Thread.sleep(100);
+		/*while(!c.getConfirmationFromServer())
+			Thread.sleep(100);*/
 		c.uploadFileToServer(5556, path);
 		c.setConfirmationFromServer();
 	}
@@ -142,9 +149,14 @@ public class ComplaintController implements Initializable{
 		Node node = (Node) event.getSource();
 		FileChooser chooser = new FileChooser();
 	    chooser.setTitle("Choose File");
+	    try {
 	    File f=chooser.showOpenDialog(secondaryStage);
 	    String filepath = f.getAbsolutePath();
 	    picPathTxtFld.setText(filepath);
+	    }
+	    catch(Exception e) {
+	    return;
+	    }
 	}
 
 	@Override
