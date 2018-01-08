@@ -7,6 +7,7 @@ package gui;
  *@author Tal Gross
  *
  * This class was made by the ProjectX team
+ * the class handles the creation of new complaints in the system
  */
 
 import java.io.File;
@@ -23,6 +24,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -135,28 +137,11 @@ public class ComplaintController implements Initializable{
 	
 
 
-	public void searchForPhoto() throws IOException{
-/*		Stage secondaryStage=new Stage();
-		FileChooser fileChooser=new FileChooser();
-		  fileChooser.setTitle("View Pictures");
-	        fileChooser.setInitialDirectory(new File(System.getProperty("user.home"))
-	        );
-	        
-	        List<File> list = fileChooser.showOpenMultipleDialog(secondaryStage);
-                if (list != null) {
-                    for (File file : list) {
-                    	 try {
-                    		 desktop.open(file);
-                         } catch (IOException ex) {
-                             Logger.getLogger(
-                                 FileChooserSample.class.getName()).log(
-                                     Level.SEVERE, null, ex
-                                 );
-                         }
-                    }
-                        
-                }
-*/	
+	public void searchForPhoto(ActionEvent event) throws IOException{
+		Node node = (Node) event.getSource();
+		FileChooser chooser = new FileChooser();
+	    chooser.setTitle("Choose File");
+	    chooser.showOpenDialog(node.getScene().getWindow());
 	}
 
 	@Override

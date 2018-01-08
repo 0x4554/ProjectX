@@ -500,14 +500,14 @@ public class ProjectServer extends AbstractServer
 		if(operation.equals("createNewOrder"))
 		{
 			retval = createNewOrder(messageFromClient);
-
+			sendToAllClients(retval);
 		}
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
 //		}
 
-			sendToAllClients(retval);
+			
 		
 		////////////////Need to split it to store names, store details ,store workers.....////////
 		if(operation.equals("getAllStores"))
