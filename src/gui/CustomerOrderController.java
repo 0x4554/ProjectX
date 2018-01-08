@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class OrderController implements Initializable {
+public class CustomerOrderController implements Initializable {
 
 	private Client clnt;
 	@FXML
@@ -40,14 +40,15 @@ public class OrderController implements Initializable {
 	 */
 	public void CreateNewOrder(ActionEvent event) throws IOException, InterruptedException {
 		((Node)event.getSource()).getScene().getWindow().hide();	//hide last window
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/SelectStoreBoundary.fxml").openStream());
-		SelectStoreController scc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		SelectStoreController scc = new SelectStoreController();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SelectStoreBoundary.fxml"));
+		loader.setController(scc);									//set the controller
+		scc.setConnectionData(this.clnt);							//set the connection data
+		scc.showStores();											//call method to load the list of stores
+		Parent root = loader.load();								//load the SelectStoreBoundary (sets the window data)
 		
-		scc.showStores();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-//		scc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Select store");
 		primaryStage.setScene(scene);
 		primaryStage.show();

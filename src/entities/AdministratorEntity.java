@@ -1,4 +1,5 @@
 package entities;
+
 /**
  * This is the entity of the administrator
  * AdministratorEntity.java

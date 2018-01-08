@@ -1,5 +1,7 @@
 package entities;
 
+import java.io.Serializable;
+
 /**
  * This is an abstract class for the users
  * This class implements UserInterface
@@ -11,7 +13,7 @@ package entities;
  *
  * This project was made by the ProjectX team
  */
-public abstract class  UserEntity implements UserInterface{
+public abstract class  UserEntity implements UserInterface,Serializable{
 	private String userName;
 	private String password;
 	private String userType;
