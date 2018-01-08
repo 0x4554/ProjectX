@@ -1,28 +1,33 @@
 package gui;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import entities.OrderEntity;
 import entities.ProductEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class CartController implements Initializable {
 	private OrderEntity newOrder;
@@ -34,6 +39,8 @@ public class CartController implements Initializable {
 //	@FXML
 //	private ListView<String> prdLst;
 	@FXML
+	private ImageView prdctImg;
+	@FXML
 	private TreeView<String> prdctTrVw;
 	@FXML
 	private Label crtEmptLbl;
@@ -42,7 +49,7 @@ public class CartController implements Initializable {
 	@FXML
 	private Button chkOutBtn;
 
-	public void showCart() {
+	public void showCart() throws FileNotFoundException {
 		String lbl = "";
 		this.stringSet = new ArrayList<String>();
 		this.newOrder = new OrderEntity();
@@ -50,8 +57,9 @@ public class CartController implements Initializable {
 		//////////////////a made up list of products for testing ///////////////////
 		for (int i = 0; i < 5; i++)
 		{
-			this.newOrder.addProductToCart(new ProductEntity("a" + i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i));
+			this.newOrder.addProductToCart(new ProductEntity("a" + i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i,new Image(new FileInputStream( "C:\\Users\\pic1.jpg"))));
 		}
+		this.newOrder.getProductsInOrder().get(1).setProductImage(new Image(new FileInputStream( "C:\\Users\\pic2.jpg")));
 		////////////////////////////////////////////////////////////////////////////
 		TreeItem<String> root;
 
@@ -90,15 +98,44 @@ public class CartController implements Initializable {
 		this.prdctTrVw.setRoot(root);
 		this.prdctTrVw.setShowRoot(false); //make root expanded every time it starts
 		this.crtEmptLbl.setText(lbl);
+		
+						///This EventHanlder is an mouse event handler which listens to a product select in the products treeview
+		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
+			showProductImage(event);
+		};
+
+		this.prdctTrVw.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle); 
+
 
 	}
-/*
-	public void showProductDetails(ActionEvent event) {
-		for (ProductEntity product : this.newOrder.getProductsInOrder())
-		{
 
+	/**
+	 * This method handles the output of a product's image to the cart window
+	 * @param event	the mouseEvent observed by the Event handler
+	 */
+	public void showProductImage(MouseEvent event) {
+		for(ProductEntity product : this.newOrder.getProductsInOrder())
+		{
+			if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
+				this.prdctImg.setImage(product.getProductImage());
 		}
-	} */
+	} 
+	
+	public void goToCheckOut(ActionEvent event) throws IOException
+	{
+		FXMLLoader loader = new FXMLLoader();
+		Pane root = loader.load(getClass().getResource("/gui/CustomerCheckOutBoundary.fxml").openStream());
+		
+		CustomerCheckOutController ccoc = loader.getController();	
+	//	ccoc.setOrder(this.newOrder);
+//		ccoc.showCart();
+		
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Your cart");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 
 	/**
 	 * This method sets the new orderEntitiy

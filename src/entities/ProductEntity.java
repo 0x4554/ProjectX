@@ -2,6 +2,9 @@ package entities;
 
 import java.io.Serializable;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public class ProductEntity implements Serializable{
 	private String productID;
 	private String productName;
@@ -9,7 +12,24 @@ public class ProductEntity implements Serializable{
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+	private Image productImage;
 	
+	/**
+	 * Getter for the productImage
+	 * @return the productImage
+	 */
+	public Image getProductImage() {
+		return productImage;
+	}
+
+	/**
+	 * Setter for the productImage
+	 * @param productImage the productImage to set
+	 */
+	public void setProductImage(Image productImage) {
+		this.productImage = productImage;
+	}
+
 	/**
 	 * Constructor for the ProductEntity.java class
 	 * @param productID	the product's id
@@ -20,7 +40,7 @@ public class ProductEntity implements Serializable{
 	 * @param productDominantColor	dominant color
 	 */
 	public ProductEntity(String productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor) {
+			String productDescription, String productDominantColor,Image productImage) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -28,6 +48,7 @@ public class ProductEntity implements Serializable{
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
+		this.productImage = productImage;
 	}
 	
 	/**

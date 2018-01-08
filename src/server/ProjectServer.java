@@ -3,10 +3,9 @@
 // license found at www.lloseng.com 
 package server;
 
-import java.io.*;
-
-
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,9 +18,10 @@ import java.util.Map;
 
 import entities.ProductEntity;
 import entities.StoreEntity;
+import javafx.scene.image.Image;
 import logic.ConnectedClients;
-import ocsf.server.*;
-import ocsf.*;
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
 /**
  * This class overrides some of the methods in the abstract 
  * superclass in order to give more functionality to the server.
@@ -330,8 +330,9 @@ public class ProjectServer extends AbstractServer
    * @return returns an ArrayList of all of the products in the catalog
    * @throws ClassNotFoundException	thrown if connecting to DB failed
    * @throws SQLException	thrown if there was an SQL exception
+ * @throws FileNotFoundException 
    */
-  private ArrayList<ProductEntity> getCatalog() throws ClassNotFoundException, SQLException
+  private ArrayList<ProductEntity> getCatalog() throws ClassNotFoundException, SQLException, FileNotFoundException
   {
 	  ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
 	  ProductEntity product;
@@ -351,7 +352,7 @@ public class ProjectServer extends AbstractServer
 	  
 	  while(rs.next())
 	  {
-		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
+		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6),new Image(new FileInputStream( "C:\\Users\\pic1.jpg")));	//create a new instance of a product
 		 listOfProducts.add(product);	//add the product from the data base to the list
 	  }
 	  return listOfProducts;
