@@ -40,60 +40,6 @@ public class ProjectServer extends AbstractServer
   }
   
   /**
-   * This method receives the file from the client?????????????????????????
-   * @param fileLocation
-   * @param messagePath
-   * @param fileSize
-   * @throws IOException
-   */
-  /*public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
-	{
-
-		int bytesRead=0;
-		int current = 0;
-		FileInputStream fileInputStream = null;
-		FileOutputStream fileOutputStream = null;
-		BufferedOutputStream bufferedOutputStream = null;
-	//	Socket socket = null;
-		try {
-
-			//creating connection.
-	//		socket = new Socket(ipAddress,portNo);
-			System.out.println("connected.");
-			
-			// receive file
-			byte [] byteArray  = new byte [fileSize];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
-			System.out.println("Please wait downloading file");
-			
-			//reading file from socket
-		//	InputStream inputStream = socket.getInputStream();
-			fileInputStream = new FileInputStream(messagePath);
-			fileOutputStream = new FileOutputStream("C:\\Users\\M207user\\Downloads\\new.pdf");
-			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-		
-			bytesRead=fileInputStream.read(byteArray,0,fileSize);
-			
-		//	bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
-			
-
-			current = bytesRead;
-			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
-			bufferedOutputStream.flush();												//flushing buffers
-			
-			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			if (fileInputStream != null) fileInputStream.close();
-			if (fileOutputStream != null) fileOutputStream.close();
-			if (bufferedOutputStream != null) bufferedOutputStream.close();
-		//	if (socket != null) socket.close();
-		}
-	}*/
-  
-  /**
    * method for connecting to DB
    * @return	the Connection
    * @throws SQLException
@@ -112,6 +58,21 @@ public class ProjectServer extends AbstractServer
   private void terminateConnection(String username)
   {
 	  ConnectedClients.removeConnectedClient(username);
+  }
+ 
+  /**
+   * this method handles the creation of new order in the system
+   * 
+   * @param newOrderDetails
+   * @return
+   */
+  private ArrayList<String> createNewOrder(String newOrderDetails)
+  {
+	  ArrayList<String> returnMessage = new ArrayList<String>();
+	  String[] data = newOrderDetails.split("~");	//split the userName and the password
+	  
+	  
+	  return returnMessage;
   }
   
   /** This method handles any login attempt messages received from the client.
@@ -271,6 +232,49 @@ public class ProjectServer extends AbstractServer
 	  return listOfProducts;
   }
   
+  /**
+   * this method handles the creation of new customers complaint
+   * 
+   * 
+   * @param details	- String of the complaint info ("complaint!"complaintnumber|complaintDescription)
+   * @return
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
+  public String complaint(String details) throws SQLException, ClassNotFoundException {
+	  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
+	  int orderNum = Integer.parseInt(num);
+	  String desc=details.substring(details.indexOf("|")+1,details.length());
+	  Statement stmt;
+	  
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	    
+	    if(con!=null)
+	    System.out.println("Connection to Data Base succeeded");  
+	    }
+	  
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
+	  
+	  stmt = con.createStatement();
+	  
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +orderNum+"'");	//prepare a statement
+	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
+	    {
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description) VALUES (?,?)");	//prepare a statement
+		    ps.setInt(1, orderNum);																			//insert parameters into the statement
+		    ps.setString(2, desc);
+		    ps.executeUpdate();
+		    
+		    return "Success";
+	    }
+	  return "Order does not exist";   
+  }
+  
   /**this method handles file received from user
    * 
    * 
@@ -281,19 +285,18 @@ public class ProjectServer extends AbstractServer
    */
   public void receiveFileFromClient(String ipAddress,int portNo) throws IOException
   {
-	  	this.stopListening();
-	  	this.setPort(5556);
-	  	this.listen();
-	  
-	  	String fileLocation="/home/mdhttr/Pictures/top.png";
+	  	String fileLocation="/home/mdhttr/Documents/complaints/";
+	  	fileLocation+="file.jpg";
 		int bytesRead=0;
 		int current = 0;
 		FileOutputStream fileOutputStream = null;
 		BufferedOutputStream bufferedOutputStream = null;
 		Socket socket = null;
 		try {
-
 			//creating connection.
+			//this.setPort(5556);
+			
+			
 			socket = new Socket(ipAddress,portNo);
 			System.out.println("connected.");
 			
@@ -302,7 +305,7 @@ public class ProjectServer extends AbstractServer
 			System.out.println("Please wait downloading file");
 			
 			//reading file from socket
-			InputStream inputStream = new FileInputStream("/home/mdhttr/Pictures/top.png");		//socket.getInputStream();
+			InputStream inputStream = socket.getInputStream();
 			fileOutputStream = new FileOutputStream(fileLocation);
 			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
 			bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
@@ -411,7 +414,15 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
 		}
-		
+
+		if(operation.equals("createNewOrder"))
+		{
+			retval = createNewOrder(messageFromClient);
+		}
+//		if(operation.equals("addProductToCatalog"))
+//		{
+//			
+//		}
 //		if(operation.equals("addNewProdcutToCatalog"))
 //		{
 //			retval = this.addNewProductToCatalog(messageFromClient);
@@ -450,7 +461,25 @@ public class ProjectServer extends AbstractServer
 			sendToAllClients(generalMessage);	//send string back to client
 		}
 		
+		if(operation.equals("complaint")) {
+			if(this.complaint((String)msg).equals("Success")) {
+				System.out.println("complaint added");
+				generalMessage = new String("Added");
+				sendToAllClients(generalMessage);
+			}
+			else {
+				System.out.println("complaint failed");
+				generalMessage = new String("failed");
+				sendToAllClients(generalMessage);
+			}
+		}
+		
 		if(operation.equals("downloadFile")) {
+			System.out.println("Server downloading file sent from client");
+			String filePath=(String)msg;
+			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
+			this.stopListening();
+			sendToAllClients("downloading");
 			this.receiveFileFromClient("localhost", 5556);
 			}
 		}

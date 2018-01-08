@@ -138,6 +138,7 @@ public class Client extends AbstractClient {
 
 			//creating connection between sender and receiver
 			try {
+				//this.closeConnection();
 				serverSocket = new ServerSocket(portNo);
 				System.out.println("Waiting for receiver...");
 					try {
@@ -206,10 +207,11 @@ public class Client extends AbstractClient {
 	   */
 	  public String getStringFromServer()	//method for when the message form the server is a String
 	  {
-		  String retMessage;
-		  this.stringFromServer = (String)this.messageFromServer;
-		  retMessage = new String(this.stringFromServer);
-		  return retMessage;
+		  String retMsg = "";
+		 for(String s: (ArrayList<String>)this.messageFromServer)
+			 retMsg+=s;
+		 // retMessage = new String(this.stringFromServer);
+		  return retMsg;
 	  }
 	  
 	  /**
