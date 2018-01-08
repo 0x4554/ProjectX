@@ -138,10 +138,13 @@ public class ComplaintController implements Initializable{
 
 
 	public void searchForPhoto(ActionEvent event) throws IOException{
+		Stage secondaryStage=new Stage();
 		Node node = (Node) event.getSource();
 		FileChooser chooser = new FileChooser();
 	    chooser.setTitle("Choose File");
-	    chooser.showOpenDialog(node.getScene().getWindow());
+	    File f=chooser.showOpenDialog(secondaryStage);
+	    String filepath = f.getAbsolutePath();
+	    picPathTxtFld.setText(filepath);
 	}
 
 	@Override
