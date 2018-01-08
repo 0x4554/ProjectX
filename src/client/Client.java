@@ -123,7 +123,7 @@ public class Client extends AbstractClient {
 		}
 		
 		/**
-		 * this method sends file to the server
+		 * this method sends file to the server which supposed to save it
 		 * 
 		 * @param portNo - port for working in front of the server
 		 * @param filePath - location of the file in client side
