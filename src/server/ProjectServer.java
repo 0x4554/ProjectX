@@ -60,6 +60,24 @@ public class ProjectServer extends AbstractServer
   {
 	  ConnectedClients.removeConnectedClient(username);
   }
+  
+  /*
+  public void handleMessageFromClient(Object msg, ConnectionToClient client)
+  {
+	  int fileSize =((MyFile)msg).getSize();
+	  MyFile file = (MyFile)msg;
+	  System.out.println("Message received: " + file.getFileName() + " from " + client);
+	  System.out.println("length "+ fileSize);
+	  try {
+		receiveFile(file.getFileName(),file.getDescription(), fileSize);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+//	  System.out.println("Message received: " + msg + " from " + client);
+//	  System.out.println("length "+ fileSize);
+	  }
+  */
   /**
    * This method receives the file from the client?????????????????????????
    * @param fileLocation
@@ -67,9 +85,9 @@ public class ProjectServer extends AbstractServer
    * @param fileSize
    * @throws IOException
    */
-  /*public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
+  //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
 	{
-
 		int bytesRead=0;
 		int current = 0;
 		FileInputStream fileInputStream = null;
@@ -77,11 +95,10 @@ public class ProjectServer extends AbstractServer
 		BufferedOutputStream bufferedOutputStream = null;
 	//	Socket socket = null;
 		try {
-
 			//creating connection.
-	//		socket = new Socket(ipAddress,portNo);
+	        //socket = new Socket(ipAddress,portNo);
 			System.out.println("connected.");
-			
+	
 			// receive file
 			byte [] byteArray  = new byte [fileSize];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
 			System.out.println("Please wait downloading file");
@@ -89,16 +106,14 @@ public class ProjectServer extends AbstractServer
 			//reading file from socket
 		//	InputStream inputStream = socket.getInputStream();
 			fileInputStream = new FileInputStream(messagePath);
-			fileOutputStream = new FileOutputStream("C:\\Users\\M207user\\Downloads\\new.pdf");
+			fileOutputStream = new FileOutputStream("C:\\newpic.jpg");   //** change it to the name of the picture ok!**//
 			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-		
 			bytesRead=fileInputStream.read(byteArray,0,fileSize);
 			
 		//	bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
 			
-
 			current = bytesRead;
-			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
+			bufferedOutputStream.write(byteArray, 0 , current);			//writing byteArray to file
 			bufferedOutputStream.flush();												//flushing buffers
 			
 			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
@@ -112,8 +127,8 @@ public class ProjectServer extends AbstractServer
 			if (bufferedOutputStream != null) bufferedOutputStream.close();
 		//	if (socket != null) socket.close();
 		}
-	}*/
-  
+	}
+  //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   private ArrayList<String> createNewOrder(String newOrderDetails)
   {
 	  ArrayList<String> returnMessage = new ArrayList<String>();
@@ -274,8 +289,8 @@ public class ProjectServer extends AbstractServer
 	  
 	  while(rs.next())
 	  {
-		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
-		 listOfProducts.add(product);	//add the product from the data base to the list
+		 //product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
+		 //listOfProducts.add(product);	//add the product from the data base to the list
 	  }
 	  return listOfProducts;
   }

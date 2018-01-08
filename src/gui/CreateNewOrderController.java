@@ -110,7 +110,7 @@ public class CreateNewOrderController implements Initializable {
 			////////////////// a made up list of products for testing ///////////////////
 			for(int i=0;i<5;i++)
 			{
-				this.newOrder.addProductToCart(new ProductEntity("a"+i,"b"+i,"c"+i,1.1+i,"e"+i,"f"+i));
+				//this.newOrder.addProductToCart(new ProductEntity("a"+i,"b"+i,"c"+i,1.1+i,"e"+i,"f"+i));
 			}
 			////////////////////////////////////////////////////////////////////////////
 			lbl="Your cart";

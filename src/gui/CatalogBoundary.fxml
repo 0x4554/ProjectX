@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.web.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.image.*?>
@@ -12,56 +13,27 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.image.Image?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="681.0" prefWidth="1056.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CatalogController">
    <children>
-      <Label contentDisplay="CENTER" graphicTextGap="5.0" layoutX="459.0" layoutY="36.0" text="Catalog" underline="true">
-         <textFill>
-            <LinearGradient endX="1.0" endY="0.9611650485436893" startX="0.9271844660194175" startY="0.33495145631067963">
-               <stops>
-                  <Stop color="#d31212" />
-                  <Stop color="WHITE" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </textFill>
+      <Label fx:id="Catlbl" layoutX="482.0" layoutY="25.0" text="Catalog" textFill="#bf0b0b" underline="true">
          <font>
-            <Font size="24.0" />
+            <Font name="System Bold" size="24.0" />
          </font>
-         <effect>
-            <Glow />
-         </effect></Label>
-      <AnchorPane layoutX="49.0" layoutY="121.0" prefHeight="782.0" prefWidth="902.0">
-         <children>
-            <ScrollBar layoutX="874.0" layoutY="14.0" orientation="VERTICAL" prefHeight="792.0" prefWidth="18.0" />
-            <Label layoutX="57.0" layoutY="203.0" text="&quot;Lily&quot; bridal boquet">
-               <font>
-                  <Font name="AR CENA" size="21.0" />
-               </font></Label>
-            <Label layoutX="60.0" layoutY="230.0" prefHeight="20.0" prefWidth="102.0" text="rose colors">
-               <font>
-                  <Font name="AR CENA" size="21.0" />
-               </font></Label>
-            <ImageView fitHeight="150.0" fitWidth="159.0" layoutX="60.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-            <Image url="img/pic1.jpg" />
-            </image>
-            </ImageView>
-            <Button layoutX="72.0" layoutY="264.0" mnemonicParsing="false" text="Add to cart">
-               <font>
-                  <Font name="Arial Bold" size="16.0" />
-               </font>
-            </Button>
-            <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="245.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-            <Label layoutX="150.0" layoutY="234.0" text="20.00 NIS" textFill="#0c0628">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            
-         </children>
-      </AnchorPane>
-      <Button layoutX="459.0" layoutY="943.0" mnemonicParsing="false" text="Back" />
-      <Button layoutX="761.0" layoutY="54.0" mnemonicParsing="false" text="Cart" />
-      <Button layoutX="846.0" layoutY="54.0" mnemonicParsing="false" text="Check Out" />
-      <AmbientLight color="CHARTREUSE" lightOn="true" />
+      </Label>
+      <TableView id="tbl" fx:id="tbl" layoutX="35.0" layoutY="90.0" onSort="#enterCatalog" prefHeight="501.0" prefWidth="981.0">
+        <columns>
+          <TableColumn id="IDcolumn" fx:id="IDcolumn" prefWidth="99.0" text="productId" />
+          <TableColumn id="namecolumn" fx:id="namecolumn" prefWidth="126.0" text="productName" />
+            <TableColumn id="typecolumn" fx:id="typecolumn" prefWidth="111.0" text="productType" />
+            <TableColumn id="pricecolumn" fx:id="pricecolumn" prefWidth="129.0" text="productPrice" />
+            <TableColumn id=" descriptioncolumn1" fx:id="descriptioncolumn1" prefWidth="163.0" text="productDescription" />
+            <TableColumn id="colorcolumn" fx:id="colorcolumn" prefWidth="187.0" text="productDominantColor" />
+            <TableColumn id="imagecolumn" fx:id="imagecolumn" prefWidth="126.0" text="productImage" />
+        </columns>
+      </TableView>
+      <TextField fx:id="searchtxt" layoutX="38.0" layoutY="616.0" prefHeight="31.0" prefWidth="131.0" promptText="Enter product ID" />
+      <Button id="searchBtn" fx:id="searchBtn" layoutX="837.0" layoutY="610.0" mnemonicParsing="false" text="Search" />
+      <Button layoutX="38.0" layoutY="27.0" mnemonicParsing="false" text="Back" />
+      <Button layoutX="931.0" layoutY="27.0" mnemonicParsing="false" text="CheckOut" />
    </children>
-</Pane>
+</AnchorPane>

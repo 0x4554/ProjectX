@@ -1,5 +1,8 @@
 package entities;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public class ProductEntity {
 	private String productID;
 	private String productName;
@@ -7,6 +10,8 @@ public class ProductEntity {
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+	private ImageView productImage;
+	//private ImageView productImageView;
 	
 	/**
 	 * Constructor for the ProductEntity.java class
@@ -17,8 +22,14 @@ public class ProductEntity {
 	 * @param productDescription	description
 	 * @param productDominantColor	dominant color
 	 */
+	
+	public ProductEntity()
+	{
+		
+	}
+	
 	public ProductEntity(String productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor) {
+			String productDescription, String productDominantColor,ImageView plV) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -26,6 +37,7 @@ public class ProductEntity {
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
+		this.productImage=plV;
 	}
 	
 	/**
@@ -56,6 +68,14 @@ public class ProductEntity {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+	public ImageView getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(ImageView productImage) {
+		this.productImage = productImage;
+	}
+
 	/**
 	 * Getter for the productType
 	 * @return the productType

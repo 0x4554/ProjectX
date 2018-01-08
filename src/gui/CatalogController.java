@@ -1,19 +1,23 @@
 package gui;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import client.Client;
 import javafx.application.Application.Parameters;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class CatalogController {
+public class CatalogController implements Initializable{
 	
 	private Parameters params;
 	private Stage primaryStage;
@@ -23,15 +27,15 @@ public class CatalogController {
 		@FXML private Label pro;
 		@FXML private Button cartBtn;
 		@FXML private Button backBtn;
+		private CustomerMenuController cstmc;
 	/**
 	 * This method is the constructor for this class
 	 * @param clnt	the connected client
 	 */
-	public CatalogController(Client clnt)
+	/*public CatalogController(Client clnt)
 	{
 		this.clnt=clnt;
-	}
-	
+	}*/
 	/**
 	 * A necessary constructor for the App
 	 */
@@ -39,11 +43,13 @@ public class CatalogController {
 	{
 		
 	}
-	
-	public void setConnectionData(Client clnt)
+	public void setConnectionData(CustomerMenuController cmc) {
+		this.cstmc=cmc;
+	}
+	/*public void setConnectionData(Client clnt)
 	{
 		this.clnt=clnt;
-	}
+	}*/
 	
 	public void AddItemToCart(ActionEvent event) throws IOException
 	{
@@ -59,6 +65,16 @@ public class CatalogController {
 		primaryStage.show();
 	}
 	
-	
+	public void bckToMainMenu(ActionEvent event)throws IOException{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		this.cstmc.showCustomerMenu();									       //open previous menu
+		return;
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
