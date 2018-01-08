@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewOrderController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CartController">
    <bottom>
       <HBox prefHeight="31.0" prefWidth="1056.0" BorderPane.alignment="CENTER">
          <children>
@@ -20,12 +19,12 @@
       </HBox>
    </bottom>
    <right>
-      <ImageView id="itmImgVw" fx:id="itmImgVw" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+      <ImageView id="itmImgVw" fx:id="itmImgVw" fitHeight="186.0" fitWidth="275.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
    </right>
    <top>
       <Label id="crtEmptLbl" fx:id="crtEmptLbl" textFill="#d01010" BorderPane.alignment="CENTER" />
    </top>
    <left>
-      <TreeView id="PrdctsTrVw" fx:id="PrdctsTrVw" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TreeView fx:id="prdctTrVw" prefHeight="348.0" prefWidth="298.0" BorderPane.alignment="CENTER" />
    </left>
 </BorderPane>

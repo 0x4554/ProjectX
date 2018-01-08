@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +17,9 @@ import java.util.Map;
  * Project Name gitProjectX
  *
  */
-public class StoreEntity {
+public class StoreEntity extends Object implements Serializable{
 	private int branchID;
+	private String BranchName;
 	private int storeManagerWorkerID;
 	private ArrayList<Integer> storeWorkers;	//all the workers of the store by worker ID
 	private Map<String,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
@@ -29,11 +31,12 @@ public class StoreEntity {
 	 * @param storeManager	the store manager
 	 * @param workers	the list of store workers
 	 */
-	public StoreEntity(int branchID,int storeManager,ArrayList<Integer> workers)
+	public StoreEntity(int branchID,String branchName,int storeManager)
 	{
 		this.branchID = branchID;
+		this.BranchName = branchName;
 		this.storeManagerWorkerID=storeManager;
-		this.storeWorkers= new ArrayList<Integer>(workers);
+		this.storeWorkers= new ArrayList<Integer>();
 		this.storeDiscoutsSales = new HashMap<String,Double>();
 	}
 	/**
@@ -54,6 +57,20 @@ public class StoreEntity {
 		this.storeWorkers.remove(workerID);
 	}
 
+	/**
+	 * Getter for the branchName
+	 * @return the branchName
+	 */
+	public String getBranchName() {
+		return BranchName;
+	}
+	/**
+	 * Setter for the branchName
+	 * @param branchName the branchName to set
+	 */
+	public void setBranchName(String branchName) {
+		BranchName = branchName;
+	}
 	/**
 	 * Getter for the branchID
 	 * @return the branchID

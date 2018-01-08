@@ -1,4 +1,7 @@
 package entities;
+
+import java.io.Serializable;
+
 /**
  * This class represents the delivery entity
  * DeliveryEntity.java
@@ -11,7 +14,7 @@ package entities;
  * Project Name gitProjectX
  *
  */
-public class DeliveryEntity {
+public class DeliveryEntity implements Serializable{
 	private String OrderID;				 /**the foreign key for the order delivery**/
 	private String deliveryAddress;
 	private String recipientName;

@@ -1,9 +1,13 @@
 package entities;
 
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class ProductEntity {
+import java.io.Serializable;
+
+public class ProductEntity implements Serializable{
+
 	private String productID;
 	private String productName;
 	private String productType;
@@ -134,3 +138,4 @@ public class ProductEntity {
 	}
 
 }
+

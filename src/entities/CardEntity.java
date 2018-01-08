@@ -1,4 +1,7 @@
 package entities;
+
+import java.io.Serializable;
+
 /**
  * This class represents the card added to the order
  * CardEntity.java
@@ -11,7 +14,7 @@ package entities;
  * Project Name gitProjectX
  *
  */
-public class CardEntity {
+public class CardEntity implements Serializable{
 	
 	private String text;
 	/**

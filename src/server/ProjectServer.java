@@ -4,6 +4,10 @@
 package server;
 
 import java.io.*;
+import java.net.Socket;
+
+
+
 
 
 import java.sql.Connection;
@@ -13,8 +17,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import entities.ProductEntity;
+import entities.StoreEntity;
 import logic.ConnectedClients;
 import ocsf.server.*;
 import ocsf.*;
@@ -60,31 +67,14 @@ public class ProjectServer extends AbstractServer
   {
 	  ConnectedClients.removeConnectedClient(username);
   }
-  
-  /*
-  public void handleMessageFromClient(Object msg, ConnectionToClient client)
-  {
-	  int fileSize =((MyFile)msg).getSize();
-	  MyFile file = (MyFile)msg;
-	  System.out.println("Message received: " + file.getFileName() + " from " + client);
-	  System.out.println("length "+ fileSize);
-	  try {
-		receiveFile(file.getFileName(),file.getDescription(), fileSize);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-//	  System.out.println("Message received: " + msg + " from " + client);
-//	  System.out.println("length "+ fileSize);
-	  }
-  */
+
   /**
-   * This method receives the file from the client?????????????????????????
-   * @param fileLocation
-   * @param messagePath
-   * @param fileSize
-   * @throws IOException
+   * this method handles the creation of new order in the system
+   * 
+   * @param newOrderDetails
+   * @return
    */
+
   //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
 	{
@@ -129,6 +119,7 @@ public class ProjectServer extends AbstractServer
 		}
 	}
   //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   private ArrayList<String> createNewOrder(String newOrderDetails)
   {
 	  ArrayList<String> returnMessage = new ArrayList<String>();
@@ -263,6 +254,79 @@ public class ProjectServer extends AbstractServer
 	    
 	  }
   
+  	/**
+  	 * This method gets the list of stores from the DB
+  	 * @return	arrayList of StoreEntity
+  	 * @throws SQLException		thrown if there was an SQL exception
+  	 * @throws ClassNotFoundException	ClassNotFoundException	thrown if connecting to DB failed
+  	 */
+	private ArrayList<StoreEntity> getAllstoresFromDB() throws SQLException, ClassNotFoundException {
+		ArrayList<StoreEntity> listOfStoresFromDB = new ArrayList<StoreEntity>();
+		StoreEntity store;
+		Statement stmt;
+		try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+		stmt = con.createStatement();
+		ResultSet rs1 = stmt.executeQuery("SELECT BranchID,BranchName,BranchManager FROM projectx.store"); //get all the stores (ID,Name,managerID) in the stores table from the data base
+
+		while (rs1.next())
+		{
+			store = new StoreEntity(rs1.getInt(1), rs1.getString(2), rs1.getInt(3)); //create a new instance of a store
+			listOfStoresFromDB.add(store); //add the product from the data base to the list
+		}
+
+		stmt = con.createStatement();
+		ResultSet rs2;
+		Map<String,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
+		for (StoreEntity store2 : listOfStoresFromDB)
+		{
+			rs2 = stmt.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+ store2.getBranchID()); //get all the discounts for each store
+			if(!(rs2.next()))						//if the store has no discounts
+			{
+				store2.setStoreDiscoutsSales(null);
+			} else
+			{
+				storeDiscoutsSales = new HashMap<String, Double>();			//create  a new hashMap for discounts
+				while (rs2.next())
+				{
+					storeDiscoutsSales.put(rs2.getString(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
+				}
+				store2.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
+			}
+		}
+		
+		stmt = con.createStatement();
+		ResultSet rs3;
+		ArrayList<Integer> listOfStoreWorkers;			//holds the list of store workers for the store entity
+		for (StoreEntity store2 : listOfStoresFromDB)
+		{
+			rs3 = stmt.executeQuery("SELECT WorkerID FROM projectx.storeemployee WHERE BranchID = "+ store2.getBranchID()); //get all the discounts for each store
+			if(!(rs3.next()))						//if the store has no workers
+			{
+				store2.setStoreWorkers(null);;
+			} else
+			{
+				listOfStoreWorkers = new ArrayList<Integer>();			//create  a new arrayList for workers
+				while (rs3.next())
+				{
+					if(rs3.getInt(1) == store2.getStoreManagerWorkerID()) {		//if the worker is the manager 
+						store2.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
+					}else													//if a simple store worker
+						listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
+				}
+				store2.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
+			}
+		}
+
+		return listOfStoresFromDB;
+	}
   /**
    * This method gets all of the products from the catalog
    * @return returns an ArrayList of all of the products in the catalog
@@ -294,6 +358,105 @@ public class ProjectServer extends AbstractServer
 	  }
 	  return listOfProducts;
   }
+  
+  /**
+   * this method handles the creation of new customers complaint
+   * 
+   * 
+   * @param details	- String of the complaint info ("complaint!"complaintnumber|complaintDescription)
+   * @return
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
+  public String complaint(String details) throws SQLException, ClassNotFoundException {
+	  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
+	  int orderNum = Integer.parseInt(num);
+	  String desc=details.substring(details.indexOf("|")+1,details.length());
+	  Statement stmt;
+	  
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	    
+	    if(con!=null)
+	    System.out.println("Connection to Data Base succeeded");  
+	    }
+	  
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
+	  
+	  stmt = con.createStatement();
+	  
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +orderNum+"'");	//prepare a statement
+	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
+	    {
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description) VALUES (?,?)");	//prepare a statement
+		    ps.setInt(1, orderNum);																			//insert parameters into the statement
+		    ps.setString(2, desc);
+		    ps.executeUpdate();
+		    
+		    return "Success";
+	    }
+	  return "Order does not exist";   
+  }
+  
+  /**this method handles file received from user
+   * 
+   * 
+   * @param ipAddress - ip of the client
+   * @param portNo - open port for sending/receiving the file
+   * @param fileLocation - Path to where file would be saved on server side
+   * @throws IOException - IOException might be thrown during the process
+   */
+  public void receiveFileFromClient(String ipAddress,int portNo) throws IOException
+  {
+	  	String fileLocation="/home/mdhttr/Documents/complaints/";
+	  	fileLocation+="file.jpg";
+		int bytesRead=0;
+		int current = 0;
+		FileOutputStream fileOutputStream = null;
+		BufferedOutputStream bufferedOutputStream = null;
+		Socket socket = null;
+		try {
+			//creating connection.
+			//this.setPort(5556);
+			
+			
+			socket = new Socket(ipAddress,portNo);
+			System.out.println("connected.");
+			
+			// receive file
+			byte [] byteArray  = new byte [6022386];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
+			System.out.println("Please wait downloading file");
+			
+			//reading file from socket
+			InputStream inputStream = socket.getInputStream();
+			fileOutputStream = new FileOutputStream(fileLocation);
+			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+			bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
+
+			current = bytesRead;
+			do {
+				bytesRead =inputStream.read(byteArray, current, (byteArray.length-current));
+				if(bytesRead >= 0) current += bytesRead;
+			} while(bytesRead > -1);
+			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
+			bufferedOutputStream.flush();												//flushing buffers
+			
+			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if (fileOutputStream != null) fileOutputStream.close();
+			if (bufferedOutputStream != null) bufferedOutputStream.close();
+			if (socket != null) socket.close();
+		}
+	}
+  
   
   /** This method handles product search messages received from the client.
   *
@@ -369,39 +532,65 @@ public class ProjectServer extends AbstractServer
 	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
+		
 		try {
 		System.out.println("<user>"+(String)msg);
+		
 		if(operation.equals("getCatalog"))
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
+			sendToAllClients(listOfProducts);
 		}
+
 		if(operation.equals("createNewOrder"))
 		{
 			retval = createNewOrder(messageFromClient);
+
 		}
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
 //		}
+
+			sendToAllClients(retval);
+		
+		////////////////Need to split it to store names, store details ,store workers.....////////
+		if(operation.equals("getAllStores"))
+		{
+			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
+			listOfAllStores = getAllstoresFromDB();
+			sendToAllClients(listOfAllStores);
+	//		sendToAllClients(new ArrayList<StoreEntity>);
+		}
+//		if(operation.equals("addProductToCatalog"))
+//		{
+//			
+//		}
+
+
 //		if(operation.equals("addNewProdcutToCatalog"))
 //		{
 //			retval = this.addNewProductToCatalog(messageFromClient);
 //		}
+		
 		if(operation.equals("exitApp"))
 		{
 			this.terminateConnection(messageFromClient);	//calls a method to remove the user from the connected list
 		}
+		
 		if(operation.equals("login"))
 		{
 			retval = this.login(client,messageFromClient);
 			sendToAllClients(retval);	//send arraylist back to client
 		}
+		
 		if(operation.equals("getProduct"))	//check if asked to find an existing product
 		{
 			retval = this.getProduct(client,messageFromClient);	//get the product's details
 			sendToAllClients(retval);	//send arraylist back to client
 		}
+		
 		if(operation.equals("createProduct"))
 		{
 			messageFromClient=messageFromClient.substring(1,messageFromClient.length());
@@ -409,14 +598,41 @@ public class ProjectServer extends AbstractServer
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
 			}
+			
 			else
 			{
 				generalMessage = new String("Product was not added to the DataBase.\n(Product ID already exists)");
 			}
+			
 			sendToAllClients(generalMessage);	//send string back to client
 		}
+		
+		if(operation.equals("complaint")) {
+			if(this.complaint((String)msg).equals("Success")) {
+				System.out.println("complaint added");
+				generalMessage = new String("Added");
+				sendToAllClients(generalMessage);
+			}
+			else {
+				System.out.println("complaint failed");
+				generalMessage = new String("failed");
+				sendToAllClients(generalMessage);
+			}
 		}
-		catch(Exception ex) {ex.printStackTrace();}
+		
+		if(operation.equals("downloadFile")) {
+			System.out.println("Server downloading file sent from client");
+			String filePath=(String)msg;
+			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
+			this.stopListening();
+			sendToAllClients("downloading");
+			this.receiveFileFromClient("localhost", 5556);
+			}
+		}
+		
+		catch(Exception ex) {
+			ex.printStackTrace();
+			}
 		
 	
 //		sendToAllClients(retval);

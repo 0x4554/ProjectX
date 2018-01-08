@@ -1,5 +1,6 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  * Project Name gitProjectX
  *
  */
-public class CatalogEntity {
+public class CatalogEntity implements Serializable{
 	private ArrayList<ProductEntity> catalogProducts;
 	/**
 	 * This method adds a new product to the catalog

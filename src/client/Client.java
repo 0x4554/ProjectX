@@ -1,8 +1,15 @@
 package client;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
+import entities.StoreEntity;
 import gui.MainBoundary;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,6 +28,7 @@ public class Client extends AbstractClient {
 	private Object messageFromServer;
 	private  Boolean confirmationFromServer;
 	private  ArrayList<String> ArrayListFromSrvr=null;
+	private ArrayList<StoreEntity> arrayListOfStoreEntityFromServer;
 	private String stringFromServer;
 	
 	/**
@@ -113,7 +121,63 @@ public class Client extends AbstractClient {
 			}
 			
 		}
+		
+		/**
+		 * this method sends file to the server
+		 * 
+		 * @param portNo - port for working in front of the server
+		 * @param filePath - location of the file in client side
+		 * @throws IOException - IOException may be thrown
+		 */
+		public void uploadFileToServer(int portNo,String filePath) throws IOException
+		{
+			FileInputStream fileInputStream = null;
+			BufferedInputStream bufferedInputStream = null;
+
+			OutputStream outputStream = null;
+			ServerSocket serverSocket = null;
+			Socket socket = null;
+
+			//creating connection between sender and receiver
+			try {
+				//this.closeConnection();
+				serverSocket = new ServerSocket(portNo);
+				System.out.println("Waiting for receiver...");
+					try {
+							socket = serverSocket.accept();
+							System.out.println("Accepted connection : " + socket);
+							//connection established successfully
+		
+							//creating object to send file
+							File file = new File (filePath);
+							byte [] byteArray  = new byte [(int)file.length()];
+							fileInputStream = new FileInputStream(file);
+							bufferedInputStream = new BufferedInputStream(fileInputStream);
+							bufferedInputStream.read(byteArray,0,byteArray.length); // copied file into byteArray
+		
+							//sending file through socket
+							outputStream = socket.getOutputStream();
+							System.out.println("Sending " + filePath + "( size: " + byteArray.length + " bytes)");
+							outputStream.write(byteArray,0,byteArray.length);			//copying byteArray to socket
+							outputStream.flush();										//flushing socket
+							System.out.println("Done.");								//file has been sent
+						}
+						finally {
+							if (bufferedInputStream != null) bufferedInputStream.close();
+							if (outputStream != null) bufferedInputStream.close();
+							if (socket!=null) socket.close();
+						}		
+				} catch (IOException e) {
+					
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				finally {
+					if (serverSocket != null) serverSocket.close();
+				}
+		}
 	  
+		
 	  /**
 	   * This method terminates the client.
 	   */
@@ -145,10 +209,25 @@ public class Client extends AbstractClient {
 	   */
 	  public String getStringFromServer()	//method for when the message form the server is a String
 	  {
-		  String retMessage;
-		  this.stringFromServer = (String)this.messageFromServer;
-		  retMessage = new String(this.stringFromServer);
-		  return retMessage;
+		  String retMsg = "";
+		 for(String s: (ArrayList<String>)this.messageFromServer)
+			 retMsg+=s;
+		 // retMessage = new String(this.stringFromServer);
+		  return retMsg;
+	  }
+	  
+	  /**
+	   * This method return the message from the server as an ArrayList of StoreEntities
+	   * @return	ArrayList of StoreEntities
+	   */
+	  public ArrayList<StoreEntity> getArrayListOfStoreEntityFromServer()
+	  {
+		  ArrayList<StoreEntity>dtls=new ArrayList<StoreEntity>();
+		  this.arrayListOfStoreEntityFromServer = (ArrayList<StoreEntity>) this.messageFromServer;
+		for(StoreEntity store:this.arrayListOfStoreEntityFromServer) 
+				dtls.add((StoreEntity)store);
+				
+		return dtls;
 	  }
 	  
 	  /**

@@ -5,13 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewOrderController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane layoutX="-76.0" layoutY="-122.0" prefHeight="481.0" prefWidth="414.0">
          <children>
             <Label layoutX="180.0" layoutY="220.0" text="Please Choose a store" />
-            <ComboBox id="chsStrCmb" fx:id="chsStrCmb" layoutX="178.0" layoutY="324.0" prefWidth="150.0" />
-            <Button id="chsStrBtn" fx:id="chsStrBtn" layoutX="221.0" layoutY="413.0" mnemonicParsing="false" onAction="#storeChosen" text="next" />
+            <ComboBox id="chsStrCmb" fx:id="strCmb" layoutX="178.0" layoutY="324.0" prefWidth="150.0" promptText="Select store" />
+            <Button id="chsStrBtn" fx:id="okBtn" layoutX="221.0" layoutY="413.0" mnemonicParsing="false" onAction="#storeSelected" text="next" />
          </children>
       </AnchorPane>
    </children>

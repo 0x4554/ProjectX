@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class OrderController implements Initializable {
+public class CustomerOrderController implements Initializable {
 
 	private Client clnt;
 	@FXML
@@ -32,16 +32,24 @@ public class OrderController implements Initializable {
 		this.clnt=clnt;
 	}
 	
-	public void CreateNewOrder(ActionEvent event) throws IOException {
+	/**
+	 * This method handles when the create new order has been pressed
+	 * @param event
+	 * @throws IOException
+	 * @throws InterruptedException 
+	 */
+	public void CreateNewOrder(ActionEvent event) throws IOException, InterruptedException {
 		((Node)event.getSource()).getScene().getWindow().hide();	//hide last window
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
-		CreateNewOrderController nom = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-
+		SelectStoreController scc = new SelectStoreController();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SelectStoreBoundary.fxml"));
+		loader.setController(scc);									//set the controller
+		scc.setConnectionData(this.clnt);							//set the connection data
+		scc.showStores();											//call method to load the list of stores
+		Parent root = loader.load();								//load the SelectStoreBoundary (sets the window data)
+		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		nom.setConnectionData(this.clnt);
-		primaryStage.setTitle("New order");
+		primaryStage.setTitle("Select store");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
