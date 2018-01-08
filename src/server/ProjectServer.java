@@ -3,12 +3,12 @@
 // license found at www.lloseng.com 
 package server;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import java.io.*;
 import java.net.Socket;
+
+
+
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,7 +22,6 @@ import java.util.Map;
 
 import entities.ProductEntity;
 import entities.StoreEntity;
-import javafx.scene.image.Image;
 import logic.ConnectedClients;
 import ocsf.server.*;
 import ocsf.*;
@@ -68,7 +67,7 @@ public class ProjectServer extends AbstractServer
   {
 	  ConnectedClients.removeConnectedClient(username);
   }
-  
+
   /**
    * this method handles the creation of new order in the system
    * 
@@ -121,7 +120,6 @@ public class ProjectServer extends AbstractServer
 	}
   //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  
   private ArrayList<String> createNewOrder(String newOrderDetails)
   {
 	  ArrayList<String> returnMessage = new ArrayList<String>();
@@ -334,9 +332,8 @@ public class ProjectServer extends AbstractServer
    * @return returns an ArrayList of all of the products in the catalog
    * @throws ClassNotFoundException	thrown if connecting to DB failed
    * @throws SQLException	thrown if there was an SQL exception
- * @throws FileNotFoundException 
    */
-  private ArrayList<ProductEntity> getCatalog() throws ClassNotFoundException, SQLException, FileNotFoundException
+  private ArrayList<ProductEntity> getCatalog() throws ClassNotFoundException, SQLException
   {
 	  ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
 	  ProductEntity product;
@@ -356,11 +353,110 @@ public class ProjectServer extends AbstractServer
 	  
 	  while(rs.next())
 	  {
-		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6),new Image(new FileInputStream( "C:\\Users\\pic1.jpg")));	//create a new instance of a product
-		 listOfProducts.add(product);	//add the product from the data base to the list
+		 //product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
+		 //listOfProducts.add(product);	//add the product from the data base to the list
 	  }
 	  return listOfProducts;
   }
+  
+  /**
+   * this method handles the creation of new customers complaint
+   * 
+   * 
+   * @param details	- String of the complaint info ("complaint!"complaintnumber|complaintDescription)
+   * @return
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
+  public String complaint(String details) throws SQLException, ClassNotFoundException {
+	  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
+	  int orderNum = Integer.parseInt(num);
+	  String desc=details.substring(details.indexOf("|")+1,details.length());
+	  Statement stmt;
+	  
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	    
+	    if(con!=null)
+	    System.out.println("Connection to Data Base succeeded");  
+	    }
+	  
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
+	  
+	  stmt = con.createStatement();
+	  
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +orderNum+"'");	//prepare a statement
+	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
+	    {
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description) VALUES (?,?)");	//prepare a statement
+		    ps.setInt(1, orderNum);																			//insert parameters into the statement
+		    ps.setString(2, desc);
+		    ps.executeUpdate();
+		    
+		    return "Success";
+	    }
+	  return "Order does not exist";   
+  }
+  
+  /**this method handles file received from user
+   * 
+   * 
+   * @param ipAddress - ip of the client
+   * @param portNo - open port for sending/receiving the file
+   * @param fileLocation - Path to where file would be saved on server side
+   * @throws IOException - IOException might be thrown during the process
+   */
+  public void receiveFileFromClient(String ipAddress,int portNo) throws IOException
+  {
+	  	String fileLocation="/home/mdhttr/Documents/complaints/";
+	  	fileLocation+="file.jpg";
+		int bytesRead=0;
+		int current = 0;
+		FileOutputStream fileOutputStream = null;
+		BufferedOutputStream bufferedOutputStream = null;
+		Socket socket = null;
+		try {
+			//creating connection.
+			//this.setPort(5556);
+			
+			
+			socket = new Socket(ipAddress,portNo);
+			System.out.println("connected.");
+			
+			// receive file
+			byte [] byteArray  = new byte [6022386];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
+			System.out.println("Please wait downloading file");
+			
+			//reading file from socket
+			InputStream inputStream = socket.getInputStream();
+			fileOutputStream = new FileOutputStream(fileLocation);
+			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+			bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
+
+			current = bytesRead;
+			do {
+				bytesRead =inputStream.read(byteArray, current, (byteArray.length-current));
+				if(bytesRead >= 0) current += bytesRead;
+			} while(bytesRead > -1);
+			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
+			bufferedOutputStream.flush();												//flushing buffers
+			
+			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			if (fileOutputStream != null) fileOutputStream.close();
+			if (bufferedOutputStream != null) bufferedOutputStream.close();
+			if (socket != null) socket.close();
+		}
+	}
+  
   
   /** This method handles product search messages received from the client.
   *
@@ -436,20 +532,28 @@ public class ProjectServer extends AbstractServer
 	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
+		
 		try {
 		System.out.println("<user>"+(String)msg);
+		
 		if(operation.equals("getCatalog"))
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
 			sendToAllClients(listOfProducts);
 		}
-		
+
 		if(operation.equals("createNewOrder"))
 		{
 			retval = createNewOrder(messageFromClient);
-			sendToAllClients(retval);
+
 		}
+//		if(operation.equals("addProductToCatalog"))
+//		{
+//			
+//		}
+
+			sendToAllClients(retval);
 		
 		////////////////Need to split it to store names, store details ,store workers.....////////
 		if(operation.equals("getAllStores"))
@@ -459,15 +563,17 @@ public class ProjectServer extends AbstractServer
 			sendToAllClients(listOfAllStores);
 	//		sendToAllClients(new ArrayList<StoreEntity>);
 		}
-		
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
 //		}
+
+
 //		if(operation.equals("addNewProdcutToCatalog"))
 //		{
 //			retval = this.addNewProductToCatalog(messageFromClient);
 //		}
+		
 		if(operation.equals("exitApp"))
 		{
 			this.terminateConnection(messageFromClient);	//calls a method to remove the user from the connected list
@@ -488,7 +594,6 @@ public class ProjectServer extends AbstractServer
 		if(operation.equals("createProduct"))
 		{
 			messageFromClient=messageFromClient.substring(1,messageFromClient.length());
-			
 			if((this.insertProduct((String)messageFromClient, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
@@ -498,12 +603,10 @@ public class ProjectServer extends AbstractServer
 			{
 				generalMessage = new String("Product was not added to the DataBase.\n(Product ID already exists)");
 			}
+			
 			sendToAllClients(generalMessage);	//send string back to client
 		}
 		
-		}
-		
-				
 		if(operation.equals("complaint")) {
 			if(this.complaint((String)msg).equals("Success")) {
 				System.out.println("complaint added");
@@ -527,7 +630,9 @@ public class ProjectServer extends AbstractServer
 			}
 		}
 		
-		catch(Exception ex) {ex.printStackTrace();}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			}
 		
 	
 //		sendToAllClients(retval);

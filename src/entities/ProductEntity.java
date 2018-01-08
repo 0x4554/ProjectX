@@ -14,6 +14,11 @@ public class ProductEntity implements Serializable{
 	private String productDominantColor;
 	private Image productImage;
 	//private ImageView productImageView;
+	
+	public ProductEntity()
+	{
+		
+	}
 	/**
 	 * Getter for the productImage
 	 * @return the productImage
@@ -80,13 +85,13 @@ public class ProductEntity implements Serializable{
 		this.productName = productName;
 	}
 	///////////////////////////////////////
-	public ImageView getProductImage() {
-		return productImage;
-	}
-
-	public void setProductImage(ImageView productImage) {
-		this.productImage = productImage;
-	}
+//	public ImageView getProductImage() {
+//		return productImage;
+//	}
+//
+//	public void setProductImage(ImageView productImage) {
+//		this.productImage = productImage;
+//	}
 ///////////////////////////////////////////////
 	/**
 	 * Getter for the productType
