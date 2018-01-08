@@ -13,7 +13,7 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
 	private Image productImage;
-	
+	//private ImageView productImageView;
 	/**
 	 * Getter for the productImage
 	 * @return the productImage
@@ -79,6 +79,15 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+	///////////////////////////////////////
+	public ImageView getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(ImageView productImage) {
+		this.productImage = productImage;
+	}
+///////////////////////////////////////////////
 	/**
 	 * Getter for the productType
 	 * @return the productType

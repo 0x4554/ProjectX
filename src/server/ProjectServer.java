@@ -6,6 +6,10 @@ package server;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import java.io.*;
+import java.net.Socket;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,8 +24,8 @@ import entities.ProductEntity;
 import entities.StoreEntity;
 import javafx.scene.image.Image;
 import logic.ConnectedClients;
-import ocsf.server.AbstractServer;
-import ocsf.server.ConnectionToClient;
+import ocsf.server.*;
+import ocsf.*;
 /**
  * This class overrides some of the methods in the abstract 
  * superclass in order to give more functionality to the server.
@@ -64,16 +68,17 @@ public class ProjectServer extends AbstractServer
   {
 	  ConnectedClients.removeConnectedClient(username);
   }
+  
   /**
-   * This method receives the file from the client?????????????????????????
-   * @param fileLocation
-   * @param messagePath
-   * @param fileSize
-   * @throws IOException
+   * this method handles the creation of new order in the system
+   * 
+   * @param newOrderDetails
+   * @return
    */
-  /*public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
-	{
 
+  //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
+	{
 		int bytesRead=0;
 		int current = 0;
 		FileInputStream fileInputStream = null;
@@ -81,11 +86,10 @@ public class ProjectServer extends AbstractServer
 		BufferedOutputStream bufferedOutputStream = null;
 	//	Socket socket = null;
 		try {
-
 			//creating connection.
-	//		socket = new Socket(ipAddress,portNo);
+	        //socket = new Socket(ipAddress,portNo);
 			System.out.println("connected.");
-			
+	
 			// receive file
 			byte [] byteArray  = new byte [fileSize];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
 			System.out.println("Please wait downloading file");
@@ -93,16 +97,14 @@ public class ProjectServer extends AbstractServer
 			//reading file from socket
 		//	InputStream inputStream = socket.getInputStream();
 			fileInputStream = new FileInputStream(messagePath);
-			fileOutputStream = new FileOutputStream("C:\\Users\\M207user\\Downloads\\new.pdf");
+			fileOutputStream = new FileOutputStream("C:\\newpic.jpg");   //** change it to the name of the picture ok!**//
 			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-		
 			bytesRead=fileInputStream.read(byteArray,0,fileSize);
 			
 		//	bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
 			
-
 			current = bytesRead;
-			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
+			bufferedOutputStream.write(byteArray, 0 , current);			//writing byteArray to file
 			bufferedOutputStream.flush();												//flushing buffers
 			
 			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
@@ -116,7 +118,9 @@ public class ProjectServer extends AbstractServer
 			if (bufferedOutputStream != null) bufferedOutputStream.close();
 		//	if (socket != null) socket.close();
 		}
-	}*/
+	}
+  //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   
   private ArrayList<String> createNewOrder(String newOrderDetails)
   {
@@ -440,11 +444,13 @@ public class ProjectServer extends AbstractServer
 			listOfProducts = getCatalog();
 			sendToAllClients(listOfProducts);
 		}
+		
 		if(operation.equals("createNewOrder"))
 		{
 			retval = createNewOrder(messageFromClient);
 			sendToAllClients(retval);
 		}
+		
 		////////////////Need to split it to store names, store details ,store workers.....////////
 		if(operation.equals("getAllStores"))
 		{
@@ -453,6 +459,7 @@ public class ProjectServer extends AbstractServer
 			sendToAllClients(listOfAllStores);
 	//		sendToAllClients(new ArrayList<StoreEntity>);
 		}
+		
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
@@ -465,30 +472,61 @@ public class ProjectServer extends AbstractServer
 		{
 			this.terminateConnection(messageFromClient);	//calls a method to remove the user from the connected list
 		}
+		
 		if(operation.equals("login"))
 		{
 			retval = this.login(client,messageFromClient);
 			sendToAllClients(retval);	//send arraylist back to client
 		}
+		
 		if(operation.equals("getProduct"))	//check if asked to find an existing product
 		{
 			retval = this.getProduct(client,messageFromClient);	//get the product's details
 			sendToAllClients(retval);	//send arraylist back to client
 		}
+		
 		if(operation.equals("createProduct"))
 		{
 			messageFromClient=messageFromClient.substring(1,messageFromClient.length());
+			
 			if((this.insertProduct((String)messageFromClient, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
 			}
+			
 			else
 			{
 				generalMessage = new String("Product was not added to the DataBase.\n(Product ID already exists)");
 			}
 			sendToAllClients(generalMessage);	//send string back to client
 		}
+		
 		}
+		
+				
+		if(operation.equals("complaint")) {
+			if(this.complaint((String)msg).equals("Success")) {
+				System.out.println("complaint added");
+				generalMessage = new String("Added");
+				sendToAllClients(generalMessage);
+			}
+			else {
+				System.out.println("complaint failed");
+				generalMessage = new String("failed");
+				sendToAllClients(generalMessage);
+			}
+		}
+		
+		if(operation.equals("downloadFile")) {
+			System.out.println("Server downloading file sent from client");
+			String filePath=(String)msg;
+			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
+			this.stopListening();
+			sendToAllClients("downloading");
+			this.receiveFileFromClient("localhost", 5556);
+			}
+		}
+		
 		catch(Exception ex) {ex.printStackTrace();}
 		
 	

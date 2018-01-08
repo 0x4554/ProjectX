@@ -1,24 +1,42 @@
 package gui;
+import  entities.ProductEntity;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
+import javax.imageio.ImageIO;
+import com.sun.org.apache.xml.internal.resolver.helpers.FileURL;
+import com.sun.xml.internal.bind.v2.runtime.property.PropertyFactory;
 import client.Client;
 import javafx.application.Application.Parameters;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import logic.ConnectedClients;
+import sun.tools.jar.Main;
+import java.awt.image.BufferedImage;
+
 
 public class CustomerMenuController implements Initializable{
 	
@@ -26,7 +44,7 @@ public class CustomerMenuController implements Initializable{
 	//@FXML private AnchorPane root;
 	
 	private Parameters params;
-	private Stage primaryStage;
+	
 	
 	private Client clnt;
 	private LoginController logcon;
@@ -39,6 +57,20 @@ public class CustomerMenuController implements Initializable{
 	@FXML private Button watchaccBtn;
 	@FXML private Button cmplntBtn;
 	@FXML private Button logoutBtn;
+	
+	/**
+	 * This variables are connected to the catalog class
+	 */
+	TableView<ProductEntity> table;
+	private TextField productID;
+	private TextField productName;
+	private TextField productType;
+	private TextField productPrice;
+	private TextField productDescription;
+	private TextField productColor;
+	private Button addButton;
+	private Button deleteButton;
+	private Button editButton;
 	
 	/**
 	 * This method is the constructor for this class
@@ -67,7 +99,9 @@ public class CustomerMenuController implements Initializable{
 		this.clnt=clnt;
 	}
 	
-	
+	public Client getClient() {
+		return this.clnt;
+	}
 	
 	public void showCustomerMenu() throws IOException
 	{
@@ -82,7 +116,6 @@ public class CustomerMenuController implements Initializable{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	
 	
 	
 	//*Open order menu from customer main menu*//
@@ -100,22 +133,147 @@ public class CustomerMenuController implements Initializable{
 	}			
 	
 	//*Open  catalog  menu from customer main menu*//
-	public void enterCatalog(ActionEvent event) throws IOException {
-		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+	/*public void enterCatalog(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("/gui/CatalogBoundary.fxml").openStream());
-		 CatalogController catg = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		CatalogController catlg = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window//i changed this line -lana
+		catlg.setConnectionData(this);
 	//	 ord.setConnectionData(DEFAULT_PORT, this);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		int n;
-		int a;
-		int b;
-		//kuhlkjhlkuh;u;oiu
-	}			
+	}	*/		
+	
+	
+	//*Open  catalog  menu from customer main menu*//
+		public void enterCatalog(ActionEvent event) throws IOException {
+			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+			//TableView<ProductEntity> table;
+			
+			//**adding the columns to the table**//
+			TableColumn<ProductEntity,String> IDcolumn=new TableColumn<>("ProductID");
+			IDcolumn.setMaxWidth(200);
+			IDcolumn.setCellValueFactory(new PropertyValueFactory<>("productID"));
+			
+			TableColumn<ProductEntity,String> namecolumn=new TableColumn<>("ProductName");
+			namecolumn.setMaxWidth(200);
+			namecolumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+			
+			TableColumn<ProductEntity,String> typecolumn=new TableColumn<>("productType");
+			typecolumn.setMaxWidth(200);
+			typecolumn.setCellValueFactory(new PropertyValueFactory<>("productType"));
+			
+			TableColumn<ProductEntity,Double> pricecolumn=new TableColumn<>("productPrice");
+			pricecolumn.setMaxWidth(200);
+			pricecolumn.setCellValueFactory(new PropertyValueFactory<>("productPrice"));
+			
+			TableColumn<ProductEntity,String> descriptioncolumn1=new TableColumn<>("productDescription");
+			descriptioncolumn1.setMaxWidth(200);
+			descriptioncolumn1.setCellValueFactory(new PropertyValueFactory<ProductEntity,String>("productDescription"));
+			
+			TableColumn<ProductEntity,String> colorcolumn=new TableColumn<>("productDominantColor");
+			colorcolumn.setMaxWidth(200);
+			colorcolumn.setCellValueFactory(new PropertyValueFactory<>("productDominantColor"));
+			
+			//TableColumn<ProductEntity,ImageView> imagecolumn=new TableColumn<>("productImageView");
+			TableColumn<ProductEntity,ImageView> imagecolumn=new TableColumn<>("productImageView");
+			imagecolumn.setMaxWidth(500);
+			imagecolumn.setCellValueFactory(new PropertyValueFactory<>("productImageView"));
+			
+			TableCell<ProductEntity, Image> cell = new TableCell<ProductEntity,Image>(); 
+			
+			productID=new TextField();
+			productID.setPromptText("Enter Id");
+			productID.setMinWidth(110);
+			
+			productName=new TextField();
+			productName.setPromptText("Enter Name");
+			productName.setMinWidth(110);
+			
+			productType=new TextField();
+			productType.setPromptText("Enter Type");
+			productType.setMinWidth(250);
+			
+			productPrice=new TextField();
+			productPrice.setPromptText("Enter Price");
+			productPrice.setMinWidth(250);
+			
+			productDescription=new TextField();
+			productDescription.setPromptText("Enter Description");
+			productDescription.setMinWidth(250);
+			
+			productColor=new TextField();
+			productColor.setPromptText("Enter dominant color");
+			productColor.setMinWidth(150);
+			
+			Button addButton=new Button("Add");
+			addButton.setOnAction(e->AddToList());
+			Button deleteButton=new Button("Delete");
+			deleteButton.setOnAction(e->DeleteFromList());
+			Button EditButton=new Button("Edit");
+		//	EditButton.setOnAction(e->EditList());
+			
+			HBox hBox=new HBox();
+			hBox.setPadding(new Insets(10,10,10,10));
+			hBox.setSpacing(10);
+			hBox.getChildren().addAll(productID,productName,productType,productPrice,productDescription,productColor,addButton,deleteButton,EditButton);
+			
+			table=new TableView<>();
+			//table.setItems(getProduct());
+	    	table.getColumns().addAll(IDcolumn,namecolumn, typecolumn, pricecolumn,descriptioncolumn1,colorcolumn, imagecolumn);
+			table.setItems(getProduct());
+
+			
+			VBox Vbox1=new VBox();
+			Vbox1.getChildren().addAll(table,hBox);
+			
+			Stage primaryStage=new Stage();
+			Scene sc=new Scene(Vbox1);
+			primaryStage.setTitle("Zer-Li Catalog");
+			primaryStage.setScene(sc);
+		    primaryStage.show();
+			
+			
+		}			
+		public void AddToList()
+		{
+			ProductEntity product=new ProductEntity();
+			product.setProductID(productID.getText());
+			product.setProductName(productName.getText());
+			product.setProductType(productType.getText());
+			product.setProductPrice(Double.parseDouble(productPrice.getText()));
+			product.setProductDescription(productDescription.getText());
+			product.setProductDominantColor(productColor.getText());
+			this.table.getItems().add(product);
+			productID.clear();
+			productName.clear();
+			productType.clear();
+			productPrice.clear();
+			productDescription.clear();
+			productColor.clear();
+		}
+		
+		public void DeleteFromList()
+		{
+			ObservableList<ProductEntity> ProductSelected,AllProducts;
+			AllProducts=table.getItems();
+			ProductSelected=table.getSelectionModel().getSelectedItems();
+			 ProductSelected.forEach(AllProducts::remove);
+		}
+
+	public ObservableList<ProductEntity> getProduct()
+	{   
+		ObservableList<ProductEntity> products=FXCollections.observableArrayList();
+		ImageView im=new ImageView((new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
+	//	if(im==null)System.out.println("its null");
+		products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue",new ImageView("/images/pic1.jpg")));
+	//	products.add(new ProductEntity("124","lili","boquet",(double) 15,"bridal","red"));
+		return products;
+	}
+	
 	
 	//*Open  Account details  menu from customer main menu*//
 		public void enterToAccount(ActionEvent event) throws IOException {
@@ -130,6 +288,7 @@ public class CustomerMenuController implements Initializable{
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}			
+		
 		
 		//*Open  Update details Window from customer main menu*//
 				public void enterToUpdateDetails(ActionEvent event) throws IOException {
@@ -178,6 +337,16 @@ public class CustomerMenuController implements Initializable{
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
 			// TODO Auto-generated method stub
+		/*	products=FXCollections.observableArrayList(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue",new ImageView("images/pic1.jpg")));
+			
+			IDcolumn.setCellValueFactory(new PropertyValueFactory<ProductEntity,String>("productID"));
+			namecolumn.setCellValueFactory(new PropertyValueFactory<ProductEntity,String>("productName"));
+			typecolumn.setCellValueFactory(new PropertyValueFactory<ProductEntity,String>("productType"));
+			pricecolumn.setCellValueFactory(new PropertyValueFactory<ProductEntity,Double>("productPrice"));
+			descriptioncolumn1.setCellValueFactory(new PropertyValueFactory<ProductEntity,String>("productDescription"));
+			colorcolumn.setCellValueFactory(new PropertyValueFactory<ProductEntity,String>("productDominantColor"));
+			imagecolumn.setCellValueFactory(new PropertyValueFactory<ProductEntity,ImageView>("productImageView"));
+			tbl.setItems(products);*/
 			
 		}
 
