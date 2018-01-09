@@ -3,13 +3,10 @@
 // license found at www.lloseng.com 
 package server;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
-
-
-
-
-
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,10 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.security.auth.callback.ConfirmationCallback;
 
 import entities.ProductEntity;
 import entities.StoreEntity;
+import javafx.scene.image.Image;
 import logic.ConnectedClients;
 import ocsf.server.*;
 import ocsf.*;
@@ -36,6 +35,7 @@ public class ProjectServer extends AbstractServer
 	//do not touch//
 	private static Connection con;
 	private static String driver="com.mysql.jdbc.Driver";
+	private String incomingFileName;
   final public static int DEFAULT_PORT = 5555;
   
   
@@ -70,57 +70,6 @@ public class ProjectServer extends AbstractServer
 	  ConnectedClients.removeConnectedClient(username);
   }
 
-  /**
-   * this method handles the creation of new order in the system
-   * 
-   * @param newOrderDetails
-   * @return
-   */
-
-  //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  public static void receiveFile(String fileLocation,String messagePath,int fileSize) throws IOException
-	{
-		int bytesRead=0;
-		int current = 0;
-		FileInputStream fileInputStream = null;
-		FileOutputStream fileOutputStream = null;
-		BufferedOutputStream bufferedOutputStream = null;
-	//	Socket socket = null;
-		try {
-			//creating connection.
-	        //socket = new Socket(ipAddress,portNo);
-			System.out.println("connected.");
-	
-			// receive file
-			byte [] byteArray  = new byte [fileSize];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
-			System.out.println("Please wait downloading file");
-			
-			//reading file from socket
-		//	InputStream inputStream = socket.getInputStream();
-			fileInputStream = new FileInputStream(messagePath);
-			fileOutputStream = new FileOutputStream("C:\\newpic.jpg");   //** change it to the name of the picture ok!**//
-			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-			bytesRead=fileInputStream.read(byteArray,0,fileSize);
-			
-		//	bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
-			
-			current = bytesRead;
-			bufferedOutputStream.write(byteArray, 0 , current);			//writing byteArray to file
-			bufferedOutputStream.flush();												//flushing buffers
-			
-			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			if (fileInputStream != null) fileInputStream.close();
-			if (fileOutputStream != null) fileOutputStream.close();
-			if (bufferedOutputStream != null) bufferedOutputStream.close();
-		//	if (socket != null) socket.close();
-		}
-	}
-  //***////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   private ArrayList<String> createNewOrder(String newOrderDetails)
   {
@@ -257,6 +206,93 @@ public class ProjectServer extends AbstractServer
 	  }
   
   	/**
+  	 * this method allows the insertion of a photo into the data base
+  	 * 
+  	 * @param instrm
+  	 * @throws ClassNotFoundException
+  	 * @throws SQLException
+  	 */
+  	public void insertPhotoToDB(InputStream instrm) throws ClassNotFoundException, SQLException {
+  		Statement stmt;
+  		String ord=incomingFileName;
+  		ord=ord.substring(0,ord.indexOf("."));
+  		 try
+ 	    {
+ 	    con = connectToDB();	//call method to connect to DB
+ 	      
+ 	    }
+ 	    catch( SQLException e)	//catch exception
+ 	    {
+ 	      System.out.println("SQLException: " + e.getMessage() );
+ 	    }
+  		 System.out.println("uploadind file to Data Base");
+   		stmt=con.createStatement();
+	    ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.complaints WHERE Ordernum = '" +incomingFileName+"'");	//prepare a statement
+	    if((rs.next()))	//if no such ID exists in the DB, Insert the new data
+	    {
+	   		PreparedStatement pstmt =con.prepareStatement("UPDATE projectx.complaints set File = ? where Ordernum = ?");
+	   		pstmt.setBlob(1, instrm);
+	   		pstmt.setString(2, ord);
+	   		
+	   		pstmt.executeUpdate();
+	    }
+	    
+	    /*checking the returned value for cases it doesnt work(Should return string or int or boolean)*/
+  	}
+  	
+  	/**
+  	 * this method gets a Blob item from the data base and converts it into InputStream 
+  	 * 
+  	 * @param orderNum - primary key of the table we want to get the data from
+  	 * @return
+  	 * @throws SQLException
+  	 */
+  	public InputStream getPhotoFromDB(String orderNum) throws SQLException{
+  		InputStream is = null;
+  		Statement stmt;
+  		Blob b = con.createBlob();							//Object to contain the data from the data base
+  		
+  		try {
+  		con=connectToDB();									//Achieve connection to the data base
+  		}
+  		catch(Exception e) {
+  			System.out.println("failed connecting to db");	
+  		}
+  		
+  		try {
+  			stmt=con.createStatement();
+  		    ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.complaints WHERE Ordernum = '" +orderNum+"'");	//Statement to execute
+  		    if (rs.next())						//if such ID exists in the DB, get the new data
+  		    	b = rs.getBlob("File");			//getting the wanted blob form the column File
+  		    is=b.getBinaryStream();				//convert blob to InputStream
+  		    
+  		}catch(Exception e) {
+  			e.printStackTrace();
+  		}
+  		
+  		return is;							//returned value
+  	}
+  	
+  	/**
+  	 * this method converts InputStream to a File
+  	 * 
+  	 * @param is - InputStream to convert
+  	 * @throws IOException
+  	 */
+  	public void convertInputStreamToFile(InputStream is) throws IOException {
+  		
+  	OutputStream outputStream = new FileOutputStream(new File("/home/mdhttr/Documents/converted/img.jpg"));		//new file's output 
+
+	int read = 0;
+	byte[] bytes = new byte[1024];
+
+	while ((read = is.read(bytes)) != -1) {				//convertion proccess
+		outputStream.write(bytes, 0, read);
+	}
+  	}
+  
+  	
+  	/**
   	 * This method gets the list of stores from the DB
   	 * @return	arrayList of StoreEntity
   	 * @throws SQLException		thrown if there was an SQL exception
@@ -329,6 +365,8 @@ public class ProjectServer extends AbstractServer
 
 		return listOfStoresFromDB;
 	}
+	
+	
   /**
    * This method gets all of the products from the catalog
    * @return returns an ArrayList of all of the products in the catalog
@@ -361,6 +399,7 @@ public class ProjectServer extends AbstractServer
 	  return listOfProducts;
   }
   
+  
   /**
    * this method handles the creation of new customers complaint
    * 
@@ -372,6 +411,7 @@ public class ProjectServer extends AbstractServer
    */
   public String complaint(String details) throws SQLException, ClassNotFoundException {
 	  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
+	  this.incomingFileName=num+".jpg";
 	  int orderNum = Integer.parseInt(num);
 	  String desc=details.substring(details.indexOf("|")+1,details.length());
 	  desc=desc.replace("~", " ");
@@ -405,6 +445,7 @@ public class ProjectServer extends AbstractServer
 	  return "Order does not exist";   
   }
   
+  
   /**this method handles file received from user
    * 
    * 
@@ -412,11 +453,15 @@ public class ProjectServer extends AbstractServer
    * @param portNo - open port for sending/receiving the file
    * @param fileLocation - Path to where file would be saved on server side
    * @throws IOException - IOException might be thrown during the process
+ * @throws InterruptedException 
+ * @throws SQLException 
+ * @throws ClassNotFoundException 
    */
-  public void receiveFileFromClient(String ipAddress,int portNo) throws IOException
+  public void receiveFileFromClient(String ipAddress,int portNo) throws IOException, InterruptedException, ClassNotFoundException, SQLException
   {
 	  	String fileLocation="/home/mdhttr/Documents/complaints/";
-	  	fileLocation+="file.jpg";
+	  	fileLocation+=incomingFileName;
+	  	InputStream inpt = null;
 		int bytesRead=0;
 		int current = 0;
 		FileOutputStream fileOutputStream = null;
@@ -426,9 +471,8 @@ public class ProjectServer extends AbstractServer
 			//creating connection.
 			//this.setPort(5556);
 			
-			
+			Thread.sleep(250);
 			socket = new Socket(ipAddress,portNo);
-			sendToAllClients("downloading");
 			System.out.println("connected.");
 			
 			// receive file
@@ -450,6 +494,7 @@ public class ProjectServer extends AbstractServer
 			bufferedOutputStream.flush();												//flushing buffers
 			
 			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
+			inpt=inputStream;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -458,6 +503,14 @@ public class ProjectServer extends AbstractServer
 			if (fileOutputStream != null) fileOutputStream.close();
 			if (bufferedOutputStream != null) bufferedOutputStream.close();
 			if (socket != null) socket.close();
+		}
+		try {
+			InputStream input=new FileInputStream(fileLocation);
+			this.insertPhotoToDB(input);
+			this.convertInputStreamToFile(getPhotoFromDB("1111"));
+		}
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
   
@@ -625,11 +678,11 @@ public class ProjectServer extends AbstractServer
 		}
 		
 		if(operation.equals("downloadFile")) {
-			//this.stopListening();
+			
 			System.out.println("Server downloading file sent from client");
 			String filePath=(String)msg;
 			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
-			//sendToAllClients("downloading");
+			
 			this.receiveFileFromClient("localhost", 5556);
 			}
 		}

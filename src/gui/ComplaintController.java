@@ -129,8 +129,7 @@ public class ComplaintController implements Initializable{
 		Client c = this.cstmc.getClient();
 		c.setDataFromUI(path, "downloadFile!");
 		c.accept();
-		/*while(!c.getConfirmationFromServer())
-			Thread.sleep(100);*/
+		
 		c.uploadFileToServer(5556, path);
 		c.setConfirmationFromServer();
 	}

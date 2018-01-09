@@ -31,6 +31,7 @@ public class Client extends AbstractClient {
 	private ArrayList<StoreEntity> arrayListOfStoreEntityFromServer;
 	private String stringFromServer;
 	
+	
 	/**
 	 * This is the constructor for the client
 	 * the connection is opened using the openConnection from the ocsf
@@ -142,12 +143,14 @@ public class Client extends AbstractClient {
 			try {
 				
 				serverSocket = new ServerSocket(portNo);
-				while(!this.getConfirmationFromServer())
-					Thread.sleep(100);
-				this.setConfirmationFromServer();
 				System.out.println("Waiting for receiver...");
+
 					try {
+							
 							socket = serverSocket.accept();
+							/*while(!this.getConfirmationFromServer())
+								Thread.sleep(100);
+							this.setConfirmationFromServer();*/
 							System.out.println("Accepted connection : " + socket);
 							//connection established successfully
 		
@@ -214,13 +217,8 @@ public class Client extends AbstractClient {
 	   */
 	  public String getStringFromServer() throws InterruptedException	//method for when the message form the server is a String
 	  {
-		  /*String retMessage;
-		  this.stringFromServer = (String)this.messageFromServer;
-		  retMessage = new String(this.stringFromServer);
-		  return retMessage;*/
 		  String retMsg=(String)this.messageFromServer;
-//		  for(Object obj:(ArrayList)this.getArrayListfromSrvr()) 
-//			  retMsg+=(String)obj;
+
 		  return retMsg;
 	  }
 	  
