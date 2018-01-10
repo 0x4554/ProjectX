@@ -20,20 +20,18 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <TableView id="tbl" fx:id="tbl" layoutX="35.0" layoutY="90.0" onSort="#enterCatalog" prefHeight="501.0" prefWidth="981.0">
-        <columns>
-          <TableColumn id="IDcolumn" fx:id="IDcolumn" prefWidth="99.0" text="productId" />
-          <TableColumn id="namecolumn" fx:id="namecolumn" prefWidth="126.0" text="productName" />
-            <TableColumn id="typecolumn" fx:id="typecolumn" prefWidth="111.0" text="productType" />
-            <TableColumn id="pricecolumn" fx:id="pricecolumn" prefWidth="129.0" text="productPrice" />
-            <TableColumn id=" descriptioncolumn1" fx:id="descriptioncolumn1" prefWidth="163.0" text="productDescription" />
-            <TableColumn id="colorcolumn" fx:id="colorcolumn" prefWidth="187.0" text="productDominantColor" />
-            <TableColumn id="imagecolumn" fx:id="imagecolumn" prefWidth="126.0" text="productImage" />
-        </columns>
-      </TableView>
-      <TextField fx:id="searchtxt" layoutX="38.0" layoutY="616.0" prefHeight="31.0" prefWidth="131.0" promptText="Enter product ID" />
-      <Button id="searchBtn" fx:id="searchBtn" layoutX="837.0" layoutY="610.0" mnemonicParsing="false" text="Search" />
+      <Button id="searchBtn" fx:id="searchBtn" layoutX="257.0" layoutY="608.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="85.0" text="Search">
+         <font>
+            <Font name="AR CENA" size="18.0" />
+         </font></Button>
       <Button layoutX="38.0" layoutY="27.0" mnemonicParsing="false" text="Back" />
       <Button layoutX="931.0" layoutY="27.0" mnemonicParsing="false" text="CheckOut" />
+      <ListView layoutX="142.0" layoutY="98.0" prefHeight="452.0" prefWidth="774.0" />
+      <TextField layoutX="49.0" layoutY="608.0" promptText="Enter Product Name" />
+      <Label layoutX="49.0" layoutY="567.0" text="Search Product">
+         <font>
+            <Font name="AR CENA" size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

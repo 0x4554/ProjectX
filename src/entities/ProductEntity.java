@@ -14,8 +14,8 @@ public class ProductEntity implements Serializable{
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+	//private ImageView productImage;
 	private ImageView productImage;
-	//private ImageView productImageView;
 	
 	/**
 	 * Constructor for the ProductEntity.java class
