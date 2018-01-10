@@ -15,6 +15,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 //import common.*;
 import ocsf.client.AbstractClient;
 
@@ -22,7 +23,8 @@ import ocsf.client.*;
 
 public class Client extends AbstractClient {
 	
-	private String fromUI;
+	private MessageToSend msg;
+//	private String fromUI;
 	private String username;
 //	private String operation;
 	private Object messageFromServer;
@@ -30,6 +32,7 @@ public class Client extends AbstractClient {
 	private  ArrayList<String> ArrayListFromSrvr=null;
 	private ArrayList<StoreEntity> arrayListOfStoreEntityFromServer;
 	private String stringFromServer;
+	
 	
 	/**
 	 * This is the constructor for the client
@@ -44,7 +47,6 @@ public class Client extends AbstractClient {
 		this.username = username; //save the userName 
 		confirmationFromServer = false; //set the confirmation from the server to false --> changed to true when server replies after conducting an action
 		openConnection(); //connect to server
-
 	}
 
 	///Instance methods ************************************************
@@ -57,7 +59,8 @@ public class Client extends AbstractClient {
 	@Override
 	public void handleMessageFromServer(Object msg)	//Receive the message sent from the server
 	{
-		this.messageFromServer =msg;	//save the message 
+		this.msg=(MessageToSend)msg;
+		//this.messageFromServer =m.getMessage();	//save the message 
 		confirmationFromServer = true;
 	}
 	
@@ -67,7 +70,7 @@ public class Client extends AbstractClient {
 	   *
 	   * @param message The message from the UI.    
 	   */
-	  public void handleMessageFromClientUI(String message)  
+	  public void handleMessageFromClientUI(Object message)  
 	  {
 	    try
 	    {
@@ -85,11 +88,12 @@ public class Client extends AbstractClient {
 	   * @param data	requested data
 	   * @param op	wanted operation ends with ! : "<operation>!"
 	   */
-	  public void setDataFromUI(String data,String operation)
+	  public void setDataFromUI(MessageToSend msg)
 	  {
-		  this.fromUI= data;
-		//  this.operation=op;
-		  this.fromUI = operation+ this.fromUI;	//set the data together with the wanted operation
+		  this.msg=msg;
+//		  this.fromUI= data;
+//		//  this.operation=op;
+//		  this.fromUI = operation+ this.fromUI;	//set the data together with the wanted operation
 	  }
 	  
 	  /**
@@ -114,7 +118,7 @@ public class Client extends AbstractClient {
 //			}
 			
 			try {
-			this.handleMessageFromClientUI(this.fromUI);
+			this.handleMessageFromClientUI(this.msg);
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
@@ -128,8 +132,9 @@ public class Client extends AbstractClient {
 		 * @param portNo - port for working in front of the server
 		 * @param filePath - location of the file in client side
 		 * @throws IOException - IOException may be thrown
+		 * @throws InterruptedException 
 		 */
-		public void uploadFileToServer(int portNo,String filePath) throws IOException
+		public void uploadFileToServer(int portNo,String filePath) throws IOException, InterruptedException
 		{
 			FileInputStream fileInputStream = null;
 			BufferedInputStream bufferedInputStream = null;
@@ -140,11 +145,16 @@ public class Client extends AbstractClient {
 
 			//creating connection between sender and receiver
 			try {
-				//this.closeConnection();
+				
 				serverSocket = new ServerSocket(portNo);
 				System.out.println("Waiting for receiver...");
+
 					try {
+							
 							socket = serverSocket.accept();
+							/*while(!this.getConfirmationFromServer())
+								Thread.sleep(100);
+							this.setConfirmationFromServer();*/
 							System.out.println("Accepted connection : " + socket);
 							//connection established successfully
 		
@@ -170,6 +180,7 @@ public class Client extends AbstractClient {
 				} catch (IOException e) {
 					
 					// TODO Auto-generated catch block
+					System.out.println("connection failed");
 					e.printStackTrace();
 				}
 				finally {
@@ -204,17 +215,7 @@ public class Client extends AbstractClient {
 		return dtls;
 	  }
 	  
-	  /**
-	   * This method returns the message from the server as a String
-	   */
-	  public String getStringFromServer()	//method for when the message form the server is a String
-	  {
-		  String retMsg = "";
-		 for(String s: (ArrayList<String>)this.messageFromServer)
-			 retMsg+=s;
-		 // retMessage = new String(this.stringFromServer);
-		  return retMsg;
-	  }
+
 	  
 	  /**
 	   * This method return the message from the server as an ArrayList of StoreEntities
@@ -255,6 +256,11 @@ public class Client extends AbstractClient {
 	  {
 		  return this.username;
 	  }
+
+	public MessageToSend getMessageFromServer() {
+		// TODO Auto-generated method stub
+		return this.msg;
+	}
 	  
 	  
 

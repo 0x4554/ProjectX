@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.ComplaintEntity;
+import entities.ComplaintEntity.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 
 public class ComplaintController implements Initializable{
 	
@@ -66,32 +69,44 @@ public class ComplaintController implements Initializable{
 		String pctr;
 		String details;
 		
-		if(!ordNumTxtFld.getText().isEmpty()) {
-			complaintDetails=ordNumTxtFld.getText();
-			complaintDetails+="|";
-		}
+//		if(!ordNumTxtFld.getText().isEmpty()) {
+//			complaintDetails=ordNumTxtFld.getText();
+//			complaintDetails+="|";
+//		}
 		
-		if(!cmpDtsTxtArea.getText().isEmpty()) {					//if complaint inserted
-				details=cmpDtsTxtArea.getText();					
-		details=details.replaceAll(" ", "~");						//for handling the message later
-		complaintDetails+=details;
+		if(!ordNumTxtFld.getText().isEmpty())
+			if(!cmpDtsTxtArea.getText().isEmpty()) {					//if complaint inserted
+//				details=cmpDtsTxtArea.getText();					
+//		details=details.replaceAll(" ", "~");						//for handling the message later
+//		complaintDetails+=details;				
 		
-		if(!picPathTxtFld.getText().isEmpty()) 						//if path to picture uploaded for sending it as avidence
-				pctr=picPathTxtFld.getText();
 				
-				Client c=this.cstmc.getClient();
-				c.setDataFromUI(complaintDetails, "complaint!");
-				c.accept();
-				if(c.getStringFromServer().equals("failed"))				
-					GeneralMessageController.showMessage("Order does not exist");
+					ComplaintEntity complaintent=new ComplaintEntity(Integer.parseInt(ordNumTxtFld.getText()), cmpDtsTxtArea.getText(), Status.processing);
+					Client c=this.cstmc.getClient();
+					MessageToSend toServer = new MessageToSend(complaintent,"complaint!");
+					c.setConfirmationFromServer();
+					c.setDataFromUI(toServer);									//, "complaint!");
+					c.accept();
+					
+					while(!c.getConfirmationFromServer())
+						Thread.sleep(100);
+					c.setConfirmationFromServer();
+					MessageToSend fromServer=(MessageToSend)c.getMessageFromServer();
+					String reply=(String)fromServer.getMessage();
+					if(reply.equals("failed"))				
+						GeneralMessageController.showMessage("Order does not exist");
 			
-				else if(c.getStringFromServer().equals("Added")){
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.cstmc.showCustomerMenu();								//back to main menu
-		GeneralMessageController.showMessage("Dear customer, we got your complaint\nand we are doing everything we can\nto make it up to you");			//message to present when complaint succeeded
-		return;
+					else if(reply.equals("Added")){
+						if(!picPathTxtFld.getText().isEmpty()) { 						//if path to picture uploaded for sending it as avidence
+							pctr=picPathTxtFld.getText();
+							this.uploadPhoto(pctr);
+						}
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					this.cstmc.showCustomerMenu();								//back to main menu
+					GeneralMessageController.showMessage("Dear customer, we got your complaint\nand we are doing everything we can\nto make it up to you");			//message to present when complaint succeeded
+					return;
 				}
-		}
+			}
 		else {
 			GeneralMessageController.showMessage("Please fill in your complaint");		//if nothing was inserted show general message
 		}
@@ -118,12 +133,12 @@ public class ComplaintController implements Initializable{
 	 * @throws InterruptedException 
 	 */
 	public void uploadPhoto(String path) throws IOException, InterruptedException {
-		String res;
+		
 		Client c = this.cstmc.getClient();
-		c.setDataFromUI(path, "downloadFile!");
+		MessageToSend m = new MessageToSend(path, "downloadFile!");
+		c.setDataFromUI(m);
 		c.accept();
-		while(!c.getConfirmationFromServer())
-			Thread.sleep(100);
+		
 		c.uploadFileToServer(5556, path);
 		c.setConfirmationFromServer();
 	}
@@ -142,9 +157,14 @@ public class ComplaintController implements Initializable{
 		Node node = (Node) event.getSource();
 		FileChooser chooser = new FileChooser();
 	    chooser.setTitle("Choose File");
+	    try {
 	    File f=chooser.showOpenDialog(secondaryStage);
 	    String filepath = f.getAbsolutePath();
 	    picPathTxtFld.setText(filepath);
+	    }
+	    catch(Exception e) {
+	    return;
+	    }
 	}
 
 	@Override

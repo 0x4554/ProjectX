@@ -14,17 +14,17 @@
          <children>
             <Button id="crtBckBtn" fx:id="crtBckBtn" mnemonicParsing="false" onAction="#backToNewOrderMenu" text="Back" />
             <Region prefHeight="31.0" prefWidth="228.0" HBox.hgrow="ALWAYS" />
-            <Button id="chkOutBtn" fx:id="chkOutBtn" mnemonicParsing="false" prefHeight="31.0" prefWidth="128.0" text="Check out" />
+            <Button id="chkOutBtn" fx:id="chkOutBtn" mnemonicParsing="false" onAction="#goToCheckOut" prefHeight="31.0" prefWidth="128.0" text="Check out" />
          </children>
       </HBox>
    </bottom>
    <right>
-      <ImageView id="itmImgVw" fx:id="itmImgVw" fitHeight="186.0" fitWidth="275.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+      <ImageView id="itmImgVw" fx:id="prdctImg" fitHeight="186.0" fitWidth="275.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
    </right>
    <top>
       <Label id="crtEmptLbl" fx:id="crtEmptLbl" textFill="#d01010" BorderPane.alignment="CENTER" />
    </top>
    <left>
-      <TreeView fx:id="prdctTrVw" prefHeight="348.0" prefWidth="298.0" BorderPane.alignment="CENTER" />
+      <TreeView fx:id="prdctTrVw" onMouseClicked="#showProductImage" prefHeight="348.0" prefWidth="298.0" BorderPane.alignment="CENTER" />
    </left>
 </BorderPane>

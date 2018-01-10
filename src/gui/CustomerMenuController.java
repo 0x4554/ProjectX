@@ -281,6 +281,7 @@ public class CustomerMenuController implements Initializable{
 	    products.add(new ProductEntity("124","lili","boquet",(double) 15.60,"bridal","red",new ImageView(new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true))));
 	    products.add(new ProductEntity("124","magic","boquet",(double) 80,"bridal","red",new ImageView(new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true))));
 	    products.add(new ProductEntity("124","bird","boquet",(double) 96,"bridal","red",new ImageView(new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true))));
+
 		return products;
 	}
 	

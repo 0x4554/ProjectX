@@ -1,22 +1,28 @@
 package entities;
 
+import java.io.Serializable;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.Serializable;
-
 public class ProductEntity implements Serializable{
-
 	private String productID;
 	private String productName;
 	private String productType;
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+
 	//private ImageView productImage;
 	private ImageView productImage;
+
 	
+	public ProductEntity()
+	{
+		
+	}
+
+
 	/**
 	 * Constructor for the ProductEntity.java class
 	 * @param productID	the product's id
@@ -26,14 +32,8 @@ public class ProductEntity implements Serializable{
 	 * @param productDescription	description
 	 * @param productDominantColor	dominant color
 	 */
-	
-	public ProductEntity()
-	{
-		
-	}
-	
 	public ProductEntity(String productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,ImageView plV) {
+			String productDescription, String productDominantColor,ImageView productImage) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -41,7 +41,7 @@ public class ProductEntity implements Serializable{
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-		this.productImage=plV;
+		this.productImage = productImage;
 	}
 	
 	/**
@@ -72,6 +72,7 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+
 	public ImageView getProductImage() {
 		return productImage;
 	}
@@ -138,4 +139,3 @@ public class ProductEntity implements Serializable{
 	}
 
 }
-
