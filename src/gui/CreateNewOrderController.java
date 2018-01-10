@@ -113,7 +113,11 @@ public class CreateNewOrderController implements Initializable {
 		((Node)event.getSource()).getScene().getWindow().hide();
 	}
 	
-	
+	/**
+	 * This method opens the cart 
+	 * @param event	pressed view cart
+	 * @throws IOException
+	 */
 	public void viewCart(ActionEvent event) throws IOException {
 	
 		

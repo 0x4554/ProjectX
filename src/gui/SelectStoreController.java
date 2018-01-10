@@ -80,24 +80,30 @@ public class SelectStoreController implements Initializable{
 	 * @param event
 	 * @throws IOException 
 	 */
-	public void storeSelected(ActionEvent event) throws IOException
-	{
-		((Node)event.getSource()).getScene().getWindow().hide();	//hide last window
+	public void storeSelected(ActionEvent event) throws IOException {
 		
-		String selectedStoreName="";
-		
-		selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem();		//get the selected store name from the comboBox
-		
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
-		CreateNewOrderController nom = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
-		nom.setConnectionData(this.clnt,this.listOfStoresEntities.get(selectedStoreName));	//send the connection and the StoreEntity selected by the user
-		primaryStage.setTitle("New order from "+selectedStoreName);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		String selectedStoreName = "";
+		if (!this.strCmb.getSelectionModel().isEmpty())				//if selected a store
+		{
+			((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+			selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem(); //get the selected store name from the comboBox
+
+			FXMLLoader loader = new FXMLLoader();
+			Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
+			CreateNewOrderController nom = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+
+			Stage primaryStage = new Stage();
+			Scene scene = new Scene(root);
+			nom.setConnectionData(this.clnt, this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
+			primaryStage.setTitle("New order from " + selectedStoreName);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		}
+		
+		else {				//if no store was selected
+			GeneralMessageController.showMessage("Please select a store");
+		}
 	}
 
 	@Override
