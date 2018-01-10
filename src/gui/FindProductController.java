@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import logic.MessageToSend;
 
 public class FindProductController implements Initializable{
 	@FXML private Button srchProdBtn;
@@ -49,15 +50,17 @@ public void searchProductID(ActionEvent event) throws IOException, InterruptedEx
 		else {
 			this.setID(srchIDfld.getText());	//collect the ID entered
 //			Client chat = new Client(MainBoundary.getHost(), this.port,this.id,3);		//last parameter (2) is for telling if we inserting product or searching product (1-insert ; 2-search)
-			this.clnt.setDataFromUI(this.id, "getProduct!");				//set the data and the operation using the connected client
+			MessageToSend messageToSend = new MessageToSend(this.id, "getProduct!");
+			this.clnt.setDataFromUI(messageToSend);				//set the data and the operation using the connected client
 			this.clnt.accept(); 	 //Wait for console data
 			ArrayList<String> data=null;
 			while(!this.clnt.getConfirmationFromServer())
 				Thread.sleep(100);			//wait for server's message
-			data=this.clnt.getArrayListfromSrvr();	//get the message returned from the server
+			messageToSend =this.clnt.getMessageFromServer();
+//			data=this.clnt.getArrayListfromSrvr();	//get the message returned from the server
 				
 			
-			if(!(data.isEmpty()))	//check if product ID is found in the Data Base
+			if(!(((ArrayList<String>)messageToSend.getMessage()).isEmpty()))	//check if product ID is found in the Data Base
 					{
 						((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 						
