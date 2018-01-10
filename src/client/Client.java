@@ -15,6 +15,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 //import common.*;
 import ocsf.client.AbstractClient;
 
@@ -22,7 +23,8 @@ import ocsf.client.*;
 
 public class Client extends AbstractClient {
 	
-	private String fromUI;
+	private MessageToSend msg;
+//	private String fromUI;
 	private String username;
 //	private String operation;
 	private Object messageFromServer;
@@ -57,7 +59,8 @@ public class Client extends AbstractClient {
 	@Override
 	public void handleMessageFromServer(Object msg)	//Receive the message sent from the server
 	{
-		this.messageFromServer =msg;	//save the message 
+		this.msg=(MessageToSend)msg;
+		//this.messageFromServer =m.getMessage();	//save the message 
 		confirmationFromServer = true;
 	}
 	
@@ -67,7 +70,7 @@ public class Client extends AbstractClient {
 	   *
 	   * @param message The message from the UI.    
 	   */
-	  public void handleMessageFromClientUI(String message)  
+	  public void handleMessageFromClientUI(Object message)  
 	  {
 	    try
 	    {
@@ -85,11 +88,12 @@ public class Client extends AbstractClient {
 	   * @param data	requested data
 	   * @param op	wanted operation ends with ! : "<operation>!"
 	   */
-	  public void setDataFromUI(String data,String operation)
+	  public void setDataFromUI(MessageToSend msg)
 	  {
-		  this.fromUI= data;
-		//  this.operation=op;
-		  this.fromUI = operation+ this.fromUI;	//set the data together with the wanted operation
+		  this.msg=msg;
+//		  this.fromUI= data;
+//		//  this.operation=op;
+//		  this.fromUI = operation+ this.fromUI;	//set the data together with the wanted operation
 	  }
 	  
 	  /**
@@ -114,7 +118,7 @@ public class Client extends AbstractClient {
 //			}
 			
 			try {
-			this.handleMessageFromClientUI(this.fromUI);
+			this.handleMessageFromClientUI(this.msg);
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
@@ -211,16 +215,7 @@ public class Client extends AbstractClient {
 		return dtls;
 	  }
 	  
-	  /**
-	   * This method returns the message from the server as a String
-	 * @throws InterruptedException 
-	   */
-	  public String getStringFromServer() throws InterruptedException	//method for when the message form the server is a String
-	  {
-		  String retMsg=(String)this.messageFromServer;
 
-		  return retMsg;
-	  }
 	  
 	  /**
 	   * This method return the message from the server as an ArrayList of StoreEntities
@@ -261,6 +256,11 @@ public class Client extends AbstractClient {
 	  {
 		  return this.username;
 	  }
+
+	public MessageToSend getMessageFromServer() {
+		// TODO Auto-generated method stub
+		return this.msg;
+	}
 	  
 	  
 

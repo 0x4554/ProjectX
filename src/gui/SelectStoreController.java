@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 
 public class SelectStoreController implements Initializable{
 	private Client clnt;
@@ -58,7 +59,7 @@ public class SelectStoreController implements Initializable{
 	 */
 	public void showStores() throws InterruptedException
 	{
-		this.clnt.setDataFromUI("", "getAllStores!");	//set operation to get all stores from DB
+		this.clnt.setDataFromUI(new MessageToSend("", "getAllStores!"));	//set operation to get all stores from DB
 		this.clnt.accept();
 		while(!(this.clnt.getConfirmationFromServer()))		//wait for server response
 			Thread.sleep(100);

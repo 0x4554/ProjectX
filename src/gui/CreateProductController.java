@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 
 public class CreateProductController implements Initializable{
 	
@@ -69,15 +70,17 @@ public class CreateProductController implements Initializable{
 		{
 			String newData="";
 			newData=newData+idFld.getText()+"~"+nmFld.getText()+"~"+typFld.getText();	//set the new data as string
-			this.clnt.setDataFromUI(newData, "createProduct!");				//set the data and the operation using the connected client
+			MessageToSend messageToSend = new MessageToSend(newData, "createProduct!");
+			this.clnt.setDataFromUI(messageToSend);				//set the data and the operation using the connected client
 			this.clnt.accept();									//send and receive form server
 			while(!this.clnt.getConfirmationFromServer())		//wait for confirmation from the server
 				Thread.sleep(100);
 			this.clnt.setConfirmationFromServer(); 				//set the confirmation back to false for next use
 			String data=null;
-			data=this.clnt.getStringFromServer();				//get the message returned from the DB via the server
+			messageToSend=this.clnt.getMessageFromServer();
+			//data=this.clnt.getStringFromServer();				//get the message returned from the DB via the server
 			GeneralMessageController message = new GeneralMessageController();
-			message.showGeneralMessage(data);					//show a message if succeeded or failed
+			message.showGeneralMessage((String)messageToSend.getMessage());					//show a message if succeeded or failed
 				
 			this.idFld.clear();									//clear all text fields after insert
 			this.nmFld.clear();

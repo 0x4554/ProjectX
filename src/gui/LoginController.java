@@ -18,6 +18,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 
 /**
  * This class uses as the controller to the log in menu and the log in process
@@ -99,6 +100,7 @@ public class LoginController implements Initializable {
 		{
 			String username_password = "";
 			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();	//set the new data as string
+			MessageToSend mts=new MessageToSend(username_password, "login!");
 			ArrayList<String> dataFromServer = null;
 			try
 			{
@@ -108,12 +110,14 @@ public class LoginController implements Initializable {
 				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
 
 			}
-			this.clnt.setDataFromUI(username_password, "login!");	//set the data and the operation to send from the client to the server
-			this.clnt.accept();	//sends to server
-			while(!this.clnt.getConfirmationFromServer())	//wait until server replies
+			this.clnt.setDataFromUI(mts);							//set the data and the operation to send from the client to the server
+			this.clnt.accept();										//sends to server
+			while(!this.clnt.getConfirmationFromServer())			//wait until server replies
 				Thread.sleep(100);
 			this.clnt.setConfirmationFromServer();		//reset confirmation to false
-			dataFromServer = this.clnt.getArrayListfromSrvr();	//get the returned ArrayList from the server
+			MessageToSend m = this.clnt.getMessageFromServer();
+			dataFromServer = (ArrayList<String>)m.getMessage();
+//			dataFromServer = this.clnt.getArrayListfromSrvr();	//get the returned ArrayList from the server
 			if(dataFromServer.get(0).equals("success"))		//if login info matches the data base
 			{	
 				try
@@ -206,7 +210,7 @@ public class LoginController implements Initializable {
 	public void signalAppClose()
 	{
 		if(this.clnt!=null) {
-		this.clnt.setDataFromUI(this.clnt.getUsername(), "exitApp!");
+		this.clnt.setDataFromUI(new MessageToSend(this.clnt.getUsername(),"exitApp!"));
 		this.clnt.accept();
 		this.clnt.quit();
 		}
