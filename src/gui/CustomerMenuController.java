@@ -54,7 +54,6 @@ public class CustomerMenuController implements Initializable{
 	//@FXML private AnchorPane root;
 	
 	private Parameters params;
-	private Client clnt;
 	private LoginController logcon;
 	
 	//*buttons of the customer menu*//
@@ -86,11 +85,10 @@ public class CustomerMenuController implements Initializable{
 	
 	/**
 	 * This method is the constructor for this class
-	 * @param clnt	the connected client
+	 * @param lc	the login controller
 	 */
-	public CustomerMenuController(Client clnt,LoginController lc)
+	public CustomerMenuController(LoginController lc)
 	{
-		this.clnt=clnt;
 		this.logcon=lc;		
 	}
 	
@@ -101,18 +99,9 @@ public class CustomerMenuController implements Initializable{
 	{
 		
 	}
-	/**
-	 * This method saves the client connection to the controller
-	 * @param clnt	the connection client
-	 */
-	
-	public void setConnectionData(Client clnt)
-	{
-		this.clnt=clnt;
-	}
 	
 	public Client getClient() {
-		return this.clnt;
+		return Client.getClientConnection();
 	}
 	
 	public void showCustomerMenu() throws IOException
@@ -123,7 +112,6 @@ public class CustomerMenuController implements Initializable{
 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		cmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -136,7 +124,6 @@ public class CustomerMenuController implements Initializable{
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
 		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		 ord.setConnectionData(this.clnt);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Order");
@@ -330,8 +317,8 @@ public class CustomerMenuController implements Initializable{
 				public void logOutCustomer(ActionEvent event) throws IOException	//when click "Back" return to main menu
 				{
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					ConnectedClients.removeConnectedClient(this.clnt.getUsername());
-					GeneralMessageController.showMessage("Bye Bye "+this.clnt.getUsername()+" we hope to see you soon");
+					ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
+					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
 					//////////////////Check returning to login page//////////////////////////
 				}
 				

@@ -24,7 +24,6 @@ import javafx.stage.Stage;
 import logic.MessageToSend;
 
 public class SelectStoreController implements Initializable{
-	private Client clnt;
 	private Integer branchID;
 	public ObservableList<String> list;
 	private Map<String,StoreEntity> listOfStoresEntities;
@@ -34,14 +33,6 @@ public class SelectStoreController implements Initializable{
 	private ComboBox strCmb;
 	@FXML
 	private Button okBtn;
-	/**
-	 * This method saves the client connection to the controller
-	 * @param clnt	the connection client
-	 */
-	public void setConnectionData(Client clnt)
-	{
-		this.clnt=clnt;
-	}
 	/**
 	 * This method inserts all the store names into the combobox
 	 * @throws InterruptedException
@@ -60,15 +51,15 @@ public class SelectStoreController implements Initializable{
 	public void showStores() throws InterruptedException
 	{
 		MessageToSend messageToSend = new MessageToSend("", "getAllStores");
-		this.clnt.setDataFromUI(messageToSend);	//set operation to get all stores from DB
-		this.clnt.accept();
-		while(!(this.clnt.getConfirmationFromServer()))		//wait for server response
+		Client.getClientConnection().setDataFromUI(messageToSend);	//set operation to get all stores from DB
+		Client.getClientConnection().accept();
+		while(!(Client.getClientConnection().getConfirmationFromServer()))		//wait for server response
 			Thread.sleep(100);
-		this.clnt.setConfirmationFromServer(); 				//reset to false
+		Client.getClientConnection().setConfirmationFromServer(); 				//reset to false
 		ArrayList<StoreEntity> listOfStoresFromDB = new ArrayList<StoreEntity>();
-		messageToSend=this.clnt.getMessageFromServer();
+		messageToSend=Client.getClientConnection().getMessageFromServer();
 		listOfStoresFromDB=(ArrayList<StoreEntity>)messageToSend.getMessage();		//get the list of stores from the message class
-//		listOfStoresFromDB=this.clnt.getArrayListOfStoreEntityFromServer();		//get the list from the server's response
+//		listOfStoresFromDB=Client.getClientConnection().getArrayListOfStoreEntityFromServer();		//get the list from the server's response
 		
 		this.storeNames = new ArrayList<String>();		//an arrayList of the store names
 		this.listOfStoresEntities = new HashMap<String,StoreEntity>();		//a hashMap to hold the stores 
@@ -99,7 +90,7 @@ public class SelectStoreController implements Initializable{
 
 			Stage primaryStage = new Stage();
 			Scene scene = new Scene(root);
-			nom.setConnectionData(this.clnt, this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
+			nom.setConnectionData(this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
 			primaryStage.setTitle("New order from " + selectedStoreName);
 			primaryStage.setScene(scene);
 			primaryStage.show();

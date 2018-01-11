@@ -36,13 +36,11 @@ public class CreateProductController implements Initializable{
 	private int port;
 	private MainBoundary main;
 	private String username;
-	private Client clnt;
 	
-	public CreateProductController(int port,MainBoundary main,Client clnt)	
+	public CreateProductController(int port,MainBoundary main)	
 	{
 		this.port=port;
 		this.main = main;
-		this.clnt = clnt;
 	}
 	
 	public CreateProductController()	//necessary empty constructor
@@ -71,14 +69,14 @@ public class CreateProductController implements Initializable{
 			String newData="";
 			newData=newData+idFld.getText()+"~"+nmFld.getText()+"~"+typFld.getText();	//set the new data as string
 			MessageToSend messageToSend = new MessageToSend(newData, "createProduct");
-			this.clnt.setDataFromUI(messageToSend);				//set the data and the operation using the connected client
-			this.clnt.accept();									//send and receive form server
-			while(!this.clnt.getConfirmationFromServer())		//wait for confirmation from the server
+			Client.getClientConnection().setDataFromUI(messageToSend);				//set the data and the operation using the connected client
+			Client.getClientConnection().accept();									//send and receive form server
+			while(!Client.getClientConnection().getConfirmationFromServer())		//wait for confirmation from the server
 				Thread.sleep(100);
-			this.clnt.setConfirmationFromServer(); 				//set the confirmation back to false for next use
+			Client.getClientConnection().setConfirmationFromServer(); 				//set the confirmation back to false for next use
 			String data=null;
-			messageToSend=this.clnt.getMessageFromServer();
-			//data=this.clnt.getStringFromServer();				//get the message returned from the DB via the server
+			messageToSend=Client.getClientConnection().getMessageFromServer();
+			//data=Client.getClientConnection().getStringFromServer();				//get the message returned from the DB via the server
 			GeneralMessageController message = new GeneralMessageController();
 			message.showGeneralMessage((String)messageToSend.getMessage());					//show a message if succeeded or failed
 				

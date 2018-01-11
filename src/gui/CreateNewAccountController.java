@@ -37,8 +37,6 @@ import javafx.stage.Stage;
 public class CreateNewAccountController implements Initializable {
 	
 	
-	private Client clnt;
-
     @FXML private Label usrLbl;
     @FXML private Label idLbl;
     @FXML private Label pswrdLbl;
@@ -56,15 +54,6 @@ public class CreateNewAccountController implements Initializable {
     @FXML private ComboBox subscrptCmb;
 
     ObservableList<String> list;
-
-    /**
-     * This method is the constructor for this class
-     * @param clnt the connected client
-     */
-    public CreateNewAccountController(Client clnt)
-	{
-		this.clnt=clnt;
-	}
     
     
 	/**
@@ -73,12 +62,7 @@ public class CreateNewAccountController implements Initializable {
 	public CreateNewAccountController() {			//Necessary empty constructor 
 		
 	}
-	
-	public void setConnectionData(Client clnt)
-	{
-		this.clnt=clnt;
-	}
-	
+		
 	
 	private void subscriptionComboBox()
 	{
@@ -100,7 +84,6 @@ public class CreateNewAccountController implements Initializable {
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		CreateNewAccountController nac = loader.getController();	//set the controller to the NewAccountController
-		nac.setConnectionData(this.clnt);
 		primaryStage.setTitle("New Customer");
 		primaryStage.setScene(scene);
 		primaryStage.show();

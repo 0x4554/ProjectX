@@ -48,7 +48,6 @@ public class LoginController implements Initializable {
 	private Button crtNwAccntBtn;
 	
 	public static String hostIP;
-	private Client clnt;
 	private CustomerMenuController cmc;
 	private ManagerMenuController mmc;
 	private AdministratorMenuController amc;
@@ -104,20 +103,20 @@ public class LoginController implements Initializable {
 			ArrayList<String> dataFromServer = null;
 			try
 			{
-			this.clnt = new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText());	//attempt to create a connection from client to server
+			Client.setClientConnection(new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText()));;	//attempt to create a connection from client to server
 			}catch(IOException e){	//if there were a connection exception
 
 				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
 
 			}
-			this.clnt.setDataFromUI(mts);							//set the data and the operation to send from the client to the server
-			this.clnt.accept();										//sends to server
-			while(!this.clnt.getConfirmationFromServer())			//wait until server replies
+			Client.getClientConnection().setDataFromUI(mts);							//set the data and the operation to send from the client to the server
+			Client.getClientConnection().accept();										//sends to server
+			while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 				Thread.sleep(100);
-			this.clnt.setConfirmationFromServer();		//reset confirmation to false
-			MessageToSend m = this.clnt.getMessageFromServer();
+			Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+			MessageToSend m = Client.getClientConnection().getMessageFromServer();
 			dataFromServer = (ArrayList<String>)m.getMessage();
-//			dataFromServer = this.clnt.getArrayListfromSrvr();	//get the returned ArrayList from the server
+//			dataFromServer = Client.getClientConnection().getArrayListfromSrvr();	//get the returned ArrayList from the server
 			if(dataFromServer.get(0).equals("success"))		//if login info matches the data base
 			{	
 				try
@@ -167,37 +166,37 @@ public class LoginController implements Initializable {
 		switch (userType)
 		{
 		case "AD":	//system administrator (system manager)
-			amc = new AdministratorMenuController(this.clnt);
+			amc = new AdministratorMenuController();
 			amc.showAdministratorMenu();
 			GeneralMessageController.showMessage("Logged in as an administrator");
 			break;
 		case "C":	//customer
-			cmc = new CustomerMenuController(this.clnt,this);
+			cmc = new CustomerMenuController(this);
 			cmc.showCustomerMenu();
 			GeneralMessageController.showMessage("Logged in as a customer");
 			break;
 		case "SW":	//store worker
-			swmc = new StoreWorkerMenuController(this.clnt);
+			swmc = new StoreWorkerMenuController();
 			swmc.showStoreWorkerMenu();
 			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
 		case "SM":	//store manager
-			mmc=new ManagerMenuController(this.clnt);
+			mmc=new ManagerMenuController();
 			mmc.showManagerMenu();
 			GeneralMessageController.showMessage("Logged in as a store manager");
 			break;
 		case "CSW":	//customer service worker
-			cswmc = new CustomerServiceWorkerMenuController(this.clnt);
+			cswmc = new CustomerServiceWorkerMenuController();
 			cswmc.showCostumerServiceWorkerMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service worker");
 			break;
 		case "CSM":	//chain store manager
-			csmmc = new ChainStoreManagerMenuController(this.clnt);
+			csmmc = new ChainStoreManagerMenuController();
 			csmmc.showChainStoreManagerMenu();
 			GeneralMessageController.showMessage("Logged in as a chain store manager");
 			break;
 		case "CSE":	//customer service expert
-			csemc = new CustomerServiceExpertMenuController(this.clnt);
+			csemc = new CustomerServiceExpertMenuController();
 			csemc.showCustomerServiceExpertMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service expert");
 			break;
@@ -209,10 +208,10 @@ public class LoginController implements Initializable {
 	 */
 	public void signalAppClose()
 	{
-		if(this.clnt!=null) {
-		this.clnt.setDataFromUI(new MessageToSend(this.clnt.getUsername(),"exitApp"));
-		this.clnt.accept();
-		this.clnt.quit();
+		if(Client.getClientConnection()!=null) {
+			Client.getClientConnection().setDataFromUI(new MessageToSend(Client.getClientConnection().getUsername(),"exitApp"));
+			Client.getClientConnection().accept();
+			Client.getClientConnection().quit();
 		}
 	}
 
