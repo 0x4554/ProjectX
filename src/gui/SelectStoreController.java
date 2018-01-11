@@ -59,13 +59,16 @@ public class SelectStoreController implements Initializable{
 	 */
 	public void showStores() throws InterruptedException
 	{
-		this.clnt.setDataFromUI(new MessageToSend("", "getAllStores!"));	//set operation to get all stores from DB
+		MessageToSend messageToSend = new MessageToSend("", "getAllStores");
+		this.clnt.setDataFromUI(messageToSend);	//set operation to get all stores from DB
 		this.clnt.accept();
 		while(!(this.clnt.getConfirmationFromServer()))		//wait for server response
 			Thread.sleep(100);
 		this.clnt.setConfirmationFromServer(); 				//reset to false
 		ArrayList<StoreEntity> listOfStoresFromDB = new ArrayList<StoreEntity>();
-		listOfStoresFromDB=this.clnt.getArrayListOfStoreEntityFromServer();		//get the list from the server's response
+		messageToSend=this.clnt.getMessageFromServer();
+		listOfStoresFromDB=(ArrayList<StoreEntity>)messageToSend.getMessage();		//get the list of stores from the message class
+//		listOfStoresFromDB=this.clnt.getArrayListOfStoreEntityFromServer();		//get the list from the server's response
 		
 		this.storeNames = new ArrayList<String>();		//an arrayList of the store names
 		this.listOfStoresEntities = new HashMap<String,StoreEntity>();		//a hashMap to hold the stores 

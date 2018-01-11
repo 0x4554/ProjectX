@@ -50,7 +50,7 @@ public void searchProductID(ActionEvent event) throws IOException, InterruptedEx
 		else {
 			this.setID(srchIDfld.getText());	//collect the ID entered
 //			Client chat = new Client(MainBoundary.getHost(), this.port,this.id,3);		//last parameter (2) is for telling if we inserting product or searching product (1-insert ; 2-search)
-			MessageToSend messageToSend = new MessageToSend(this.id, "getProduct!");
+			MessageToSend messageToSend = new MessageToSend(this.id, "getProduct");
 			this.clnt.setDataFromUI(messageToSend);				//set the data and the operation using the connected client
 			this.clnt.accept(); 	 //Wait for console data
 			ArrayList<String> data=null;

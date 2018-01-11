@@ -83,7 +83,7 @@ public class ComplaintController implements Initializable{
 				
 					ComplaintEntity complaintent=new ComplaintEntity(Integer.parseInt(ordNumTxtFld.getText()), cmpDtsTxtArea.getText(), Status.processing);
 					Client c=this.cstmc.getClient();
-					MessageToSend toServer = new MessageToSend(complaintent,"complaint!");
+					MessageToSend toServer = new MessageToSend(complaintent,"complaint");
 					c.setConfirmationFromServer();
 					c.setDataFromUI(toServer);									//, "complaint!");
 					c.accept();
@@ -135,7 +135,7 @@ public class ComplaintController implements Initializable{
 	public void uploadPhoto(String path) throws IOException, InterruptedException {
 		
 		Client c = this.cstmc.getClient();
-		MessageToSend m = new MessageToSend(path, "downloadFile!");
+		MessageToSend m = new MessageToSend(path, "downloadFile");
 		c.setDataFromUI(m);
 		c.accept();
 		

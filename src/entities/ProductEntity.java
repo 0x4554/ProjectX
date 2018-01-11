@@ -14,7 +14,7 @@ public class ProductEntity implements Serializable{
 	private String productDominantColor;
 
 	//private ImageView productImage;
-	private ImageView productImage;
+	private Image productImage;
 
 	
 	public ProductEntity()
@@ -33,7 +33,7 @@ public class ProductEntity implements Serializable{
 	 * @param productDominantColor	dominant color
 	 */
 	public ProductEntity(String productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,ImageView productImage) {
+			String productDescription, String productDominantColor,Image productImage) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -72,14 +72,33 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+	
 
-	public ImageView getProductImage() {
+//	public ImageView getProductImage() {
+//		return productImage;
+//	}
+//
+//	public void setProductImage(ImageView productImage) {
+//		this.productImage = productImage;
+//	}
+
+	/**
+	 * Getter for the productImage
+	 * @return the productImage
+	 */
+	public Image getProductImage() {
 		return productImage;
 	}
 
-	public void setProductImage(ImageView productImage) {
+
+	/**
+	 * Setter for the productImage
+	 * @param productImage the productImage to set
+	 */
+	public void setProductImage(Image productImage) {
 		this.productImage = productImage;
 	}
+
 
 	/**
 	 * Getter for the productType

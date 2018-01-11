@@ -100,7 +100,7 @@ public class LoginController implements Initializable {
 		{
 			String username_password = "";
 			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();	//set the new data as string
-			MessageToSend mts=new MessageToSend(username_password, "login!");
+			MessageToSend mts=new MessageToSend(username_password, "login");
 			ArrayList<String> dataFromServer = null;
 			try
 			{
@@ -210,7 +210,7 @@ public class LoginController implements Initializable {
 	public void signalAppClose()
 	{
 		if(this.clnt!=null) {
-		this.clnt.setDataFromUI(new MessageToSend(this.clnt.getUsername(),"exitApp!"));
+		this.clnt.setDataFromUI(new MessageToSend(this.clnt.getUsername(),"exitApp"));
 		this.clnt.accept();
 		this.clnt.quit();
 		}

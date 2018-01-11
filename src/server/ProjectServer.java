@@ -593,7 +593,7 @@ public class ProjectServer extends AbstractServer
 	  
 	//  messageFromClient=messageFromClient.substring(messageFromClient.indexOf("!")+1,messageFromClient.length());	/**set apart the operation from the message from the client**/
 	  
-	  	operation=operation.substring(0,operation.indexOf("!"));
+/////	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		

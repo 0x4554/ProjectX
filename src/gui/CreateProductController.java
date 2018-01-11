@@ -70,7 +70,7 @@ public class CreateProductController implements Initializable{
 		{
 			String newData="";
 			newData=newData+idFld.getText()+"~"+nmFld.getText()+"~"+typFld.getText();	//set the new data as string
-			MessageToSend messageToSend = new MessageToSend(newData, "createProduct!");
+			MessageToSend messageToSend = new MessageToSend(newData, "createProduct");
 			this.clnt.setDataFromUI(messageToSend);				//set the data and the operation using the connected client
 			this.clnt.accept();									//send and receive form server
 			while(!this.clnt.getConfirmationFromServer())		//wait for confirmation from the server
