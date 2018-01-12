@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.CustomerEntity;
+import entities.UserEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -53,7 +55,7 @@ public class CreateNewAccountController implements Initializable {
     @FXML private TextField crdFld;
     @FXML private Button bckBtn;
     @FXML private Button crtBtn;
-    @FXML private ComboBox subscrptCmb;
+    @FXML private ComboBox<String> subscrptCmb;
 
     ObservableList<String> list;
 
@@ -104,8 +106,34 @@ public class CreateNewAccountController implements Initializable {
 		primaryStage.setTitle("New Customer");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+					
+	}
+	
+	public boolean checkRequiredFields() {
+		if(usrFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty()) 
+			return false;
 			
-			
+		return true;
+	}
+	
+	
+	public void createNewUser() throws IOException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
+		if(checkRequiredFields()) 												//check required fields are ok
+			if(!pswrdFld.getText().equals(pswrd2Fld.getText())) {				//check matching passwords
+				GeneralMessageController.showMessage("Passwords are not the same\nPlease try again");
+				return;
+			}
+			else {
+				CustomerEntity cust=new CustomerEntity();
+				cust.setUserName(usrFld.getText());						//set Fields of the new customer
+				cust.setCustomerID(Long.parseLong(idFld.getText()));
+				cust.setPassword(pswrdFld.getText());
+				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
+				if(!crdFld.getText().isEmpty()) 								//if credit card is entered
+					cust.setCreditCardNumber(Long.parseLong(crdFld.getText()));
+			}
+		
+		
 	}
 	
 

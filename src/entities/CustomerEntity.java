@@ -27,7 +27,7 @@ public class CustomerEntity extends UserEntity {
 	 * @param userType
 	 */
 	public CustomerEntity() {
-		super("customer");
+		super("C");
 	}
 	/**
 	 * Getter for the creditCardNumber
@@ -82,8 +82,13 @@ public class CustomerEntity extends UserEntity {
 	 * Setter for the subscriptionDiscount
 	 * @param subscriptionDiscount the subscriptionDiscount to set
 	 */
-	public void setSubscriptionDiscount(double subscriptionDiscount) {
-		this.subscriptionDiscount = subscriptionDiscount;
+	public void setSubscriptionDiscount(String subscriptionDiscount) {
+		if(subscriptionDiscount.equals("none"))
+			this.subscriptionDiscount = 0;
+		else if(subscriptionDiscount.equals("Monthly"))
+			this.subscriptionDiscount=0.1;
+		else if(subscriptionDiscount.equals("Yearly"))
+			this.subscriptionDiscount=0.15;
 	}
 	/**
 	 * Getter for the accountStatus
