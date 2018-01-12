@@ -17,21 +17,12 @@ import javafx.stage.Stage;
 
 public class CustomerOrderController implements Initializable {
 
-	private Client clnt;
 	@FXML
 	private Button swOrdrDtlsBtn;
 
 	@FXML
 	private Button crtNwOrdrBtn;
-	/**
-	 * This method saves the client connection to the controller
-	 * @param clnt	the connection client
-	 */
-	public void setConnectionData(Client clnt)
-	{
-		this.clnt=clnt;
-	}
-	
+
 	/**
 	 * This method handles when the create new order has been pressed
 	 * @param event
@@ -43,7 +34,6 @@ public class CustomerOrderController implements Initializable {
 		SelectStoreController scc = new SelectStoreController();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SelectStoreBoundary.fxml"));
 		loader.setController(scc);									//set the controller
-		scc.setConnectionData(this.clnt);							//set the connection data
 		scc.showStores();											//call method to load the list of stores
 		Parent root = loader.load();								//load the SelectStoreBoundary (sets the window data)
 		

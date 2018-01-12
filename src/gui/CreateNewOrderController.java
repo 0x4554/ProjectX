@@ -31,7 +31,6 @@ import sun.reflect.generics.tree.Tree;
 public class CreateNewOrderController implements Initializable {
 
 	private StoreEntity store;
-	private Client clnt;
 	private OrderEntity newOrder;
 	@FXML
 	private TreeView<String> PrdctsTrVw;
@@ -70,12 +69,11 @@ public class CreateNewOrderController implements Initializable {
 	/**
 	 * This method saves the client connection to the controller
 	 * And saves the selected store to make the order from
-	 * @param clnt	the connection client
+	 * @param store	the store
 	 */
-	public void setConnectionData(Client clnt,StoreEntity store)
+	public void setConnectionData(StoreEntity store)
 	{
 		this.store=store;
-		this.clnt=clnt;
 	}
 	
 	/**
@@ -113,7 +111,11 @@ public class CreateNewOrderController implements Initializable {
 		((Node)event.getSource()).getScene().getWindow().hide();
 	}
 	
-	
+	/**
+	 * This method opens the cart 
+	 * @param event	pressed view cart
+	 * @throws IOException
+	 */
 	public void viewCart(ActionEvent event) throws IOException {
 	
 		

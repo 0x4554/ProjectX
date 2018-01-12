@@ -57,9 +57,9 @@ public class CartController implements Initializable {
 		//////////////////a made up list of products for testing ///////////////////
 		for (int i = 0; i < 5; i++)
 		{
-			this.newOrder.addProductToCart(new ProductEntity("a" + i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i,new Image(new FileInputStream( "C:\\Users\\pic1.jpg"))));
+			//**this.newOrder.addProductToCart(new ProductEntity("a" + i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i,new Image(new FileInputStream( "C:\\Users\\pic1.jpg"))));
 		}
-		this.newOrder.getProductsInOrder().get(1).setProductImage(new Image(new FileInputStream( "C:\\Users\\pic2.jpg")));
+	//	**this.newOrder.getProductsInOrder().get(1).setProductImage(new Image(new FileInputStream( "C:\\Users\\pic2.jpg")));
 		////////////////////////////////////////////////////////////////////////////
 		TreeItem<String> root;
 
@@ -116,8 +116,8 @@ public class CartController implements Initializable {
 	public void showProductImage(MouseEvent event) {
 		for(ProductEntity product : this.newOrder.getProductsInOrder())
 		{
-			if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
-				this.prdctImg.setImage(product.getProductImage());
+		//**	if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
+				//**this.prdctImg.setImage(product.getProductImage());
 		}
 	} 
 	

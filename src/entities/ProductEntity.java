@@ -12,28 +12,16 @@ public class ProductEntity implements Serializable{
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+
+	//private ImageView productImage;
 	private Image productImage;
-	//private ImageView productImageView;
+
 	
 	public ProductEntity()
 	{
 		
 	}
-	/**
-	 * Getter for the productImage
-	 * @return the productImage
-	 */
-	public Image getProductImage() {
-		return productImage;
-	}
 
-	/**
-	 * Setter for the productImage
-	 * @param productImage the productImage to set
-	 */
-	public void setProductImage(Image productImage) {
-		this.productImage = productImage;
-	}
 
 	/**
 	 * Constructor for the ProductEntity.java class
@@ -84,7 +72,8 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	///////////////////////////////////////
+	
+
 //	public ImageView getProductImage() {
 //		return productImage;
 //	}
@@ -92,7 +81,25 @@ public class ProductEntity implements Serializable{
 //	public void setProductImage(ImageView productImage) {
 //		this.productImage = productImage;
 //	}
-///////////////////////////////////////////////
+
+	/**
+	 * Getter for the productImage
+	 * @return the productImage
+	 */
+	public Image getProductImage() {
+		return productImage;
+	}
+
+
+	/**
+	 * Setter for the productImage
+	 * @param productImage the productImage to set
+	 */
+	public void setProductImage(Image productImage) {
+		this.productImage = productImage;
+	}
+
+
 	/**
 	 * Getter for the productType
 	 * @return the productType

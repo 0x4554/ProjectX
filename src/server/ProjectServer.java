@@ -20,10 +20,12 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.security.auth.callback.ConfirmationCallback;
 
+import entities.ComplaintEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
 import javafx.scene.image.Image;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 import ocsf.server.*;
 import ocsf.*;
 /**
@@ -35,7 +37,7 @@ public class ProjectServer extends AbstractServer
 	//do not touch//
 	private static Connection con;
 	private static String driver="com.mysql.jdbc.Driver";
-	private String incomingFileName;
+	private int incomingFileName;
   final public static int DEFAULT_PORT = 5555;
   
   
@@ -214,8 +216,7 @@ public class ProjectServer extends AbstractServer
   	 */
   	public void insertPhotoToDB(InputStream instrm) throws ClassNotFoundException, SQLException {
   		Statement stmt;
-  		String ord=incomingFileName;
-  		ord=ord.substring(0,ord.indexOf("."));
+  		
   		 try
  	    {
  	    con = connectToDB();	//call method to connect to DB
@@ -232,7 +233,7 @@ public class ProjectServer extends AbstractServer
 	    {
 	   		PreparedStatement pstmt =con.prepareStatement("UPDATE projectx.complaints set File = ? where Ordernum = ?");
 	   		pstmt.setBlob(1, instrm);
-	   		pstmt.setString(2, ord);
+	   		pstmt.setInt(2, incomingFileName);
 	   		
 	   		pstmt.executeUpdate();
 	    }
@@ -409,12 +410,12 @@ public class ProjectServer extends AbstractServer
    * @throws SQLException
    * @throws ClassNotFoundException
    */
-  public String complaint(String details) throws SQLException, ClassNotFoundException {
-	  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
-	  this.incomingFileName=num+".jpg";
-	  int orderNum = Integer.parseInt(num);
-	  String desc=details.substring(details.indexOf("|")+1,details.length());
-	  desc=desc.replace("~", " ");
+  	public String complaint(ComplaintEntity details) throws SQLException, ClassNotFoundException {
+	//  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
+	//  this.incomingFileName=num+".jpg";
+	//  int orderNum = Integer.parseInt(num);
+	// String desc=details.substring(details.indexOf("|")+1,details.length());
+	//  desc=desc.replace("~", " ");
 	  Statement stmt;
 	  
 	  try
@@ -432,12 +433,13 @@ public class ProjectServer extends AbstractServer
 	  
 	  stmt = con.createStatement();
 	  
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +orderNum+"'");	//prepare a statement
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +incomingFileName+"'");	//prepare a statement
 	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
 	    {
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description) VALUES (?,?)");	//prepare a statement
-		    ps.setInt(1, orderNum);																			//insert parameters into the statement
-		    ps.setString(2, desc);
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status) VALUES (?,?,?)");	//prepare a statement
+		    ps.setInt(1, incomingFileName);																			//insert parameters into the statement
+		    ps.setString(2, details.getDescription());
+		    ps.setString(3, details.getStatus().toString());
 		    ps.executeUpdate();
 		    
 		    return "Success";
@@ -581,29 +583,37 @@ public class ProjectServer extends AbstractServer
 	protected synchronized void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
 	  String generalMessage;
-	  String operation=(String)msg;
-	  String messageFromClient=(String)msg;
+	  String operation;
+	  MessageToSend messageToSend=(MessageToSend)msg;
+	  Object messageFromClient=messageToSend.getMessage();		//the sent data from the client
 	  
-	  messageFromClient=messageFromClient.substring(messageFromClient.indexOf("!")+1,messageFromClient.length());	/**set apart the operation from the message from the client**/
 	  
-	  	operation=operation.substring(0,operation.indexOf("!"));
+	  operation=messageToSend.getOperation();					//the operation required
+	//  messageFromClient=m.getMessage();
+	  
+	//  messageFromClient=messageFromClient.substring(messageFromClient.indexOf("!")+1,messageFromClient.length());	/**set apart the operation from the message from the client**/
+	  
+/////	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		
 		try {
-		System.out.println("<user>"+(String)msg);
+		System.out.println("<user>"+operation);
 		
 		if(operation.equals("getCatalog"))
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
-			sendToAllClients(listOfProducts);
+			messageToSend.setMessage(listOfProducts);		//set the message for sending back to the client
+			sendToAllClients(messageToSend);
+			
 		}
 
 		if(operation.equals("createNewOrder"))
 		{
-			retval = createNewOrder(messageFromClient);
-			sendToAllClients(retval);
+		//	retval = createNewOrder(messageFromClient);		///////////////////////////////////
+			messageToSend.setMessage(retval);
+			sendToAllClients(messageToSend);
 		}
 //		if(operation.equals("addProductToCatalog"))
 //		{
@@ -617,7 +627,8 @@ public class ProjectServer extends AbstractServer
 		{
 			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllStores = getAllstoresFromDB();
-			sendToAllClients(listOfAllStores);
+			messageToSend.setMessage(listOfAllStores);		//set the message for sending back to the client
+			sendToAllClients(messageToSend);
 	//		sendToAllClients(new ArrayList<StoreEntity>);
 		}
 //		if(operation.equals("addProductToCatalog"))
@@ -633,24 +644,28 @@ public class ProjectServer extends AbstractServer
 		
 		if(operation.equals("exitApp"))
 		{
-			this.terminateConnection(messageFromClient);	//calls a method to remove the user from the connected list
+			this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
 		}
 		
 		if(operation.equals("login"))
 		{
-			retval = this.login(client,messageFromClient);
-			sendToAllClients(retval);	//send arraylist back to client
+			retval = this.login(client,(String)messageFromClient);
+			messageToSend.setMessage(retval);	//set the message for sending back to the client
+			sendToAllClients(messageToSend);	//send arraylist back to client
 		}
 		
 		if(operation.equals("getProduct"))	//check if asked to find an existing product
 		{
 			retval = this.getProduct(client,messageFromClient);	//get the product's details
-			sendToAllClients(retval);	//send arraylist back to client
+			messageToSend.setMessage(retval);	//set the message for sending back to the client
+			sendToAllClients(messageToSend);	//send arraylist back to client
 		}
 		
 		if(operation.equals("createProduct"))
 		{
-			messageFromClient=messageFromClient.substring(1,messageFromClient.length());
+			String str =(String)messageFromClient;
+			str = str.substring(1,str.length());
+			//String str=messageFromClient
 			if((this.insertProduct((String)messageFromClient, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
@@ -665,22 +680,26 @@ public class ProjectServer extends AbstractServer
 		}
 		
 		if(operation.equals("complaint")) {
-			if(this.complaint((String)msg).equals("Success")) {
+			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
+			this.incomingFileName=complaint.getOrderID();
+			if(this.complaint(complaint).equals("Success")) {
 				System.out.println("complaint added");
 			//	generalMessage = (String)("Added");
-				sendToAllClients("Added");
+				messageToSend.setMessage("Added"); 		//set the message for sending back to the client
+				sendToAllClients(messageToSend);
 			}
 			else {
 				System.out.println("complaint failed");
 			//	generalMessage = (String)("failed");
-				sendToAllClients("failed");
+				messageToSend.setMessage("failed"); //set the message for sending back to the client
+				sendToAllClients(messageToSend);
 			}
 		}
 		
 		if(operation.equals("downloadFile")) {
 			
 			System.out.println("Server downloading file sent from client");
-			String filePath=(String)msg;
+			String filePath=(String)messageToSend.getMessage();
 			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
 			
 			this.receiveFileFromClient("localhost", 5556);
@@ -692,9 +711,10 @@ public class ProjectServer extends AbstractServer
 			}
 		
 	
-//		sendToAllClients(retval);
+//		sendToAllClients(messageToSend);
 		
 	}
+  
   
   //Class methods ***************************************************
   
