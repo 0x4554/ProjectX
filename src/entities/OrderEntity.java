@@ -3,24 +3,33 @@ package entities;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class OrderEntity implements Serializable{
-	public enum SelfOrDelivery{selfPickup,delivery};
-	public enum OrderStatus{active,cancelled};
-	public enum CashOrCredit{cash,credit};
+	public static enum SelfOrDelivery {selfPickup,delivery};
+	public  static enum OrderStatus	  {active,cancelled};
+	public  static enum CashOrCredit   {cash,credit};
 	
-	private int orderID;
-	private String orderDateAndTime;
+	private Integer orderID;
+//	private String orderDateAndTime;
 	private Time orderTime;	//theses represents the sql type time and date 
 	private Date orderDate;
-	private String Description;
+	
+	private String userName;
+	private StoreEntity store;
+//	private String Description;
 	private CardEntity card;
 	private SelfOrDelivery orderPickup;
+	private Date receivingDate;
+	private Time receivingTime;
 	private OrderStatus status;
-	private boolean paid;
-	private double totalPrice;
+	private Boolean paid;
+	private Double totalPrice;
 	private ArrayList<ProductEntity> productsInOrder;
+	private CashOrCredit paymendMethod;
+	private DeliveryEntity deliveryDetails;
+	
 	
 	/**
 	 * 
@@ -29,6 +38,7 @@ public class OrderEntity implements Serializable{
 	public OrderEntity()
 	{
 		this.productsInOrder = new ArrayList<ProductEntity>();
+		this.totalPrice=0.0;
 	}
 	/**
 	 * This method adds a product to the cart
@@ -52,9 +62,20 @@ public class OrderEntity implements Serializable{
 	public void setProductsInOrder(ArrayList<ProductEntity> productsInOrder) {
 		this.productsInOrder = productsInOrder;
 	}
-	private CashOrCredit paymendMethod;
-	private DeliveryEntity deliveryDetails;
 	
+	/**
+	 * This method uses for removing a product from the cart
+	 * @param productName
+	 */
+	public void removeProductFromCart(String productName)
+	{
+		for(ProductEntity product : this.productsInOrder)
+			if(product.getProductName().equals(productName))
+			{
+				this.getProductsInOrder().remove(product);
+				return;
+			}
+	}
 	/**
 	 * Getter for the card
 	 * @return the card
@@ -68,5 +89,201 @@ public class OrderEntity implements Serializable{
 	 */
 	public void setCard(CardEntity card) {
 		this.card = card;
+	}
+	/**
+	 * Getter for the store
+	 * @return the store
+	 */
+	public StoreEntity getStore() {
+		return store;
+	}
+	/**
+	 * Setter for the store
+	 * @param store the store to set
+	 */
+	public void setStore(StoreEntity store) {
+		this.store = store;
+	}
+	/**
+	 * Getter for the orderPickup
+	 * @return the orderPickup
+	 */
+	public SelfOrDelivery getOrderPickup() {
+		return orderPickup;
+	}
+	/**
+	 * Setter for the orderPickup
+	 * @param orderPickup the orderPickup to set
+	 */
+	public void setOrderPickup(SelfOrDelivery orderPickup) {
+		this.orderPickup = orderPickup;
+	}
+	/**
+	 * Getter for the paid
+	 * @return the paid
+	 */
+	public boolean isPaid() {
+		return paid;
+	}
+	/**
+	 * Setter for the paid
+	 * @param paid the paid to set
+	 */
+	public void setPaid(boolean paid) {
+		this.paid = paid;
+	}
+	/**
+	 * Getter for the totalPrice
+	 * @return the totalPrice
+	 */
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+	/**
+	 * Setter for the totalPrice
+	 * @param totalPrice the totalPrice to set
+	 */
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	/**
+	 * Getter for the paymendMethod
+	 * @return the paymendMethod
+	 */
+	public CashOrCredit getPaymendMethod() {
+		return paymendMethod;
+	}
+	/**
+	 * Setter for the paymendMethod
+	 * @param paymendMethod the paymendMethod to set
+	 */
+	public void setPaymendMethod(CashOrCredit paymendMethod) {
+		this.paymendMethod = paymendMethod;
+	}
+	/**
+	 * Getter for the deliveryDetails
+	 * @return the deliveryDetails
+	 */
+	public DeliveryEntity getDeliveryDetails() {
+		return deliveryDetails;
+	}
+	/**
+	 * Setter for the deliveryDetails
+	 * @param deliveryDetails the deliveryDetails to set
+	 */
+	public void setDeliveryDetails(DeliveryEntity deliveryDetails) {
+		this.deliveryDetails = deliveryDetails;
+	}
+	/**
+	 * Getter for the orderID
+	 * @return the orderID
+	 */
+	public Integer getOrderID() {
+		return orderID;
+	}
+	/**
+	 * Setter for the orderID
+	 * @param orderID the orderID to set
+	 */
+	public void setOrderID(Integer orderID) {
+		this.orderID = orderID;
+	}
+	/**
+	 * Getter for the receivingDate
+	 * @return the receivingDate
+	 */
+	public Date getReceivingDate() {
+		return receivingDate;
+	}
+	/**
+	 * Setter for the receivingDate
+	 * @param receivingDate the receivingDate to set
+	 */
+	public void setReceivingDate(Date receivingDate) {
+		this.receivingDate = receivingDate;
+	}
+	/**
+	 * Getter for the receivingTime
+	 * @return the receivingTime
+	 */
+	public Time getReceivingTime() {
+		return receivingTime;
+	}
+	/**
+	 * Setter for the receivingTime
+	 * @param receivingTime the receivingTime to set
+	 */
+	public void setReceivingTime(Time receivingTime) {
+		this.receivingTime = receivingTime;
+	}
+	/**
+	 * Getter for the status
+	 * @return the status
+	 */
+	public OrderStatus getStatus() {
+		return status;
+	}
+	/**
+	 * Setter for the status
+	 * @param status the status to set
+	 */
+	public void setStatus(OrderStatus status) {
+		this.status = status;
+	}
+	/**
+	 * Getter for the userName
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * Setter for the userName
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	/**
+	 * Getter for the paid
+	 * @return the paid
+	 */
+	public Boolean getPaid() {
+		return paid;
+	}
+	/**
+	 * Setter for the paid
+	 * @param paid the paid to set
+	 */
+	public void setPaid(Boolean paid) {
+		this.paid = paid;
+	}
+	/**
+	 * Getter for the orderTime
+	 * @return the orderTime
+	 */
+	public Time getOrderTime() {
+		return orderTime;
+	}
+	/**
+	 * Setter for the orderTime
+	 * @param orderTime the orderTime to set
+	 */
+	public void setOrderTime(Time orderTime) {
+		this.orderTime = orderTime;
+	}
+	/**
+	 * Getter for the orderDate
+	 * @return the orderDate
+	 */
+	public Date getOrderDate() {
+		return orderDate;
+	}
+	/**
+	 * Setter for the orderDate
+	 * @param orderDate the orderDate to set
+	 */
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
 	}
 }

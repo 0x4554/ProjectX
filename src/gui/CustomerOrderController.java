@@ -44,8 +44,21 @@ public class CustomerOrderController implements Initializable {
 		primaryStage.show();
 	}
 
-	public void showOrderDetails(ActionEvent event) {
+	public void showOrderDetails(ActionEvent event) throws IOException {
 
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/CustomerOrderDetailsBoundary.fxml").openStream());
+		CustomerOrderDetailsController cocdc = loader.getController();
+//		cocdc.setOrder(this.newOrder);
+//		cocdc.showCart();
+		
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(pRoot);
+		primaryStage.setTitle("Your Orders");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	@Override
