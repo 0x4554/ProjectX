@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.Button;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,11 +18,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 
 /**
  * 
@@ -55,7 +57,8 @@ public class CreateNewAccountController implements Initializable {
     @FXML private Button crtBtn;
     @FXML private ComboBox<String> subscrptCmb;
 
-    ObservableList<String> list;
+    private ObservableList<String> list;
+    private ManagerMenuController mmc;
     
     
 	/**
@@ -63,6 +66,10 @@ public class CreateNewAccountController implements Initializable {
 	 */
 	public CreateNewAccountController() {			//Necessary empty constructor 
 		
+	}
+	
+	public void setConnectionData(ManagerMenuController m) {
+		this.mmc=m;
 	}
 		
 	
@@ -78,24 +85,10 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 	
-	public void ShowNewUserAcount() throws IOException {
-			
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("NewAccountBoundary.fxml").openStream());
-		 
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
-		CreateNewAccountController nac = loader.getController();	//set the controller to the NewAccountController
-		primaryStage.setTitle("New Customer");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-					
-	}
-	
 	public boolean checkRequiredFields() {
-		if(usrFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty()) 
+		if(usrFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
 			return false;
-			
+
 		return true;
 	}
 	
@@ -112,11 +105,26 @@ public class CreateNewAccountController implements Initializable {
 				cust.setCustomerID(Long.parseLong(idFld.getText()));
 				cust.setPassword(pswrdFld.getText());
 				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
+
 				if(!crdFld.getText().isEmpty()) 								//if credit card is entered
 					cust.setCreditCardNumber(Long.parseLong(crdFld.getText()));
+				
+				MessageToSend msg=new MessageToSend(cust, "createAccount");			//defining the job for the server
+				Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
+				Client.getClientConnection().accept();								//sending data to server
+				
 			}
+		else {
+			GeneralMessageController.showMessage("Please fill in all the required fields");
+		}
 		
-		
+	}
+	
+	
+	public void bckBtnHandler(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		this.mmc.showManagerMenu();										//open previous menu
+		return;
 	}
 	
 
@@ -155,7 +163,7 @@ public class CreateNewAccountController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		ArrayList<String> al = new ArrayList<String>();	
-		al.add("Mounthly");
+		al.add("Monthly");
 		al.add("Yearly");
 		al.add("None");
 		

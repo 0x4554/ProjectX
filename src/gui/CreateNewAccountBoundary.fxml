@@ -30,8 +30,8 @@
       <TextField fx:id="pswrdFld" layoutX="209.0" layoutY="176.0" prefHeight="31.0" prefWidth="197.0" />
       <TextField fx:id="pswrd2Fld" layoutX="209.0" layoutY="216.0" prefHeight="31.0" prefWidth="197.0" />
       <TextField fx:id="crdFld" layoutX="209.0" layoutY="305.0" prefHeight="31.0" prefWidth="197.0" />
-      <Button fx:id="bckBtn" layoutX="220.0" layoutY="353.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="63.0" text="Back" />
-      <Button fx:id="crtBtn" layoutX="341.0" layoutY="353.0" mnemonicParsing="false" onAction="#ShowNewUserAcount" text="Create" />
       <ComboBox fx:id="subscrptCmb" layoutX="210.0" layoutY="258.0" prefHeight="31.0" prefWidth="197.0" promptText="Chooose subscription" />
+      <Button fx:id="bckBtn" layoutX="249.0" layoutY="355.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
+      <Button fx:id="crtBtn" layoutX="332.0" layoutY="355.0" mnemonicParsing="false" onAction="#createNewUser" text="Create" />
    </children>
 </Pane>

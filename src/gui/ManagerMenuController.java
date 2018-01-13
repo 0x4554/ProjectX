@@ -62,8 +62,9 @@ public class ManagerMenuController implements Initializable {
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("CreateNewAccountBoundary.fxml").openStream());				//new window to open
-		 /*load here needed controller*/
+		 Parent root = loader.load(getClass().getResource("/gui/CreateNewAccountBoundary.fxml").openStream());				//new window to open
+		 CreateNewAccountController cnac = loader.getController();
+		 cnac.setConnectionData(this);
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			

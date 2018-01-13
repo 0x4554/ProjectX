@@ -86,9 +86,9 @@ public class CustomerEntity extends UserEntity {
 		if(subscriptionDiscount.equals("none"))
 			this.subscriptionDiscount = 0;
 		else if(subscriptionDiscount.equals("Monthly"))
-			this.subscriptionDiscount=0.1;
+			this.subscriptionDiscount=monthlySubscriptionDiscount;
 		else if(subscriptionDiscount.equals("Yearly"))
-			this.subscriptionDiscount=0.15;
+			this.subscriptionDiscount=yearlySubscriptionDiscount;
 	}
 	/**
 	 * Getter for the accountStatus

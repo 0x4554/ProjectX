@@ -13,7 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,8 +24,10 @@ import javax.imageio.ImageIO;
 import javax.security.auth.callback.ConfirmationCallback;
 
 import entities.ComplaintEntity;
+import entities.CustomerEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
+import entities.UserEntity;
 import javafx.scene.image.Image;
 import logic.ConnectedClients;
 import logic.MessageToSend;
@@ -615,12 +620,18 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(retval);
 			sendToAllClients(messageToSend);
 		}
+		
+	
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
 //		}
-
-			
+		
+		if(operation.equals("createAccount")) {
+			CustomerEntity custen=(CustomerEntity)messageFromClient;	
+			this.insertNewCustomer(custen);
+		}
+		
 		
 		////////////////Need to split it to store names, store details ,store workers.....////////
 		if(operation.equals("getAllStores"))
@@ -714,6 +725,34 @@ public class ProjectServer extends AbstractServer
 //		sendToAllClients(messageToSend);
 		
 	}
+  
+  
+  public void insertNewCustomer(CustomerEntity ce) throws SQLException {
+	  
+	  try {
+		  con=connectToDB();
+		  System.out.println("Connection to Database succeeded");
+	  }
+	  catch(Exception e) {
+		  e.printStackTrace();
+		  System.out.println("Connection to Database failed");
+	  }
+	  
+	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,SubscriptionDiscount,JoinTime,Credit) VALUES (?,?,?,?,?,?)");
+	  ps.setString(1, ce.getUserName());
+	  ps.setString(2, ce.getPassword());
+	  ps.setLong(3, ce.getCustomerID());
+	  ps.setDouble(4,ce.getSubscriptionDiscount());
+	  
+	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+      Date dateobj = new Date();
+      
+	  ps.setString(5, df.format(dateobj).toString());
+	  ps.setLong(6, ce.getCreditCardNumber());
+	  ps.executeUpdate();										//add new customer to Database
+	
+	  System.out.println("new customer added to Database");
+  }
   
   
   //Class methods ***************************************************
