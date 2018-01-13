@@ -33,6 +33,8 @@ public class SelectStoreController implements Initializable{
 	private ComboBox strCmb;
 	@FXML
 	private Button okBtn;
+	@FXML
+	private Button bckBtn;
 	/**
 	 * This method inserts all the store names into the combobox
 	 * @throws InterruptedException
@@ -99,6 +101,24 @@ public class SelectStoreController implements Initializable{
 		else {				//if no store was selected
 			GeneralMessageController.showMessage("Please select a store");
 		}
+	}
+	
+	/**
+	 * This method is used to return to the  order menu
+	 * @param event	button back 
+	 * @throws IOException 
+	 */
+	public void backToOrderMenu(ActionEvent event) throws IOException
+	{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
+		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Order");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	@Override

@@ -164,7 +164,7 @@ public class CustomerMenuController implements Initializable{
 	                        super.updateItem(product, status);
 	                        if (product != null) {
 	                            setText(product.getProductName()+"  "+product.getProductDescription()+"  " + "\n"+product.getProductPrice()+"¤");
-	                            setGraphic(new ImageView(product.getProductImage()));
+//**TO BE FIXED	                            setGraphic(new ImageView(product.getProductImage()));
 	                        }
 	                    }
 	                };
@@ -270,10 +270,10 @@ public class CustomerMenuController implements Initializable{
 //	    products.add(new ProductEntity("124","bird","boquet",(double) 96,"bridal","red",new ImageView(new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true))));
 
 	    
-		products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue", new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
-	    products.add(new ProductEntity("124","lili","boquet",(double) 15.60,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true)));
-	    products.add(new ProductEntity("124","magic","boquet",(double) 80,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true)));
-	    products.add(new ProductEntity("124","bird","boquet",(double) 96,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true)));
+//**TO BE FIXED WHEN IMAGE FIXED	products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue", new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
+//	    products.add(new ProductEntity("124","lili","boquet",(double) 15.60,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true)));
+//	    products.add(new ProductEntity("124","magic","boquet",(double) 80,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true)));
+//	    products.add(new ProductEntity("124","bird","boquet",(double) 96,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true)));
 
 		return products;
 	}

@@ -11,7 +11,8 @@
          <children>
             <Label layoutX="180.0" layoutY="220.0" text="Please Choose a store" />
             <ComboBox id="chsStrCmb" fx:id="strCmb" layoutX="178.0" layoutY="324.0" prefWidth="150.0" promptText="Select store" />
-            <Button id="chsStrBtn" fx:id="okBtn" layoutX="221.0" layoutY="413.0" mnemonicParsing="false" onAction="#storeSelected" text="next" />
+            <Button id="chsStrBtn" fx:id="okBtn" layoutX="304.0" layoutY="413.0" mnemonicParsing="false" onAction="#storeSelected" text="next" />
+            <Button fx:id="bckBtn" layoutX="126.0" layoutY="413.0" mnemonicParsing="false" onAction="#backToOrderMenu" text="Back" />
          </children>
       </AnchorPane>
    </children>
