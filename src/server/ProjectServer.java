@@ -26,6 +26,8 @@ import javax.security.auth.callback.ConfirmationCallback;
 import entities.CardEntity;
 import entities.ComplaintEntity;
 import entities.CustomerEntity;
+import entities.DeliveryEntity;
+import entities.OrderEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
 import entities.UserEntity;
