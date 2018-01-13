@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,7 +32,7 @@ import javafx.stage.Stage;
 
 public class CartController implements Initializable {
 	private OrderEntity newOrder;
-	private List<String> stringSet;
+	private List<String> listOfProductsNames;
 	ObservableList observableList = FXCollections.observableArrayList();
 
 //	@FXML
@@ -48,18 +49,23 @@ public class CartController implements Initializable {
 	private Button crtBckBtn;
 	@FXML
 	private Button chkOutBtn;
+	@FXML
+	private Label totalPriceLable;
 
 	public void showCart() throws FileNotFoundException {
 		String lbl = "";
-		this.stringSet = new ArrayList<String>();
-		this.newOrder = new OrderEntity();
+		this.listOfProductsNames = new ArrayList<String>();
+		//this.newOrder = new OrderEntity();
 
 		//////////////////a made up list of products for testing ///////////////////
-		for (int i = 0; i < 5; i++)
-		{
-			//**this.newOrder.addProductToCart(new ProductEntity("a" + i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i,new Image(new FileInputStream( "C:\\Users\\pic1.jpg"))));
-		}
-	//	**this.newOrder.getProductsInOrder().get(1).setProductImage(new Image(new FileInputStream( "C:\\Users\\pic2.jpg")));
+//		for (int i = 0; i < 5; i++)
+//		{
+//**TO BE FIXED			this.newOrder.addProductToCart(new ProductEntity("a" + i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i,new Image(new FileInputStream( "C:\\Users\\pic1.jpg"))));
+//			this.newOrder.addProductToCart(new ProductEntity( i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i));
+
+//		}
+//**TO BE FIXED	this.newOrder.getProductsInOrder().get(1).setProductImage(new Image(new FileInputStream( "C:\\Users\\pic2.jpg")));
+		this.newOrder.addProductToCart(new ProductEntity(1, "rose", "flower", 20.0, "pretty flower", null));
 		////////////////////////////////////////////////////////////////////////////
 		TreeItem<String> root;
 
@@ -72,10 +78,10 @@ public class CartController implements Initializable {
 			lbl = "Your cart";
 			for (ProductEntity product : this.newOrder.getProductsInOrder())
 			{
-				this.stringSet.add(product.getProductName());
+				this.listOfProductsNames.add(product.getProductName());
 				TreeItem<String> productName = new TreeItem<>(product.getProductName()); //set the branch as the product's name to be the parent of it's details
 							/* Set all the product's details to be leaves on the branch */
-				TreeItem<String> productID = new TreeItem<>(product.getProductID()); 		//create a new leaf
+				TreeItem<String> productID = new TreeItem<>(product.getProductID().toString()); 		//create a new leaf
 				productName.getChildren().add(productID); 									//set as a child 
 				TreeItem<String> productType = new TreeItem<>(product.getProductType());
 				productName.getChildren().add(productType);
@@ -99,6 +105,8 @@ public class CartController implements Initializable {
 		this.prdctTrVw.setShowRoot(false); //make root expanded every time it starts
 		this.crtEmptLbl.setText(lbl);
 		
+		calculatePrice(); 	//call method to calculate the order price
+		this.totalPriceLable.setText(this.newOrder.getTotalPrice().toString());
 						///This EventHanlder is an mouse event handler which listens to a product select in the products treeview
 		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
 			showProductImage(event);
@@ -116,18 +124,40 @@ public class CartController implements Initializable {
 	public void showProductImage(MouseEvent event) {
 		for(ProductEntity product : this.newOrder.getProductsInOrder())
 		{
-		//**	if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
-				//**this.prdctImg.setImage(product.getProductImage());
+//**TO BE FIXED			if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
+//**TO BE FIXED				this.prdctImg.setImage(product.getProductImage());
 		}
 	} 
 	
+	/**
+	 * This method calculates the order's price based on products prices
+	 */
+	private void calculatePrice()
+	{
+		this.newOrder.setTotalPrice(0.0);
+		for(ProductEntity product: this.newOrder.getProductsInOrder())
+		{
+			
+			this.newOrder.setTotalPrice(this.newOrder.getTotalPrice()+product.getProductPrice()); 		//sum all of the product prices
+		}
+	}
+	
+	/**
+	 * This method loads the check out window
+	 * @param event	clicked on go to checkout
+	 * @throws IOException
+	 */
 	public void goToCheckOut(ActionEvent event) throws IOException
 	{
+		if(!this.newOrder.getProductsInOrder().isEmpty())		//if cart contains products
+		{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		
 		FXMLLoader loader = new FXMLLoader();
 		Pane root = loader.load(getClass().getResource("/gui/CustomerCheckOutBoundary.fxml").openStream());
 		
 		CustomerCheckOutController ccoc = loader.getController();	
-	//	ccoc.setOrder(this.newOrder);
+		ccoc.setOrder(this.newOrder);
 //		ccoc.showCart();
 		
 		Stage primaryStage=new Stage();
@@ -135,6 +165,12 @@ public class CartController implements Initializable {
 		primaryStage.setTitle("Your cart");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		}
+		
+		else
+		{
+			GeneralMessageController.showMessage("Cart is empty.");
+		}
 	}
 
 	/**
@@ -151,9 +187,47 @@ public class CartController implements Initializable {
 	 * 
 	 * @param event
 	 *            button back
+	 * @throws IOException 
 	 */
-	public void backToNewOrderMenu(ActionEvent event) {
+	public void backToNewOrderMenu(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+		//	selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem(); //get the selected store name from the comboBox
+
+			FXMLLoader loader = new FXMLLoader();
+			Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
+			CreateNewOrderController cnoc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+
+			Stage primaryStage = new Stage();
+			Scene scene = new Scene(root);
+			cnoc.setOrderDetails(newOrder);
+//			nom.setConnectionData(this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
+			primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
+			primaryStage.setScene(scene);
+			primaryStage.show();
+	}
+	
+	/**
+	 * This method removed a product from the order
+	 * @param event	click on remove from cart
+	 * @throws IOException 
+	 */
+	public void removeFromCart(ActionEvent event) throws IOException
+	{
+		if(this.listOfProductsNames.contains(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))		//if a product was selected
+		{
+			 										//remove the product from the treeView
+	           this.newOrder.removeProductFromCart(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue());		//remove the product from the Order's products in cart list
+	           calculatePrice(); 	//recalculate the price
+	           this.totalPriceLable.setText(this.newOrder.getTotalPrice().toString()); 			//update the price label 
+	           this.listOfProductsNames.remove(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue());
+	           TreeItem c = (TreeItem)this.prdctTrVw.getSelectionModel().getSelectedItem();
+	           c.getParent().getChildren().remove(c);	
+		}
+		
+		else
+		{
+			GeneralMessageController.showMessage("No product selected to remove.");
+		}
 	}
 
 	@Override

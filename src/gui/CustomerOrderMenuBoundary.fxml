@@ -12,9 +12,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button layoutX="435.0" layoutY="151.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="152.0" text="Edit Order" />
       <Button id="swOrdrDtlsBtn" fx:id="swOrdrDtlsBtn" layoutX="357.0" layoutY="120.0" mnemonicParsing="false" onAction="#showOrderDetails" text="Show Orders Details" />
-      <Button layoutX="369.0" layoutY="185.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="152.0" text="Cancel Order" />
       <Button layoutX="261.0" layoutY="334.0" mnemonicParsing="false" text="Back" />
       <Button id="crtNwOrdrBtn" fx:id="crtNwOrdrBtn" layoutX="82.0" layoutY="120.0" mnemonicParsing="false" onAction="#CreateNewOrder" text="Create a new order" />
    </children>

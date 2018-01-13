@@ -24,7 +24,6 @@ import javafx.stage.Stage;
 import logic.MessageToSend;
 
 public class SelectStoreController implements Initializable{
-	private Client clnt;
 	private Integer branchID;
 	public ObservableList<String> list;
 	private Map<String,StoreEntity> listOfStoresEntities;
@@ -34,14 +33,8 @@ public class SelectStoreController implements Initializable{
 	private ComboBox strCmb;
 	@FXML
 	private Button okBtn;
-	/**
-	 * This method saves the client connection to the controller
-	 * @param clnt	the connection client
-	 */
-	public void setConnectionData(Client clnt)
-	{
-		this.clnt=clnt;
-	}
+	@FXML
+	private Button bckBtn;
 	/**
 	 * This method inserts all the store names into the combobox
 	 * @throws InterruptedException
@@ -59,13 +52,16 @@ public class SelectStoreController implements Initializable{
 	 */
 	public void showStores() throws InterruptedException
 	{
-		this.clnt.setDataFromUI(new MessageToSend("", "getAllStores!"));	//set operation to get all stores from DB
-		this.clnt.accept();
-		while(!(this.clnt.getConfirmationFromServer()))		//wait for server response
+		MessageToSend messageToSend = new MessageToSend("", "getAllStores");
+		Client.getClientConnection().setDataFromUI(messageToSend);	//set operation to get all stores from DB
+		Client.getClientConnection().accept();
+		while(!(Client.getClientConnection().getConfirmationFromServer()))		//wait for server response
 			Thread.sleep(100);
-		this.clnt.setConfirmationFromServer(); 				//reset to false
+		Client.getClientConnection().setConfirmationFromServer(); 				//reset to false
 		ArrayList<StoreEntity> listOfStoresFromDB = new ArrayList<StoreEntity>();
-		listOfStoresFromDB=this.clnt.getArrayListOfStoreEntityFromServer();		//get the list from the server's response
+		messageToSend=Client.getClientConnection().getMessageFromServer();
+		listOfStoresFromDB=(ArrayList<StoreEntity>)messageToSend.getMessage();		//get the list of stores from the message class
+//		listOfStoresFromDB=Client.getClientConnection().getArrayListOfStoreEntityFromServer();		//get the list from the server's response
 		
 		this.storeNames = new ArrayList<String>();		//an arrayList of the store names
 		this.listOfStoresEntities = new HashMap<String,StoreEntity>();		//a hashMap to hold the stores 
@@ -81,22 +77,46 @@ public class SelectStoreController implements Initializable{
 	 * @param event
 	 * @throws IOException 
 	 */
-	public void storeSelected(ActionEvent event) throws IOException
-	{
-		((Node)event.getSource()).getScene().getWindow().hide();	//hide last window
+	public void storeSelected(ActionEvent event) throws IOException {
 		
-		String selectedStoreName="";
-		
-		selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem();		//get the selected store name from the comboBox
-		
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
-		CreateNewOrderController nom = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 
+		String selectedStoreName = "";
+		if (!this.strCmb.getSelectionModel().isEmpty())				//if selected a store
+		{
+			((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+			selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem(); //get the selected store name from the comboBox
+
+			FXMLLoader loader = new FXMLLoader();
+			Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
+			CreateNewOrderController nom = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+
+			Stage primaryStage = new Stage();
+			Scene scene = new Scene(root);
+			nom.setConnectionData(this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
+			primaryStage.setTitle("New order from " + selectedStoreName);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		}
+		
+		else {				//if no store was selected
+			GeneralMessageController.showMessage("Please select a store");
+		}
+	}
+	
+	/**
+	 * This method is used to return to the  order menu
+	 * @param event	button back 
+	 * @throws IOException 
+	 */
+	public void backToOrderMenu(ActionEvent event) throws IOException
+	{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
+		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		nom.setConnectionData(this.clnt,this.listOfStoresEntities.get(selectedStoreName));	//send the connection and the StoreEntity selected by the user
-		primaryStage.setTitle("New order from "+selectedStoreName);
+		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

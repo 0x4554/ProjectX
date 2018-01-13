@@ -6,15 +6,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ProductEntity implements Serializable{
-	private String productID;
+	private Integer productID;
 	private String productName;
 	private String productType;
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+    private Image productImage;
 
-	//private ImageView productImage;
-private Image productImage;
 	
 	public ProductEntity()
 	{
@@ -31,8 +30,9 @@ private Image productImage;
 	 * @param productDescription	description
 	 * @param productDominantColor	dominant color
 	 */
-	public ProductEntity(String productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,Image productImage) {
+
+	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
+			String productDescription, String productDominantColor,Image img) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -40,11 +40,11 @@ private Image productImage;
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-		this.productImage = productImage;
+    	this.productImage = img;
 	}
-	public ProductEntity(String productID, String productName, String productType, Double productPrice,
+	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
 			String productDescription, String productDominantColor) {
-		super();
+		//super();
 		this.productID = productID;
 		this.productName = productName;
 		this.productType = productType;
@@ -57,14 +57,14 @@ private Image productImage;
 	 * Getter for the productID
 	 * @return the productID
 	 */
-	public String getProductID() {
+	public Integer getProductID() {
 		return productID;
 	}
 	/**
 	 * Setter for the productID
 	 * @param productID the productID to set
 	 */
-	public void setProductID(String productID) {
+	public void setProductID(Integer productID) {
 		this.productID = productID;
 	}
 	/**
@@ -81,7 +81,7 @@ private Image productImage;
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-
+	
 	public Image getProductImage() {
 		return productImage;
 	}
@@ -89,6 +89,7 @@ private Image productImage;
 	public void setProductImage(Image productImage) {
 		this.productImage = productImage;
 	}
+
 
 	/**
 	 * Getter for the productType

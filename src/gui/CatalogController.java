@@ -118,14 +118,6 @@ public class CatalogController implements Initializable{
 		this.products = products;
 	}
 	/**
-	 * This method is the constructor for this class
-	 * @param clnt	the connected client
-	 */
-	/*public CatalogController(Client clnt)
-	{
-		this.clnt=clnt;
-	}*/
-	/**
 	 * A necessary constructor for the App
 	 */
 	public CatalogController()
@@ -135,11 +127,7 @@ public class CatalogController implements Initializable{
 	public void setConnectionData(CustomerMenuController cmc) {
 		this.cstmc=cmc;
 	}
-	/*public void setConnectionData(Client clnt)
-	{
-		this.clnt=clnt;
-	}*/
-	
+
 	public void AddItemToCart(ActionEvent event) throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
@@ -148,7 +136,6 @@ public class CatalogController implements Initializable{
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		cmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();

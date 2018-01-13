@@ -33,7 +33,28 @@ public class Client extends AbstractClient {
 	private ArrayList<StoreEntity> arrayListOfStoreEntityFromServer;
 	private String stringFromServer;
 	
+	/**
+	 * This the the static object for holding the connected client to be used when sending data to the server , or for getting data received from the server
+	 */
+	private static Client clientConnection;		//the static connected client to be used every time data is to be transfered to the server;
 	
+	
+	/**
+	 * Getter for the clientConnection
+	 * @return the clientConnection
+	 */
+	public static Client getClientConnection() {
+		return clientConnection;
+	}
+
+	/**
+	 * Setter for the clientConnection
+	 * @param clientConnection the clientConnection to set
+	 */
+	public static void setClientConnection(Client clientConnection) {
+		Client.clientConnection = clientConnection;
+	}
+
 	/**
 	 * This is the constructor for the client
 	 * the connection is opened using the openConnection from the ocsf

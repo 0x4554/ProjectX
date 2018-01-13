@@ -25,8 +25,8 @@ import javafx.stage.Stage;
  */
 public class MainLaunch extends Application {
 
-	private Stage primaryStage;
-	private LoginController login;
+	public Stage primaryStage;
+	public LoginController login;
 	/**
 	 * The main method for the application.
 	 * Calls the launch() to start the application
@@ -35,6 +35,7 @@ public class MainLaunch extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
 	
 	/**
 	 * This method loads the first window in the application, the login window
@@ -59,6 +60,8 @@ public class MainLaunch extends Application {
 		this.primaryStage.show();
 
 	}
+	
+
 	
 	@Override
 	public void stop() throws Exception
