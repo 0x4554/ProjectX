@@ -394,8 +394,8 @@ public class ProjectServer extends AbstractServer
 	  
 	  while(rs.next())
 	  {
-		 //product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
-		 //listOfProducts.add(product);	//add the product from the data base to the list
+		 product = new ProductEntity(rs.getString(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
+		 listOfProducts.add(product);	//add the product from the data base to the list
 	  }
 	  return listOfProducts;
   }

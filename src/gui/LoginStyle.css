@@ -12,3 +12,12 @@
 .button:hover{
 	-fx-text-fill: #000000;
 }
+.list-cell{
+    -fx-font-size:17.0;
+    -fx-text-fill: 	#000000;
+
+}
+.list-cell:filled:hover {
+    -fx-background-color: #0093ff;
+    -fx-text-fill: white;
+}
