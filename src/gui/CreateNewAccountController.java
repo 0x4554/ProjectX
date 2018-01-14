@@ -25,6 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 
 /**
  * 
@@ -166,9 +167,7 @@ public class CreateNewAccountController implements Initializable {
 //		while(!this.clnt.getConfirmationFromServer())	//wait until server replies
 //			Thread.sleep(100);
 //		this.clnt.setConfirmationFromServer();		//reset confirmation to false
-		}
-	
-	*/
+//		}
 	
 	
 	
@@ -177,7 +176,7 @@ public class CreateNewAccountController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		subscriptionComboBox();
 	}
-	
+}
 /*	
 	/**
 	 * when back button pressed
