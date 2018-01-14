@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import logic.ConnectedClients;
 
 public class ManagerMenuController implements Initializable {
 	private Client clnt;
@@ -52,6 +53,7 @@ public class ManagerMenuController implements Initializable {
 		this.clnt=clnt;
 	}
 	
+	
 	/**
 	 * 
 	 * This method will present the menu for manager user
@@ -71,21 +73,17 @@ public class ManagerMenuController implements Initializable {
 		
 	}
 	
-	private void setConnectionData(Client clnt2) {
-		// TODO Auto-generated method stub
-		this.clnt=clnt2;
-	}
+	
+	
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("CreateNewAccountBoundary.fxml").openStream());				//new window to open
-		 /*load here needed controller*/
 		 Stage primaryStage=new Stage();
-			Scene scene=new Scene(root);
-			
-			primaryStage.setTitle("New Accout");
-			primaryStage.setScene(scene);
-			primaryStage.show();
+		 Scene scene=new Scene(root);
+		 primaryStage.setTitle("New Accout");
+		 primaryStage.setScene(scene);
+		 primaryStage.show();
 	}
 	
 	
@@ -136,7 +134,7 @@ public class ManagerMenuController implements Initializable {
 	public void usersPermissions(ActionEvent event) throws IOException{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/******ToImplement*****/.fxml").openStream());				//new window to open
+		 Parent root = loader.load(getClass().getResource("EditUsersPremissionBoundary.fxml").openStream());				//new window to open
 		 /*load needed controller here*/
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
@@ -152,6 +150,23 @@ public class ManagerMenuController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		
+	}
+	private void setConnectionData(Client clnt2) {
+		// TODO Auto-generated method stub
+		this.clnt=clnt2;
+	}
+	
+	
+	/**
+	 * if pressed log out button
+	 * @param event log out button pressed
+	 * @throws IOException
+	 */
+	public void logOut(ActionEvent event) throws IOException
+	{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		ConnectedClients.removeConnectedClient(this.clnt.getUsername());
+		GeneralMessageController.showMessage("Bye Bye "+this.clnt.getUsername()+" we hope to see you soon");
 	}
 
 }

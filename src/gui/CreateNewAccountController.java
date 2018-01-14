@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Button;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,11 +15,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.ConnectedClients;
 
 /**
  * 
@@ -35,11 +37,8 @@ import javafx.stage.Stage;
  */
 
 public class CreateNewAccountController implements Initializable {
-	
-	
-	private Client clnt;
 
-    @FXML private Label usrLbl;
+	@FXML private Label usrLbl;
     @FXML private Label idLbl;
     @FXML private Label pswrdLbl;
     @FXML private Label pswrd2Lbl;
@@ -47,14 +46,14 @@ public class CreateNewAccountController implements Initializable {
     @FXML private Label crdLbl;
     @FXML private TextField usrFld;
     @FXML private TextField idFld;
-    @FXML private TextField pswrdFld;
-    @FXML private TextField pswrd2Fld;
-    @FXML private TextField subscrptFld;
+    @FXML private PasswordField pswrdFld;
+    @FXML private PasswordField pswrd2Fld;
     @FXML private TextField crdFld;
     @FXML private Button bckBtn;
     @FXML private Button crtBtn;
     @FXML private ComboBox subscrptCmb;
 
+    private Client clnt;
     ObservableList<String> list;
 
     /**
@@ -74,6 +73,10 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
+	/**
+	 * This method is the constructor for this class
+	 * @param clnt
+	 */
 	public void setConnectionData(Client clnt)
 	{
 		this.clnt=clnt;
@@ -86,9 +89,10 @@ public class CreateNewAccountController implements Initializable {
 		al.add("Mounthly");
 		al.add("Yearly");
 		al.add("None");
-		
+				
 		list = FXCollections.observableArrayList(al);
 		subscrptCmb.setItems(list);
+	
 	}
 	
 	
@@ -108,48 +112,72 @@ public class CreateNewAccountController implements Initializable {
 			
 	}
 	
+	/**
+	 * when "create" button pressed
+	 * checks if all data is correct
+	 * checks if all required fields are filled in
+	 * @param event
+	 * @throws IOException
+	 */
 
-//	public void pressedCreateAccount(ActionEvent event)  {		//when pressed "Create" button
-//		
-//		
-//		
-//		if(this.usrFld.getText().isEmpty() || this.idFld.getText().isEmpty() || this.pswrdFld.getText().isEmpty() || this.pswrd2Fld.getText().isEmpty() || this.crdFld.getText().isEmpty())			//if all fields are empty
-//			GeneralMessageController.showMessage("All fields are empty!\nPlease fill the fields");
-//		
-//		else if(this.usrFld.getText().isEmpty())
-//			GeneralMessageController.showMessage("Please enter user name");
-//		
-//		else if(this.idFld.getText().isEmpty())			GeneralMessageController.showMessage("Please enter user ID");
-//		
-//		else if(this.subscrptFld.getText().isEmpty())
-//			GeneralMessageController.showMessage("Please enter subscription field");
-//		
-//		else if(this.pswrdFld.getText().isEmpty() && this.pswrd2Fld.getText().isEmpty())
-//			GeneralMessageController.showMessage("Please enter password");
-//		
-//		
-//		
-//		if(!(this.pswrdFld.getText().equals(this.pswrd2Fld.getText())))		//check if password in field1 = password in field2;
-//		{
-//			
-//		}
-			
-//	}
+	public void pressedCreateAccount(ActionEvent event) throws IOException  {
+		if(this.usrFld.getText().isEmpty() && this.idFld.getText().isEmpty() && this.pswrdFld.getText().isEmpty() && this.pswrd2Fld.getText().isEmpty() && this.crdFld.getText().isEmpty())			//if all fields are empty
+			GeneralMessageController.showMessage("All fields are empty!\nPlease fill the fields");
+		
+		else if(this.usrFld.getText().isEmpty())
+			GeneralMessageController.showMessage("Please enter user name");
+		
+		else if(this.idFld.getText().isEmpty())		
+			GeneralMessageController.showMessage("Please enter user ID");
+		else if(this.pswrdFld.getText().isEmpty() && this.pswrd2Fld.getText().isEmpty())
+			GeneralMessageController.showMessage("Please enter password");
+		else if(!(this.pswrdFld.getText().equals(this.pswrd2Fld.getText())))					//check if password in field1 = password in field2;
+		{
+			GeneralMessageController.showMessage("Password doeas not match!\nPlease enter again");
+			this.pswrdFld.clear();
+			this.pswrd2Fld.clear();
+		}
+		else if(this.subscrptCmb.getSelectionModel().isEmpty())
+			GeneralMessageController.showMessage("Please enter subscription");
+	/*	else
+			GeneralMessageController.showMessage("succeed");*/
+		
+//		this.clnt.setDataFromUI(username_password, "login!");	//set the data and the operation to send from the client to the server
+//		this.clnt.accept();	//sends to server
+//		while(!this.clnt.getConfirmationFromServer())	//wait until server replies
+//			Thread.sleep(100);
+//		this.clnt.setConfirmationFromServer();		//reset confirmation to false
+		}
 	
 	
 	
-	//GeneralMessageController.showMessage("");
+	
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		subscriptionComboBox();
+	}
+	
+	
+	/**
+	 * when back button pressed
+	 * @param event pressed back button
+	 * @throws IOException
+	 */
+	public void back(ActionEvent event) throws IOException
+	{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/ManagerMenuBoundary.fxml").openStream());
 		
-		ArrayList<String> al = new ArrayList<String>();	
-		al.add("Mounthly");
-		al.add("Yearly");
-		al.add("None");
+		Stage primaryS=new Stage();
+		Scene scene=new Scene(root);
 		
-		list = FXCollections.observableArrayList(al);
-		subscrptCmb.setItems(list);
+		primaryS.setTitle("Generate Report");
+		primaryS.setScene(scene);
+		primaryS.show();
 	}
 	
 }
