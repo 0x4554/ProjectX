@@ -17,6 +17,6 @@
       <Button fx:id="gnrtRprtBtn" layoutX="223.0" layoutY="200.0" mnemonicParsing="false" onAction="#generateReport" text="Generate new report" />
       <Button fx:id="edtPrmsnsBtn" layoutX="218.0" layoutY="262.0" mnemonicParsing="false" onAction="#usersPermissions" text="Edit users permissions " />
       <Button fx:id="shwCnclBtn" layoutX="206.0" layoutY="327.0" mnemonicParsing="false" text="Show cancelation requests" />
-      <Button fx:id="bckBtn" layoutX="267.0" layoutY="375.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button fx:id="logOutBtn" layoutX="267.0" layoutY="375.0" mnemonicParsing="false" onAction="#logOutManager" text="Log out" />
    </children>
 </Pane>

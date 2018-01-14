@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import logic.ConnectedClients;
 
 public class ManagerMenuController implements Initializable {
 	private Client clnt;
@@ -27,6 +28,8 @@ public class ManagerMenuController implements Initializable {
 	private Button shwCnclBtn;
 	@FXML	
 	private Button edtPrmsnsBtn;
+	@FXML
+	private Button logOutBtn;
 	
 	
 	/**
@@ -144,6 +147,23 @@ public class ManagerMenuController implements Initializable {
 			primaryStage.setTitle("Generate Report");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+	}
+	
+	
+	public void logOutManager(ActionEvent event) throws IOException	//when click "Back" return to main menu
+	{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("Login");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		GeneralMessageController.showMessage("Manager "+Client.getClientConnection().getUsername()+" logged out");
 	}
 
 
