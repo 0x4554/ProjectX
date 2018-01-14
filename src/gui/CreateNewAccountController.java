@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.CustomerEntity;
+import entities.UserEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -51,19 +53,11 @@ public class CreateNewAccountController implements Initializable {
     @FXML private TextField crdFld;
     @FXML private Button bckBtn;
     @FXML private Button crtBtn;
-    @FXML private ComboBox subscrptCmb;
+    @FXML private ComboBox<String> subscrptCmb;
 
     private Client clnt;
-    ObservableList<String> list;
-
-    /**
-     * This method is the constructor for this class
-     * @param clnt the connected client
-     */
-    public CreateNewAccountController(Client clnt)
-	{
-		this.clnt=clnt;
-	}
+    private ObservableList<String> list;
+    private ManagerMenuController mmc;
     
     
 	/**
@@ -77,16 +71,15 @@ public class CreateNewAccountController implements Initializable {
 	 * This method is the constructor for this class
 	 * @param clnt
 	 */
-	public void setConnectionData(Client clnt)
-	{
-		this.clnt=clnt;
+	public void setConnectionData(ManagerMenuController m) {
+		this.mmc=m;
 	}
-	
+		
 	
 	private void subscriptionComboBox()
 	{
 		ArrayList<String> al = new ArrayList<String>();	
-		al.add("Mounthly");
+		al.add("Monthly");
 		al.add("Yearly");
 		al.add("None");
 				
@@ -96,22 +89,48 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 	
-	public void ShowNewUserAcount() throws IOException {
-			
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("NewAccountBoundary.fxml").openStream());
-		 
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
-		CreateNewAccountController nac = loader.getController();	//set the controller to the NewAccountController
-		nac.setConnectionData(this.clnt);
-		primaryStage.setTitle("New Customer");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-			
-			
+	public boolean checkRequiredFields() {
+		if(usrFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
+			return false;
+
+		return true;
 	}
 	
+	
+	public void createNewUser() throws IOException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
+		if(checkRequiredFields()) 												//check required fields are ok
+			if(!pswrdFld.getText().equals(pswrd2Fld.getText())) {				//check matching passwords
+				GeneralMessageController.showMessage("Passwords are not the same\nPlease try again");
+				return;
+			}
+			else {
+				CustomerEntity cust=new CustomerEntity();
+				cust.setUserName(usrFld.getText());						//set Fields of the new customer
+				cust.setCustomerID(Long.parseLong(idFld.getText()));
+				cust.setPassword(pswrdFld.getText());
+				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
+
+				if(!crdFld.getText().isEmpty()) 								//if credit card is entered
+					cust.setCreditCardNumber(Long.parseLong(crdFld.getText()));
+				
+				MessageToSend msg=new MessageToSend(cust, "createAccount");			//defining the job for the server
+				Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
+				Client.getClientConnection().accept();								//sending data to server
+				
+			}
+		else {
+			GeneralMessageController.showMessage("Please fill in all the required fields");
+		}
+		
+	}
+	
+	
+	public void bckBtnHandler(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		this.mmc.showManagerMenu();										//open previous menu
+		return;
+	}
+/*
 	/**
 	 * when "create" button pressed
 	 * checks if all data is correct
@@ -120,7 +139,7 @@ public class CreateNewAccountController implements Initializable {
 	 * @throws IOException
 	 */
 
-	public void pressedCreateAccount(ActionEvent event) throws IOException  {
+/*	public void pressedCreateAccount(ActionEvent event) throws IOException  {
 		if(this.usrFld.getText().isEmpty() && this.idFld.getText().isEmpty() && this.pswrdFld.getText().isEmpty() && this.pswrd2Fld.getText().isEmpty() && this.crdFld.getText().isEmpty())			//if all fields are empty
 			GeneralMessageController.showMessage("All fields are empty!\nPlease fill the fields");
 		
@@ -149,7 +168,7 @@ public class CreateNewAccountController implements Initializable {
 //		this.clnt.setConfirmationFromServer();		//reset confirmation to false
 		}
 	
-	
+	*/
 	
 	
 	
@@ -159,13 +178,13 @@ public class CreateNewAccountController implements Initializable {
 		subscriptionComboBox();
 	}
 	
-	
+/*	
 	/**
 	 * when back button pressed
 	 * @param event pressed back button
 	 * @throws IOException
 	 */
-	public void back(ActionEvent event) throws IOException
+/*	public void back(ActionEvent event) throws IOException
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 
@@ -181,3 +200,4 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 }
+*/

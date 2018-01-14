@@ -6,34 +6,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ProductEntity implements Serializable{
-	private String productID;
+	private Integer productID;
 	private String productName;
 	private String productType;
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
-	private Image productImage;
-	//private ImageView productImageView;
+
+	//private ImageView productImage;
+//	private Image productImage;
+
 	
 	public ProductEntity()
 	{
 		
 	}
-	/**
-	 * Getter for the productImage
-	 * @return the productImage
-	 */
-	public Image getProductImage() {
-		return productImage;
-	}
 
-	/**
-	 * Setter for the productImage
-	 * @param productImage the productImage to set
-	 */
-	public void setProductImage(Image productImage) {
-		this.productImage = productImage;
-	}
 
 	/**
 	 * Constructor for the ProductEntity.java class
@@ -44,8 +32,8 @@ public class ProductEntity implements Serializable{
 	 * @param productDescription	description
 	 * @param productDominantColor	dominant color
 	 */
-	public ProductEntity(String productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,Image productImage) {
+	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
+			String productDescription, String productDominantColor) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -53,21 +41,21 @@ public class ProductEntity implements Serializable{
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-		this.productImage = productImage;
+//** TO BE FIXED		this.productImage = productImage;
 	}
 	
 	/**
 	 * Getter for the productID
 	 * @return the productID
 	 */
-	public String getProductID() {
+	public Integer getProductID() {
 		return productID;
 	}
 	/**
 	 * Setter for the productID
 	 * @param productID the productID to set
 	 */
-	public void setProductID(String productID) {
+	public void setProductID(Integer productID) {
 		this.productID = productID;
 	}
 	/**
@@ -84,7 +72,8 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	///////////////////////////////////////
+	
+
 //	public ImageView getProductImage() {
 //		return productImage;
 //	}
@@ -92,7 +81,25 @@ public class ProductEntity implements Serializable{
 //	public void setProductImage(ImageView productImage) {
 //		this.productImage = productImage;
 //	}
-///////////////////////////////////////////////
+
+//**TO BE FIXED	/**
+//	 * Getter for the productImage
+//	 * @return the productImage
+//	 */
+//	public Image getProductImage() {
+//		return productImage;
+//	}
+//
+//
+//	/**
+//	 * Setter for the productImage
+//	 * @param productImage the productImage to set
+//	 */
+//	public void setProductImage(Image productImage) {
+//		this.productImage = productImage;
+//	}
+
+
 	/**
 	 * Getter for the productType
 	 * @return the productType

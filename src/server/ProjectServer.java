@@ -13,17 +13,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.security.auth.callback.ConfirmationCallback;
 
+import entities.CardEntity;
+import entities.ComplaintEntity;
+import entities.CustomerEntity;
+import entities.DeliveryEntity;
+import entities.OrderEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
+import entities.UserEntity;
 import javafx.scene.image.Image;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 import ocsf.server.*;
 import ocsf.*;
 /**
@@ -35,7 +45,7 @@ public class ProjectServer extends AbstractServer
 	//do not touch//
 	private static Connection con;
 	private static String driver="com.mysql.jdbc.Driver";
-	private String incomingFileName;
+	private int incomingFileName;
   final public static int DEFAULT_PORT = 5555;
   
   
@@ -70,13 +80,176 @@ public class ProjectServer extends AbstractServer
 	  ConnectedClients.removeConnectedClient(username);
   }
 
-
-  private ArrayList<String> createNewOrder(String newOrderDetails)
+  private ArrayList<OrderEntity> getCustomerOrders(String userID) throws SQLException, ClassNotFoundException
   {
-	  ArrayList<String> returnMessage = new ArrayList<String>();
-	  String[] data = newOrderDetails.split("~");	//split the userName and the password
+	  ArrayList<OrderEntity> listOfOrdersFromDB = new ArrayList<OrderEntity>();
+		OrderEntity order;
+		StoreEntity store;
+		DeliveryEntity delivery = null;
+		ProductEntity product;
+		Statement stmt,stmt2,stmt3,stmt4,stmt5;
+		try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+		stmt = con.createStatement();
+		stmt2 = con.createStatement();
+		stmt3 = con.createStatement();
+		stmt4 = con.createStatement();
+		stmt5 = con.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE UserID ='"+userID+"'"); //get all the stores (ID,Name,managerID) in the stores table from the data base
+		ResultSet rs2;		//for the delivery
+		ResultSet rs3;		//for the list of products
+		ResultSet rs4;
+		ResultSet rs5;		//for the store
+		while (rs.next())
+		{
+			order = new OrderEntity();
+			
+					//** get the delivery details **//
+			rs2 = stmt2.executeQuery("SELECT * FROM projectx.delivery WHERE OrderID ="+rs.getInt(1)+"" );	//get the delivery data for the order
+			while(rs2.next())
+				delivery = new DeliveryEntity(rs2.getString(2), rs2.getString(3), rs2.getString(4), rs2.getDate(5), rs2.getTime(6));		//create a new delivery using the data
+			order.setDeliveryDetails(delivery);
+			
+					//**get the products in the order **//
+			rs3 = stmt3.executeQuery("SELECT ProductID FROM projectx.productsinorder WHERE Ordernum = " +rs.getInt(1)+ "");
+			while(rs3.next())
+			{
+				rs4 = stmt4.executeQuery("SELECT * FROM projectx.product WHERE ProductID = " +rs3.getInt(1)+""); 	//get each product's details from DB
+				while(rs4.next())
+				{
+					product = new ProductEntity(rs4.getInt(1), rs4.getString(2), rs4.getString(3), rs4.getDouble(4), rs4.getString(5), rs4.getString(7)); //**NO IMAGE YET//
+					order.addProductToCart(product); 			//add the product to the order
+				}
+			}
+			order.setOrderID(rs.getInt(1));
+			order.setUserName(userID);
+			order.setOrderTime(rs.getTime(3));
+			order.setOrderDate(rs.getDate(4));
+			if(rs.getString(5) != null)
+				order.setCard(new CardEntity(rs.getString(5)));
+			if(rs.getString(6).equals(OrderEntity.SelfOrDelivery.selfPickup))  //set self pickup or delivery
+				order.setOrderPickup(OrderEntity.SelfOrDelivery.selfPickup);
+			else
+				order.setOrderPickup(OrderEntity.SelfOrDelivery.delivery);
+			
+			if(rs.getString(7).equals(OrderEntity.OrderStatus.active))
+				order.setStatus(OrderEntity.OrderStatus.active);
+			else
+				order.setStatus(OrderEntity.OrderStatus.cancelled);
+			
+			if(rs.getInt(8) == 0)
+				order.setPaid(false);
+			else
+				order.setPaid(true);
+			
+			order.setTotalPrice(rs.getDouble(9));
+			order.setReceivingDate(rs.getDate(10));
+			order.setReceivingTime(rs.getTime(11));
+						//** get the store **//
+			rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(12)+"");
+			while(rs5.next())
+			{
+				store = new StoreEntity(rs5.getInt(1), rs5.getString(2), rs5.getInt(3));
+				order.setStore(store);
+			}
+			
+			if(rs.getString(7).equals(OrderEntity.CashOrCredit.cash))
+				order.setPaymendMethod(OrderEntity.CashOrCredit.cash);
+			else
+				order.setPaymendMethod(OrderEntity.CashOrCredit.credit);
+	
+			listOfOrdersFromDB.add(order); //add the product from the data base to the list
+		}
+		
+		return listOfOrdersFromDB;
+	  
+  }
+
+	private ArrayList<String> createNewOrder(OrderEntity newOrder) throws SQLException, ClassNotFoundException {
+		ArrayList<String> returnMessage = new ArrayList<String>();
+		Statement stmt;
+		int orderCounter = 0;
+		try
+		{
+			con = connectToDB(); //call method to connect to DB
+
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		}
+
+		catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		stmt = con.createStatement();
+		ResultSet rs= stmt.executeQuery("SELECT OrdersID FROM projectx.counters");			//get the current latest order id
+		
+		while(rs.next())
+			orderCounter = rs.getInt(1);
+		
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (OrderNum,UserID,OrderTime,OrderDate,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveDate,ReceiveTime,BranchID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"); //prepare a statement
+			ps.setInt(1, orderCounter+1);  				//insert new order id into the statement
+			ps.setString(2, newOrder.getUserName());
+			
+			ps.setString(3,null);  
+			ps.setDate(4, null);
+			if(newOrder.getCard()!=null)						//if there is a card
+				ps.setString(5,newOrder.getCard().getText());
+			else
+				ps.setString(5, null);
+			ps.setString(6,newOrder.getOrderPickup().toString());
+			ps.setString(7,newOrder.getStatus().toString());
+			
+			if(newOrder.getPaid())			//if paid
+				ps.setInt(8, 1);
+			else
+				ps.setInt(8, 0);
+			
+			ps.setDouble(9, newOrder.getTotalPrice());
+			ps.setDate(10, newOrder.getReceivingDate());
+			ps.setTime(11, newOrder.getReceivingTime());
+			ps.setInt(12, newOrder.getStore().getBranchID());
+			ps.executeUpdate();
+
+			ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
+			ps.setInt(1, orderCounter);
+			ps.executeUpdate();
+			
+					//** now insert all the products in order to the productsInOrder table **//
+			PreparedStatement ps3;
+			for(ProductEntity product : newOrder.getProductsInOrder())
+			{
+				ps3 = con.prepareStatement("INSERT INTO projectx.productsinorder (OrderNum,ProductID) VALUES (?,?)"); //prepare a statement
+				ps3.setInt(1, orderCounter+1);
+				ps3.setInt(2, product.getProductID());
+				ps3.executeUpdate();
+			}
+			
+			if(newOrder.getOrderPickup().equals(OrderEntity.SelfOrDelivery.delivery))		//if the order has a delivery
+			{
+						//** insert all the order's delivery details in to the delivery table **//
+				newOrder.getDeliveryDetails().setOrderID(orderCounter+1);	//set the orderID for the delivery
+				PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryDate,DeliveryTime) VALUES (?,?,?,?,?,?)"); //prepare a statement
+				ps2.setInt(1, newOrder.getDeliveryDetails().getOrderID());
+				ps2.setString(2, newOrder.getDeliveryDetails().getDeliveryAddress());
+				ps2.setString(3, newOrder.getDeliveryDetails().getRecipientName());
+				ps2.setString(4,	 newOrder.getDeliveryDetails().getPhoneNumber());
+				ps2.setDate(5, newOrder.getDeliveryDetails().getDeliveryDate());
+				ps2.setTime(6, newOrder.getDeliveryDetails().getDeliveryTime());
+				ps2.executeUpdate();
+			}
 	  
 	  
+	  returnMessage.add("Your order was placed successfully.\nWe hope to see you again.");
 	  return returnMessage;
   }
   
@@ -101,6 +274,7 @@ public class ProjectServer extends AbstractServer
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			e.printStackTrace();
 		}
 		stmt = con.createStatement();
 
@@ -184,6 +358,7 @@ public class ProjectServer extends AbstractServer
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	     
 	    }
 	    System.out.println("Message received: " + msg + " from " + client);
 	    								//first check if the ID already exists in the DB
@@ -214,8 +389,7 @@ public class ProjectServer extends AbstractServer
   	 */
   	public void insertPhotoToDB(InputStream instrm) throws ClassNotFoundException, SQLException {
   		Statement stmt;
-  		String ord=incomingFileName;
-  		ord=ord.substring(0,ord.indexOf("."));
+  		
   		 try
  	    {
  	    con = connectToDB();	//call method to connect to DB
@@ -232,7 +406,7 @@ public class ProjectServer extends AbstractServer
 	    {
 	   		PreparedStatement pstmt =con.prepareStatement("UPDATE projectx.complaints set File = ? where Ordernum = ?");
 	   		pstmt.setBlob(1, instrm);
-	   		pstmt.setString(2, ord);
+	   		pstmt.setInt(2, incomingFileName);
 	   		
 	   		pstmt.executeUpdate();
 	    }
@@ -409,12 +583,12 @@ public class ProjectServer extends AbstractServer
    * @throws SQLException
    * @throws ClassNotFoundException
    */
-  public String complaint(String details) throws SQLException, ClassNotFoundException {
-	  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
-	  this.incomingFileName=num+".jpg";
-	  int orderNum = Integer.parseInt(num);
-	  String desc=details.substring(details.indexOf("|")+1,details.length());
-	  desc=desc.replace("~", " ");
+  	public String complaint(ComplaintEntity details) throws SQLException, ClassNotFoundException {
+	//  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
+	//  this.incomingFileName=num+".jpg";
+	//  int orderNum = Integer.parseInt(num);
+	// String desc=details.substring(details.indexOf("|")+1,details.length());
+	//  desc=desc.replace("~", " ");
 	  Statement stmt;
 	  
 	  try
@@ -432,12 +606,13 @@ public class ProjectServer extends AbstractServer
 	  
 	  stmt = con.createStatement();
 	  
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +orderNum+"'");	//prepare a statement
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +incomingFileName+"'");	//prepare a statement
 	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
 	    {
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description) VALUES (?,?)");	//prepare a statement
-		    ps.setInt(1, orderNum);																			//insert parameters into the statement
-		    ps.setString(2, desc);
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status) VALUES (?,?,?)");	//prepare a statement
+		    ps.setInt(1, incomingFileName);																			//insert parameters into the statement
+		    ps.setString(2, details.getDescription());
+		    ps.setString(3, details.getStatus().toString());
 		    ps.executeUpdate();
 		    
 		    return "Success";
@@ -581,76 +756,108 @@ public class ProjectServer extends AbstractServer
 	protected synchronized void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	// TODO Auto-generated method stub
 	  String generalMessage;
-	  String operation=(String)msg;
-	  String messageFromClient=(String)msg;
+	  String operation;
+	  MessageToSend messageToSend=(MessageToSend)msg;
+	  Object messageFromClient=messageToSend.getMessage();		//the sent data from the client
 	  
-	  messageFromClient=messageFromClient.substring(messageFromClient.indexOf("!")+1,messageFromClient.length());	/**set apart the operation from the message from the client**/
 	  
-	  	operation=operation.substring(0,operation.indexOf("!"));
+	  operation=messageToSend.getOperation();					//the operation required
+	//  messageFromClient=m.getMessage();
+	  
+	//  messageFromClient=messageFromClient.substring(messageFromClient.indexOf("!")+1,messageFromClient.length());	/**set apart the operation from the message from the client**/
+	  
+/////	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		
 		try {
-		System.out.println("<user>"+(String)msg);
+		System.out.println("<user>"+operation);
 		
 		if(operation.equals("getCatalog"))
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
-			sendToAllClients(listOfProducts);
+			messageToSend.setMessage(listOfProducts);		//set the message for sending back to the client
+			sendToAllClients(messageToSend);
+			
 		}
 
 		if(operation.equals("createNewOrder"))
 		{
-			retval = createNewOrder(messageFromClient);
-			sendToAllClients(retval);
+			try
+			{
+			retval = createNewOrder((OrderEntity)messageFromClient);		///////////////////////////////////
+			}
+			catch(Exception e)
+			{
+				retval.add("We are sorry,Something went wrong, Please try again later.");
+				e.printStackTrace();
+			}
+			messageToSend.setMessage(retval);
+			sendToAllClients(messageToSend);
 		}
+		
+		if(operation.equals("getCustomerOrders"))		//for getting a specific customer's list of orders
+		{
+			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
+			listOfOrders = getCustomerOrders((String)messageFromClient);
+			messageToSend.setMessage(listOfOrders);
+			sendToAllClients(messageToSend);
+		}
+		
+		if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
+		{
+			
+		}
+	
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
 //		}
-
-			
 		
-		////////////////Need to split it to store names, store details ,store workers.....////////
+		if(operation.equals("createAccount")) {
+			CustomerEntity custen=(CustomerEntity)messageFromClient;	
+			this.insertNewCustomer(custen);
+		}
+		
+		
 		if(operation.equals("getAllStores"))
 		{
 			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllStores = getAllstoresFromDB();
-			sendToAllClients(listOfAllStores);
-	//		sendToAllClients(new ArrayList<StoreEntity>);
+			messageToSend.setMessage(listOfAllStores);		//set the message for sending back to the client
+			sendToAllClients(messageToSend);
 		}
+		
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
 //		}
-
-
-//		if(operation.equals("addNewProdcutToCatalog"))
-//		{
-//			retval = this.addNewProductToCatalog(messageFromClient);
-//		}
 		
 		if(operation.equals("exitApp"))
 		{
-			this.terminateConnection(messageFromClient);	//calls a method to remove the user from the connected list
+			this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
 		}
 		
 		if(operation.equals("login"))
 		{
-			retval = this.login(client,messageFromClient);
-			sendToAllClients(retval);	//send arraylist back to client
+			retval = this.login(client,(String)messageFromClient);
+			messageToSend.setMessage(retval);	//set the message for sending back to the client
+			sendToAllClients(messageToSend);	//send arraylist back to client
 		}
 		
 		if(operation.equals("getProduct"))	//check if asked to find an existing product
 		{
 			retval = this.getProduct(client,messageFromClient);	//get the product's details
-			sendToAllClients(retval);	//send arraylist back to client
+			messageToSend.setMessage(retval);	//set the message for sending back to the client
+			sendToAllClients(messageToSend);	//send arraylist back to client
 		}
 		
 		if(operation.equals("createProduct"))
 		{
-			messageFromClient=messageFromClient.substring(1,messageFromClient.length());
+			String str =(String)messageFromClient;
+			str = str.substring(1,str.length());
+			//String str=messageFromClient
 			if((this.insertProduct((String)messageFromClient, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
@@ -665,22 +872,26 @@ public class ProjectServer extends AbstractServer
 		}
 		
 		if(operation.equals("complaint")) {
-			if(this.complaint((String)msg).equals("Success")) {
+			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
+			this.incomingFileName=complaint.getOrderID();
+			if(this.complaint(complaint).equals("Success")) {
 				System.out.println("complaint added");
 			//	generalMessage = (String)("Added");
-				sendToAllClients("Added");
+				messageToSend.setMessage("Added"); 		//set the message for sending back to the client
+				sendToAllClients(messageToSend);
 			}
 			else {
 				System.out.println("complaint failed");
 			//	generalMessage = (String)("failed");
-				sendToAllClients("failed");
+				messageToSend.setMessage("failed"); //set the message for sending back to the client
+				sendToAllClients(messageToSend);
 			}
 		}
 		
 		if(operation.equals("downloadFile")) {
 			
 			System.out.println("Server downloading file sent from client");
-			String filePath=(String)msg;
+			String filePath=(String)messageToSend.getMessage();
 			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
 			
 			this.receiveFileFromClient("localhost", 5556);
@@ -692,9 +903,38 @@ public class ProjectServer extends AbstractServer
 			}
 		
 	
-//		sendToAllClients(retval);
+//		sendToAllClients(messageToSend);
 		
 	}
+  
+  
+  public void insertNewCustomer(CustomerEntity ce) throws SQLException {
+	  
+	  try {
+		  con=connectToDB();
+		  System.out.println("Connection to Database succeeded");
+	  }
+	  catch(Exception e) {
+		  e.printStackTrace();
+		  System.out.println("Connection to Database failed");
+	  }
+	  
+	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,SubscriptionDiscount,JoinTime,Credit) VALUES (?,?,?,?,?,?)");
+	  ps.setString(1, ce.getUserName());
+	  ps.setString(2, ce.getPassword());
+	  ps.setLong(3, ce.getCustomerID());
+	  ps.setDouble(4,ce.getSubscriptionDiscount());
+	  
+	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+      Date dateobj = new Date();
+      
+	  ps.setString(5, df.format(dateobj).toString());
+	  ps.setLong(6, ce.getCreditCardNumber());
+	  ps.executeUpdate();										//add new customer to Database
+	
+	  System.out.println("new customer added to Database");
+  }
+  
   
   //Class methods ***************************************************
   

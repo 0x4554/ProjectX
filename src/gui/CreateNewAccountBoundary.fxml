@@ -20,7 +20,7 @@
             <Font size="32.0" />
          </font>
       </Label>
-      <Label fx:id="crdLbl" layoutX="40.0" layoutY="310.0" prefHeight="21.0" prefWidth="148.0" text="Credid card number:" />
+      <Label fx:id="crdLbl" layoutX="40.0" layoutY="310.0" prefHeight="21.0" prefWidth="148.0" text="Credit card number:" />
       <Label layoutX="27.0" layoutY="368.0" prefHeight="21.0" prefWidth="286.0" text="Fields with * are required" textFill="#d70b0b">
          <font>
             <Font size="11.0" />
@@ -29,8 +29,8 @@
       <TextField fx:id="usrFld" layoutX="209.0" layoutY="89.0" prefHeight="31.0" prefWidth="197.0" />
       <TextField fx:id="idFld" layoutX="209.0" layoutY="133.0" prefHeight="31.0" prefWidth="197.0" />
       <TextField fx:id="crdFld" layoutX="209.0" layoutY="305.0" prefHeight="31.0" prefWidth="197.0" />
-      <Button fx:id="bckBtn" layoutX="220.0" layoutY="353.0" mnemonicParsing="false" onAction="#back" prefHeight="31.0" prefWidth="63.0" text="Back" />
-      <Button fx:id="crtBtn" layoutX="341.0" layoutY="353.0" mnemonicParsing="false" onAction="#pressedCreateAccount" text="Create" />
+      <Button fx:id="bckBtn" layoutX="220.0" layoutY="353.0" mnemonicParsing="false" onAction="#bckBtnHandler" prefHeight="31.0" prefWidth="63.0" text="Back" />
+      <Button fx:id="crtBtn" layoutX="341.0" layoutY="353.0" mnemonicParsing="false" onAction="#createNewUser" text="Create" />
       <ComboBox fx:id="subscrptCmb" layoutX="210.0" layoutY="258.0" prefHeight="31.0" prefWidth="197.0" promptText="Chooose subscription" />
       <PasswordField fx:id="pswrdFld" layoutX="207.0" layoutY="176.0" prefHeight="31.0" prefWidth="197.0" />
       <PasswordField fx:id="pswrd2Fld" layoutX="207.0" layoutY="216.0" prefHeight="31.0" prefWidth="197.0" />

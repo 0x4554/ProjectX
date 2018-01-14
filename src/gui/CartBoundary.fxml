@@ -12,8 +12,13 @@
    <bottom>
       <HBox prefHeight="31.0" prefWidth="1056.0" BorderPane.alignment="CENTER">
          <children>
-            <Button id="crtBckBtn" fx:id="crtBckBtn" mnemonicParsing="false" onAction="#backToNewOrderMenu" text="Back" />
-            <Region prefHeight="31.0" prefWidth="228.0" HBox.hgrow="ALWAYS" />
+            <Button id="crtBckBtn" fx:id="crtBckBtn" mnemonicParsing="false" onAction="#backToNewOrderMenu" prefHeight="31.0" prefWidth="61.0" text="Back" />
+            <Region prefHeight="31.0" prefWidth="70.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="rmvFrmCrtBtn" mnemonicParsing="false" onAction="#removeFromCart" prefHeight="31.0" prefWidth="172.0" text="Remove from cart" />
+            <Region prefHeight="31.0" prefWidth="31.0" />
+            <Label prefHeight="21.0" prefWidth="94.0" text="Total price :" />
+            <Label fx:id="totalPriceLable" prefHeight="21.0" prefWidth="54.0" />
+            <Region prefHeight="31.0" prefWidth="30.0" />
             <Button id="chkOutBtn" fx:id="chkOutBtn" mnemonicParsing="false" onAction="#goToCheckOut" prefHeight="31.0" prefWidth="128.0" text="Check out" />
          </children>
       </HBox>

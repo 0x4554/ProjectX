@@ -31,7 +31,6 @@ import sun.reflect.generics.tree.Tree;
 public class CreateNewOrderController implements Initializable {
 
 	private StoreEntity store;
-	private Client clnt;
 	private OrderEntity newOrder;
 	@FXML
 	private TreeView<String> PrdctsTrVw;
@@ -41,15 +40,11 @@ public class CreateNewOrderController implements Initializable {
 	private Button crtBckBtn;
 
 	@FXML
-	private Button chkOutBtn;
+	private Button bckTorderMn;
 
 	@FXML
 	private ListView<?> dtlsLstVw;
-	@FXML
-	private TextArea crdTxtArea;
 	
-	@FXML
-	private Button crdCnfrmBtn;
 	@FXML
 	private Button itmFrmCtlgBtn;
 
@@ -70,12 +65,13 @@ public class CreateNewOrderController implements Initializable {
 	/**
 	 * This method saves the client connection to the controller
 	 * And saves the selected store to make the order from
-	 * @param clnt	the connection client
+	 * @param store	the store
 	 */
-	public void setConnectionData(Client clnt,StoreEntity store)
+	public void setConnectionData(StoreEntity store)
 	{
 		this.store=store;
-		this.clnt=clnt;
+		this.newOrder.setStore(store);
+
 	}
 	
 	/**
@@ -85,6 +81,16 @@ public class CreateNewOrderController implements Initializable {
 	public void setStore(StoreEntity store)
 	{
 		this.store=store;
+		
+
+	}
+	
+	/**
+	 * This method sets the order
+	 * @param order
+	 */
+	public void setOrderDetails(OrderEntity order) {
+		this.newOrder=order;
 	}
 	
 	/**
@@ -96,31 +102,30 @@ public class CreateNewOrderController implements Initializable {
 	{
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CardBoundary.fxml").openStream());
+		AddCardController acc = loader.getController();
+		acc.setOrder(this.newOrder);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Add a card");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
+	
 	/**
-	 * This method handles the card confirmation and add it to the order
-	 * @param event	confirm pressed
+	 * This method opens the cart 
+	 * @param event	pressed view cart
+	 * @throws IOException
 	 */
-	public void cardConfirm(ActionEvent event)
-	{
-		CardEntity newCard = new CardEntity(this.crdTxtArea.getText());		//get the text from the text area
-		this.newOrder.setCard(newCard);										//save the new card to the new order
-		((Node)event.getSource()).getScene().getWindow().hide();
-	}
-	
-	
 	public void viewCart(ActionEvent event) throws IOException {
 	
 		
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
 		FXMLLoader loader = new FXMLLoader();
 		Parent pRoot = loader.load(getClass().getResource("/gui/CartBoundary.fxml").openStream());
 		CartController cc = loader.getController();
+		cc.setOrder(this.newOrder);
 		cc.showCart();
 		
 		Stage primaryStage=new Stage();
@@ -131,12 +136,21 @@ public class CreateNewOrderController implements Initializable {
 		
 	}
 	/**
-	 * This method is used to return to the new order menu
+	 * This method is used to return to the  order menu
 	 * @param event	button back 
+	 * @throws IOException 
 	 */
-	public void backToNewOrderMenu(ActionEvent event)
+	public void backToOrderMenu(ActionEvent event) throws IOException
 	{
-		((Node)event.getSource()).getScene().getWindow().hide();	//hide last window
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
+		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Order");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 
@@ -144,6 +158,8 @@ public class CreateNewOrderController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		this.newOrder = new OrderEntity();
+		this.newOrder.setUserName(Client.getClientConnection().getUsername()); 	//set the customer user name to the order
+		//this.newOrder.setStore(store);
 		this.PrdctsTrVw = new TreeView<>();
 	}
 }
