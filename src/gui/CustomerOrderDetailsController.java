@@ -85,23 +85,23 @@ public class CustomerOrderDetailsController implements Initializable {
 			return;
 		TreeItem<String> root;
 
-		root = new TreeItem<>(); //set the root for the prodcuts in cart tree
+		root = new TreeItem<>(); //set the root for the tree
 		root.setExpanded(true); //set it to expanded by default  
 
 	
-
+					//**------Build a treeView that contains all the order's details-------**//
 			for (OrderEntity order : arraylistOfOrders)
 			{
-				if(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13).equals(order.getOrderID().toString()))
+				if(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13).equals(order.getOrderID().toString())) 		//check which order was selected
 				{
 				//this.listOfProductsNames.add(product.getProductName());
 				TreeItem<String> OrderID = new TreeItem<>("Order number : "+order.getOrderID().toString()); //set the branch as the product's name to be the parent of it's details
-							/* Set all the product's details to be leaves on the branch */
+							/* Set all the order's details to be leaves on the branch */
 				TreeItem<String> totalprice = new TreeItem<>("Total price : "+order.getTotalPrice().toString()); 		//create a new leaf
 				OrderID.getChildren().add(totalprice); 									//set as a child 
 				
 //**NEED TO FIX 				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
-//				OrderID.getChildren().add(orderTime); 									//set as a child 
+//		IMAGE STUFF		OrderID.getChildren().add(orderTime); 									//set as a child 
 //				TreeItem<String> orderDate = new TreeItem<>("Order Date : "+order.getOrderDate().toString());
 //				OrderID.getChildren().add(orderDate);
 				TreeItem<String> store = new TreeItem<>("From Store named : "+order.getStore().getBranchName());
@@ -130,11 +130,11 @@ public class CustomerOrderDetailsController implements Initializable {
 				{
 				TreeItem<String> deliveryDetails = new TreeItem<>("Delivery Details");
 				OrderID.getChildren().add(deliveryDetails);
+				TreeItem<String> recipientName = new TreeItem<>("Recipient name : "+order.getDeliveryDetails().getRecipientName());
+				deliveryDetails.getChildren().add(recipientName);
 				TreeItem<String> address = new TreeItem<>("Recipient address : "+order.getDeliveryDetails().getDeliveryAddress());
 				deliveryDetails.getChildren().add(address);
 				TreeItem<String> phoneNumber = new TreeItem<>("Recipient phone number : "+order.getDeliveryDetails().getPhoneNumber());
-				deliveryDetails.getChildren().add(phoneNumber);
-				TreeItem<String> recipientName = new TreeItem<>("Recipient name : "+order.getDeliveryDetails().getRecipientName());
 				deliveryDetails.getChildren().add(phoneNumber);
 				TreeItem<String> deliveryprice = new TreeItem<>("Delivery fee : "+order.getDeliveryDetails().getDeliveryPrice().toString());
 				deliveryDetails.getChildren().add(deliveryprice);
@@ -145,26 +145,27 @@ public class CustomerOrderDetailsController implements Initializable {
 				
 				for(ProductEntity product : order.getProductsInOrder())
 				{
-					TreeItem<String> productID = new TreeItem<>("Product ID : "+product.getProductID().toString());
-					products.getChildren().add(productID);
 					TreeItem<String> productName = new TreeItem<>("Product name : "+product.getProductName());
 					products.getChildren().add(productName);
-					TreeItem<String> ProductType = new TreeItem<>("Product : "+product.getProductType());
-					products.getChildren().add(ProductType);
+					TreeItem<String> productID = new TreeItem<>("Product ID : "+product.getProductID().toString());
+					productName.getChildren().add(productID);
+					TreeItem<String> ProductType = new TreeItem<>("Product Type : "+product.getProductType());
+					productName.getChildren().add(ProductType);
 					TreeItem<String> productDescription = new TreeItem<>("Product description : "+product.getProductDescription());
-					products.getChildren().add(productDescription);
+					productName.getChildren().add(productDescription);
 //					if(product.getProductDominantColor() != null)
 //					{
 //						TreeItem<String> productDominantColor = new TreeItem<>("Dominent color : "+product.getProductDominantColor());
-//						products.getChildren().add(productDominantColor);
+//						productName.getChildren().add(productDominantColor);
 //			
 //					}
 					TreeItem<String> productPrice = new TreeItem<>("Product price : "+product.getProductPrice().toString());
-					products.getChildren().add(productPrice);
+					productName.getChildren().add(productPrice);
 					
 				}
 				
 				root.getChildren().add(OrderID);
+				OrderID.setExpanded(true); 				//set the tree expanded by default
 				}
 			}
 //			observableList.setAll(stringSet);
