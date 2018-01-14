@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="305.0" prefWidth="553.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EditUsersPremissionController">
+   <children>
+      <Pane layoutX="-11.0" layoutY="2.0" prefHeight="320.0" prefWidth="546.0">
+         <children>
+            <Label layoutX="176.0" layoutY="14.0" prefHeight="76.0" prefWidth="317.0" text="Edit Users Premission">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Label>
+            <Label fx:id="usrLbl" layoutX="109.0" layoutY="121.0" prefHeight="21.0" prefWidth="135.0" text="Enter user name:" />
+            <TextField fx:id="usrFld" layoutX="300.0" layoutY="116.0" prefHeight="31.0" prefWidth="172.0" />
+            <ComboBox fx:id="prmsCmb" layoutX="191.0" layoutY="171.0" prefHeight="31.0" prefWidth="186.0" promptText="Choose premission" />
+            <Button fx:id="bckBtn" layoutX="191.0" layoutY="236.0" mnemonicParsing="false" onAction="#back" text="Back" />
+            <Button fx:id="okBtn" layoutX="324.0" layoutY="236.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="51.0" text="OK" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

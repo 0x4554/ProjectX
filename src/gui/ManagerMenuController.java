@@ -15,7 +15,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class ManagerMenuController implements Initializable {	
+public class ManagerMenuController implements Initializable {
+	private Client clnt;
+	
 	
 	@FXML	
 	private Button newAcntBtn;
@@ -40,7 +42,16 @@ public class ManagerMenuController implements Initializable {
 	public ManagerMenuController(){
 		
 	}
-		
+	
+	/**
+	 * 
+	 * Constructor for saving the calling client for moving it to the controller
+	 * @param clnt
+	 */
+	public ManagerMenuController(Client clnt){
+		this.clnt=clnt;
+	}
+	
 	/**
 	 * 
 	 * This method will present the menu for manager user
@@ -53,12 +64,17 @@ public class ManagerMenuController implements Initializable {
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		ManagerMenuController mmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		mmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
 	}
 	
+	private void setConnectionData(Client clnt2) {
+		// TODO Auto-generated method stub
+		this.clnt=clnt2;
+	}
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
