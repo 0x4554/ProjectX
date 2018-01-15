@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import logic.ConnectedClients;
 
-public class ManagerMenuController implements Initializable {
+public class StoreManagerMenuController implements Initializable {
 	private Client clnt;
 	
 	
@@ -42,7 +42,7 @@ public class ManagerMenuController implements Initializable {
 	/**
 	 * necessary constructor for the application
 	 */
-	public ManagerMenuController(){
+	public StoreManagerMenuController(){
 		
 	}
 	
@@ -51,7 +51,7 @@ public class ManagerMenuController implements Initializable {
 	 * Constructor for saving the calling client for moving it to the controller
 	 * @param clnt
 	 */
-	public ManagerMenuController(Client clnt){
+	public StoreManagerMenuController(Client clnt){
 		this.clnt=clnt;
 	}
 	
@@ -62,13 +62,13 @@ public class ManagerMenuController implements Initializable {
 	 */
 	public void showManagerMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/ManagerMenuBoundary.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("/gui/StoreManagerMenuBoundary.fxml").openStream());
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		ManagerMenuController mmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		StoreManagerMenuController mmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		mmc.setConnectionData(this.clnt);
-		primaryStage.setTitle("Manager's main menu");
+		primaryStage.setTitle("Store manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		

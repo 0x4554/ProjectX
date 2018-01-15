@@ -35,7 +35,7 @@ public class SurveyEntity implements Serializable{
 	private int q5Rnk;
 	private int q6Rnk;
 	
-	private String usernameAnswers;				//holds the user that took the survey
+	private String username;				//holds the user that took the survey
 	
 	
 	/**
@@ -122,5 +122,11 @@ public class SurveyEntity implements Serializable{
 			return;
 		}
 	}
+	
+	
+	public void setUsername(String name) {
+			this.username=name;
+	}
+	
 	
 }

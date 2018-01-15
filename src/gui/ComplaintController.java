@@ -69,21 +69,17 @@ public class ComplaintController implements Initializable{
 		String pctr;
 		String details;
 		
-//		if(!ordNumTxtFld.getText().isEmpty()) {
-//			complaintDetails=ordNumTxtFld.getText();
-//			complaintDetails+="|";
-//		}
 		
 		if(!ordNumTxtFld.getText().isEmpty())
-			if(!cmpDtsTxtArea.getText().isEmpty()) {					//if complaint inserted
-//				details=cmpDtsTxtArea.getText();					
-//		details=details.replaceAll(" ", "~");						//for handling the message later
-//		complaintDetails+=details;				
-		
+			if(!cmpDtsTxtArea.getText().isEmpty()) {					//if complaint inserted			
 				
-					ComplaintEntity complaintent=new ComplaintEntity(Integer.parseInt(ordNumTxtFld.getText()), cmpDtsTxtArea.getText(), Status.processing);
+					ComplaintEntity cmplnt=new ComplaintEntity(Integer.parseInt(ordNumTxtFld.getText()), cmpDtsTxtArea.getText(), Status.processing);
+					if(!picPathTxtFld.getText().isEmpty()) {
+						cmplnt.setFile(picPathTxtFld.getText());
+					}
+					
 					Client c=this.cstmc.getClient();
-					MessageToSend toServer = new MessageToSend(complaintent,"complaint");
+					MessageToSend toServer = new MessageToSend(cmplnt,"complaint");
 					c.setConfirmationFromServer();
 					c.setDataFromUI(toServer);									//, "complaint!");
 					c.accept();
@@ -95,6 +91,8 @@ public class ComplaintController implements Initializable{
 					String reply=(String)fromServer.getMessage();
 					if(reply.equals("failed"))				
 						GeneralMessageController.showMessage("Order does not exist");
+					
+					/*
 			
 					else if(reply.equals("Added")){
 						if(!picPathTxtFld.getText().isEmpty()) { 						//if path to picture uploaded for sending it as avidence
@@ -105,7 +103,7 @@ public class ComplaintController implements Initializable{
 					this.cstmc.showCustomerMenu();								//back to main menu
 					GeneralMessageController.showMessage("Dear customer, we got your complaint\nand we are doing everything we can\nto make it up to you");			//message to present when complaint succeeded
 					return;
-				}
+				}				*/
 			}
 		else {
 			GeneralMessageController.showMessage("Please fill in your complaint");		//if nothing was inserted show general message
@@ -139,8 +137,8 @@ public class ComplaintController implements Initializable{
 		c.setDataFromUI(m);
 		c.accept();
 		
-		c.uploadFileToServer(5556, path);
-		c.setConfirmationFromServer();
+	//	c.uploadFileToServer(5556, path);
+	//	c.setConfirmationFromServer();
 	}
 	
 	

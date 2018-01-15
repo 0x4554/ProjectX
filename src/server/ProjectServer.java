@@ -382,39 +382,21 @@ public class ProjectServer extends AbstractServer
 	    
 	  }
   
+ 
+  	
   	/**
-  	 * this method allows the insertion of a photo into the data base
+  	 * converts array of bytes (byte[]) into a InputStream in order to enter it to the database as blob
   	 * 
-  	 * @param instrm
-  	 * @throws ClassNotFoundException
-  	 * @throws SQLException
+  	 * 
+  	 * @param byteArray - the byte[] to convert
   	 */
-  	public void insertPhotoToDB(InputStream instrm) throws ClassNotFoundException, SQLException {
-  		Statement stmt;
+  	public InputStream convertByteArrayToInputStream(byte [] byteArray) {
   		
-  		 try
- 	    {
- 	    con = connectToDB();	//call method to connect to DB
- 	      
- 	    }
- 	    catch( SQLException e)	//catch exception
- 	    {
- 	      System.out.println("SQLException: " + e.getMessage() );
- 	    }
-  		 System.out.println("uploadind file to Data Base");
-   		stmt=con.createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.complaints WHERE Ordernum = '" +incomingFileName+"'");	//prepare a statement
-	    if((rs.next()))	//if no such ID exists in the DB, Insert the new data
-	    {
-	   		PreparedStatement pstmt =con.prepareStatement("UPDATE projectx.complaints set File = ? where Ordernum = ?");
-	   		pstmt.setBlob(1, instrm);
-	   		pstmt.setInt(2, incomingFileName);
-	   		
-	   		pstmt.executeUpdate();
-	    }
-	    
-	    /*checking the returned value for cases it doesnt work(Should return string or int or boolean)*/
+  		InputStream retInputStream = new ByteArrayInputStream(byteArray);
+  		
+  		return retInputStream;
   	}
+  	
   	
   	/**
   	 * this method gets a Blob item from the data base and converts it into InputStream 
@@ -424,6 +406,7 @@ public class ProjectServer extends AbstractServer
   	 * @throws SQLException
   	 */
   	public InputStream getPhotoFromDB(String orderNum) throws SQLException{
+  		
   		InputStream is = null;
   		Statement stmt;
   		Blob b = con.createBlob();							//Object to contain the data from the data base
@@ -449,6 +432,7 @@ public class ProjectServer extends AbstractServer
   		return is;							//returned value
   	}
   	
+  	
   	/**
   	 * this method converts InputStream to a File
   	 * 
@@ -464,9 +448,37 @@ public class ProjectServer extends AbstractServer
 
 	while ((read = is.read(bytes)) != -1) {				//convertion proccess
 		outputStream.write(bytes, 0, read);
-	}
+		}
   	}
+  	
+  	
+  	/**
+  	 * this method converts InputStream object into array of bytes(byte[])
+  	 * 
+  	 * 
+  	 * @param inStrm - InputStream to convert
+  	 * @return  - array of bytes
+  	 * @throws IOException 
+  	 */
+  	public byte[] convertInputStreamToByteArray(InputStream inStrm) throws IOException {
+  		
+  		byte [] retByteArray=null;
+  		byte[] buff = new byte[4096];
+  		int bytesRead = 0;
+
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        
+        while((bytesRead = inStrm.read(buff)) != -1) {							//read the entire stream
+            bao.write(buff, 0, bytesRead);
+         }
+
+         retByteArray = bao.toByteArray();
   
+  		return retByteArray;
+  	}
+    	
+  	
+  	
   	
   	/**
   	 * This method gets the list of stores from the DB
@@ -586,11 +598,7 @@ public class ProjectServer extends AbstractServer
    * @throws ClassNotFoundException
    */
   	public String complaint(ComplaintEntity details) throws SQLException, ClassNotFoundException {
-	//  String num=details.substring(details.indexOf("!")+1, details.indexOf("|"));
-	//  this.incomingFileName=num+".jpg";
-	//  int orderNum = Integer.parseInt(num);
-	// String desc=details.substring(details.indexOf("|")+1,details.length());
-	//  desc=desc.replace("~", " ");
+	
 	  Statement stmt;
 	  
 	  try
@@ -608,19 +616,22 @@ public class ProjectServer extends AbstractServer
 	  
 	  stmt = con.createStatement();
 	  
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.orders WHERE Ordernum = '" +incomingFileName+"'");	//prepare a statement
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" +details.getOrderID()+"'");	//prepare a statement
 	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
 	    {
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status) VALUES (?,?,?)");	//prepare a statement
-		    ps.setInt(1, incomingFileName);																			//insert parameters into the statement
+	    	InputStream inStrm=convertByteArrayToInputStream(details.getFile());
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File) VALUES (?,?,?,?)");	//prepare a statement
+		    ps.setInt(1, details.getOrderID());																			//insert parameters into the statement
 		    ps.setString(2, details.getDescription());
 		    ps.setString(3, details.getStatus().toString());
+		    ps.setBlob(4, inStrm);
 		    ps.executeUpdate();
 		    
 		    return "Success";
 	    }
 	  return "Order does not exist";   
   }
+  	
   
   
   /**this method handles file received from user
@@ -634,7 +645,7 @@ public class ProjectServer extends AbstractServer
  * @throws SQLException 
  * @throws ClassNotFoundException 
    */
-  public void receiveFileFromClient(String ipAddress,int portNo) throws IOException, InterruptedException, ClassNotFoundException, SQLException
+  /*public void receiveFileFromClient(String ipAddress,int portNo) throws IOException, InterruptedException, ClassNotFoundException, SQLException
   {
 	  	String fileLocation="/home/mdhttr/Documents/complaints/";
 	  	fileLocation+=incomingFileName;
@@ -689,19 +700,22 @@ public class ProjectServer extends AbstractServer
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}			*/
   
   
   /** This method handles product search messages received from the client.
   *
   * @param msg The message received from the client.
   * @param client The connection from which the message originated.
+ * @throws SQLException 
+ * @throws ClassNotFoundException 
+ * @throws IOException 
   */
-  public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException, InterruptedException, ClassNotFoundException
+/*  public ArrayList<String> getProduct(ConnectionToClient clnt,Object asked) throws SQLException, InterruptedException, ClassNotFoundException
   {
 	  ArrayList<String> msg1 = new ArrayList<String>();
 	  Statement stmt;
-	  String str = (String) asked;	/**The asked Product**/
+	  String str = (String) asked;								//The asked Product
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -729,7 +743,46 @@ public class ProjectServer extends AbstractServer
 	  for(String s:msg1)
 		System.out.println(s.toString()+" ");
 	  return msg1; 
-  }
+  }						*/
+  	
+  	public ProductEntity getProductFromDB(int productID) throws SQLException, ClassNotFoundException, IOException {
+  		Statement stmt;
+  		ProductEntity pe = new ProductEntity();
+  		 try
+ 	    {
+ 	    con = connectToDB();	//call method to connect to DB
+ 	    if(con!=null)
+ 	    System.out.println("Connection to Data Base succeeded");  
+ 	    }
+ 	    catch( SQLException e)	//catch exception
+ 	    {
+ 	      System.out.println("SQLException: " + e.getMessage() );
+ 	    }
+  		stmt = con.createStatement();
+  		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID = "+productID);	//query for extracting a prodcut's details
+  	  
+  		Blob b = con.createBlob();							//Object to contain the data from the data base
+  		
+  	  if(rs.next()) {						//run for the extracted data and add it to an arrayList of strings  
+  		  pe.setProductID(rs.getInt(1));
+  		  pe.setProductName(rs.getString(2));
+  		  pe.setProductType(rs.getString(3));
+  		  pe.setProductPrice(rs.getDouble(4));
+  		  pe.setProductDescription(rs.getString(5));
+  		 
+  		  b=rs.getBlob(6);
+  		  InputStream is=b.getBinaryStream();
+  		  pe.setProductImage(convertInputStreamToByteArray(is));
+  		  
+  		  pe.setProductDominantColor(rs.getString(7));
+  	  }
+  	  
+  	  else {
+  		  return null;
+  	  }
+  	  
+  	  return pe;
+  	}
 
     
   /**
@@ -850,8 +903,8 @@ public class ProjectServer extends AbstractServer
 		
 		if(operation.equals("getProduct"))	//check if asked to find an existing product
 		{
-			retval = this.getProduct(client,messageFromClient);	//get the product's details
-			messageToSend.setMessage(retval);	//set the message for sending back to the client
+			ProductEntity prodEnt = this.getProductFromDB((int)messageFromClient);	//get the product's details
+			messageToSend.setMessage(prodEnt);	//set the message for sending back to the client
 			sendToAllClients(messageToSend);	//send arraylist back to client
 		}
 		
@@ -896,7 +949,7 @@ public class ProjectServer extends AbstractServer
 			String filePath=(String)messageToSend.getMessage();
 			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
 			
-			this.receiveFileFromClient("localhost", 5556);
+			//this.receiveFileFromClient("localhost", 5556);
 			}
 		}
 		

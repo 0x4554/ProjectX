@@ -1,5 +1,10 @@
 package entities;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -18,6 +23,8 @@ public class ComplaintEntity implements Serializable{
 	private int orderID;
 	private String description;
 	private Status status;
+	private byte [] file;
+	
 	
 	/**
 	 * class contructor for ComplaintEntity
@@ -80,5 +87,24 @@ public class ComplaintEntity implements Serializable{
 		this.status = status;
 	}
 	
+	/**
+	 * Setter for the file
+	 * 
+	 * @param path - path to needed file
+	 * @throws IOException 
+	 */
+	public void setFile(String filePath) throws IOException {
+	
+		File file = new File (filePath);
+		//byte [] byteArray
+		this.file = new byte [(int)file.length()];
+		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		bis.read(this.file,0,this.file.length); 					// copied file into this.file
+	}
+	
+	public byte[] getFile() {
+		return this.file;
+	}
 	
 }
