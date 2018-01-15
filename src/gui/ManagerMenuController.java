@@ -82,7 +82,8 @@ public class ManagerMenuController implements Initializable {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("CreateNewAccountBoundary.fxml").openStream());				//new window to open
-		 /*load here needed controller*/
+		 CreateNewAccountController cna=loader.getController();
+		 cna.setConnectionData(this);
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
