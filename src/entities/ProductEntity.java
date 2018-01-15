@@ -12,6 +12,7 @@ public class ProductEntity implements Serializable{
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
+	private byte[] image;
 
 	//private ImageView productImage;
 //	private Image productImage;
@@ -91,13 +92,18 @@ public class ProductEntity implements Serializable{
 //	}
 //
 //
-//	/**
-//	 * Setter for the productImage
-//	 * @param productImage the productImage to set
-//	 */
-//	public void setProductImage(Image productImage) {
-//		this.productImage = productImage;
-//	}
+	/**
+	 * Setter for the productImage
+	 * @param productImage the productImage to set
+	 */
+	public void setProductImage(byte[] productImage) {
+		this.image = productImage;
+	}
+	
+	
+	public void convertImageToByteArray(Image img) {
+		
+	}
 
 
 	/**

@@ -58,7 +58,7 @@ public class CreateNewAccountController implements Initializable {
 
     private Client clnt;
     private ObservableList<String> list;
-    private ManagerMenuController mmc;
+    private StoreManagerMenuController mmc;
     
     
 	/**
@@ -72,7 +72,7 @@ public class CreateNewAccountController implements Initializable {
 	 * This method is the constructor for this class
 	 * @param clnt
 	 */
-	public void setConnectionData(ManagerMenuController m) {
+	public void setConnectionData(StoreManagerMenuController m) {
 		this.mmc=m;
 	}
 		
