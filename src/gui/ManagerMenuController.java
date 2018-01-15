@@ -153,7 +153,8 @@ public class ManagerMenuController implements Initializable {
 	public void logOutManager(ActionEvent event) throws IOException	//when click "Back" return to main menu
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
+//		ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
+		LoginController.signalAppClose();
 		
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());

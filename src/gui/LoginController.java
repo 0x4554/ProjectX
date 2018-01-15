@@ -98,13 +98,13 @@ public class LoginController implements Initializable {
 		else 
 		{
 			String username_password = "";
-			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();	//set the new data as string
+			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();				//set the new data as string
 			MessageToSend mts=new MessageToSend(username_password, "login");
 			ArrayList<String> dataFromServer = null;
 			try
 			{
-			Client.setClientConnection(new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText()));;	//attempt to create a connection from client to server
-			}catch(IOException e){	//if there were a connection exception
+			Client.setClientConnection(new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText()));		//attempt to create a connection from client to server
+			}catch(IOException e){																							//if there were a connection exception
 
 				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
 
@@ -113,7 +113,7 @@ public class LoginController implements Initializable {
 			Client.getClientConnection().accept();										//sends to server
 			while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 				Thread.sleep(100);
-			Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+			Client.getClientConnection().setConfirmationFromServer();					//reset confirmation to false
 			MessageToSend m = Client.getClientConnection().getMessageFromServer();
 			dataFromServer = (ArrayList<String>)m.getMessage();
 //			dataFromServer = Client.getClientConnection().getArrayListfromSrvr();	//get the returned ArrayList from the server
@@ -149,7 +149,9 @@ public class LoginController implements Initializable {
 				} 
 				else if (dataFromServer.get(1).equals("user is already logged in"))	//user is already logged in
 				{
-					GeneralMessageController.showMessage("User is already connected to the system.");
+					GeneralMessageController.showMessage("User is already connected to the system");
+					Client temp=Client.getClientConnection();
+					temp.setClientUserName("-1");
 				}
 			}
 		}
@@ -206,12 +208,12 @@ public class LoginController implements Initializable {
 	/**
 	 * This method handling the signaling of a closing connection from the client to the server
 	 */
-	public void signalAppClose()
+	public static void signalAppClose()
 	{
 		if(Client.getClientConnection()!=null) {
 			Client.getClientConnection().setDataFromUI(new MessageToSend(Client.getClientConnection().getUsername(),"exitApp"));
 			Client.getClientConnection().accept();
-			Client.getClientConnection().quit();
+	//*******//		Client.getClientConnection().quit();
 		}
 	}
 

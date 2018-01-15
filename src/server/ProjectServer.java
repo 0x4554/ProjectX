@@ -77,6 +77,7 @@ public class ProjectServer extends AbstractServer
    */
   private void terminateConnection(String username)
   {
+	  System.out.println(username + " logged out");
 	  ConnectedClients.removeConnectedClient(username);
   }
 
@@ -292,6 +293,7 @@ public class ProjectServer extends AbstractServer
 					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 				returnMessage.add("failed"); 							//state failed to log in
 				returnMessage.add("user is already logged in"); 		//reason for failure
+				System.out.println("connected user tried to login again - blocked");
 				return returnMessage;
 			} else if (data[1].equals(rs.getString(2))) 				//if password received matches the data base 
 			{

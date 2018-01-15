@@ -163,7 +163,7 @@ public class CustomerMenuController implements Initializable{
 	                    protected void updateItem(ProductEntity product, boolean status) {
 	                        super.updateItem(product, status);
 	                        if (product != null) {
-	                            setText(product.getProductName()+"  "+product.getProductDescription()+"  " + "\n"+product.getProductPrice()+"¤");
+	                            setText(product.getProductName()+"  "+product.getProductDescription()+"  " + "\n"+product.getProductPrice()+"ï¿½");
 //**TO BE FIXED	                            setGraphic(new ImageView(product.getProductImage()));
 	                        }
 	                    }
@@ -316,9 +316,19 @@ public class CustomerMenuController implements Initializable{
 				public void logOutCustomer(ActionEvent event) throws IOException	//when click "Back" return to main menu
 				{
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
+					LoginController.signalAppClose();
+					
+					FXMLLoader loader = new FXMLLoader();
+					Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
+					Stage primaryStage=new Stage();
+					Scene scene=new Scene(root);
+					
+					primaryStage.setTitle("Login");
+					primaryStage.setScene(scene);
+					primaryStage.show();
+					
 					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
-					//////////////////Check returning to login page//////////////////////////
+					
 				}
 				
 				public void startComplaint(ActionEvent event) throws IOException {

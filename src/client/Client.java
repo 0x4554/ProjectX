@@ -69,6 +69,11 @@ public class Client extends AbstractClient {
 		confirmationFromServer = false; //set the confirmation from the server to false --> changed to true when server replies after conducting an action
 		openConnection(); //connect to server
 	}
+	
+	
+	public void setClientUserName(String s) {
+		this.username=s;
+	}
 
 	///Instance methods ************************************************
 	
