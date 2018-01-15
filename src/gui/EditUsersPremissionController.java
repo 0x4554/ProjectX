@@ -36,11 +36,19 @@ public class EditUsersPremissionController implements Initializable{
 	@FXML private Button bckBtn;
 	@FXML private Button okBtn;
 	
+	private ManagerMenuController mmc;
+	
+	/**
+	 * Necessary constructor for the APP
+	 */
+	public EditUsersPremissionController() {
+	}
 	
 	
-	
-	
-	
+	public void setConnectionData(ManagerMenuController m)
+	{
+		this.mmc=m;
+	}
 	
 	
 	
@@ -53,26 +61,16 @@ public class EditUsersPremissionController implements Initializable{
 		
 	}
 	
-	
-	 /**
-	  * when back button pressed
-	  * @param event pressed back button
-	  * @throws IOException
-	  */
-	 public void back(ActionEvent event) throws IOException
-		{
-			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-
-			FXMLLoader loader = new FXMLLoader();
-			Parent root = loader.load(getClass().getResource("/gui/ManagerMenuBoundary.fxml").openStream());
-			
-			Stage primaryS=new Stage();
-			Scene scene=new Scene(root);
-			
-			primaryS.setTitle("Generate Report");
-			primaryS.setScene(scene);
-			primaryS.show();
-		}
+	/**
+	 * when back button pressed
+	 * @param event pressed back button
+	 * @throws IOException
+	 */	
+	public void bckBtnHandler(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		this.mmc.showManagerMenu();										//open previous menu
+		return;
+	}
 
 	
 	

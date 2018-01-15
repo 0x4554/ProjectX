@@ -64,14 +64,11 @@ public class CreateNewAccountController implements Initializable {
 	/**
 	 * A necessary constructor for the App
 	 */
-	public CreateNewAccountController() {			//Necessary empty constructor 
+	public CreateNewAccountController() {
 		
 	}
 	
-	/**
-	 * This method is the constructor for this class
-	 * @param clnt
-	 */
+
 	public void setConnectionData(ManagerMenuController m) {
 		this.mmc=m;
 	}
@@ -90,6 +87,12 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 	
+	/**
+	 * when create button pressed
+	 * check if all required fields are filled in
+	 * @return false if there is empty required field
+	 */
+	
 	public boolean checkRequiredFields() {
 		if(usrFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
 			return false;
@@ -98,6 +101,13 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 	
+	/**
+	 * when "create" button pressed
+	 * checks if all data is correct
+	 * checks if all required fields are filled in
+	 * @param event
+	 * @throws IOException
+	 */
 	public void createNewUser() throws IOException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
 		if(checkRequiredFields()) 												//check required fields are ok
 			if(!pswrdFld.getText().equals(pswrd2Fld.getText())) {				//check matching passwords
@@ -125,78 +135,20 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
-	
+	/**
+	 * when back button pressed
+	 * @param event pressed back button
+	 * @throws IOException
+	 */	
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		this.mmc.showManagerMenu();										//open previous menu
 		return;
 	}
-/*
-	/**
-	 * when "create" button pressed
-	 * checks if all data is correct
-	 * checks if all required fields are filled in
-	 * @param event
-	 * @throws IOException
-	 */
 
-/*	public void pressedCreateAccount(ActionEvent event) throws IOException  {
-		if(this.usrFld.getText().isEmpty() && this.idFld.getText().isEmpty() && this.pswrdFld.getText().isEmpty() && this.pswrd2Fld.getText().isEmpty() && this.crdFld.getText().isEmpty())			//if all fields are empty
-			GeneralMessageController.showMessage("All fields are empty!\nPlease fill the fields");
-		
-		else if(this.usrFld.getText().isEmpty())
-			GeneralMessageController.showMessage("Please enter user name");
-		
-		else if(this.idFld.getText().isEmpty())		
-			GeneralMessageController.showMessage("Please enter user ID");
-		else if(this.pswrdFld.getText().isEmpty() && this.pswrd2Fld.getText().isEmpty())
-			GeneralMessageController.showMessage("Please enter password");
-		else if(!(this.pswrdFld.getText().equals(this.pswrd2Fld.getText())))					//check if password in field1 = password in field2;
-		{
-			GeneralMessageController.showMessage("Password doeas not match!\nPlease enter again");
-			this.pswrdFld.clear();
-			this.pswrd2Fld.clear();
-		}
-		else if(this.subscrptCmb.getSelectionModel().isEmpty())
-			GeneralMessageController.showMessage("Please enter subscription");
-	/*	else
-			GeneralMessageController.showMessage("succeed");*/
-		
-//		this.clnt.setDataFromUI(username_password, "login!");	//set the data and the operation to send from the client to the server
-//		this.clnt.accept();	//sends to server
-//		while(!this.clnt.getConfirmationFromServer())	//wait until server replies
-//			Thread.sleep(100);
-//		this.clnt.setConfirmationFromServer();		//reset confirmation to false
-//		}
-	
-	
-	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		subscriptionComboBox();
-	}
+	}	
 }
-/*	
-	/**
-	 * when back button pressed
-	 * @param event pressed back button
-	 * @throws IOException
-	 */
-/*	public void back(ActionEvent event) throws IOException
-	{
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/ManagerMenuBoundary.fxml").openStream());
-		
-		Stage primaryS=new Stage();
-		Scene scene=new Scene(root);
-		
-		primaryS.setTitle("Generate Report");
-		primaryS.setScene(scene);
-		primaryS.show();
-	}
-	
-}
-*/
