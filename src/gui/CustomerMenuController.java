@@ -142,7 +142,7 @@ public class CustomerMenuController implements Initializable{
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
 			 Parent root = loader.load(getClass().getResource("/gui/AccountDetailsBoundary.fxml").openStream());
-			 AccountController acc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+			 AccountDetailsController acc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		//	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
@@ -175,10 +175,24 @@ public class CustomerMenuController implements Initializable{
 				 */
 				public void logOutCustomer(ActionEvent event) throws IOException	//when click "Back" return to main menu
 				{
-					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					/*((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
 					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
-					//////////////////Check returning to login page//////////////////////////
+					//////////////////Check returning to login page//////////////////////////*/
+					
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					LoginController.signalAppClose();
+					
+					FXMLLoader loader = new FXMLLoader();
+					Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
+					Stage primaryStage=new Stage();
+					Scene scene=new Scene(root);
+					
+					primaryStage.setTitle("Login");
+					primaryStage.setScene(scene);
+					primaryStage.show();
+					
+					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
 				}
 				
 				public void startComplaint(ActionEvent event) throws IOException {

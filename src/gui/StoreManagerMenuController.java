@@ -14,8 +14,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import logic.ConnectedClients;
 
-public class ManagerMenuController implements Initializable {	
+public class StoreManagerMenuController implements Initializable {
+	private Client clnt;
+	
 	
 	@FXML	
 	private Button newAcntBtn;
@@ -25,6 +28,8 @@ public class ManagerMenuController implements Initializable {
 	private Button shwCnclBtn;
 	@FXML	
 	private Button edtPrmsnsBtn;
+	@FXML
+	private Button logOutBtn;
 	
 	
 	/**
@@ -37,10 +42,19 @@ public class ManagerMenuController implements Initializable {
 	/**
 	 * necessary constructor for the application
 	 */
-	public ManagerMenuController(){
+	public StoreManagerMenuController(){
 		
 	}
-		
+	
+	/**
+	 * 
+	 * Constructor for saving the calling client for moving it to the controller
+	 * @param clnt
+	 */
+	public StoreManagerMenuController(Client clnt){
+		this.clnt=clnt;
+	}
+	
 	/**
 	 * 
 	 * This method will present the menu for manager user
@@ -48,22 +62,28 @@ public class ManagerMenuController implements Initializable {
 	 */
 	public void showManagerMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/ManagerMenuBoundary.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("/gui/StoreManagerMenuBoundary.fxml").openStream());
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		ManagerMenuController mmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		primaryStage.setTitle("Manager's main menu");
+		StoreManagerMenuController mmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		mmc.setConnectionData(this.clnt);
+		primaryStage.setTitle("Store manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
 	}
 	
+	private void setConnectionData(Client clnt2) {
+		// TODO Auto-generated method stub
+		this.clnt=clnt2;
+	}
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("CreateNewAccountBoundary.fxml").openStream());				//new window to open
-		 /*load here needed controller*/
+		 CreateNewAccountController cna=loader.getController();
+		 cna.setConnectionData(this);
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
@@ -128,6 +148,24 @@ public class ManagerMenuController implements Initializable {
 			primaryStage.setTitle("Generate Report");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+	}
+	
+	
+	public void logOutManager(ActionEvent event) throws IOException	//when click "Back" return to main menu
+	{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+//		ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
+		LoginController.signalAppClose();
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("Login");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		GeneralMessageController.showMessage("Manager "+Client.getClientConnection().getUsername()+" logged out");
 	}
 
 

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ManagerMenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="429.0" prefWidth="605.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.StoreManagerMenuController">
    <children>
       <Label layoutX="230.0" layoutY="32.0" text="Main Menu">
          <font>
@@ -15,7 +15,8 @@
       <Label layoutX="140.0" layoutY="81.0" text="Hello Manager! what would you like to do today?" />
       <Button fx:id="newAcntBtn" layoutX="227.0" layoutY="137.0" mnemonicParsing="false" onAction="#newAccount" text="Open new account" />
       <Button fx:id="gnrtRprtBtn" layoutX="223.0" layoutY="200.0" mnemonicParsing="false" onAction="#generateReport" text="Generate new report" />
-      <Button fx:id="edtPrmsnsBtn" layoutX="218.0" layoutY="262.0" mnemonicParsing="false" text="Edit users permissions " />
+      <Button fx:id="edtPrmsnsBtn" layoutX="218.0" layoutY="262.0" mnemonicParsing="false" onAction="#usersPermissions" text="Edit users permissions " />
       <Button fx:id="shwCnclBtn" layoutX="206.0" layoutY="327.0" mnemonicParsing="false" text="Show cancelation requests" />
+      <Button fx:id="logOutBtn" layoutX="267.0" layoutY="375.0" mnemonicParsing="false" onAction="#logOutManager" text="Log out" />
    </children>
 </Pane>

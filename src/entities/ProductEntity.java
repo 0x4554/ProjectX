@@ -13,7 +13,7 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
     private Image productImage;
-
+private byte[] image1;
 	
 	public ProductEntity()
 	{
@@ -89,7 +89,18 @@ public class ProductEntity implements Serializable{
 		this.productImage = productImage;
 	}
 
-
+/**
+	 * Setter for the productImage
+	 * @param productImage the productImage to set
+	 */
+public void setProductImage(byte[] productImage) {
+		this.image = productImage;
+	}
+	
+	
+	public void convertImageToByteArray(Image img) {
+		
+	}
 	/**
 	 * Getter for the productType
 	 * @return the productType

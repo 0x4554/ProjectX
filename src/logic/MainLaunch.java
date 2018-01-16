@@ -66,6 +66,6 @@ public class MainLaunch extends Application {
 	@Override
 	public void stop() throws Exception
 	{
-		this.login.signalAppClose();
+		LoginController.signalAppClose();
 	}
 }

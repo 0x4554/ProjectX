@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalTime;
 
 /**
@@ -23,9 +24,10 @@ public class DeliveryEntity implements Serializable{
 	private String recipientName;
 	private String phoneNumber;
 	private final static Double deliveryPrice = 20.0;
-	private Date deliveryDate;
-	private Time deliveryTime;
-	
+	private Timestamp deliveryTimestamp;
+//	private Date deliveryDate;
+//	private Time deliveryTime;
+//	
 	
 	/**
 	 * Constructor for the DeliveryEntity.java class
@@ -36,14 +38,35 @@ public class DeliveryEntity implements Serializable{
 	 * @param deliveryDate
 	 * @param deliveryTime
 	 */
-	public DeliveryEntity( String deliveryAddress, String recipientName, String phoneNumber, Date deliveryDate, Time deliveryTime) {
+	public DeliveryEntity( String deliveryAddress, String recipientName, String phoneNumber, Timestamp deliveryTimestamp) {
 		super();
 		this.deliveryAddress = deliveryAddress;
 		this.recipientName = recipientName;
 		this.phoneNumber = phoneNumber;
-		this.deliveryDate = deliveryDate;
-		this.deliveryTime = deliveryTime;
+		this.deliveryTimestamp = deliveryTimestamp;
+//		this.deliveryDate = deliveryDate;
+//		this.deliveryTime = deliveryTime;
 	}
+	
+	
+	/**
+	 * Getter for the deliveryTimestamp
+	 * @return the deliveryTimestamp
+	 */
+	public Timestamp getDeliveryTimestamp() {
+		return deliveryTimestamp;
+	}
+
+
+	/**
+	 * Setter for the deliveryTimestamp
+	 * @param deliveryTimestamp the deliveryTimestamp to set
+	 */
+	public void setDeliveryTimestamp(Timestamp deliveryTimestamp) {
+		this.deliveryTimestamp = deliveryTimestamp;
+	}
+
+
 	/**
 	 * Getter for the orderID
 	 * @return the orderID
@@ -108,34 +131,34 @@ public class DeliveryEntity implements Serializable{
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	/**
-	 * Getter for the deliveryDate
-	 * @return the deliveryDate
-	 */
-	public Date getDeliveryDate() {
-		return deliveryDate;
-	}
-	/**
-	 * Setter for the deliveryDate
-	 * @param deliveryDate the deliveryDate to set
-	 */
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
-	/**
-	 * Getter for the deliveryTime
-	 * @return the deliveryTime
-	 */
-	public Time getDeliveryTime() {
-		return deliveryTime;
-	}
-	/**
-	 * Setter for the deliveryTime
-	 * @param deliveryTime the deliveryTime to set
-	 */
-	public void setDeliveryTime(Time deliveryTime) {
-		this.deliveryTime = deliveryTime;
-	}
+//	/**
+//	 * Getter for the deliveryDate
+//	 * @return the deliveryDate
+//	 */
+//	public Date getDeliveryDate() {
+//		return deliveryDate;
+//	}
+//	/**
+//	 * Setter for the deliveryDate
+//	 * @param deliveryDate the deliveryDate to set
+//	 */
+//	public void setDeliveryDate(Date deliveryDate) {
+//		this.deliveryDate = deliveryDate;
+//	}
+//	/**
+//	 * Getter for the deliveryTime
+//	 * @return the deliveryTime
+//	 */
+//	public Time getDeliveryTime() {
+//		return deliveryTime;
+//	}
+//	/**
+//	 * Setter for the deliveryTime
+//	 * @param deliveryTime the deliveryTime to set
+//	 */
+//	public void setDeliveryTime(Time deliveryTime) {
+//		this.deliveryTime = deliveryTime;
+//	}
 	/**
 	 * Getter for the deliveryprice
 	 * @return the deliveryprice
