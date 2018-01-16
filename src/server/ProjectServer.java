@@ -4,6 +4,8 @@
 package server;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,6 +39,7 @@ import entities.ProductEntity;
 import entities.StoreEntity;
 import gui.GeneralMessageController;
 import logic.ConnectedClients;
+import logic.FilesConverter;
 import logic.MessageToSend;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -75,6 +78,8 @@ public class ProjectServer extends AbstractServer
  	 return DriverManager.getConnection("jdbc:mysql://localhost/projectx","root","Braude");	//connect to the sql database
   }
   
+  
+  
   /**
    * This method removes the connection of the user from the connected client list
    * @param username
@@ -85,6 +90,8 @@ public class ProjectServer extends AbstractServer
 	  ConnectedClients.removeConnectedClient(username);
   }
 
+  
+  
   /**
    * This method cancel an order and sets its status to canceled in the DB
    * @param OrderID	the order to cancel
@@ -117,6 +124,7 @@ public class ProjectServer extends AbstractServer
 	  return retMsg = "Order cancelled";
   }
   
+  
   /**
    * This method calculates time difference between two Timestamp objects
    * @param t1	Later Timestamp
@@ -128,6 +136,9 @@ public class ProjectServer extends AbstractServer
 		Long t3 = t1.getTime()-t2.getTime();
 		return t3;
   }
+  
+  
+  
   /**
    * This method sets the customer's order status to "cancel_request" 
    * @param UserID the customer's id
@@ -600,12 +611,12 @@ public class ProjectServer extends AbstractServer
   	 * 
   	 * @param byteArray - the byte[] to convert
   	 */
-  	public InputStream convertByteArrayToInputStream(byte [] byteArray) {
+/*  	public InputStream convertByteArrayToInputStream(byte [] byteArray) {
   		
   		InputStream retInputStream = new ByteArrayInputStream(byteArray);
   		
   		return retInputStream;
-  	}
+  	}				*/
   	
   	
   	/**
@@ -649,7 +660,7 @@ public class ProjectServer extends AbstractServer
   	 * @param is - InputStream to convert
   	 * @throws IOException
   	 */
-  	public void convertInputStreamToFile(InputStream is) throws IOException {
+/*  	public void convertInputStreamToFile(InputStream is) throws IOException {
   		
   	OutputStream outputStream = new FileOutputStream(new File("/home/mdhttr/Documents/converted/img.jpg"));		//new file's output 
 
@@ -659,7 +670,7 @@ public class ProjectServer extends AbstractServer
 	while ((read = is.read(bytes)) != -1) {				//convertion proccess
 		outputStream.write(bytes, 0, read);
 		}
-  	}
+  	}				*/
   	
   	
   	/**
@@ -670,7 +681,7 @@ public class ProjectServer extends AbstractServer
   	 * @return  - array of bytes
   	 * @throws IOException 
   	 */
-  	public byte[] convertInputStreamToByteArray(InputStream inStrm) throws IOException {
+  /*	public byte[] convertInputStreamToByteArray(InputStream inStrm) throws IOException {
   		
   		byte [] retByteArray=null;
   		byte[] buff = new byte[4096];
@@ -685,7 +696,7 @@ public class ProjectServer extends AbstractServer
          retByteArray = bao.toByteArray();
   
   		return retByteArray;
-  	}
+  	}								*/
     	
   	
   	
@@ -829,7 +840,7 @@ public class ProjectServer extends AbstractServer
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" +details.getOrderID()+"'");	//prepare a statement
 	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
 	    {
-	    	InputStream inStrm=convertByteArrayToInputStream(details.getFile());
+	    	InputStream inStrm=FilesConverter.convertByteArrayToInputStream(details.getFile());
 		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File) VALUES (?,?,?,?)");	//prepare a statement
 		    ps.setInt(1, details.getOrderID());																			//insert parameters into the statement
 		    ps.setString(2, details.getDescription());
@@ -982,7 +993,7 @@ public class ProjectServer extends AbstractServer
   		 
   		  b=rs.getBlob(6);
   		  InputStream is=b.getBinaryStream();
-  		  pe.setProductImage(convertInputStreamToByteArray(is));
+  		  pe.setProductImage(FilesConverter.convertInputStreamToByteArray(is));
   		  
   		  pe.setProductDominantColor(rs.getString(7));
   	  }
