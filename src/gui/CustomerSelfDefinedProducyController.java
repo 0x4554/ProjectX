@@ -61,7 +61,7 @@ public class CustomerSelfDefinedProducyController implements Initializable {
 	 * @throws IOException 	for the loader
 	 * @throws InterruptedException for the sleep
 	 */
-	void FindMatchingProducts(ActionEvent event) throws IOException, InterruptedException {
+	public void FindMatchingProducts(ActionEvent event) throws IOException, InterruptedException {
 		if(this.MinPrcCmb.getSelectionModel().isEmpty() || this.maxPrcCmb.getSelectionModel().isEmpty())	//if price wasn't chosen
 		{
 			GeneralMessageController.showMessage("Please enter price range");
@@ -109,7 +109,7 @@ public class CustomerSelfDefinedProducyController implements Initializable {
 	 *            pressed back
 	 * @throws IOException
 	 */
-	void backToNewOrderMenu(ActionEvent event) throws IOException {
+	public void backToNewOrderMenu(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
 		FXMLLoader loader = new FXMLLoader();

@@ -49,7 +49,7 @@ public class CreateNewOrderController implements Initializable {
 	private Button itmFrmCtlgBtn;
 
 	@FXML
-	private Button AddSlfDfItmBtm;
+    private Button AddSlfDfIPrdctBtn;
 
 	@FXML
 	private Button VwCrtBtn;
@@ -92,6 +92,28 @@ public class CreateNewOrderController implements Initializable {
 	public void setOrderDetails(OrderEntity order) {
 		this.newOrder=order;
 	}
+	
+	/**
+	 * This method handles the self defined product option
+	 * @param event	pressed self defined product button
+	 * @throws IOException
+	 */
+	public void addSelfDefinedProduct(ActionEvent event) throws IOException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/CustomerSelfDefinedProductBoundary.fxml").openStream());
+		CustomerSelfDefinedProducyController csdpc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
+		csdpc.setOrder(newOrder);
+		primaryStage.setTitle("Search for self defined product");
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+    }
+
 	
 	/**
 	 * This method shows the add card window when pressed "add new card" button
