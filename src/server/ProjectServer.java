@@ -626,7 +626,7 @@ public class ProjectServer extends AbstractServer
   	 * @return
   	 * @throws SQLException
   	 */
-  	public InputStream getPhotoFromDB(String orderNum) throws SQLException{
+  	public InputStream getInputStreamFromDB(String orderNum) throws SQLException{
   		
   		InputStream is = null;
   		Statement stmt;
@@ -1110,8 +1110,18 @@ public class ProjectServer extends AbstractServer
 //		}
 		
 		if(operation.equals("createAccount")) {
-			CustomerEntity custen=(CustomerEntity)messageFromClient;	
+			CustomerEntity custen=(CustomerEntity)messageFromClient;
+			try {
 			this.insertNewCustomer(custen);
+			MessageToSend toClient=new MessageToSend("added","retval");
+			client.sendToClient(toClient);
+			
+			}
+			catch(Exception e) {
+				MessageToSend toClient = new MessageToSend("failed","retval");
+				client.sendToClient(toClient);
+			}
+			
 		}
 		
 		
@@ -1169,13 +1179,13 @@ public class ProjectServer extends AbstractServer
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
 			this.incomingFileName=complaint.getOrderID();
 			if(this.complaint(complaint).equals("Success")) {
-				System.out.println("complaint added");
+				System.out.println("complaint added by customer");
 			//	generalMessage = (String)("Added");
 				messageToSend.setMessage("Added"); 		//set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
 			else {
-				System.out.println("complaint failed");
+				System.out.println("failed to add complaint");
 			//	generalMessage = (String)("failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
 				sendToAllClients(messageToSend);
@@ -1225,7 +1235,15 @@ public class ProjectServer extends AbstractServer
 	  ps.setString(5, df.format(dateobj).toString());
 	  ps.setLong(6, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
-	
+	  
+	  ps=con.prepareStatement("INSERT INTO projectx.users (Username,Password,UserType,LoginAttempts) VALUES (?,?,?,?)");
+	  ps.setString(1, ce.getUserName());
+	  ps.setString(2, ce.getPassword());
+	  ps.setString(3, "C");
+	  ps.setInt(4, 0);
+	  
+	  ps.executeUpdate();
+	  
 	  System.out.println("new customer added to Database");
   }
   

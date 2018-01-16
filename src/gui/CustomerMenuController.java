@@ -82,6 +82,8 @@ public class CustomerMenuController implements Initializable{
 	private Button backFromcatalog;
 	private Button CheckOut;
 	private Client clnt;/////////////////////
+	
+	
 	/**
 	 * 
 	 * Constructor for saving the calling client for moving it to the controller
