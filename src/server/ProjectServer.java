@@ -92,6 +92,64 @@ public class ProjectServer extends AbstractServer
 	  ConnectedClients.removeConnectedClient(username);
   }
 
+
+  /**
+   * This method get the products matching the self defined products from the product table in the DB
+ * @throws ClassNotFoundException  problem connecting
+ * @throws SQLException for the sql query
+ * @throws IOException for the files converter
+   */
+  private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
+  {
+	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
+	 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
+	 ProductEntity product;
+	 Blob productImage;
+	 Statement stmt;
+	 ResultSet rs;
+	 try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+	 Double minPrice,maxPrice;
+	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
+	 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
+	 
+	 String type = "";
+	 type=requests.get(2); 											//get the product type
+	 
+	 String dominantColor ="";
+	 if(!requests.get(3).isEmpty()) 								//if dominant color was chosen
+	 {
+		dominantColor = "AND ProductDominantColor = '"+ requests.get(4)+"'";
+	 }
+	 stmt=con.createStatement();
+	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+"AND"+maxPrice+"AND ProductType = '"+type+"'"+dominantColor+"");
+	 while(rs.next())
+	 {
+		 product = new ProductEntity();									//create new product
+		 product.setProductID(rs.getInt(1));
+		 product.setProductName(rs.getString(2));
+		 product.setProductType(rs.getString(3));
+		 product.setProductPrice(rs.getDouble(4));
+		 product.setProductDescription(rs.getString(5));
+		 				//**get the blob for the image from the DB**//
+		 productImage =con.createBlob();
+		 productImage = rs.getBlob(6);
+		 InputStream is = productImage.getBinaryStream();
+		 
+		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
+		 product.setProductDominantColor(rs.getString(7));
+		 listOfProducts.add(product);									//add the product to the list
+	 }
+	 return listOfProducts;												//return the found products
+	 
+  }
  /**
    * This method cancel an order and sets its status to canceled in the DB
    * @param OrderID	the order to cancel
@@ -412,7 +470,7 @@ public class ProjectServer extends AbstractServer
 	//	while(rs.next())
 		//	orderCounter = rs.getInt(1);
 		
-			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (OrderNum,UserID,OrderTime,OrderDate,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID) VALUES (?,?,?,?,?,?,?,?,?)"); //prepare a statement
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (UserID,OrderTime,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID) VALUES (?,?,?,?,?,?,?,?,?)"); //prepare a statement
 			//ps.setInt(1, orderCounter+1);  				//insert new order id into the statement
 			ps.setString(1, newOrder.getUserName());
 			
@@ -438,9 +496,9 @@ public class ProjectServer extends AbstractServer
 	    	ps.setInt(9, newOrder.getStore().getBranchID());
 			ps.executeUpdate();
 
-			ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
-			ps.setInt(1, orderCounter);
-			ps.executeUpdate();
+		//	ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
+		//	ps.setInt(1, orderCounter);
+		//	ps.executeUpdate();
 			
 					//** now insert all the products in order to the productsInOrder table **//
 			PreparedStatement ps3;
@@ -456,7 +514,7 @@ public class ProjectServer extends AbstractServer
 			{
 						//** insert all the order's delivery details in to the delivery table **//
 				newOrder.getDeliveryDetails().setOrderID(orderCounter+1);	//set the orderID for the delivery
-				PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryDate,DeliveryTimestamp) VALUES (?,?,?,?,?)"); //prepare a statement
+				PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryTimestamp) VALUES (?,?,?,?,?)"); //prepare a statement
 				ps2.setInt(1, newOrder.getDeliveryDetails().getOrderID());
 				ps2.setString(2, newOrder.getDeliveryDetails().getDeliveryAddress());
 				ps2.setString(3, newOrder.getDeliveryDetails().getRecipientName());
@@ -685,7 +743,7 @@ public class ProjectServer extends AbstractServer
   	 * @param is - InputStream to convert
   	 * @throws IOException
   	 */
-  	public void convertInputStreamToFile(InputStream is) throws IOException {
+/*  	public void convertInputStreamToFile(InputStream is) throws IOException {
   		
   	OutputStream outputStream = new FileOutputStream(new File("/home/mdhttr/Documents/converted/img.jpg"));		//new file's output 
 
@@ -694,9 +752,11 @@ public class ProjectServer extends AbstractServer
 
 	while ((read = is.read(bytes)) != -1) {				//convertion proccess
 		outputStream.write(bytes, 0, read);
-	}
-  	}
-  /**
+		}
+  	}				*/
+  	
+  	
+  	/**
   	 * this method converts InputStream object into array of bytes(byte[])
   	 * 
   	 * 
@@ -704,7 +764,7 @@ public class ProjectServer extends AbstractServer
   	 * @return  - array of bytes
   	 * @throws IOException 
   	 */
-  	public byte[] convertInputStreamToByteArray(InputStream inStrm) throws IOException {
+  /*	public byte[] convertInputStreamToByteArray(InputStream inStrm) throws IOException {
   		
   		byte [] retByteArray=null;
   		byte[] buff = new byte[4096];
@@ -719,7 +779,10 @@ public class ProjectServer extends AbstractServer
          retByteArray = bao.toByteArray();
   
   		return retByteArray;
-  	}
+  	}								*/
+    	
+  	
+  	
   	
   	/**
   	 * This method gets the list of stores from the DB
@@ -1122,7 +1185,6 @@ public class ProjectServer extends AbstractServer
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		
-		
 		try {
 		System.out.println("<user>"+operation);
 		
@@ -1133,6 +1195,13 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(listOfProducts);		//set the message for sending back to the client
 			sendToAllClients(messageToSend);
 			
+		}
+		if(operation.equals("getSelfDefinedProduct"))
+		{
+			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
+			listOfProducts = getSelfDefinedProducts((ArrayList<String>)messageFromClient);
+			messageToSend.setMessage(listOfProducts);
+			sendToAllClients(messageToSend);
 		}
 		
 		if(operation.equals("getDiscounts"))/*get the discounts Hash Map for a specific store*/
@@ -1256,6 +1325,7 @@ public class ProjectServer extends AbstractServer
 		{
 			
 		}
+	
 //		if(operation.equals("addProductToCatalog"))
 //		{
 //			
@@ -1369,13 +1439,14 @@ public class ProjectServer extends AbstractServer
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,SubscriptionDiscount,JoinTime,Credit) VALUES (?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
-	  ps.setLong(3, ce.getCustomerID());
-	  ps.setDouble(4,ce.getSubscriptionDiscount());
+	  ps.setLong(3, ce.getID());
+	  ps.setString(4,ce.getSubscriptionDiscount().toString());
 	  
-	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-      Date dateobj = new Date();
-      
-	  ps.setString(5, df.format(dateobj).toString());
+	  Timestamp timestamp = new Timestamp(System.currentTimeMillis());		//get current time
+//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+//      Date dateobj = new Date();
+      ps.setTimestamp(5, timestamp);
+//	  ps.setString(5, df.format(dateobj).toString());
 	  ps.setLong(6, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
 	

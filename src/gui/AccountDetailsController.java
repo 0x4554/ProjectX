@@ -31,20 +31,20 @@ import javafx.stage.Stage;
 
 public class AccountDetailsController implements Initializable{
 	
-	 @FXML private Label cstLbl;
-	 @FXML private Label idLbl;
-	 @FXML private Label statLbl;
-	 @FXML private Label crdLbl;
-	 @FXML private Label crddatLbl;
-	 @FXML private TextField Fld;
-	 @FXML private TextField idFld;
-	 @FXML private TextField statFld;
-	 @FXML private TextField crdFld;
-	 @FXML private TextField crdDateFld;
-	 @FXML private Button crtBtn;
-	 @FXML private Button bckBtn;
+	@FXML private Button bckBtn;
+    @FXML private Button updBtn;
+    @FXML private Label cstLbl;
+    @FXML private Label idLbl;
+    @FXML private Label sttLbl;
+    @FXML private Label crdLbl;
 	 
 	 private Client clnt;
+	 CustomerMenuController cm;
+	 
+	 public void setConnectionData(CustomerMenuController m)
+		{
+			this.cm=m;
+		}
 
 	 /**
 	  * This method is the constructor for this class
@@ -79,6 +79,12 @@ public class AccountDetailsController implements Initializable{
 	  * @param event pressed back button
 	  * @throws IOException
 	  */
+	 public void bckBtnHandler(ActionEvent event) throws IOException {
+			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+			this.cm.showCustomerMenu();										//open previous menu
+			return;
+		}
+	 /*
 	 public void back(ActionEvent event) throws IOException
 		{
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -92,7 +98,7 @@ public class AccountDetailsController implements Initializable{
 			primaryS.setTitle("Generate Report");
 			primaryS.setScene(scene);
 			primaryS.show();
-		}
+		}*/
 	 
 	 
 	
