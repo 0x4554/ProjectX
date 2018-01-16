@@ -36,7 +36,7 @@ public class EditUsersPremissionController implements Initializable{
 	@FXML private Button bckBtn;
 	@FXML private Button okBtn;
 	
-	private ManagerMenuController mmc;
+	private StoreManagerMenuController mmc;
 	
 	/**
 	 * Necessary constructor for the APP
@@ -45,7 +45,7 @@ public class EditUsersPremissionController implements Initializable{
 	}
 	
 	
-	public void setConnectionData(ManagerMenuController m)
+	public void setConnectionData(StoreManagerMenuController m)
 	{
 		this.mmc=m;
 	}
