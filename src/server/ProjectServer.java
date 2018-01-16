@@ -4,6 +4,8 @@
 package server;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -430,9 +432,9 @@ public class ProjectServer extends AbstractServer
 			ps.setInt(9, newOrder.getStore().getBranchID());
 			ps.executeUpdate();
 
-			ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
-			ps.setInt(1, orderCounter);
-			ps.executeUpdate();
+//			ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
+//			ps.setInt(1, orderCounter);
+//			ps.executeUpdate();
 			
 					//** now insert all the products in order to the productsInOrder table **//
 			PreparedStatement ps3;
@@ -1208,10 +1210,11 @@ public class ProjectServer extends AbstractServer
 	  ps.setLong(3, ce.getCustomerID());
 	  ps.setDouble(4,ce.getSubscriptionDiscount());
 	  
-	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-      Date dateobj = new Date();
-      
-	  ps.setString(5, df.format(dateobj).toString());
+	  Timestamp timestamp = new Timestamp(System.currentTimeMillis());		//get current time
+//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+//      Date dateobj = new Date();
+      ps.setTimestamp(5, timestamp);
+//	  ps.setString(5, df.format(dateobj).toString());
 	  ps.setLong(6, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
 	
