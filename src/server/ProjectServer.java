@@ -90,63 +90,7 @@ public class ProjectServer extends AbstractServer
 	  ConnectedClients.removeConnectedClient(username);
   }
 
-  /**
-   * This method get the products matching the self defined products from the product table in the DB
- * @throws ClassNotFoundException  problem connecting
- * @throws SQLException for the sql query
- * @throws IOException for the files converter
-   */
-  private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
-  {
-	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
-	 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
-	 ProductEntity product;
-	 Blob productImage;
-	 Statement stmt;
-	 ResultSet rs;
-	 try
-		{
-			con = connectToDB(); //call method to connect to DB
-			if (con != null)
-				System.out.println("Connection to Data Base succeeded");
-		} catch (SQLException e) //catch exception
-		{
-			System.out.println("SQLException: " + e.getMessage());
-		}
-	 Double minPrice,maxPrice;
-	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
-	 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
-	 
-	 String type = "";
-	 type=requests.get(2); 											//get the product type
-	 
-	 String dominantColor ="";
-	 if(!requests.get(3).isEmpty()) 								//if dominant color was chosen
-	 {
-		dominantColor = "AND ProductDominantColor = '"+ requests.get(4)+"'";
-	 }
-	 stmt=con.createStatement();
-	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+"AND"+maxPrice+"AND ProductType = '"+type+"'"+dominantColor+"");
-	 while(rs.next())
-	 {
-		 product = new ProductEntity();									//create new product
-		 product.setProductID(rs.getInt(1));
-		 product.setProductName(rs.getString(2));
-		 product.setProductType(rs.getString(3));
-		 product.setProductPrice(rs.getDouble(4));
-		 product.setProductDescription(rs.getString(5));
-		 				//**get the blob for the image from the DB**//
-		 productImage =con.createBlob();
-		 productImage = rs.getBlob(6);
-		 InputStream is = productImage.getBinaryStream();
-		 
-		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
-		 product.setProductDominantColor(rs.getString(7));
-		 listOfProducts.add(product);									//add the product to the list
-	 }
-	 return listOfProducts;												//return the found products
-	 
-  }
+  
   
   /**
    * This method cancel an order and sets its status to canceled in the DB
@@ -497,9 +441,9 @@ public class ProjectServer extends AbstractServer
 			ps.setInt(9, newOrder.getStore().getBranchID());
 			ps.executeUpdate();
 
-//			ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
-//			ps.setInt(1, orderCounter);
-//			ps.executeUpdate();
+			ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
+			ps.setInt(1, orderCounter);
+			ps.executeUpdate();
 			
 					//** now insert all the products in order to the productsInOrder table **//
 			PreparedStatement ps3;
@@ -686,7 +630,6 @@ public class ProjectServer extends AbstractServer
   		
   		InputStream is = null;
   		Statement stmt;
-  		Blob b = con.createBlob();							//Object to contain the data from the data base
   		
   		try {
   		con=connectToDB();									//Achieve connection to the data base
@@ -696,6 +639,8 @@ public class ProjectServer extends AbstractServer
   		}
   		
   		try {
+  	  		Blob b = con.createBlob();							//Object to contain the data from the data base
+
   			stmt=con.createStatement();
   		    ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.complaints WHERE Ordernum = '" +orderNum+"'");	//Statement to execute
   		    if (rs.next())						//if such ID exists in the DB, get the new data
@@ -1113,13 +1058,6 @@ public class ProjectServer extends AbstractServer
 			sendToAllClients(messageToSend);
 			
 		}
-		if(operation.equals("getSelfDefinedProduct"))
-		{
-			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
-			listOfProducts = getSelfDefinedProducts((ArrayList<String>)messageFromClient);
-			messageToSend.setMessage(listOfProducts);
-			sendToAllClients(messageToSend);
-		}
 		if(operation.equals("cancelRequest"))
 		{
 			String retMsg = cancelRequest((Integer)messageFromClient);
@@ -1292,11 +1230,10 @@ public class ProjectServer extends AbstractServer
 	  ps.setLong(3, ce.getCustomerID());
 	  ps.setDouble(4,ce.getSubscriptionDiscount());
 	  
-	  Timestamp timestamp = new Timestamp(System.currentTimeMillis());		//get current time
-//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-//      Date dateobj = new Date();
-      ps.setTimestamp(5, timestamp);
-//	  ps.setString(5, df.format(dateobj).toString());
+	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+      Date dateobj = new Date();
+      
+	  ps.setString(5, df.format(dateobj).toString());
 	  ps.setLong(6, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
 	  
