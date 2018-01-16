@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.ComplaintEntity;
 import entities.ProductEntity;
+import entities.ComplaintEntity.Status;
 import javafx.application.Application.Parameters;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import logic.MessageToSend;
 
 /**
  * This program presents the catalog to the costumer and preform's Add, Delete, Edit products from the Data Base
@@ -148,6 +151,7 @@ public class CatalogController implements Initializable{
 	}
 	
 	public void showProductcatalog() throws IOException//fix this shit//
+, InterruptedException
 	{		 
 		products.setAll(getProduct());//get the product list
 		
@@ -216,30 +220,83 @@ public class CatalogController implements Initializable{
 	   this.primaryStage.show();	
 	}
 	
-	public ObservableList<ProductEntity> getProduct() //this method creat's a list of products
+	public ObservableList<ProductEntity> getProduct() throws InterruptedException //this method creat's a list of products
 	{
 		ObservableList<ProductEntity> prod=FXCollections.observableArrayList();
-		prod.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue", new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
-	    prod.add(new ProductEntity("124","lili","boquet",(double) 15.60,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true)));
-	    prod.add(new ProductEntity("124","magic","boquet",(double) 80,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true)));
-	    prod.add(new ProductEntity("124","bird","boquet",(double) 96,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true)));
+		ArrayList<ProductEntity> products=new ArrayList<ProductEntity>();
+		products=getProductsFromDB();
+		for(ProductEntity i: products)
+		{
+			prod.add(i);
+		}
+		System.out.println(prod);
+		/*prod.add(new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue", new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
+	    prod.add(new ProductEntity(124,"lili","boquet",(double) 15.60,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true)));
+	    prod.add(new ProductEntity(125,"magic","boquet",(double) 80,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true)));
+	    prod.add(new ProductEntity(126,"bird","boquet",(double) 96,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true)));*/
 		return prod;
 	}
 	
-	public ArrayList<ProductEntity> getProductsFromDB() {
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		return null;
+	
+	/**
+	 * This method gets the products from the DB (table catalog) and set's them in the catalog
+	 * @return
+	 * @throws InterruptedException
+	 */
+	public ArrayList<ProductEntity> getProductsFromDB() throws InterruptedException {
+				MessageToSend mts=new MessageToSend(null,"getCatalog");
+				ArrayList<ProductEntity> dataFromServer = null;
+				Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+				Client.getClientConnection().accept();										//sends to server
+				while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+					Thread.sleep(100);
+				Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+				MessageToSend m = Client.getClientConnection().getMessageFromServer();
+				dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
+				return dataFromServer;
 	}
 	
+	public String addProductsToDB(ProductEntity product) throws InterruptedException {
+		String msg;
+		//ProductEntity product=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue");
+		MessageToSend mts=new MessageToSend(product,"addProductToCatalog");
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		 msg = (String)m.getMessage();
+		return msg;
+}
 	
+	public String DeleteProductsFromDB() throws InterruptedException {
+		String msg;
+		ProductEntity p=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue");
+		MessageToSend mts=new MessageToSend(p,"deleteProductFromCatalog");
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		 msg = (String)m.getMessage();
+		return msg;
+}
+	public ProductEntity searchProductInCatalog(int productid) throws InterruptedException/******* lana**********************************/
+	{
+		ProductEntity p=new ProductEntity();
+		MessageToSend mts=new MessageToSend(productid,"serachProductInCatalog");
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		p = (ProductEntity)m.getMessage();
+		System.out.println(p.getProductID()+p.getProductDominantColor());
+		return p;
+	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

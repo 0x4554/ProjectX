@@ -20,7 +20,6 @@ public class ProductEntity implements Serializable{
 		
 	}
 
-
 	/**
 	 * Constructor for the ProductEntity.java class
 	 * @param productID	the product's id

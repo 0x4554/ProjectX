@@ -73,7 +73,6 @@ public class CustomerMenuController implements Initializable{
 	private Button backFromcatalog;
 	private Button CheckOut;
 	
-	
 	/**
 	 * This method is the constructor for this class
 	 * @param lc	the login controller
@@ -108,7 +107,6 @@ public class CustomerMenuController implements Initializable{
 		primaryStage.show();
 	}
 	
-	
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -132,9 +130,13 @@ public class CustomerMenuController implements Initializable{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		CatalogController catlg=new CatalogController();
 		catlg.setConnectionData(this);
-		catlg.showProductcatalog();
+		try {
+			catlg.showProductcatalog();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
 	    //*Open  Account details  menu from customer main menu*//
 		public void enterToAccount(ActionEvent event) throws IOException {
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window

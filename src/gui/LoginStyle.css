@@ -21,3 +21,12 @@
     -fx-background-color: #0093ff;
     -fx-text-fill: white;
 }
+.hbox {
+    -fx-background-color: #20B2AA;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+vbox{
+     -fx-background-color: #20B2AA;
+}
+ 

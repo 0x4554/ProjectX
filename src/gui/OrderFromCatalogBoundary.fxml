@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<HBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.OrderFromCatalogController">
+   <children>
+      <HBox>
+         <children>
+            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="565.0" prefWidth="609.0">
+               <children>
+                  <ListView fx:id="List" layoutX="39.0" layoutY="69.0" prefHeight="439.0" prefWidth="529.0" />
+                  <Label fx:id="catalogLbl" contentDisplay="CENTER" layoutX="90.0" layoutY="27.0" text="Zer-Li Catalog" wrapText="true">
+                     <font>
+                        <Font name="Arial" size="24.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="backBtn" layoutX="39.0" layoutY="520.0" mnemonicParsing="false" text="Back" />
+                  <HBox fx:id="hb" layoutX="370.0" layoutY="25.0">
+                     <children>
+                        <Button fx:id="viewCartBtn" layoutX="575.0" layoutY="26.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="104.0" text="View cart" />
+                        <Button fx:id="checkOutBtn" layoutX="669.0" layoutY="26.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="Check out" />
+                     </children>
+                  </HBox>
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+   </children>
+</HBox>
