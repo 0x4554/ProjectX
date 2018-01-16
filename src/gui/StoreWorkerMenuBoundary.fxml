@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.StoreWorkerMenuController">
+   <children>
+      <Pane layoutX="-206.0" layoutY="-179.0" prefHeight="549.0" prefWidth="895.0">
+         <children>
+            <Label layoutX="485.0" layoutY="210.0" prefHeight="56.0" prefWidth="192.0" text="Main Menue" textAlignment="CENTER">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <Button fx:id="cmplnBtn" layoutX="501.0" layoutY="275.0" mnemonicParsing="false" text="New complaint" />
+            <Button fx:id="cmplnDetBtn" layoutX="475.0" layoutY="324.0" mnemonicParsing="false" text="View complaints ditails" />
+            <Button fx:id="ctlgBtn" layoutX="499.0" layoutY="376.0" mnemonicParsing="false" text="Update catalog" />
+            <Button fx:id="lgBtn" layoutX="523.0" layoutY="479.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+            <Button fx:id="srvBtn" layoutX="528.0" layoutY="428.0" mnemonicParsing="false" text="Survey" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

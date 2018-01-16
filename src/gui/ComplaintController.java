@@ -117,6 +117,7 @@ public class ComplaintController implements Initializable{
 	 * @throws IOException
 	 */
 	public void cancelComplaint(ActionEvent event) throws IOException {
+		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		this.cstmc.showCustomerMenu();
 		return;
@@ -143,6 +144,7 @@ public class ComplaintController implements Initializable{
 	
 	
 	public void bckToMainMenu(ActionEvent event)throws IOException{
+		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		this.cstmc.showCustomerMenu();									//open previous menu
 		return;
@@ -151,6 +153,7 @@ public class ComplaintController implements Initializable{
 
 
 	public void searchForPhoto(ActionEvent event) throws IOException{
+		
 		Stage secondaryStage=new Stage();
 		Node node = (Node) event.getSource();
 		FileChooser chooser = new FileChooser();
@@ -164,6 +167,8 @@ public class ComplaintController implements Initializable{
 	    return;
 	    }
 	}
+	
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

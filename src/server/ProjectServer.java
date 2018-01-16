@@ -4,6 +4,8 @@
 package server;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -278,7 +280,13 @@ public class ProjectServer extends AbstractServer
   }
   
   
-
+  /**
+   * This method returns an ArrayList of the customer's orders
+   * @param userID	the user id
+   * @return ArrayList  of orders
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
   private ArrayList<OrderEntity> getCustomerOrders(String userID) throws SQLException, ClassNotFoundException
   {
 	  ArrayList<OrderEntity> listOfOrdersFromDB = new ArrayList<OrderEntity>();
@@ -331,7 +339,7 @@ public class ProjectServer extends AbstractServer
 			order.setOrderTime(rs.getTimestamp(3));
 			//order.setOrderDate(rs.getDate(4));
 			if(rs.getString(4) != null)
-				order.setCard(new CardEntity(rs.getString(5)));
+				order.setCard(new CardEntity(rs.getString(4)));
 			if(rs.getString(5).equals(OrderEntity.SelfOrDelivery.selfPickup.toString()))  //set self pickup or delivery
 				order.setOrderPickup(OrderEntity.SelfOrDelivery.selfPickup);
 			else
@@ -403,7 +411,7 @@ public class ProjectServer extends AbstractServer
 	//	while(rs.next())
 		//	orderCounter = rs.getInt(1);
 		
-			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (OrderNum,UserID,OrderTime,OrderDate,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveDate,ReceiveTime,BranchID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"); //prepare a statement
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (OrderNum,UserID,OrderTime,OrderDate,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID) VALUES (?,?,?,?,?,?,?,?,?)"); //prepare a statement
 			//ps.setInt(1, orderCounter+1);  				//insert new order id into the statement
 			ps.setString(1, newOrder.getUserName());
 			
@@ -447,7 +455,7 @@ public class ProjectServer extends AbstractServer
 			{
 						//** insert all the order's delivery details in to the delivery table **//
 				newOrder.getDeliveryDetails().setOrderID(orderCounter+1);	//set the orderID for the delivery
-				PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryDate,DeliveryTimestamp) VALUES (?,?,?,?,?,?)"); //prepare a statement
+				PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryDate,DeliveryTimestamp) VALUES (?,?,?,?,?)"); //prepare a statement
 				ps2.setInt(1, newOrder.getDeliveryDetails().getOrderID());
 				ps2.setString(2, newOrder.getDeliveryDetails().getDeliveryAddress());
 				ps2.setString(3, newOrder.getDeliveryDetails().getRecipientName());
@@ -937,12 +945,12 @@ public class ProjectServer extends AbstractServer
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" +details.getOrderID()+"'");	//prepare a statement
 	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
 	    {
-	    	InputStream inStrm=convertByteArrayToInputStream(details.getFile());
+	    	InputStream inStrm=FilesConverter.convertByteArrayToInputStream(details.getFile());
 		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status) VALUES (?,?,?)");	//prepare a statement
 		    ps.setInt(1,details.getOrderID());																			//insert parameters into the statement
 		    ps.setString(2, details.getDescription());
 		    ps.setString(3, details.getStatus().toString());
-		    ps.setBlob(4,inStrm);
+		    ps.setBlob(4, inStrm);
 		    ps.executeUpdate();
 		    
 		    return "Success";

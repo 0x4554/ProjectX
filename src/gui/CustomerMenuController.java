@@ -72,14 +72,15 @@ public class CustomerMenuController implements Initializable{
 	private TextField EnterProductname;
 	private Button backFromcatalog;
 	private Button CheckOut;
+	private Client clnt;
 	
 	/**
 	 * This method is the constructor for this class
 	 * @param lc	the login controller
 	 */
-	public CustomerMenuController(LoginController lc)
+	public CustomerMenuController(Client lc)
 	{
-		this.logcon=lc;		
+		this.clnt=lc;		
 	}
 	
 	/**
@@ -98,14 +99,20 @@ public class CustomerMenuController implements Initializable{
 	{
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		//CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		cmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	private void setConnectionData(Client clnt2) {
+		// TODO Auto-generated method stub
+		this.clnt=clnt2;
+	}////////////////////////////////////////////////////////
 	
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
@@ -113,7 +120,8 @@ public class CustomerMenuController implements Initializable{
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
 		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		Stage primaryStage=new Stage();
+		ord.setConnectionData(this);
+		 Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);

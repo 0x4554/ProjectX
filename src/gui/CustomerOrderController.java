@@ -1,6 +1,19 @@
 package gui;
 
 import java.io.IOException;
+
+/**
+ * 
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yaakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -17,12 +30,23 @@ import javafx.stage.Stage;
 
 public class CustomerOrderController implements Initializable {
 
-	@FXML
-	private Button swOrdrDtlsBtn;
+	@FXML private Button swOrdrDtlsBtn;
+	@FXML private Button crtNwOrdrBtn;
+	@FXML private Button bckBtn;
 
-	@FXML
-	private Button crtNwOrdrBtn;
-
+	private CustomerMenuController cm;
+	
+	/**
+	 * Necessary constructor for the App
+	 */
+	public CustomerOrderController() {
+	}
+	
+	public void setConnectionData(CustomerMenuController m) {
+		this.cm=m;
+	}
+	
+	
 	/**
 	 * This method handles when the create new order has been pressed
 	 * @param event
@@ -65,6 +89,17 @@ public class CustomerOrderController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * when back button pressed
+	 * @param event pressed back button
+	 * @throws IOException
+	 */	
+	public void bckBtnHandler(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		this.cm.showCustomerMenu();										//open previous menu
+		return;
 	}
 	
 }
