@@ -21,13 +21,8 @@
                         <Font name="Arial" size="24.0" />
                      </font>
                   </Label>
-                  <Button fx:id="backBtn" layoutX="39.0" layoutY="520.0" mnemonicParsing="false" text="Back" />
-                  <HBox fx:id="hb" layoutX="370.0" layoutY="25.0">
-                     <children>
-                        <Button fx:id="viewCartBtn" layoutX="575.0" layoutY="26.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="104.0" text="View cart" />
-                        <Button fx:id="checkOutBtn" layoutX="669.0" layoutY="26.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="94.0" text="Check out" />
-                     </children>
-                  </HBox>
+                  <Button fx:id="backBtn" layoutX="39.0" layoutY="520.0" mnemonicParsing="false" onAction="#backToOrder" text="Back" />
+                  <HBox fx:id="hb" layoutX="370.0" layoutY="25.0" />
                </children>
             </Pane>
          </children>

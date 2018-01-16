@@ -13,11 +13,20 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
     private Image productImage;
-private byte[] image1;
+
+    private byte[] image1;
 	
 	public ProductEntity()
 	{
 		
+	}
+
+	public byte[] getImage1() {
+		return image1;
+	}
+
+	public void setImage1(byte[] image1) {
+		this.image1 = image1;
 	}
 
 	/**
@@ -31,7 +40,7 @@ private byte[] image1;
 	 */
 
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,Image img) {
+			String productDescription, String productDominantColor,byte[]img) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -39,8 +48,11 @@ private byte[] image1;
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-    	this.productImage = img;
+    	this.image1 = img;
 	}
+	
+	/*constructor with out the image*/
+	
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
 			String productDescription, String productDominantColor) {
 		//super();
@@ -93,10 +105,9 @@ private byte[] image1;
 	 * Setter for the productImage
 	 * @param productImage the productImage to set
 	 */
-public void setProductImage(byte[] productImage) {
-		this.image = productImage;
+    public void setProductImage(byte[] productImage) {
+		this.image1 = productImage;
 	}
-	
 	
 	public void convertImageToByteArray(Image img) {
 		

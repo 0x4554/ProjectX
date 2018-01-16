@@ -32,6 +32,7 @@ import javax.security.auth.callback.ConfirmationCallback;
 import java.util.Date;
 import entities.CardEntity;
 import entities.ComplaintEntity;
+import entities.CustomerEntity;
 import entities.DeliveryEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
@@ -53,7 +54,7 @@ public class ProjectServer extends AbstractServer
 	private static Connection con;
 	private static String driver="com.mysql.jdbc.Driver";
 	private int incomingFileName;
-  final public static int DEFAULT_PORT = 5555;
+    final public static int DEFAULT_PORT = 5555;
   
   
   /// * Constructs an instance of the echo server.
@@ -350,7 +351,7 @@ public class ProjectServer extends AbstractServer
 			
 			order.setTotalPrice(rs.getDouble(8));
 			order.setReceivingTimestamp(rs.getTimestamp(9));
-			order.setReceivingTime(rs.getTime(11));
+			//order.setReceivingTime(rs.getTime(11));
 						//** get the store **//
 			rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(10)+"");
 			while(rs5.next())
@@ -451,7 +452,7 @@ public class ProjectServer extends AbstractServer
 				ps2.setString(2, newOrder.getDeliveryDetails().getDeliveryAddress());
 				ps2.setString(3, newOrder.getDeliveryDetails().getRecipientName());
 				ps2.setString(4,	 newOrder.getDeliveryDetails().getPhoneNumber());
-				ps2.setDate(5, newOrder.getReceivingTimestamp());
+				ps2.setTimestamp(5, newOrder.getReceivingTimestamp());/**changed it lanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
 			//	ps2.setTime(6, newOrder.getDeliveryDetails().getDeliveryTime());
 				ps2.executeUpdate();
 			}
@@ -1044,8 +1045,9 @@ public class ProjectServer extends AbstractServer
   *    Search is with ID
   * @param msg The message received from the client.
   * @param client The connection from which the message originated.
+ * @throws IOException 
   */
-  public ProductEntity getProduct(ConnectionToClient clnt,int asked) throws SQLException, InterruptedException, ClassNotFoundException
+  public ProductEntity getProduct(ConnectionToClient clnt,int asked) throws SQLException, InterruptedException, ClassNotFoundException, IOException
   {
 	  ProductEntity prd=new ProductEntity();
 	  //ArrayList<ProductEntity> product = new ArrayList<ProductEntity>();
@@ -1063,11 +1065,27 @@ public class ProjectServer extends AbstractServer
 	    }
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID ='" +productID+"'");	//query for extracting a prodcut's details
+	  
+	  Blob b=con.createBlob();
+	  
 	  if(rs.next())
 	  {
-			 prd = new ProductEntity(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
+			// prd = new ProductEntity(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getBlob(6));	//create a new instance of a product
              // product.add(prd);
-              return prd;
+		  prd.setProductID(rs.getInt(1));
+		  prd.setProductName(rs.getString(2));
+		  prd.setProductType(rs.getString(3));
+		  prd.setProductPrice(rs.getDouble(4));
+		  prd.setProductDescription(rs.getString(5));
+		
+		  /*
+		  b=rs.getBlob(6);
+  		  InputStream is=b.getBinaryStream();
+  		  prd.setProductImage(convertInputStreamToByteArray(is));*/
+		  
+		  
+  		  prd.setProductDominantColor(rs.getString(7));  
+          return prd;
 	  }
 	  else 
 	         return null;  

@@ -142,7 +142,7 @@ public void addItemFromCatalog(ActionEvent event) throws IOException, Interrupte
 		FXMLLoader loader = new FXMLLoader();
 		Parent pRoot = loader.load(getClass().getResource("/gui/OrderFromCatalogBoundary.fxml").openStream());
 		OrderFromCatalogController ord=loader.getController();
-		ord.showCatalog(this.store);                                              //Call the method show catalog
+		ord.showCatalog(this.newOrder);                                              //Call the method show catalog
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(pRoot);
 		primaryStage.setTitle("Zer-Li Catalog");
