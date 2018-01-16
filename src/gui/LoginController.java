@@ -49,7 +49,7 @@ public class LoginController implements Initializable {
 	
 	public static String hostIP;
 	private CustomerMenuController cmc;
-	private ManagerMenuController mmc;
+	private StoreManagerMenuController mmc;
 	private AdministratorMenuController amc;
 	private StoreWorkerMenuController swmc;
 	private CustomerServiceWorkerMenuController cswmc;
@@ -183,7 +183,7 @@ public class LoginController implements Initializable {
 			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
 		case "SM":	//store manager
-			mmc=new ManagerMenuController();
+			mmc=new StoreManagerMenuController();
 			mmc.showManagerMenu();
 			GeneralMessageController.showMessage("Logged in as a store manager");
 			break;

@@ -51,8 +51,8 @@
       <RadioButton fx:id="q3r4" layoutX="280.0" layoutY="293.0" mnemonicParsing="false" text="4" toggleGroup="$q3" />
       <RadioButton fx:id="q3r5" layoutX="332.0" layoutY="294.0" mnemonicParsing="false" text="5" toggleGroup="$q3" />
       <Label layoutX="142.0" layoutY="330.0" text="Q4" />
-      <Button fx:id="sbmtBtn" layoutX="332.0" layoutY="492.0" mnemonicParsing="false" text="Submit" />
-      <Button fx:id="bckBtn" layoutX="196.0" layoutY="492.0" mnemonicParsing="false" text="Back" />
+      <Button fx:id="sbmtBtn" layoutX="332.0" layoutY="492.0" mnemonicParsing="false" onAction="#submitSurveyAnswers" text="Submit" />
+      <Button fx:id="bckBtn" layoutX="196.0" layoutY="492.0" mnemonicParsing="false" onAction="#bckToPrevMnu" text="Back" />
       <RadioButton fx:id="q4r1" layoutX="116.0" layoutY="354.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q4" />

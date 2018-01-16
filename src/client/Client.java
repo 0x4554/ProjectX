@@ -127,21 +127,6 @@ public class Client extends AbstractClient {
 	   */
 		public void accept() {
 			// TODO Auto-generated method stub
-//			if(this.operation == -1) {
-//				this.fromUI = "close "+ this.fromUI;
-//			}
-//			if(this.operation == 1) {
-//				this.fromUI = "login "+this.fromUI;
-//			}
-//			if(this.operation==2) {
-//				this.fromUI="create "+this.fromUI;
-//			}
-//			if(this.operation==3) {
-//				this.fromUI="find "+this.fromUI;
-//			}
-//			if(this.operation==4) {						//for create new account
-//				this.fromUI="create new account";
-//			}
 			
 			try {
 			this.handleMessageFromClientUI(this.msg);
@@ -160,7 +145,7 @@ public class Client extends AbstractClient {
 		 * @throws IOException - IOException may be thrown
 		 * @throws InterruptedException 
 		 */
-		public void uploadFileToServer(int portNo,String filePath) throws IOException, InterruptedException
+	/*	public void uploadFileToServer(int portNo,String filePath) throws IOException, InterruptedException
 		{
 			FileInputStream fileInputStream = null;
 			BufferedInputStream bufferedInputStream = null;
@@ -178,9 +163,9 @@ public class Client extends AbstractClient {
 					try {
 							
 							socket = serverSocket.accept();
-							/*while(!this.getConfirmationFromServer())
-								Thread.sleep(100);
-							this.setConfirmationFromServer();*/
+//							while(!this.getConfirmationFromServer())
+//								Thread.sleep(100);
+//							this.setConfirmationFromServer();
 							System.out.println("Accepted connection : " + socket);
 							//connection established successfully
 		
@@ -212,7 +197,7 @@ public class Client extends AbstractClient {
 				finally {
 					if (serverSocket != null) serverSocket.close();
 				}
-		}
+		}				*/
 	  
 		
 	  /**

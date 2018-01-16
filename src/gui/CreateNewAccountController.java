@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
 import client.Client;
 import entities.CustomerEntity;
 import entities.UserEntity;
@@ -57,7 +58,7 @@ public class CreateNewAccountController implements Initializable {
 
     private Client clnt;
     private ObservableList<String> list;
-    private ManagerMenuController mmc;
+    private StoreManagerMenuController mmc;
     
     
 	/**
@@ -68,7 +69,7 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 
-	public void setConnectionData(ManagerMenuController m) {
+	public void setConnectionData(StoreManagerMenuController m) {
 		this.mmc=m;
 	}
 		

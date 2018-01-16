@@ -3,26 +3,29 @@ package entities;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class OrderEntity implements Serializable{
 	public static enum SelfOrDelivery {selfPickup,delivery};
-	public  static enum OrderStatus	  {active,cancelled};
+	public  static enum OrderStatus	  {active,cancelled,cancel_requested};
 	public  static enum CashOrCredit   {cash,credit};
 	
 	private Integer orderID;
 //	private String orderDateAndTime;
-	private Time orderTime;	//theses represents the sql type time and date 
-	private Date orderDate;
+//	private Time orderTime;	//theses represents the sql type time and date 
+//	private Date orderDate;
+	private Timestamp orderTime;
 	
 	private String userName;
 	private StoreEntity store;
 //	private String Description;
 	private CardEntity card;
 	private SelfOrDelivery orderPickup;
-	private Date receivingDate;
-	private Time receivingTime;
+	private Timestamp receivingTimestamp;
+//	private Date receivingDate;
+//	private Time receivingTime;
 	private OrderStatus status;
 	private Boolean paid;
 	private Double totalPrice;
@@ -188,34 +191,34 @@ public class OrderEntity implements Serializable{
 	public void setOrderID(Integer orderID) {
 		this.orderID = orderID;
 	}
-	/**
-	 * Getter for the receivingDate
-	 * @return the receivingDate
-	 */
-	public Date getReceivingDate() {
-		return receivingDate;
-	}
-	/**
-	 * Setter for the receivingDate
-	 * @param receivingDate the receivingDate to set
-	 */
-	public void setReceivingDate(Date receivingDate) {
-		this.receivingDate = receivingDate;
-	}
-	/**
-	 * Getter for the receivingTime
-	 * @return the receivingTime
-	 */
-	public Time getReceivingTime() {
-		return receivingTime;
-	}
-	/**
-	 * Setter for the receivingTime
-	 * @param receivingTime the receivingTime to set
-	 */
-	public void setReceivingTime(Time receivingTime) {
-		this.receivingTime = receivingTime;
-	}
+//	/**
+//	 * Getter for the receivingDate
+//	 * @return the receivingDate
+//	 */
+//	public Date getReceivingDate() {
+//		return receivingDate;
+//	}
+//	/**
+//	 * Setter for the receivingDate
+//	 * @param receivingDate the receivingDate to set
+//	 */
+//	public void setReceivingDate(Date receivingDate) {
+//		this.receivingDate = receivingDate;
+//	}
+//	/**
+//	 * Getter for the receivingTime
+//	 * @return the receivingTime
+//	 */
+//	public Time getReceivingTime() {
+//		return receivingTime;
+//	}
+//	/**
+//	 * Setter for the receivingTime
+//	 * @param receivingTime the receivingTime to set
+//	 */
+//	public void setReceivingTime(Time receivingTime) {
+//		this.receivingTime = receivingTime;
+//	}
 	/**
 	 * Getter for the status
 	 * @return the status
@@ -258,32 +261,63 @@ public class OrderEntity implements Serializable{
 	public void setPaid(Boolean paid) {
 		this.paid = paid;
 	}
+//	/**
+//	 * Getter for the orderTime
+//	 * @return the orderTime
+//	 */
+//	public Time getOrderTime() {
+//		return orderTime;
+//	}
+//	/**
+//	 * Setter for the orderTime
+//	 * @param orderTime the orderTime to set
+//	 */
+//	public void setOrderTime(Time orderTime) {
+//		this.orderTime = orderTime;
+//	}
+//	/**
+//	 * Getter for the orderDate
+//	 * @return the orderDate
+//	 */
+//	public Date getOrderDate() {
+//		return orderDate;
+//	}
+//	/**
+//	 * Setter for the orderDate
+//	 * @param orderDate the orderDate to set
+//	 */
+//	public void setOrderDate(Date orderDate) {
+//		this.orderDate = orderDate;
+//	}
+	/**
+	 * Getter for the receivingTimestamp
+	 * @return the receivingTimestamp
+	 */
+	public Timestamp getReceivingTimestamp() {
+		return receivingTimestamp;
+	}
+	/**
+	 * Setter for the receivingTimestamp
+	 * @param receivingTimestamp the receivingTimestamp to set
+	 */
+	public void setReceivingTimestamp(Timestamp receivingTimestamp) {
+		this.receivingTimestamp = receivingTimestamp;
+	}
 	/**
 	 * Getter for the orderTime
 	 * @return the orderTime
 	 */
-	public Time getOrderTime() {
+	public Timestamp getOrderTime() {
 		return orderTime;
 	}
 	/**
 	 * Setter for the orderTime
 	 * @param orderTime the orderTime to set
 	 */
-	public void setOrderTime(Time orderTime) {
+	public void setOrderTime(Timestamp orderTime) {
 		this.orderTime = orderTime;
 	}
-	/**
-	 * Getter for the orderDate
-	 * @return the orderDate
-	 */
-	public Date getOrderDate() {
-		return orderDate;
-	}
-	/**
-	 * Setter for the orderDate
-	 * @param orderDate the orderDate to set
-	 */
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
-	}
+	
+	
+	
 }

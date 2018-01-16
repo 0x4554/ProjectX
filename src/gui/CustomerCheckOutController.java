@@ -4,13 +4,16 @@ import java.io.IOException;
 
 
 import java.net.URL;
-import java.sql.Date;
+//import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -204,7 +207,7 @@ public class CustomerCheckOutController implements Initializable {
 			this.newOrder.setOrderPickup(SelfOrDelivery.delivery);		//set to delivery
 			this.newOrder.setTotalPrice(this.newOrder.getTotalPrice()+DeliveryEntity.getDeliveryPrice());			//add the delivery fee to the order's price
 					//create a new delivery entity and set it's details
-			this.newOrder.setDeliveryDetails(new DeliveryEntity( this.dlvrAddrs.getText(), this.dlvrRcptNm.getText(), this.dlvrPhoneNmbr.getText(), this.newOrder.getReceivingDate(), this.newOrder.getReceivingTime()));
+			this.newOrder.setDeliveryDetails(new DeliveryEntity( this.dlvrAddrs.getText(), this.dlvrRcptNm.getText(), this.dlvrPhoneNmbr.getText(),this.newOrder.getReceivingTimestamp()));
 		}
 		
 		else
@@ -269,13 +272,20 @@ public class CustomerCheckOutController implements Initializable {
 	private void setTimeAndDateOfOrder() throws ParseException
 	{
 		LocalDate date =this.datePicker.getValue();		//get the localDate from the date picker
-		Date receivingDate = Date.valueOf( date );		//convert the LocalDate type to a SQL Date type
+		Date receivingDate = java.sql.Date.valueOf(date);
+	//	Date receivingDate = Date.from(date);
+	//	Date receivingDate = Date.valueOf( date );		//convert the LocalDate type to a SQL Date type
 		Time receivingTime;
 		DateFormat formatter = new SimpleDateFormat("HH:mm");		//format the time
 		receivingTime = new Time(formatter.parse(this.hrsTxtFld.getText()+":"+this.mntsTxtFld.getText()).getTime());		//set the time to a SQL time type
 		
-		this.newOrder.setReceivingDate(receivingDate);			//set the time and date to the new order 
-		this.newOrder.setReceivingTime(receivingTime);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	    Date parsedDate = (Date) dateFormat.parse(receivingDate.toString()+" "+receivingTime.toString());
+	    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+	    
+	    this.newOrder.setReceivingTimestamp(timestamp);  	//set the time and date to the new order 
+//		this.newOrder.setReceivingDate(receivingDate);			//set the time and date to the new order 
+//		this.newOrder.setReceivingTime(receivingTime);
 	}
 	
 	
