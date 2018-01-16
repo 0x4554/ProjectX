@@ -78,11 +78,10 @@ public class CustomerMenuController implements Initializable{
 	 * This method is the constructor for this class
 	 * @param lc	the login controller
 	 */
-	public CustomerMenuController(Client lc)
+	public CustomerMenuController(LoginController lc)
 	{
-		this.clnt=lc;		
+		this.logcon=lc;		
 	}
-	
 	/**
 	 * A necessary constructor for the App
 	 */
@@ -139,7 +138,8 @@ public class CustomerMenuController implements Initializable{
 		CatalogController catlg=new CatalogController();
 		catlg.setConnectionData(this);
 		try {
-			catlg.showProductcatalog();
+			catlg.addProductsToDB(null);
+			//catlg.showProductcatalog();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

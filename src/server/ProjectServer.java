@@ -41,6 +41,7 @@ import entities.ProductEntity;
 import entities.StoreEntity;
 import javafx.scene.image.Image;
 import logic.ConnectedClients;
+import logic.FilesConverter;
 import logic.MessageToSend;
 import ocsf.server.*;
 import ocsf.*;
@@ -851,12 +852,22 @@ public class ProjectServer extends AbstractServer
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//prepare a statement
 	    if(!(rs.next()))																						//if such ID exists in the DB, Insert the new data
 	    {
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.catalog (ProductID,ProductName,ProductType,ProductPrice,ProductDescription,ProductColor) VALUES (?,?,?,?,?,?)");	//prepare a statement
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.catalog (ProductID,ProductName,ProductType,ProductPrice,ProductDescription,ProductColor,ProductImage) VALUES (?,?,?,?,?,?,?)");	//prepare a statement
 		    ps.setInt(1, prd.getProductID());																			//insert parameters into the statement
 		    ps.setString(2, prd.getProductName());
 		    ps.setString(3, prd.getProductType());
 		    ps.setDouble(4,prd.getProductPrice());
 		    ps.setString(5,prd.getProductDescription());
+		    
+		    ps.setBlob(7, FilesConverter.convertByteArrayToInputStream(prd.getImage1()));
+		    
+		   // FilesConverter.convertByteArrayToInputStream(prd.getImage1());
+		    /*
+	  		InputStream is=b.getBinaryStream();
+	  		  prd.setProductImage(convertInputStreamToByteArray(is));
+	  		  prd.setProductImage(FilesConverter.convertInputStreamToByteArray(is));
+		      ps.setBlob(6, prd.getImage1());
+		    */
 		    ps.setString(6, prd.getProductDominantColor());
 		    ps.executeUpdate();
 		    return "Success";
@@ -959,74 +970,6 @@ public class ProjectServer extends AbstractServer
   }
 
   
-  /**this method handles file received from user
-   * 
-   * 
-   * @param ipAddress - ip of the client
-   * @param portNo - open port for sending/receiving the file
-   * @param fileLocation - Path to where file would be saved on server side
-   * @throws IOException - IOException might be thrown during the process
- * @throws InterruptedException 
- * @throws SQLException 
- * @throws ClassNotFoundException 
-   */
-  public void receiveFileFromClient(String ipAddress,int portNo) throws IOException, InterruptedException, ClassNotFoundException, SQLException
-  {
-	  	String fileLocation="/home/mdhttr/Documents/complaints/";
-	  	fileLocation+=incomingFileName;
-	  	InputStream inpt = null;
-		int bytesRead=0;
-		int current = 0;
-		FileOutputStream fileOutputStream = null;
-		BufferedOutputStream bufferedOutputStream = null;
-		Socket socket = null;
-		try {
-			//creating connection.
-			//this.setPort(5556);
-			
-			Thread.sleep(250);
-			socket = new Socket(ipAddress,portNo);
-			System.out.println("connected.");
-			
-			// receive file
-			byte [] byteArray  = new byte [6022386];					//I have hard coded size of byteArray, you can send file size from socket before creating this.
-			System.out.println("Please wait downloading file");
-			
-			//reading file from socket
-			InputStream inputStream = socket.getInputStream();
-			fileOutputStream = new FileOutputStream(fileLocation);
-			bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-			bytesRead = inputStream.read(byteArray,0,byteArray.length);					//copying file from socket to byteArray
-
-			current = bytesRead;
-			do {
-				bytesRead =inputStream.read(byteArray, current, (byteArray.length-current));
-				if(bytesRead >= 0) current += bytesRead;
-			} while(bytesRead > -1);
-			bufferedOutputStream.write(byteArray, 0 , current);							//writing byteArray to file
-			bufferedOutputStream.flush();												//flushing buffers
-			
-			System.out.println("File " + fileLocation  + " downloaded ( size: " + current + " bytes read)");
-			inpt=inputStream;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			if (fileOutputStream != null) fileOutputStream.close();
-			if (bufferedOutputStream != null) bufferedOutputStream.close();
-			if (socket != null) socket.close();
-		}
-		try {
-			InputStream input=new FileInputStream(fileLocation);
-			this.insertPhotoToDB(input);
-			this.convertInputStreamToFile(getPhotoFromDB("1111"));
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-  
   public ArrayList<Integer> getProductsIDS() throws SQLException, ClassNotFoundException
   {
 	  ArrayList<Integer> listOfProducts=new ArrayList<Integer>(); 
@@ -1075,7 +1018,7 @@ public class ProjectServer extends AbstractServer
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID ='" +productID+"'");	//query for extracting a prodcut's details
 	  
 	  Blob b=con.createBlob();
-	  
+
 	  if(rs.next())
 	  {
 			// prd = new ProductEntity(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getBlob(6));	//create a new instance of a product
@@ -1086,10 +1029,12 @@ public class ProjectServer extends AbstractServer
 		  prd.setProductPrice(rs.getDouble(4));
 		  prd.setProductDescription(rs.getString(5));
 		
-		  /*
+		 /* 
 		  b=rs.getBlob(6);
   		  InputStream is=b.getBinaryStream();
-  		  prd.setProductImage(convertInputStreamToByteArray(is));*/
+  		  prd.setProductImage(convertInputStreamToByteArray(is));
+  		  prd.setProductImage(FilesConverter.convertInputStreamToByteArray(is));
+		  */
 		  
 		  
   		  prd.setProductDominantColor(rs.getString(7));  

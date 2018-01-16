@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -35,6 +36,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import logic.FilesConverter;
 import logic.MessageToSend;
 
 /**
@@ -256,10 +258,16 @@ public class CatalogController implements Initializable{
 				return dataFromServer;
 	}
 	
-	public String addProductsToDB(ProductEntity product) throws InterruptedException {
+	public String addProductsToDB(ProductEntity product) throws InterruptedException, IOException {
 		String msg;
-		//ProductEntity product=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue");
-		MessageToSend mts=new MessageToSend(product,"addProductToCatalog");
+	 byte [] d;
+		//Image g=new Image(getClass().getResourceAsStream("/images/pic1.jpg"));
+		File f=new File("C:\\pictures\\pic1.jpg");/***/
+		
+		d=FilesConverter.convertFileToByteArray(f);/***/
+		
+		ProductEntity product1=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue",	d);
+		MessageToSend mts=new MessageToSend(product1,"addProductToCatalog");
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
