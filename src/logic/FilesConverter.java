@@ -1,12 +1,16 @@
 package logic;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javafx.scene.image.Image;
 
 /**
  * this method helps to convert files into different types
@@ -59,6 +63,40 @@ public class FilesConverter {
   		
   		return retInputStream;
   	}
+  	
+  	
+	/**
+	 * converts File to an byte array
+	 * 
+	 * @param path - path to needed file
+	 * @throws IOException 
+	 */
+	public static byte[] convertFileToByteArray(File file) throws IOException {
+	
+		
+		byte [] byteArray;
+		byteArray = new byte [(int)file.length()];
+		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		bis.read(byteArray,0,byteArray.length); 					// copied file into this.file
+		
+		return byteArray;
+	}
+	
+	/**
+	 * this method converts byteArray to an Image
+	 * 
+	 * @param byteArray - the byte array you want to convert
+	 * @return - returns an image made out of the byte array
+	 */
+	public Image convertByteArrayToImage(byte[] byteArray) {
+
+		//BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
+		Image image = new Image(new ByteArrayInputStream(byteArray));
+		
+		return image;
+
+	}
   	
   	
 }
