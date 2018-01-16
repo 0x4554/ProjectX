@@ -500,7 +500,7 @@ public class ProjectServer extends AbstractServer
 		}
 		stmt = con.createStatement();
 
-		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.users WHERE Username = '" + data[0] + "'"); //query to check if such a user exists
+		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.user WHERE Username = '" + data[0] + "'"); //query to check if such a user exists
 		if (!(rs.next())) //if user does not exists
 		{
 			//failed - ArrayList<String> to return in form of ["failed",reason of failure]
@@ -529,7 +529,7 @@ public class ProjectServer extends AbstractServer
 										//----------success - ArrayList<String> to return in form of ["success",user's type]----------//
 					returnMessage.add("success"); //state succeeded to login
 					returnMessage.add(rs.getString(3)); //add the type of user (customer,worker...)
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
 
@@ -550,7 +550,7 @@ public class ProjectServer extends AbstractServer
 					returnMessage.add("failed"); 							//state failed to log in
 					returnMessage.add("password does not match"); 			//reason for failure
 					attempts = rs.getInt(4) + 1; 							//increment number of attempts made
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
 					ps.setString(2, data[0]);
 					ps.setInt(1, attempts); 								//update the number of attempts made to log in 
 					ps.executeUpdate();
@@ -1216,8 +1216,8 @@ public class ProjectServer extends AbstractServer
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,SubscriptionDiscount,JoinTime,Credit) VALUES (?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
-	  ps.setLong(3, ce.getCustomerID());
-	  ps.setDouble(4,ce.getSubscriptionDiscount());
+	  ps.setLong(3, ce.getID());
+	  ps.setString(4,ce.getSubscriptionDiscount().toString());
 	  
 	  Timestamp timestamp = new Timestamp(System.currentTimeMillis());		//get current time
 //	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
