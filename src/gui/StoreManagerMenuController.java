@@ -122,7 +122,7 @@ public class StoreManagerMenuController implements Initializable {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("/******ToImplement*****/.fxml").openStream());				//new window to open
-		 /*load here needed controller*/
+		
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
@@ -140,8 +140,9 @@ public class StoreManagerMenuController implements Initializable {
 	public void usersPermissions(ActionEvent event) throws IOException{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/******ToImplement*****/.fxml").openStream());				//new window to open
-		 /*load needed controller here*/
+		 Parent root = loader.load(getClass().getResource("/gui/EditUsersPremissionBoundary.fxml").openStream());				//new window to open
+		 EditUsersPremissionController eup = loader.getController();
+		 eup.setConnectionData(this);
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			

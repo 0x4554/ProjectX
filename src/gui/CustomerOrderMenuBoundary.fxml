@@ -13,7 +13,7 @@
          </font>
       </Label>
       <Button id="swOrdrDtlsBtn" fx:id="swOrdrDtlsBtn" layoutX="357.0" layoutY="120.0" mnemonicParsing="false" onAction="#showOrderDetails" text="Show Orders Details" />
-      <Button layoutX="261.0" layoutY="334.0" mnemonicParsing="false" text="Back" />
+      <Button fx:id="bckBtn" layoutX="261.0" layoutY="334.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
       <Button id="crtNwOrdrBtn" fx:id="crtNwOrdrBtn" layoutX="82.0" layoutY="120.0" mnemonicParsing="false" onAction="#CreateNewOrder" text="Create a new order" />
    </children>
 </Pane>
