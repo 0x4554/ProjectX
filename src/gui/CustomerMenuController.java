@@ -296,8 +296,9 @@ public class CustomerMenuController implements Initializable{
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
 			 Parent root = loader.load(getClass().getResource("/gui/AccountDetailsBoundary.fxml").openStream());
-			 AccountDetailsController acc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		//	 ord.setConnectionData(DEFAULT_PORT, this);
+			 AccountDetailsController adc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+			 adc.setConnectionData(this);
+			 //	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			primaryStage.setTitle("Account details");
