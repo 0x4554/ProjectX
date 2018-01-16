@@ -8,7 +8,7 @@
       <AnchorPane layoutX="-128.0" layoutY="-111.0" prefHeight="393.0" prefWidth="480.0">
          <children>
             <Button id="itmFrmCtlgBtn" fx:id="itmFrmCtlgBtn" layoutX="179.0" layoutY="157.0" mnemonicParsing="false" text="Add item from catalog" />
-            <Button id="AddSlfDfItmBtm" fx:id="AddSlfDfItmBtm" layoutX="177.0" layoutY="241.0" mnemonicParsing="false" text="Add a self defined item" />
+            <Button id="AddSlfDfItmBtm" fx:id="AddSlfDfIPrdctBtn" layoutX="177.0" layoutY="241.0" mnemonicParsing="false" onAction="#addSelfDefinedProduct" text="Add a self defined item" />
          </children>
       </AnchorPane>
       <Button id="VwCrtBtn" fx:id="VwCrtBtn" layoutX="330.0" layoutY="313.0" mnemonicParsing="false" onAction="#viewCart" text="Go to cart" />
