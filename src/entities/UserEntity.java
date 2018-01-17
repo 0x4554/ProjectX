@@ -17,7 +17,7 @@ public abstract class  UserEntity implements UserInterface,Serializable{
 	private String userName;
 	private String password;
 	private String userType;
-	private long phoneNumber;
+	private String phoneNumber;
 	private String EmailAddress;
 	/**
 	 * 
@@ -33,14 +33,14 @@ public abstract class  UserEntity implements UserInterface,Serializable{
 	 * Getter for the phone number
 	 * @return	the phone number
 	 */
-	public long getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 	/**
 	 * Setter for the phone number
 	 * @param phoneNumber the new phone number
 	 */
-	public void setPhoneNumber(long phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 	/**

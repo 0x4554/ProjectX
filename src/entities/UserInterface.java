@@ -54,12 +54,12 @@ public interface UserInterface {
 	 * Getter for the phone number
 	 * @return	the phone number
 	 */
-	public long getPhoneNumber();
+	public String getPhoneNumber();
 	/**
 	 * Setter for the phone number
 	 * @param phoneNumber the new phone number
 	 */
-	public void setPhoneNumber(long phoneNumber);
+	public void setPhoneNumber(String phoneNumber);
 	/**
 	 * Getter for the Email address
 	 * @return	the Email Address

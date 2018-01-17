@@ -16,7 +16,7 @@
                </font>
             </Label>
             <Button fx:id="rprtBtn" layoutX="490.0" layoutY="245.0" mnemonicParsing="false" text="View reports" />
-            <Button fx:id="usrBtn" layoutX="501.0" layoutY="287.0" mnemonicParsing="false" text="New user" />
+            <Button fx:id="usrBtn" layoutX="501.0" layoutY="287.0" mnemonicParsing="false" onAction="#enterCreateNewUser" text="New user" />
             <Button fx:id="lgBtn" layoutX="506.0" layoutY="331.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
          </children>
       </Pane>

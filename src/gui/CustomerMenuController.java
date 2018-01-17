@@ -125,6 +125,8 @@ public class CustomerMenuController implements Initializable{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
+	
 	private void setConnectionData(Client clnt2) {
 		// TODO Auto-generated method stub
 		this.clnt=clnt2;

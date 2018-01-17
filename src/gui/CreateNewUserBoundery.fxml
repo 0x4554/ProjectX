@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="482.0" prefWidth="588.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.141">
+<AnchorPane prefHeight="482.0" prefWidth="588.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewUserController">
    <children>
       <Pane layoutX="-114.0" layoutY="-188.0" prefHeight="539.0" prefWidth="680.0">
          <children>
@@ -25,18 +24,18 @@
             <Label layoutX="261.0" layoutY="453.0" text="Email" />
             <Label layoutX="226.0" layoutY="493.0" text="Worker number" />
             <Label layoutX="258.0" layoutY="529.0" text="Salary" />
-            <TextField layoutX="376.0" layoutY="284.0" />
-            <TextField layoutX="376.0" layoutY="325.0" />
-            <TextField layoutX="376.0" layoutY="364.0" />
-            <TextField layoutX="376.0" layoutY="409.0" />
-            <TextField layoutX="376.0" layoutY="448.0" />
-            <TextField layoutX="376.0" layoutY="488.0" />
+            <TextField fx:id="nmTxt" layoutX="376.0" layoutY="284.0" />
+            <TextField fx:id="idTxt" layoutX="376.0" layoutY="325.0" />
+            <TextField fx:id="prmTxt" layoutX="376.0" layoutY="364.0" />
+            <TextField fx:id="phnNumTxt" layoutX="376.0" layoutY="409.0" />
+            <TextField fx:id="emlTxt" layoutX="376.0" layoutY="448.0" />
+            <TextField fx:id="wnumTxt" layoutX="376.0" layoutY="488.0" />
          </children>
       </Pane>
       <Label layoutX="134.0" layoutY="380.0" text="Password" />
-      <TextField layoutX="260.0" layoutY="336.0" />
-      <Button layoutX="177.0" layoutY="424.0" mnemonicParsing="false" text="Back" />
-      <Button layoutX="354.0" layoutY="424.0" mnemonicParsing="false" text="Create" />
-      <PasswordField layoutX="260.0" layoutY="375.0" />
+      <TextField fx:id="slrTxt" layoutX="260.0" layoutY="336.0" />
+      <Button fx:id="bckBtn" layoutX="177.0" layoutY="424.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
+      <Button fx:id="crtBtn" layoutX="354.0" layoutY="424.0" mnemonicParsing="false" text="Create" />
+      <PasswordField fx:id="pswrdTxt" layoutX="260.0" layoutY="375.0" />
    </children>
 </AnchorPane>
