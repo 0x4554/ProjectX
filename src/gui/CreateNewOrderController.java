@@ -140,14 +140,7 @@ public class CreateNewOrderController implements Initializable {
 	 * @throws IOException
 	 */
 	public void viewCart(ActionEvent event) throws IOException {
-<<<<<<< HEAD
-	
-		
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
-
-=======
-		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
->>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 		FXMLLoader loader = new FXMLLoader();
 		Parent pRoot = loader.load(getClass().getResource("/gui/CartBoundary.fxml").openStream());
 		CartController cc = loader.getController();
