@@ -20,6 +20,7 @@ public abstract class  UserEntity implements UserInterface,Serializable{
 	private long ID;
 	private String phoneNumber;
 	private String EmailAddress;
+	
 	/**
 	 * 
 	 * Constructor for the UserEntity.java class
@@ -30,6 +31,21 @@ public abstract class  UserEntity implements UserInterface,Serializable{
 	{
 		this.userType = userType;
 	}
+	
+	/**Getter for the user ID
+	 * @return the iD
+	 */
+	public long getCustomerID() {
+		return ID;
+	}
+
+	/**Setter for the user Id
+	 * @param iD the iD to set
+	 */
+	public void setCustomerID(long iD) {
+		ID = iD;
+	}
+
 	/**
 	 * Getter for the phone number
 	 * @return	the phone number
