@@ -138,8 +138,8 @@ public class CustomerMenuController implements Initializable{
 		CatalogController catlg=new CatalogController();
 		catlg.setConnectionData(this);
 		try {
-			catlg.addProductsToDB(null);
-			//catlg.showProductcatalog();
+			//catlg.addProductsToDB(null);
+			catlg.showProductcatalog();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

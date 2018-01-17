@@ -334,7 +334,6 @@ public class ProjectServer extends AbstractServer
 	
 			listOfOrdersFromDB.add(order); //add the product from the data base to the list
 		}
-		
 		return listOfOrdersFromDB;
   }
   
@@ -434,9 +433,7 @@ public class ProjectServer extends AbstractServer
 	
 			listOfOrdersFromDB.add(order); //add the product from the data base to the list
 		}
-		
 		return listOfOrdersFromDB;
-	  
   }
 
  /**
@@ -614,7 +611,6 @@ public class ProjectServer extends AbstractServer
 			}
 		}
 		return returnMessage;
-
 	}
   
   
@@ -623,9 +619,8 @@ public class ProjectServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public String insertProduct(String msg, ConnectionToClient client) throws SQLException, ClassNotFoundException
+  public String insertProduct(ProductEntity product, ConnectionToClient client) throws SQLException, ClassNotFoundException
   {
-	  String [] data= msg.split("~");	//split the data
 	  Statement stmt;
 	  try
 	    {
@@ -637,21 +632,24 @@ public class ProjectServer extends AbstractServer
 	      System.out.println("SQLException: " + e.getMessage() );
 	     
 	    }
-	    System.out.println("Message received: " + msg + " from " + client);
-	    								//first check if the ID already exists in the DB
+	    //First check if the ID already exists in the DB
 	    stmt = con.createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = '" +data[0]+"'");	//prepare a statement
+	    ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductID = '" +product.getProductID()+"'");	//prepare a statement
 	    if(!(rs.next()))	//if no such ID exists in the DB, Insert the new data
 	    {
 		    PreparedStatement ps = con.prepareStatement("INSERT INTO product (ProductID,ProductName,ProductType) VALUES (?,?,?)");	//prepare a statement
-		    ps.setString(1,data[0]);	//insert parameters into the statement
-		    ps.setString(2, data[1]);
-		    ps.setString(3, data[2]);
+		    ps.setInt(1,product.getProductID());	//insert parameters into the statement
+		    ps.setString(2, product.getProductName());
+		    ps.setString(3, product.getProductType());
+		    ps.setDouble(4, product.getProductPrice());
+		    ps.setString(5,product.getProductDescription());
+		    
+		    ps.setBlob(6,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));
+		    ps.setString(7, product.getProductDominantColor());
 		    ps.executeUpdate();
 		    
 		    return "Success";
-	    }
-	    
+	    }  
 	    else	//if such Id already exists return failed String
 	    	return "Failed";
 	    
@@ -736,53 +734,6 @@ public class ProjectServer extends AbstractServer
   		
   		return is;							//returned value
   	}
-  	
-  	/**
-  	 * this method converts InputStream to a File
-  	 * 
-  	 * @param is - InputStream to convert
-  	 * @throws IOException
-  	 */
-/*  	public void convertInputStreamToFile(InputStream is) throws IOException {
-  		
-  	OutputStream outputStream = new FileOutputStream(new File("/home/mdhttr/Documents/converted/img.jpg"));		//new file's output 
-
-	int read = 0;
-	byte[] bytes = new byte[1024];
-
-	while ((read = is.read(bytes)) != -1) {				//convertion proccess
-		outputStream.write(bytes, 0, read);
-		}
-  	}				*/
-  	
-  	
-  	/**
-  	 * this method converts InputStream object into array of bytes(byte[])
-  	 * 
-  	 * 
-  	 * @param inStrm - InputStream to convert
-  	 * @return  - array of bytes
-  	 * @throws IOException 
-  	 */
-  /*	public byte[] convertInputStreamToByteArray(InputStream inStrm) throws IOException {
-  		
-  		byte [] retByteArray=null;
-  		byte[] buff = new byte[4096];
-  		int bytesRead = 0;
-
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        
-        while((bytesRead = inStrm.read(buff)) != -1) {							//read the entire stream
-            bao.write(buff, 0, bytesRead);
-         }
-
-         retByteArray = bao.toByteArray();
-  
-  		return retByteArray;
-  	}								*/
-    	
-  	
-  	
   	
   	/**
   	 * This method gets the list of stores from the DB
@@ -892,13 +843,13 @@ public class ProjectServer extends AbstractServer
   }
   
   /**
-   * Insert product to catalog
+   *This method  Insert's product to catalog
    * @param prd
    * @return
    * @throws SQLException
    * @throws ClassNotFoundException
    */
-  public String addToCatalog(ProductEntity prd) throws SQLException, ClassNotFoundException/**lanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
+  public String addToCatalog(ProductEntity prd) throws SQLException, ClassNotFoundException
   {
   Statement stmt;
 	  try
@@ -913,30 +864,23 @@ public class ProjectServer extends AbstractServer
 	    }
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//prepare a statement
-	    if(!(rs.next()))																						//if such ID exists in the DB, Insert the new data
+	    if(!(rs.next()))																						//if such ID does not exists in the DB, Insert the new data
 	    {
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.catalog (ProductID,ProductName,ProductType,ProductPrice,ProductDescription,ProductColor,ProductImage) VALUES (?,?,?,?,?,?,?)");	//prepare a statement
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.catalog (ProductID,ProductName) VALUES (?,?)");	//prepare a statement
 		    ps.setInt(1, prd.getProductID());																			//insert parameters into the statement
 		    ps.setString(2, prd.getProductName());
-		    ps.setString(3, prd.getProductType());
-		    ps.setDouble(4,prd.getProductPrice());
-		    ps.setString(5,prd.getProductDescription());
-		    
-		    ps.setBlob(7, FilesConverter.convertByteArrayToInputStream(prd.getImage1()));
-		    
-		   // FilesConverter.convertByteArrayToInputStream(prd.getImage1());
-		    /*
-	  		InputStream is=b.getBinaryStream();
-	  		  prd.setProductImage(convertInputStreamToByteArray(is));
-	  		  prd.setProductImage(FilesConverter.convertInputStreamToByteArray(is));
-		      ps.setBlob(6, prd.getImage1());
-		    */
-		    ps.setString(6, prd.getProductDominantColor());
 		    ps.executeUpdate();
 		    return "Success";
 	    }
-	  return "Inserting product to catalog failed";   
+	  return "Failed";   
   }
+  /**
+   * This method delet's product from the catalog 
+   * @param prd
+   * @return
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
   public String deleteProductFromCatalog(ProductEntity prd) throws SQLException, ClassNotFoundException/**lanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
   {
   Statement stmt;
@@ -951,52 +895,25 @@ public class ProjectServer extends AbstractServer
 	      System.out.println("SQLException: " + e.getMessage() );
 	    }
 	  stmt = con.createStatement();
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//prepare a statement
-	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//see if the product exists in the catalog
+	    if((rs.next()))																						//if such ID exists in the DB, delete .
 	    {
 		    PreparedStatement ps = con.prepareStatement("DELETE FROM projectx.catalog WHERE ProductID = ?");	//prepare a statement
 		    ps.setInt(1, prd.getProductID());																			//insert parameters into the statement
 		    ps.executeUpdate();
-		    return "Success";
+		    return "Success";                                                                            //deleted successesfuly
 	    }
 	  return "Product was not found";   
   }
-  
-  public ProductEntity searchProductInCatalog(int prd) throws SQLException, ClassNotFoundException {
-  Statement stmt;
-  ProductEntity product;
-  try
-    {
-    con = connectToDB();	//call method to connect to DB
-    if(con!=null)
-    System.out.println("Connection to Data Base succeeded");  
-    }
-    catch( SQLException e)	//catch exception
-    {
-      System.out.println("SQLException: " + e.getMessage() );
-    }
-  stmt = con.createStatement();
-  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd+"'");	//prepare a statement
-    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
-    {
-    	product = new ProductEntity(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
-	    return product;
-    }
-    else
-      return null;
-  }
-  
+
   /**
-   * this method handles the creation of new customers complaint
-   * 
+   * This method handles the creation of new customers complaint
    * 
    * @param details	- String of the complaint info ("complaint!"complaintnumber|complaintDescription)
    * @return
    * @throws SQLException
    * @throws ClassNotFoundException
    */
-  
-  
   	public String complaint(ComplaintEntity details) throws SQLException, ClassNotFoundException {
 	
 	  Statement stmt;
@@ -1032,7 +949,12 @@ public class ProjectServer extends AbstractServer
 	  return "Order does not exist";   
   }
 
-  
+  /**
+   * This method returns the products id's from the catalog
+   * @return
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
   public ArrayList<Integer> getProductsIDS() throws SQLException, ClassNotFoundException
   {
 	  ArrayList<Integer> listOfProducts=new ArrayList<Integer>(); 
@@ -1055,6 +977,52 @@ public class ProjectServer extends AbstractServer
 	  }
 	  return listOfProducts;
   }
+  public ArrayList<ProductEntity> getproductstemp() throws SQLException, ClassNotFoundException, IOException
+  {
+	  ArrayList<ProductEntity> listOfProducts=new ArrayList<ProductEntity>(); 
+	  Statement stmt;
+		Blob b = con.createBlob();							//Object to contain the data from the data base
+  		InputStream is = null;
+
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	    if(con!=null)
+	    System.out.println("Connection to Data Base succeeded");  
+	    }
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
+	  stmt = con.createStatement();
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.catalog");	//get all the products in the catalog table from the data base
+	  while(rs.next())
+	  {
+		  ProductEntity y=new ProductEntity();
+		  y.setProductID(rs.getInt(1));
+		  y.setProductName(rs.getString(2));
+		  y.setProductType(rs.getString(3));
+		  y.setProductPrice(rs.getDouble(4));
+		  y.setProductDescription(rs.getString(5));
+		  y.setProductDominantColor(rs.getString(6));
+		  
+		  /**************************************************************added*******************************************************/
+		  if(rs.getBlob(7)!=null)
+		  {
+		  b=rs.getBlob(7);
+		   is=b.getBinaryStream();	
+		  byte [] t;
+		  t=FilesConverter.convertInputStreamToByteArray(is);
+		  y.setProductImage(t);
+		  }
+		  /***************************************************************************************************************************/
+		  
+		 listOfProducts.add(y);	//add the product from the data base to the list
+	  }
+	  return listOfProducts;
+  }
+  
+  
   /** This method handles product search messages received from the client.
   *    Search is with ID
   * @param msg The message received from the client.
@@ -1067,6 +1035,9 @@ public class ProjectServer extends AbstractServer
 	  //ArrayList<ProductEntity> product = new ArrayList<ProductEntity>();
 	  Statement stmt;
 	  int productID=asked;     /*The id of the product we want to get from the data base*/
+	  Blob b = con.createBlob();							//Object to contain the data from the data base
+      InputStream is = null;
+		
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -1080,26 +1051,23 @@ public class ProjectServer extends AbstractServer
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID ='" +productID+"'");	//query for extracting a prodcut's details
 	  
-	  Blob b=con.createBlob();
-
 	  if(rs.next())
 	  {
-			// prd = new ProductEntity(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getBlob(6));	//create a new instance of a product
-             // product.add(prd);
 		  prd.setProductID(rs.getInt(1));
 		  prd.setProductName(rs.getString(2));
 		  prd.setProductType(rs.getString(3));
 		  prd.setProductPrice(rs.getDouble(4));
 		  prd.setProductDescription(rs.getString(5));
-		
-		 /* 
+		  /**************************************************************added*******************************************************/
+		  if(rs.getBlob(6)!=null)
+		  {
 		  b=rs.getBlob(6);
-  		  InputStream is=b.getBinaryStream();
-  		  prd.setProductImage(convertInputStreamToByteArray(is));
-  		  prd.setProductImage(FilesConverter.convertInputStreamToByteArray(is));
-		  */
-		  
-		  
+		   is=b.getBinaryStream();	
+		  byte [] byte_Image;
+		  byte_Image=FilesConverter.convertInputStreamToByteArray(is);
+		  prd.setProductImage(byte_Image);
+		  }
+		  /***************************************************************************************************************************/
   		  prd.setProductDominantColor(rs.getString(7));  
           return prd;
 	  }
@@ -1135,7 +1103,6 @@ public class ProjectServer extends AbstractServer
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE BranchID ='" +storeID+"'");	
 	  if(rs.next())
 	  {
-		//prd = new ProductEntity(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getDouble(4),rs.getString(5),rs.getString(6));	//create a new instance of a product
 		  key_product_id=rs.getInt(2); //set value's
 		  price=rs.getDouble(3);
           product.put(key_product_id, price); //add values to hash map
@@ -1224,8 +1191,17 @@ public class ProjectServer extends AbstractServer
 		{
 			ArrayList<Integer> listOfProducts = new ArrayList<Integer>();	//an arrayList that holds all the products in the catalog
 			listOfProducts= getProductsIDS();                                               //get products from the catalog table in the data base
+
+			/***/
+			ArrayList<ProductEntity> p=new ArrayList<ProductEntity>();
+			//p=getproductstemp();
+			/***/
+			
 			if(listOfProducts!=null)                                                               //Success
 			{
+				//messageToSend.setMessage(p);
+				//sendToAllClients(messageToSend);
+				
 			messageToSend.setMessage(listOfProducts);		                        //set the message for sending back to the client
 			sendToAllClients(messageToSend);
 			}
@@ -1288,16 +1264,6 @@ public class ProjectServer extends AbstractServer
 			}
 		}
 		
-		if(operation.equals("serachProductInCatalog"))/**************************************************************lana*/
-		{
-			int productid = (int)messageToSend.getMessage();
-			ProductEntity product=new ProductEntity();
-			product = searchProductInCatalog(productid);
-			messageToSend.setMessage(product);		//set the message for sending back to the client
-			sendToAllClients(messageToSend);
-			
-		}
-		
 		if(operation.equals("createNewOrder"))
 		{
 			try
@@ -1358,8 +1324,7 @@ public class ProjectServer extends AbstractServer
 			retval = this.login(client,(String)messageFromClient);
 			messageToSend.setMessage(retval);	//set the message for sending back to the client
 			sendToAllClients(messageToSend);	//send arraylist back to client
-		}
-		
+		}	
 		if(operation.equals("getProduct"))	//check***********fix*******to***********lana*******object***********************//
 		{
 		//getProductFromDB
@@ -1374,12 +1339,10 @@ public class ProjectServer extends AbstractServer
 		{
 			String str =(String)messageFromClient;
 			str = str.substring(1,str.length());
-			//String str=messageFromClient
-			if((this.insertProduct((String)messageFromClient, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
+			if((this.insertProduct((ProductEntity)messageFromClient, client)).equals("Success"))	//check if asked to create a new product and check if it was create successfully
 			{
 				generalMessage = new String("Product was successfully added to the DataBase");
 			}
-			
 			else
 			{
 				generalMessage = new String("Product was not added to the DataBase.\n(Product ID already exists)");

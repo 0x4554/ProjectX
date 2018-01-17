@@ -20,12 +20,11 @@ public class ProductEntity implements Serializable{
 	{
 		
 	}
-
-	public byte[] getImage1() {
+	public byte[] getProductImage() {
 		return image1;
 	}
 
-	public void setImage1(byte[] image1) {
+	public void setProductImage(byte[] image1) {
 		this.image1 = image1;
 	}
 
@@ -93,21 +92,16 @@ public class ProductEntity implements Serializable{
 		this.productName = productName;
 	}
 	
-	public Image getProductImage() {
+	/*public Image getProductImage() {
 		return productImage;
 	}
 
 	public void setProductImage(Image productImage) {
 		this.productImage = productImage;
 	}
+*/
 
-/**
-	 * Setter for the productImage
-	 * @param productImage the productImage to set
-	 */
-    public void setProductImage(byte[] productImage) {
-		this.image1 = productImage;
-	}
+    
 	
 	public void convertImageToByteArray(Image img) {
 		

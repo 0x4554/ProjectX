@@ -69,7 +69,6 @@ public class OrderEntity implements Serializable{
 	public void setProductsInOrder(ProductEntity p) {
 		this.productsInOrder.add(p);
 	}
-	
 	/**
 	 * This method uses for removing a product from the cart
 	 * @param productName
