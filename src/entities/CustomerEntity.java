@@ -63,7 +63,7 @@ public class CustomerEntity extends UserEntity {
 	 * @return the subscriptionDiscount
 	 */
 	public String getSubscriptionDiscount() {
-		return subscriptionDiscount.toString();
+		return this.subscriptionDiscount.name();
 	}
 	/**
 	 * Setter for the subscriptionDiscount

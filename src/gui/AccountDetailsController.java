@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.CustomerEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,8 +38,9 @@ public class AccountDetailsController implements Initializable{
     @FXML private Label idLbl;
     @FXML private Label phnLbl;
     @FXML private Label mailLbl;
-    @FXML private Label sttsLbl;
+    @FXML private Label sbscrptLbl;
     @FXML private Label crdtLbl;
+    @FXML private Label adrsLbl;
 	 
 	 CustomerMenuController cm;
 	 
@@ -68,10 +70,20 @@ public class AccountDetailsController implements Initializable{
 			return;
 		}
 	 
+	 
+	 public void setLabels(CustomerEntity c) {
+		 cstNmLbl.setText(c.getUserName());
+		 idLbl.setText(Long.toString(c.getCustomerID()));
+		 phnLbl.setText(c.getPhoneNumber());
+		 mailLbl.setText(c.getEmailAddress());
+		 sbscrptLbl.setText(c.getSubscriptionDiscount().toString());
+		 crdtLbl.setText(Long.toString(c.getCreditCardNumber()));
+		 adrsLbl.setText(c.getAddress());
+	 }
+	 
 	 @Override
 		public void initialize(URL location, ResourceBundle resources) 
 		{
-		 
 		}
 	
 }

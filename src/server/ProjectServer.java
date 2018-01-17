@@ -32,6 +32,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.imageio.ImageIO;
 import javax.security.auth.callback.ConfirmationCallback;
+
+import client.Client;
+
 import java.util.Date;
 import entities.CardEntity;
 import entities.ComplaintEntity;
@@ -1326,7 +1329,17 @@ public class ProjectServer extends AbstractServer
 		
 		if(operation.equals("getUserDetails")) {
 			
+			MessageToSend reply;
+
 			CustomerEntity cust=this.getCustomerDetails((String)messageFromClient);
+			if(cust!=null) {
+			reply=new MessageToSend(cust, "customerExist");
+			client.sendToClient(reply);
+			}
+			else {
+				reply=new MessageToSend(null,"noCustomer");
+				client.sendToClient(reply);
+			}
 		}
 		
 		if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
@@ -1353,6 +1366,7 @@ public class ProjectServer extends AbstractServer
 				sendToAllClients(messageToSend);
 			}
 		}
+		
 		if(operation.equals("getCatalogByID"))/*get the discounts Hash Map for a specific store*/
 		{
 			ArrayList<Integer> listOfProducts = new ArrayList<Integer>();	//an arrayList that holds all the products in the catalog
@@ -1578,14 +1592,16 @@ public class ProjectServer extends AbstractServer
 	  }
 	  
 	  Statement s=con.createStatement();
-	  ResultSet rs = s.executeQuery("SELECT * FROM projectx.customers WHERE Username="+custName);
+	  ResultSet rs = s.executeQuery("SELECT * FROM projectx.customers WHERE Username='"+custName+"'");
 	  if(rs.next()) {
 		  CustomerEntity ce=new CustomerEntity();
 		  ce.setUserName(rs.getString(1));
-		  ce.setUserID(rs.getString(3));
+		  ce.setCustomerID(rs.getLong(3));
 		  ce.setSubscriptionDiscount(rs.getString(4));
-		  ce.setEmailAddress(rs.getString(5));
-		  ce.setPhoneNumber(rs.getString(6));
+		  ce.setAddress(rs.getString(5));
+		  ce.setEmailAddress(rs.getString(6));
+		  ce.setPhoneNumber(rs.getString(7));
+		  ce.setCreditCardNumber(Long.parseLong(rs.getString(9)));
 		 
 	      System.out.println("customer was pulled from database");
 	      return ce;
@@ -1609,17 +1625,20 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 		  System.out.println("Connection to Database failed");
 	  }
 	  
-	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,SubscriptionDiscount,JoinTime,Credit) VALUES (?,?,?,?,?,?)");
+	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
-	  ps.setLong(3, ce.getID());
+	  ps.setLong(3, ce.getCustomerID());
 	  ps.setString(4,ce.getSubscriptionDiscount().toString());
+	  ps.setString(5, ce.getAddress());
+	  ps.setString(6, ce.getEmailAddress());
+	  ps.setString(7, ce.getPhoneNumber());
 	  
 	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
       Date dateobj = new Date();
       
-	  ps.setString(5, df.format(dateobj).toString());
-	  ps.setLong(6, ce.getCreditCardNumber());
+	  ps.setString(8, df.format(dateobj).toString());
+	  ps.setLong(9, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
 	  
 	  ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts) VALUES (?,?,?,?)");

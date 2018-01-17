@@ -150,7 +150,7 @@ public class CustomerMenuController implements Initializable{
 		}
 	}
 	    //*Open  Account details  menu from customer main menu*//
-		public void enterToAccount(ActionEvent event) throws IOException {
+		public void enterToAccount(ActionEvent event) throws IOException, InterruptedException {
 			
 //			Client.getClientConnection().setConfirmationFromServer();
 //			MessageToSend msg=new MessageToSend(Client.getClientConnection().getUsername(), "getUserDetails");
@@ -160,10 +160,16 @@ public class CustomerMenuController implements Initializable{
 //			while(!Client.getClientConnection().getConfirmationFromServer())
 //				Thread.sleep(100);
 			
+			CustomerEntity custent=this.getCustomerData(Client.getClientConnection().getUsername());
+			if(custent==null)
+				GeneralMessageController.showMessage("There was a problem loading customer\nPlease try again later");
+			
+			else {
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
 			 Parent root = loader.load(getClass().getResource("/gui/AccountDetailsBoundary.fxml").openStream());
 			 AccountDetailsController adc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+			 adc.setLabels(custent);
 			 adc.setConnectionData(this);
 			 //	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
@@ -171,27 +177,38 @@ public class CustomerMenuController implements Initializable{
 			primaryStage.setTitle("Account details");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			}
 		}
+		
 		
 		public CustomerEntity getCustomerData(String customerName) throws InterruptedException {
 			
 			CustomerEntity ce;
 			
-			Client.getClientConnection().setConfirmationFromServer();
+			
 			MessageToSend msg=new MessageToSend(customerName, "getUserDetails");
-			Client.getClientConnection().handleMessageFromClientUI(msg);
+			Client.getClientConnection().setDataFromUI(msg);
 			Client.getClientConnection().accept();
 			
-
 			while(!Client.getClientConnection().getConfirmationFromServer())
 				Thread.sleep(100);
 			
+			Client.getClientConnection().setConfirmationFromServer();
 			
+			msg=Client.getClientConnection().getMessageFromServer();
+			
+			if(msg.getOperation().equals("customerExist")) 
+				return (CustomerEntity)msg.getMessage();
+			
+			else
+				return null;
+				
 		}
 		
 		
 		//*Open  Update details Window from customer main menu*//
 				public void enterToUpdateDetails(ActionEvent event) throws IOException {
+					
 					 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					 FXMLLoader loader = new FXMLLoader();
 					 Parent root = loader.load(getClass().getResource("/gui/UpdateAccountBoundary.fxml").openStream());

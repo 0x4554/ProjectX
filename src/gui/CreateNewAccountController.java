@@ -59,6 +59,7 @@ public class CreateNewAccountController implements Initializable {
     @FXML private ComboBox<String> subscrptCmb;
     @FXML private TextField emlFld;
     @FXML private TextField phnFld;
+    @FXML private TextField adrsFld;
 
 
     private ObservableList<String> list;
@@ -98,7 +99,7 @@ public class CreateNewAccountController implements Initializable {
 	 */
 	
 	public boolean checkRequiredFields() {
-		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
+		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || adrsFld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
 			return false;
 
 		return true;
@@ -122,21 +123,26 @@ public class CreateNewAccountController implements Initializable {
 			else {
 				CustomerEntity cust=new CustomerEntity();
 				cust.setUserName(usrFld.getText());						//set Fields of the new customer
-				cust.setID(Long.parseLong(idFld.getText()));
+				cust.setCustomerID(Long.parseLong(idFld.getText()));
 				cust.setPassword(pswrdFld.getText());
 				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
 				cust.setEmailAddress(emlFld.getText());
 				cust.setPhoneNumber(phnFld.getText());
+				cust.setAddress(adrsFld.getText());
 
 				if(!crdFld.getText().isEmpty()) 								//if credit card is entered
 					cust.setCreditCardNumber(Long.parseLong(crdFld.getText()));
 				
+				
 				MessageToSend msg=new MessageToSend(cust, "createAccount");			//defining the job for the server
 				Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 				Client.getClientConnection().accept();								//sending data to server
-				Client.getClientConnection().setConfirmationFromServer();
+				
+				
 				while(!Client.getClientConnection().getConfirmationFromServer())
 					Thread.sleep(100);
+				
+				Client.getClientConnection().setConfirmationFromServer();
 				
 				if(Client.getClientConnection().getMessageFromServer().getMessage().equals("added")) {
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
