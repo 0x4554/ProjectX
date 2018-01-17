@@ -252,8 +252,9 @@ public class ProjectServer extends AbstractServer
    * @return	an arrayList of Orders
  * @throws SQLException 
  * @throws ClassNotFoundException 
+ * @throws IOException 
    */
-  private ArrayList<OrderEntity> getCancelRequests() throws SQLException, ClassNotFoundException
+  private ArrayList<OrderEntity> getCancelRequests() throws SQLException, ClassNotFoundException, IOException
   {
 	  ArrayList<OrderEntity> listOfOrdersFromDB = new ArrayList<OrderEntity>();
 		OrderEntity order;
@@ -360,7 +361,7 @@ public class ProjectServer extends AbstractServer
    * @throws ClassNotFoundException
  * @throws IOException for file converting
    */
-  private ArrayList<OrderEntity> getCustomerOrders(String userID) throws SQLException, ClassNotFoundException
+  private ArrayList<OrderEntity> getCustomerOrders(String userID) throws SQLException, ClassNotFoundException, IOException
   {
 	  ArrayList<OrderEntity> listOfOrdersFromDB = new ArrayList<OrderEntity>();
 		OrderEntity order;
