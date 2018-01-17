@@ -89,7 +89,7 @@ public class FilesConverter {
 	 * @param byteArray - the byte array you want to convert
 	 * @return - returns an image made out of the byte array
 	 */
-	public Image convertByteArrayToImage(byte[] byteArray) {
+	public static Image convertByteArrayToImage(byte[] byteArray) {
 
 		//BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
 		Image image = new Image(new ByteArrayInputStream(byteArray));

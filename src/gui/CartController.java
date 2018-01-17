@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.FilesConverter;
 
 public class CartController implements Initializable {
 	private OrderEntity newOrder;
@@ -52,7 +54,7 @@ public class CartController implements Initializable {
 	@FXML
 	private Label totalPriceLable;
 
-	public void showCart() throws FileNotFoundException {
+	public void showCart() throws IOException {
 		String lbl = "";
 		this.listOfProductsNames = new ArrayList<String>();
 		//this.newOrder = new OrderEntity();
@@ -65,7 +67,9 @@ public class CartController implements Initializable {
 
 //		}
 //**TO BE FIXED	this.newOrder.getProductsInOrder().get(1).setProductImage(new Image(new FileInputStream( "C:\\Users\\pic2.jpg")));
-		this.newOrder.addProductToCart(new ProductEntity(1, "rose", "flower", 20.0, "pretty flower", null));
+		byte[] b = FilesConverter.convertFileToByteArray(new File("C:\\Users\\pic1.jpg"));
+		//Image i = FilesConverter.convertByteArrayToImage(b);
+		this.newOrder.addProductToCart(new ProductEntity(1, "rose", "flower", 20.0, "pretty flower","red", b));
 		////////////////////////////////////////////////////////////////////////////
 		TreeItem<String> root;
 
@@ -124,8 +128,8 @@ public class CartController implements Initializable {
 	public void showProductImage(MouseEvent event) {
 		for(ProductEntity product : this.newOrder.getProductsInOrder())
 		{
-//**TO BE FIXED			if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
-//**TO BE FIXED				this.prdctImg.setImage(product.getProductImage());
+		if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
+				this.prdctImg.setImage(FilesConverter.convertByteArrayToImage(product.getProductImage()));
 		}
 	} 
 	
