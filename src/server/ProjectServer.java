@@ -102,8 +102,16 @@ public class ProjectServer extends AbstractServer
  * @throws SQLException 
  * @throws IOException for file conversion
    */
-  private ArrayList<OrderEntity> getAllOrders(String storeName) throws ClassNotFoundException, SQLException, IOException
+  private ArrayList<OrderEntity> getAllOrders(ArrayList<String> storeNameQuarter) throws ClassNotFoundException, SQLException, IOException
   {
+	///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<"number"> for the wanted quarter ////
+	  String[] firstQuarter = {"January","February","March"};
+	  String[] secondQuarter = {"April","May","June"};
+	  String[] thirdQuarter = {"July","August","September"};
+	  String[] forthQuarter = {"October","November","December"};
+	  String[] askedQuarter = null;
+	  
+	  
 	  Statement stmt,stmt2,stmt3,stmt4,stmt5;
 	  OrderEntity order;
 	  DeliveryEntity delivery = null;
@@ -125,12 +133,26 @@ public class ProjectServer extends AbstractServer
 	  stmt3=con.createStatement();
 	  stmt4=con.createStatement();
 	  stmt5=con.createStatement();
+	  
+	  //determine which quarter is asked by the client
+	  if(storeNameQuarter.get(1).equals("1"))
+		  askedQuarter=firstQuarter;
+	  else if (storeNameQuarter.get(1).equals("2"))
+		  askedQuarter=secondQuarter;
+	  else if (storeNameQuarter.get(1).equals("3"))
+		  askedQuarter=thirdQuarter;
+	  else if (storeNameQuarter.get(1).equals("4"))
+		  askedQuarter=forthQuarter;
 	  String storeOrders = "";
-	  if(storeName != null)							//check if asked for all orders OR a specific store orders
+	  if(!storeNameQuarter.get(0).equals("all"))							//check if asked for all orders OR a specific store orders
 	  {
-		  storeOrders = "WHERE A.BranchID = (SELECT BranchID FROM projectx.store WHERE BranchName = '"+storeName+"') ";
+		  storeOrders = "AND A.BranchID = (SELECT BranchID FROM projectx.store WHERE BranchName = '"+storeNameQuarter.get(0)+"') ";
 	  }
-	  rs = stmt.executeQuery("SELECT * FROM projectx.order A "+storeOrders);
+	  rs = stmt.executeQuery("SELECT * FROM projectx.order A "
+	  		+ "WHERE"
+	  		+ "( monthname(A.OrderTime)= '"+askedQuarter[0]+"' OR"
+	  		+ " monthname(A.OrderTime)= '"+askedQuarter[1]+"' OR"
+	  		+ " monthname(A.OrderTime)= '"+askedQuarter[2]+"' )"+storeOrders);
 	  while(rs.next())
 	  {
 		  order = new OrderEntity();
@@ -1441,8 +1463,10 @@ public class ProjectServer extends AbstractServer
 		
 		if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
 		{
+			
+							///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<int> for the wanted quarter ////
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
-			listOfOrders = getAllOrders((String)messageFromClient);
+			listOfOrders = getAllOrders((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
 			sendToAllClients(messageToSend);
 		}
