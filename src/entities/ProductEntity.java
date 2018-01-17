@@ -12,17 +12,17 @@ public class ProductEntity implements Serializable{
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
-	private byte[] image;
+	private byte[] productImage;
 
 	//private ImageView productImage;
 //	private Image productImage;
+
 
 	
 	public ProductEntity()
 	{
 		
 	}
-
 
 	/**
 	 * Constructor for the ProductEntity.java class
@@ -33,8 +33,10 @@ public class ProductEntity implements Serializable{
 	 * @param productDescription	description
 	 * @param productDominantColor	dominant color
 	 */
+
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor) {
+			String productDescription, String productDominantColor,byte[] productImage) {
+
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -42,7 +44,7 @@ public class ProductEntity implements Serializable{
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-//** TO BE FIXED		this.productImage = productImage;
+		this.productImage = productImage;
 	}
 	
 	/**
@@ -73,39 +75,23 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	
 
-//	public ImageView getProductImage() {
-//		return productImage;
-//	}
-//
-//	public void setProductImage(ImageView productImage) {
-//		this.productImage = productImage;
-//	}
+	 /** Getter for the productImage
+	 * @return the productImage
+	 */
+	public byte[] getProductImage() {
+		return productImage;
+	}
 
-//**TO BE FIXED	/**
-//	 * Getter for the productImage
-//	 * @return the productImage
-//	 */
-//	public Image getProductImage() {
-//		return productImage;
-//	}
-//
-//
+
 	/**
 	 * Setter for the productImage
 	 * @param productImage the productImage to set
 	 */
 	public void setProductImage(byte[] productImage) {
-		this.image = productImage;
+		this.productImage = productImage;
 	}
 	
-	
-	public void convertImageToByteArray(Image img) {
-		
-	}
-
-
 	/**
 	 * Getter for the productType
 	 * @return the productType

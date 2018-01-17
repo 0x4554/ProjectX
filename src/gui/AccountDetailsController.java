@@ -38,32 +38,17 @@ public class AccountDetailsController implements Initializable{
     @FXML private Label sttLbl;
     @FXML private Label crdLbl;
 	 
-	 private Client clnt;
 	 CustomerMenuController cm;
 	 
 	 public void setConnectionData(CustomerMenuController m)
 		{
 			this.cm=m;
 		}
-
-	 /**
-	  * This method is the constructor for this class
-	  * @param clnt is connected client
-	  */
-	 public AccountDetailsController(Client clnt)
-	 {
-		 this.clnt=clnt;
-	 }
 	 
 	 /**
 	  * A necessary constructor for the App
 	  */
 	 public AccountDetailsController()
-	 {
-		 
-	 }
-	 
-	 public void ShowAccountDetails(Client clnt)
 	 {
 		 
 	 }
@@ -84,21 +69,6 @@ public class AccountDetailsController implements Initializable{
 			this.cm.showCustomerMenu();										//open previous menu
 			return;
 		}
-	 /*
-	 public void back(ActionEvent event) throws IOException
-		{
-			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-
-			FXMLLoader loader = new FXMLLoader();
-			Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-			
-			Stage primaryS=new Stage();
-			Scene scene=new Scene(root);
-			
-			primaryS.setTitle("Generate Report");
-			primaryS.setScene(scene);
-			primaryS.show();
-		}*/
 	 
 	 
 	

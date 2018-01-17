@@ -57,8 +57,10 @@ public class CreateNewAccountController implements Initializable {
     @FXML private Button bckBtn;
     @FXML private Button crtBtn;
     @FXML private ComboBox<String> subscrptCmb;
+    @FXML private TextField emlFld;
+    @FXML private TextField phnFld;
 
-    private Client clnt;
+
     private ObservableList<String> list;
     private StoreManagerMenuController mmc;
     
@@ -96,7 +98,7 @@ public class CreateNewAccountController implements Initializable {
 	 */
 	
 	public boolean checkRequiredFields() {
-		if(usrFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
+		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
 			return false;
 
 		return true;
@@ -123,6 +125,8 @@ public class CreateNewAccountController implements Initializable {
 				cust.setID(Long.parseLong(idFld.getText()));
 				cust.setPassword(pswrdFld.getText());
 				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
+				cust.setEmailAddress(emlFld.getText());
+				cust.setPhoneNumber(phnFld.getText());
 
 				if(!crdFld.getText().isEmpty()) 								//if credit card is entered
 					cust.setCreditCardNumber(Long.parseLong(crdFld.getText()));
