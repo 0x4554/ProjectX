@@ -55,6 +55,7 @@ public class LoginController implements Initializable {
 	private CustomerServiceWorkerMenuController cswmc;
 	private ChainStoreManagerMenuController csmmc;
 	private CustomerServiceExpertMenuController csemc;
+	private ChainWorkerMenuController cwmn;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -199,6 +200,12 @@ public class LoginController implements Initializable {
 			csemc = new CustomerServiceExpertMenuController();
 			csemc.showCustomerServiceExpertMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service expert");
+			break;
+			
+		case "CW":	//chain worker
+			cwmn = new ChainWorkerMenuController();
+			cwmn.showChainWorkerMenu();
+			GeneralMessageController.showMessage("Logged in as a chain worker");
 			break;
 		}
 	}

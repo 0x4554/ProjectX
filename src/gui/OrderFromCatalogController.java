@@ -24,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -31,11 +32,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import logic.FilesConverter;
 import logic.MessageToSend;
 /**
  * 
@@ -97,21 +101,38 @@ public class OrderFromCatalogController implements Initializable{
 	    newOrder=order;
 	    
 	    storeid=order.getStore().getBranchID();
-	    //store.getBranchID();                                           //get the branch id
 		HashMap<Integer, Double> discount=new HashMap<Integer,Double>();//Integer->product id-key, Double->product price is the value
 		discount=getDiscounts(storeid);                                     //get the discount for the specific store
 		itr=discount.keySet().iterator();                                         //get the key's from the hash map of discounts
 		
 		ArrayList<Integer> products =new ArrayList<Integer>();//product id's from the Catalog 
+		
+		/*************************************************************************added yesterday**********************************/
+		//ArrayList<ProductEntity> pr=new ArrayList<ProductEntity>();
+		/*****************************************************************************************************************************/
+
+		/*****************************************comma products added pr*******************************/
 		products=getProductsFromDB_ByID();                            //get the product id's from the catalog table in the data base
+		//pr=getProductsFromDB_ByID();
+
+		/*************************************************************************************************************************/
+
+		
 		
 		/*Here we insert  the product's that need to be in the catalog */
 		for(i=0;i<products.size();i++)
 		{
-			productsFromTable.add(getProduct(products.get(i)));//get product using product id from the product table
+			/**********************************************************comma did i pr added*******************************/
+			ProductEntity product_temp=new ProductEntity();
+			product_temp=getProduct(products.get(i));
+			if(product_temp!=null)
+			   productsFromTable.add(getProduct(products.get(i)));//get product using product id from the product table
+			//productsFromTable.add(pr.get(i));
+			/**************************************************************************************************************/
 		}		
 		i=0;
 		
+		/***************************************************put them in comma******************************************/
 		/*Update store prices*/
 	    while (itr.hasNext())
 	    {	
@@ -123,6 +144,9 @@ public class OrderFromCatalogController implements Initializable{
 		        }
 	    		i++;
 		}
+		/**********************************************************************************************************************/
+		
+		
 	    /*******************************************************Build the catalog view**********************************************/
 	    
 	    /*Add all products to observable List*/
@@ -142,25 +166,7 @@ public class OrderFromCatalogController implements Initializable{
                     protected void updateItem(ProductEntity product, boolean status) {
                         super.updateItem(product, status);
                         if (product != null) {
-                        	/**************************************************************************************************/
-                        	// convert byte array back to BufferedImage
-                			/*InputStream in = new ByteArrayInputStream(product.getImage1());
-                			BufferedImage bImageFromConvert = null;
-							try {
-								bImageFromConvert = ImageIO.read(in);
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-                			try {
-								ImageIO.write(bImageFromConvert, "jpg", new File(
-										"c:/pic.jpg"));
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-                        	/**************************************************************************************************/
-                        	
+                                                	
                         	Button addToCart =new Button("Add To Cart");
                       //  	ImageView imgv=new ImageView(product.getProductImage());
                         	
@@ -171,11 +177,25 @@ public class OrderFromCatalogController implements Initializable{
                							AddProductToCart(product);
                               }
                            });
-                        	
+                        	/********************************************added all ***********************************************************/
+                        	if(product.getProductImage()!=null)
+                        	{
+                        		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
+                        		ImageView v=new ImageView(j);
+                        		v.setFitHeight(130);
+                        		v.setFitWidth(130);
+                        		VBox vb=new VBox(15);
+                        		addToCart.setMinWidth(130);
+                            	vb.getChildren().addAll(v,addToCart);
+                                setGraphic(vb);
+
+                              /*****************************************************************************************************************/
+                        	}
+                        	else {
+                        		setGraphic(addToCart);
+                        	}
                             setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
                             setFont(Font.font(18));
-                           // setGraphic(imgv);
-                            setGraphic(addToCart);
                         }
                     }
                 };
@@ -198,6 +218,7 @@ public class OrderFromCatalogController implements Initializable{
 		CreateNewOrderController cnoc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		
 		/**********************************************************change it**********************************/
        for(int i=0;i<this.productsInOrder.size();i++)
        {
@@ -219,8 +240,7 @@ public class OrderFromCatalogController implements Initializable{
 	public void AddProductToCart(ProductEntity product)
 	{
 		productsInOrder.add(product);
-		System.out.println("hey its added babe");
-		System.out.println(product.getProductID());
+		System.out.println("hey its added babe"+product.getProductID());
 	}
 	
 	/*************************************************************Update Price**********************************************/
@@ -242,6 +262,8 @@ public class OrderFromCatalogController implements Initializable{
 			}
 		}
 	}
+	
+	/************************************************put this in comma and replaced it ***********************/
 	/**
 	 * This method returns the id of the products in the catalog table
 	 * @return
@@ -259,7 +281,20 @@ public class OrderFromCatalogController implements Initializable{
 		dataFromServer = (ArrayList<Integer>)m.getMessage();
 		return dataFromServer;
 }
-
+/*	public ArrayList<ProductEntity> getProductsFromDB_ByID() throws InterruptedException {
+		MessageToSend mts=new MessageToSend(null,"getCatalogByID");
+		ArrayList<ProductEntity> dataFromServer = null;
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
+		return dataFromServer;
+	}
+	*/
+	/*********************************************************************************************************************/
 	/**
 	 * This method return's the product entity requested by product ID 
 	 * @param productID-the product we want to get from the data base

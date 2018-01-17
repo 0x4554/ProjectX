@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import entities.UserEntity;
 import client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,7 +57,6 @@ public class CreateNewUserController implements Initializable{
 		this.am.showAdministratorMenu();										//open previous menu
 		return;
 	}
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

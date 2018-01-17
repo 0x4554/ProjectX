@@ -74,7 +74,6 @@ public class CustomerMenuController implements Initializable{
 	private TextField EnterProductname;
 	private Button backFromcatalog;
 	private Button CheckOut;
-	private Client clnt;
 	
 	/**
 	 * This method is the constructor for this class
@@ -105,17 +104,19 @@ public class CustomerMenuController implements Initializable{
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		cmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+<<<<<<< HEAD
+=======
 	
 	
 	private void setConnectionData(Client clnt2) {
 		// TODO Auto-generated method stub
 		this.clnt=clnt2;
 	}////////////////////////////////////////////////////////
+>>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 	
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
@@ -142,8 +143,8 @@ public class CustomerMenuController implements Initializable{
 		CatalogController catlg=new CatalogController();
 		catlg.setConnectionData(this);
 		try {
-			catlg.addProductsToDB(null);
-			//catlg.showProductcatalog();
+			//catlg.addProductsToDB(null);
+			catlg.showProductcatalog();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
