@@ -90,6 +90,113 @@ public class ProjectServer extends AbstractServer
 	  ConnectedClients.removeConnectedClient(username);
   }
 
+
+/**
+   * This method gets all of the orders in the DB OR  a specific store's orders
+   * @return	arrayList of orders in the DB
+   * @param the store name OR null if for all stores
+ * @throws ClassNotFoundException 
+ * @throws SQLException 
+ * @throws IOException for file conversion
+   */
+  private ArrayList<OrderEntity> getAllOrders(String storeName) throws ClassNotFoundException, SQLException, IOException
+  {
+	  Statement stmt,stmt2,stmt3,stmt4,stmt5;
+	  OrderEntity order;
+	  DeliveryEntity delivery = null;
+	  ProductEntity product;
+	  StoreEntity store;
+	  ResultSet rs,rs2,rs3,rs4,rs5;
+	  ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
+	  try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+	  stmt = con.createStatement();
+	  stmt2 = con.createStatement();
+	  stmt3=con.createStatement();
+	  stmt4=con.createStatement();
+	  stmt5=con.createStatement();
+	  String storeOrders = "";
+	  if(storeName != null)							//check if asked for all orders OR a specific store orders
+	  {
+		  storeOrders = "WHERE A.BranchID = (SELECT BranchID FROM projectx.store WHERE BranchName = '"+storeName+"') ";
+	  }
+	  rs = stmt.executeQuery("SELECT * FROM projectx.order A "+storeOrders);
+	  while(rs.next())
+	  {
+		  order = new OrderEntity();
+			
+			//** get the delivery details **//
+	rs2 = stmt2.executeQuery("SELECT * FROM projectx.delivery WHERE OrderID ="+rs.getInt(1)+"" );	//get the delivery data for the order
+	while(rs2.next())
+		delivery = new DeliveryEntity(rs2.getString(2), rs2.getString(3), rs2.getString(4), rs2.getTimestamp(5));		//create a new delivery using the data
+	order.setDeliveryDetails(delivery);
+	
+			//**get the products in the order **//
+	rs3 = stmt3.executeQuery("SELECT ProductID FROM projectx.productsinorder WHERE Ordernum = " +rs.getInt(1)+ "");
+	while(rs3.next())
+	{
+		rs4 = stmt4.executeQuery("SELECT * FROM projectx.product WHERE ProductID = " +rs3.getInt(1)+""); 	//get each product's details from DB
+		while(rs4.next())
+		{
+			Blob b = con.createBlob(); 					//create blob
+			b=rs.getBlob(8);							////get blob from DB
+	  		InputStream is=b.getBinaryStream();	  		//get binary Stream for blob and than use FilesConverter.convertInputStreamToByteArray(InputStream)
+	  		byte[] image = FilesConverter.convertInputStreamToByteArray(is);
+
+	  		product = new ProductEntity(rs4.getInt(1), rs4.getString(2), rs4.getString(3), rs4.getDouble(4), rs4.getString(5), rs4.getString(7), image); //**NO IMAGE YET//
+			order.addProductToCart(product); 			//add the product to the order
+		}
+	}
+	order.setOrderID(rs.getInt(1));
+	order.setUserName(rs.getString(2));
+	order.setOrderTime(rs.getTimestamp(3));
+	if(rs.getString(4) != null)
+		order.setCard(new CardEntity(rs.getString(4)));
+	if(rs.getString(5).equals(OrderEntity.SelfOrDelivery.selfPickup.toString()))  //set self pickup or delivery
+		order.setOrderPickup(OrderEntity.SelfOrDelivery.selfPickup);
+	else
+		order.setOrderPickup(OrderEntity.SelfOrDelivery.delivery);
+	
+	if(rs.getString(6).equals(OrderEntity.OrderStatus.active.toString()))		//check order status
+		order.setStatus(OrderEntity.OrderStatus.active);
+	else if(rs.getString(6).equals(OrderEntity.OrderStatus.cancel_requested.toString()))
+		order.setStatus(OrderEntity.OrderStatus.cancel_requested);
+	else
+		order.setStatus(OrderEntity.OrderStatus.cancelled);
+	
+	if(rs.getInt(7) == 0)				//check if order was paid for
+		order.setPaid(false);
+	else
+		order.setPaid(true);
+	
+	order.setTotalPrice(rs.getDouble(8));
+	order.setReceivingTimestamp(rs.getTimestamp(9));
+				//** get the store **//
+	rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(10)+"");
+	while(rs5.next())
+	{
+		store = new StoreEntity(rs5.getInt(1), rs5.getString(2), rs5.getInt(3));
+		order.setStore(store);
+	}
+	
+	if(rs.getString(7).equals(OrderEntity.CashOrCredit.cash.toString()))
+		order.setPaymendMethod(OrderEntity.CashOrCredit.cash);
+	else
+		order.setPaymendMethod(OrderEntity.CashOrCredit.credit);
+
+	listOfOrders.add(order); //add the product from the data base to the list
+	  }
+
+	  return listOfOrders;
+  }
+  
   /**
    * This method get the products matching the self defined products from the product table in the DB
  * @throws ClassNotFoundException  problem connecting
@@ -121,12 +228,12 @@ public class ProjectServer extends AbstractServer
 	 type=requests.get(2); 											//get the product type
 	 
 	 String dominantColor ="";
-	 if(!requests.get(3).isEmpty()) 								//if dominant color was chosen
+	 if(!(requests.size()<4)) 								//if dominant color was chosen
 	 {
-		dominantColor = "AND ProductDominantColor = '"+ requests.get(4)+"'";
+		dominantColor = "AND ProductDominantColor = '"+ requests.get(3)+"'";
 	 }
 	 stmt=con.createStatement();
-	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+"AND"+maxPrice+"AND ProductType = '"+type+"'"+dominantColor+"");
+	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+" AND "+maxPrice+" AND ProductType = '"+type+"'"+dominantColor+"");
 	 while(rs.next())
 	 {
 		 product = new ProductEntity();									//create new product
@@ -138,16 +245,15 @@ public class ProjectServer extends AbstractServer
 		 				//**get the blob for the image from the DB**//
 		 productImage =con.createBlob();
 		 productImage = rs.getBlob(6);
-		 InputStream is = productImage.getBinaryStream();
+////////********////////		 InputStream is = productImage.getBinaryStream();
 		 
-		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
+///////*********////////		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
 		 product.setProductDominantColor(rs.getString(7));
 		 listOfProducts.add(product);									//add the product to the list
 	 }
 	 return listOfProducts;												//return the found products
 	 
   }
-  
   /**
    * This method cancel an order and sets its status to canceled in the DB
    * @param OrderID	the order to cancel
@@ -243,10 +349,11 @@ public class ProjectServer extends AbstractServer
   /**
    * This method gets all the cancel requests from the DB
    * @return	an arrayList of Orders
- * @throws SQLException 
+ * @throws SQLException 	sql error
  * @throws ClassNotFoundException 
+ * @throws IOException file converting
    */
-  private ArrayList<OrderEntity> getCancelRequests() throws SQLException, ClassNotFoundException
+  private ArrayList<OrderEntity> getCancelRequests() throws SQLException, ClassNotFoundException, IOException
   {
 	  ArrayList<OrderEntity> listOfOrdersFromDB = new ArrayList<OrderEntity>();
 		OrderEntity order;

@@ -79,7 +79,7 @@ public class CustomerSelfDefinedProducyController implements Initializable {
 		data.add(this.MinPrcCmb.getSelectionModel().getSelectedItem());		//add the minimum price to the list
 		data.add(this.maxPrcCmb.getSelectionModel().getSelectedItem());		//add the maximum price to the list
 		data.add(this.prdctTypeCmb.getSelectionModel().getSelectedItem());	//add type to list
-		if(!this.dmnntClrCmb.getSelectionModel().isEmpty())
+		if(!this.dmnntClrCmb.getSelectionModel().isEmpty() && !this.dmnntClrCmb.getSelectionModel().getSelectedItem().equals("none"))
 			data.add(this.dmnntClrCmb.getSelectionModel().getSelectedItem());		//if exists add dominant color
 		
 		MessageToSend messageToSend = new MessageToSend(data, "getSelfDefinedProduct");
@@ -99,6 +99,7 @@ public class CustomerSelfDefinedProducyController implements Initializable {
 		}
 		
 		///////////////////////show as catalog////////////////////////
+		GeneralMessageController.showMessage(matchingProducts.get(0).getProductName());
 
 	}
 
@@ -166,6 +167,7 @@ public class CustomerSelfDefinedProducyController implements Initializable {
 		this.prdctTypeCmb.setItems(this.listProductTypes);
 		
 		this.dominantColors = new ArrayList<String>();		//set  the dominant colors
+		this.dominantColors.add("none");
 		this.dominantColors.add("blue");
 		this.dominantColors.add("red");
 		this.dominantColors.add("green");
