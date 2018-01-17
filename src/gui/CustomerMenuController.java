@@ -1,4 +1,5 @@
 package gui;
+import entities.CustomerEntity;
 import  entities.ProductEntity;
 
 import java.io.File;
@@ -44,6 +45,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 import sun.tools.jar.Main;
 import java.awt.image.BufferedImage;
 
@@ -149,6 +151,15 @@ public class CustomerMenuController implements Initializable{
 	}
 	    //*Open  Account details  menu from customer main menu*//
 		public void enterToAccount(ActionEvent event) throws IOException {
+			
+//			Client.getClientConnection().setConfirmationFromServer();
+//			MessageToSend msg=new MessageToSend(Client.getClientConnection().getUsername(), "getUserDetails");
+//			Client.getClientConnection().handleMessageFromClientUI(msg);
+//			Client.getClientConnection().accept();
+//			
+//			while(!Client.getClientConnection().getConfirmationFromServer())
+//				Thread.sleep(100);
+			
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
 			 Parent root = loader.load(getClass().getResource("/gui/AccountDetailsBoundary.fxml").openStream());
@@ -160,7 +171,23 @@ public class CustomerMenuController implements Initializable{
 			primaryStage.setTitle("Account details");
 			primaryStage.setScene(scene);
 			primaryStage.show();
-		}			
+		}
+		
+		public CustomerEntity getCustomerData(String customerName) throws InterruptedException {
+			
+			CustomerEntity ce;
+			
+			Client.getClientConnection().setConfirmationFromServer();
+			MessageToSend msg=new MessageToSend(customerName, "getUserDetails");
+			Client.getClientConnection().handleMessageFromClientUI(msg);
+			Client.getClientConnection().accept();
+			
+
+			while(!Client.getClientConnection().getConfirmationFromServer())
+				Thread.sleep(100);
+			
+			
+		}
 		
 		
 		//*Open  Update details Window from customer main menu*//

@@ -672,7 +672,7 @@ public class ProjectServer extends AbstractServer
 		}
 		stmt = con.createStatement();
 
-		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.users WHERE Username = '" + data[0] + "'"); //query to check if such a user exists
+		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.user WHERE Username = '" + data[0] + "'"); //query to check if such a user exists
 		if (!(rs.next())) //if user does not exists
 		{
 			//failed - ArrayList<String> to return in form of ["failed",reason of failure]
@@ -701,7 +701,7 @@ public class ProjectServer extends AbstractServer
 										//----------success - ArrayList<String> to return in form of ["success",user's type]----------//
 					returnMessage.add("success"); //state succeeded to login
 					returnMessage.add(rs.getString(3)); //add the type of user (customer,worker...)
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
 
@@ -722,7 +722,7 @@ public class ProjectServer extends AbstractServer
 					returnMessage.add("failed"); 							//state failed to log in
 					returnMessage.add("password does not match"); 			//reason for failure
 					attempts = rs.getInt(4) + 1; 							//increment number of attempts made
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
 					ps.setString(2, data[0]);
 					ps.setInt(1, attempts); 								//update the number of attempts made to log in 
 					ps.executeUpdate();
@@ -1231,63 +1231,7 @@ public class ProjectServer extends AbstractServer
 	         return null;  
   }
   
-   /**
-   * This method get the products matching the self defined products from the product table in the DB
-   * @throws ClassNotFoundException  problem connecting
-   * @throws SQLException for the sql query
-   * @throws IOException for the files converter
-   */
-  private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
-  {
-	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
-	 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
-	 ProductEntity product;
-	 Blob productImage;
-	 Statement stmt;
-	 ResultSet rs;
-	 try
-		{
-			con = connectToDB(); //call method to connect to DB
-			if (con != null)
-				System.out.println("Connection to Data Base succeeded");
-		} catch (SQLException e) //catch exception
-		{
-			System.out.println("SQLException: " + e.getMessage());
-		}
-	 Double minPrice,maxPrice;
-	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
-	 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
-	 
-	 String type = "";
-	 type=requests.get(2); 											//get the product type
-	 
-	 String dominantColor ="";
-	 if(!(requests.size()<4)) 								//if dominant color was chosen
-	 {
-		dominantColor = "AND ProductDominantColor = '"+ requests.get(3)+"'";
-	 }
-	 stmt=con.createStatement();
-	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+" AND "+maxPrice+" AND ProductType = '"+type+"'"+dominantColor+"");
-	 while(rs.next())
-	 {
-		 product = new ProductEntity();									//create new product
-		 product.setProductID(rs.getInt(1));
-		 product.setProductName(rs.getString(2));
-		 product.setProductType(rs.getString(3));
-		 product.setProductPrice(rs.getDouble(4));
-		 product.setProductDescription(rs.getString(5));
-		 				//**get the blob for the image from the DB**//
-		 productImage =con.createBlob();
-		 productImage = rs.getBlob(6);
-////////********////////		 InputStream is = productImage.getBinaryStream();
-		 
-///////*********////////		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
-		 product.setProductDominantColor(rs.getString(7));
-		 listOfProducts.add(product);									//add the product to the list
-	 }
-	 return listOfProducts;												//return the found products
-	 
-  }
+
   
 /**
  * This method return's the discount's from the table in the data base 
@@ -1378,6 +1322,11 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(listOfProducts);		//set the message for sending back to the client
 			sendToAllClients(messageToSend);
 			
+		}
+		
+		if(operation.equals("getUserDetails")) {
+			
+			CustomerEntity cust=this.getCustomerDetails((String)messageFromClient);
 		}
 		
 		if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
@@ -1617,7 +1566,39 @@ public class ProjectServer extends AbstractServer
 	}
   
   
-  public void insertNewCustomer(CustomerEntity ce) throws SQLException {
+  private CustomerEntity getCustomerDetails(String custName) throws SQLException {
+	// TODO Auto-generated method stub
+	  try {
+		  con=connectToDB();
+		  System.out.println("Connection to Database succeeded");
+	  }
+	  catch(Exception e) {
+		  e.printStackTrace();
+		  System.out.println("Connection to Database failed");
+	  }
+	  
+	  Statement s=con.createStatement();
+	  ResultSet rs = s.executeQuery("SELECT * FROM projectx.customers WHERE Username="+custName);
+	  if(rs.next()) {
+		  CustomerEntity ce=new CustomerEntity();
+		  ce.setUserName(rs.getString(1));
+		  ce.setUserID(rs.getString(3));
+		  ce.setSubscriptionDiscount(rs.getString(4));
+		  ce.setEmailAddress(rs.getString(5));
+		  ce.setPhoneNumber(rs.getString(6));
+		 
+	      System.out.println("customer was pulled from database");
+	      return ce;
+	  }
+	  
+	  else {
+		  System.out.println("failed to fine customer "+custName);
+	  }
+	  
+	return null;
+}
+
+public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  
 	  try {
 		  con=connectToDB();
@@ -1641,7 +1622,7 @@ public class ProjectServer extends AbstractServer
 	  ps.setLong(6, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
 	  
-	  ps=con.prepareStatement("INSERT INTO projectx.users (Username,Password,UserType,LoginAttempts) VALUES (?,?,?,?)");
+	  ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts) VALUES (?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
 	  ps.setString(3, "C");

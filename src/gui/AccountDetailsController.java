@@ -33,10 +33,12 @@ public class AccountDetailsController implements Initializable{
 	
 	@FXML private Button bckBtn;
     @FXML private Button updBtn;
-    @FXML private Label cstLbl;
+    @FXML private Label cstNmLbl;
     @FXML private Label idLbl;
-    @FXML private Label sttLbl;
-    @FXML private Label crdLbl;
+    @FXML private Label phnLbl;
+    @FXML private Label mailLbl;
+    @FXML private Label sttsLbl;
+    @FXML private Label crdtLbl;
 	 
 	 CustomerMenuController cm;
 	 
@@ -53,10 +55,6 @@ public class AccountDetailsController implements Initializable{
 		 
 	 }
 	 
-	 @Override
-		public void initialize(URL location, ResourceBundle resources) 
-		{
-		}
 
 	 
 	 /**
@@ -70,6 +68,10 @@ public class AccountDetailsController implements Initializable{
 			return;
 		}
 	 
-	 
+	 @Override
+		public void initialize(URL location, ResourceBundle resources) 
+		{
+		 
+		}
 	
 }
