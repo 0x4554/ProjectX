@@ -33,6 +33,8 @@ public class OrderEntity implements Serializable{
 	private CashOrCredit paymendMethod;
 	private DeliveryEntity deliveryDetails;
 	
+	private Timestamp cancelRequestTime;
+	
 	
 	/**
 	 * 
@@ -321,6 +323,21 @@ public class OrderEntity implements Serializable{
 	public void setOrderTime(Timestamp orderTime) {
 		this.orderTime = orderTime;
 	}
+	/**
+	 * Getter for the cancelRequestTime
+	 * @return the cancelRequestTime
+	 */
+	public Timestamp getCancelRequestTime() {
+		return cancelRequestTime;
+	}
+	/**
+	 * Setter for the cancelRequestTime
+	 * @param cancelRequestTime the cancelRequestTime to set
+	 */
+	public void setCancelRequestTime(Timestamp cancelRequestTime) {
+		this.cancelRequestTime = cancelRequestTime;
+	}
+	
 	
 	
 	

@@ -72,7 +72,6 @@ public class CustomerMenuController implements Initializable{
 	private TextField EnterProductname;
 	private Button backFromcatalog;
 	private Button CheckOut;
-	private Client clnt;
 	
 	/**
 	 * This method is the constructor for this class
@@ -103,15 +102,10 @@ public class CustomerMenuController implements Initializable{
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		cmc.setConnectionData(this.clnt);
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	private void setConnectionData(Client clnt2) {
-		// TODO Auto-generated method stub
-		this.clnt=clnt2;
-	}////////////////////////////////////////////////////////
 	
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {

@@ -1,10 +1,13 @@
 package gui;
 
 import java.io.IOException;
+
 import java.net.URL;
+import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import client.Client;
 import entities.OrderEntity;
@@ -179,13 +182,37 @@ public class StoreManagerCancellationRequestsController implements Initializable
 				
 				root.getChildren().add(OrderID);
 				OrderID.setExpanded(true); 				//set the tree expanded by default
+				
+				String amountForRefund = "";
+											//** calculate the time between the cancellation request and the receiving time
+				Long timeDifference = TimeCalculation.calculateTimeDifference(order.getReceivingTimestamp(), order.getCancelRequestTime());		//calculate difference
+				Double refund;
+				timeDifference = TimeUnit.MILLISECONDS.toHours(timeDifference);			//convert miliseconds to hours
+				if(timeDifference >= 3)													//if more than 3 hours
+				{
+					amountForRefund = "Amount for refund : " +order.getTotalPrice().toString();		//set full refund
+				}
+				
+				else if (timeDifference < 3 && timeDifference >= 1)									//if between 3 and 1 hours
+				{
+					refund = order.getTotalPrice() * 0.5;
+					amountForRefund = "Amount for refund : " +refund.toString();					//refund 50 percent
+				}
+				
+				else if(timeDifference < 1 && timeDifference > 0)									//if less than 1 hour
+				{
+					amountForRefund = "Amount for refund : 0";
+				}
+				
+				else 
+					amountForRefund = "Amount for refund : 0";
+				this.rfndLbl.setText(amountForRefund);
 				}
 			}
 			
 		this.dtlsTrVw.setRoot(root);
 		this.dtlsTrVw.setShowRoot(false); //make root expanded every time it starts
 		
-	////////////////////////////////////	GeneralMessageController.showMessage(TimeCalculation.);
 	}
 	
    public void backToMainMenu(ActionEvent event) throws IOException {
@@ -193,7 +220,7 @@ public class StoreManagerCancellationRequestsController implements Initializable
 
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/StoreManagerMenuBoundary.fxml").openStream());
-		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		StoreManagerMenuController smmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
@@ -229,7 +256,7 @@ public class StoreManagerCancellationRequestsController implements Initializable
 
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK){						//if pressed OK
-				MessageToSend message = new MessageToSend(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)), "cancelRequest");	//get the order ID
+				MessageToSend message = new MessageToSend(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)), "cancelOrder");	//get the order ID
 
 				Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 				Client.getClientConnection().accept();										//sends to server
@@ -239,6 +266,7 @@ public class StoreManagerCancellationRequestsController implements Initializable
 				MessageToSend m = Client.getClientConnection().getMessageFromServer();
 				GeneralMessageController.showMessage((String)m.getMessage());
 				showOrders();
+				this.dtlsTrVw.setRoot(null);
 			
 			}
 			else
@@ -246,15 +274,11 @@ public class StoreManagerCancellationRequestsController implements Initializable
 		}
 			
     }
-
-    
-	/**
-	 * This method handles the decline cancellation
-	 * @param event	pressed decline
-	 */
-   public void cancelDeclined(ActionEvent event) {
-
-    }
+   
+   public void cancelDeclined(ActionEvent event)
+   {
+	   
+   }
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

@@ -4,6 +4,7 @@
 package server;
 
 import java.io.BufferedOutputStream;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.sql.Blob;
@@ -278,8 +279,9 @@ public class ProjectServer extends AbstractServer
 			System.out.println("SQLException: " + e.getMessage());
 		}
 	  stmt = con.createStatement();
+	  
 	  try {
-	  stmt.executeUpdate("UPDATE projectx.order SET OrderStatus = 'cancelled' WHERE OrderID = " + OrderID+ "");
+	  stmt.executeUpdate("UPDATE projectx.order SET OrderStatus = 'cancelled' WHERE Ordernum = " + OrderID+ "");
 	  }
 	  catch(Exception e)
 	  {
@@ -436,10 +438,14 @@ public class ProjectServer extends AbstractServer
 				order.setStore(store);
 			}
 			
-			if(rs.getString(7).equals(OrderEntity.CashOrCredit.cash.toString()))
+			if(rs.getString(11).equals(OrderEntity.CashOrCredit.cash.toString()))
 				order.setPaymendMethod(OrderEntity.CashOrCredit.cash);
 			else
 				order.setPaymendMethod(OrderEntity.CashOrCredit.credit);
+			if(rs.getTimestamp(12) != null)
+			{
+				order.setCancelRequestTime(rs.getTimestamp(12));
+			}
 	
 			listOfOrdersFromDB.add(order); //add the product from the data base to the list
 		}
@@ -584,7 +590,7 @@ public class ProjectServer extends AbstractServer
 	//	while(rs.next())
 		//	orderCounter = rs.getInt(1);
 		
-			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (UserID,OrderTime,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID) VALUES (?,?,?,?,?,?,?,?,?)"); //prepare a statement
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (UserID,OrderTime,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID,PaymentMethod) VALUES (?,?,?,?,?,?,?,?,?,?)"); //prepare a statement
 			//ps.setInt(1, orderCounter+1);  				//insert new order id into the statement
 			ps.setString(1, newOrder.getUserName());
 			
@@ -608,6 +614,10 @@ public class ProjectServer extends AbstractServer
 		//	ps.setTime(11, newOrder.getReceivingTime());
 		//ps.setInt(12, newOrder.getStore().getBranchID());
 	    	ps.setInt(9, newOrder.getStore().getBranchID());
+	    	if(newOrder.getPaymendMethod().toString().equals(OrderEntity.CashOrCredit.cash.toString()))
+	    		ps.setString(10, OrderEntity.CashOrCredit.cash.toString());
+	    	else
+	    		ps.setString(10, OrderEntity.CashOrCredit.credit.toString());
 			ps.executeUpdate();
 
 		//	ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
@@ -668,7 +678,7 @@ public class ProjectServer extends AbstractServer
 		}
 		stmt = con.createStatement();
 
-		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.users WHERE Username = '" + data[0] + "'"); //query to check if such a user exists
+		ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.user WHERE Username = '" + data[0] + "'"); //query to check if such a user exists
 		if (!(rs.next())) //if user does not exists
 		{
 			//failed - ArrayList<String> to return in form of ["failed",reason of failure]
@@ -697,7 +707,7 @@ public class ProjectServer extends AbstractServer
 										//----------success - ArrayList<String> to return in form of ["success",user's type]----------//
 					returnMessage.add("success"); //state succeeded to login
 					returnMessage.add(rs.getString(3)); //add the type of user (customer,worker...)
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
 
@@ -718,7 +728,7 @@ public class ProjectServer extends AbstractServer
 					returnMessage.add("failed"); 							//state failed to log in
 					returnMessage.add("password does not match"); 			//reason for failure
 					attempts = rs.getInt(4) + 1; 							//increment number of attempts made
-					PreparedStatement ps = con.prepareStatement("UPDATE users SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
+					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
 					ps.setString(2, data[0]);
 					ps.setInt(1, attempts); 								//update the number of attempts made to log in 
 					ps.executeUpdate();
