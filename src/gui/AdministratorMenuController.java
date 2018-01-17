@@ -72,7 +72,7 @@ public class AdministratorMenuController implements Initializable {
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/ChooseToCreateBoundary.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("/gui/ChooseUserToCreateBoundary.fxml").openStream());
 		ChooseUserToCreateController cnu=loader.getController();
 		cnu.setConnectionData(this);
 		Stage primaryStage=new Stage();

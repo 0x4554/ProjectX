@@ -89,18 +89,7 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 	
-	/**
-	 * when create button pressed
-	 * check if all required fields are filled in
-	 * @return false if there is empty required field
-	 */
 	
-	public boolean checkRequiredFields() {
-		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
-			return false;
-
-		return true;
-	}
 	
 	
 	/**
@@ -119,7 +108,7 @@ public class CreateNewAccountController implements Initializable {
 			else {
 				CustomerEntity cust=new CustomerEntity();
 				cust.setUserName(usrFld.getText());						//set Fields of the new customer
-				cust.setID(Long.parseLong(idFld.getText()));
+				cust.setCustomerID(Long.parseLong(idFld.getText()));
 				cust.setPassword(pswrdFld.getText());
 				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
 				cust.setEmailAddress(emlFld.getText());
@@ -137,6 +126,18 @@ public class CreateNewAccountController implements Initializable {
 			GeneralMessageController.showMessage("Please fill in all the required fields");
 		}
 		
+	}
+	
+	/**
+	 * when create button pressed
+	 * check if all required fields are filled in
+	 * @return false if there is empty required field
+	 */
+	public boolean checkRequiredFields() {
+		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
+			return false;
+
+		return true;
 	}
 	
 	/**

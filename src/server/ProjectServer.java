@@ -1555,7 +1555,7 @@ public class ProjectServer extends AbstractServer
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,SubscriptionDiscount,JoinTime,Credit) VALUES (?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
-	  ps.setLong(3, ce.getID());
+	  ps.setLong(3, ce.getCustomerID());
 	  ps.setString(4,ce.getSubscriptionDiscount().toString());
 	  
 	  Timestamp timestamp = new Timestamp(System.currentTimeMillis());		//get current time
