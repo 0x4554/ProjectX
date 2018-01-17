@@ -2,6 +2,8 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -26,6 +28,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 import sun.reflect.generics.tree.Tree;
 
 public class CreateNewOrderController implements Initializable {
@@ -49,7 +52,7 @@ public class CreateNewOrderController implements Initializable {
 	private Button itmFrmCtlgBtn;
 
 	@FXML
-	private Button AddSlfDfItmBtm;
+    private Button AddSlfDfIPrdctBtn;
 
 	@FXML
 	private Button VwCrtBtn;
@@ -81,8 +84,6 @@ public class CreateNewOrderController implements Initializable {
 	public void setStore(StoreEntity store)
 	{
 		this.store=store;
-		
-
 	}
 	
 	/**
@@ -92,6 +93,28 @@ public class CreateNewOrderController implements Initializable {
 	public void setOrderDetails(OrderEntity order) {
 		this.newOrder=order;
 	}
+	
+	/**
+	 * This method handles the self defined product option
+	 * @param event	pressed self defined product button
+	 * @throws IOException
+	 */
+	public void addSelfDefinedProduct(ActionEvent event) throws IOException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/CustomerSelfDefinedProductBoundary.fxml").openStream());
+		CustomerSelfDefinedProducyController csdpc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
+		csdpc.setOrder(newOrder);
+		primaryStage.setTitle("Search for self defined product");
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+    }
+
 	
 	/**
 	 * This method shows the add card window when pressed "add new card" button
@@ -111,29 +134,42 @@ public class CreateNewOrderController implements Initializable {
 		primaryStage.show();
 	}
 	
-	
 	/**
 	 * This method opens the cart 
 	 * @param event	pressed view cart
 	 * @throws IOException
 	 */
 	public void viewCart(ActionEvent event) throws IOException {
-	
-		
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
-
 		FXMLLoader loader = new FXMLLoader();
 		Parent pRoot = loader.load(getClass().getResource("/gui/CartBoundary.fxml").openStream());
 		CartController cc = loader.getController();
 		cc.setOrder(this.newOrder);
 		cc.showCart();
-		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(pRoot);
 		primaryStage.setTitle("Your cart");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
+	}
+	
+	/**
+	 * This method show's the catalog in order to choose item 
+	 * @param event
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+public void addItemFromCatalog(ActionEvent event) throws IOException, InterruptedException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //Hide last window
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/OrderFromCatalogBoundary.fxml").openStream());
+		OrderFromCatalogController ord=loader.getController();
+		ord.showCatalog(this.newOrder);                                              //Call the method show catalog
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(pRoot);
+		primaryStage.setTitle("Zer-Li Catalog");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 	/**
 	 * This method is used to return to the  order menu

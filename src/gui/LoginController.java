@@ -105,9 +105,7 @@ public class LoginController implements Initializable {
 			{
 			Client.setClientConnection(new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText()));		//attempt to create a connection from client to server
 			}catch(IOException e){																							//if there were a connection exception
-
 				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
-
 			}
 			Client.getClientConnection().setDataFromUI(mts);							//set the data and the operation to send from the client to the server
 			Client.getClientConnection().accept();										//sends to server

@@ -17,6 +17,7 @@ public abstract class  UserEntity implements UserInterface,Serializable{
 	private String userName;
 	private String password;
 	private String userType;
+	private long ID;
 	private String phoneNumber;
 	private String EmailAddress;
 	/**

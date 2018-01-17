@@ -22,7 +22,7 @@ public class StoreEntity extends Object implements Serializable{
 	private String BranchName;
 	private int storeManagerWorkerID;
 	private ArrayList<Integer> storeWorkers;	//all the workers of the store by worker ID
-	private Map<String,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
+	private Map<Integer,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
 	
 	/**
 	 * 
@@ -37,7 +37,7 @@ public class StoreEntity extends Object implements Serializable{
 		this.BranchName = branchName;
 		this.storeManagerWorkerID=storeManager;
 		this.storeWorkers= new ArrayList<Integer>();
-		this.storeDiscoutsSales = new HashMap<String,Double>();
+		this.storeDiscoutsSales = new HashMap<Integer,Double>();
 	}
 	/**
 	 * This method adds a worker to the store workers list
@@ -123,7 +123,7 @@ public class StoreEntity extends Object implements Serializable{
 	 * Getter for the storeDiscoutsSales
 	 * @return the storeDiscoutsSales
 	 */
-	public Map<String, Double> getStoreDiscoutsSales() {
+	public Map<Integer, Double> getStoreDiscoutsSales() {
 		return storeDiscoutsSales;
 	}
 
@@ -131,7 +131,7 @@ public class StoreEntity extends Object implements Serializable{
 	 * Setter for the storeDiscoutsSales
 	 * @param storeDiscoutsSales the storeDiscoutsSales to set
 	 */
-	public void setStoreDiscoutsSales(Map<String, Double> storeDiscoutsSales) {
+	public void setStoreDiscoutsSales(Map<Integer, Double> storeDiscoutsSales) {
 		this.storeDiscoutsSales = storeDiscoutsSales;
 	}
 
