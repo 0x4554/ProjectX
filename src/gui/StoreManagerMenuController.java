@@ -147,7 +147,7 @@ public class StoreManagerMenuController implements Initializable {
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
-			primaryStage.setTitle("Generate Report");
+			primaryStage.setTitle("User's premission");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 	}

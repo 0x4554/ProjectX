@@ -32,24 +32,22 @@ public class AdministratorMenuController implements Initializable {
 	@FXML private Button rprtBtn;
     @FXML private Button usrBtn;
     @FXML private Button lgBtn;
+    
+    private Client clnt;
 	
-	private Client clnt;
 	/**
 	 * A necessary constructor for the App
 	 */
 	public AdministratorMenuController() {}
 	
-	
-	/**
-	 * Constructor for saving the calling client for moving it to the controller
-	 * @param clnt
-	 */
-	public AdministratorMenuController(Client clnt){
+	public AdministratorMenuController(Client clnt) {
 		this.clnt=clnt;
 	}
-
 	
-	
+	/**
+	 * method that shows Administrator menu
+	 * @throws IOException
+	 */
 	public void showAdministratorMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
@@ -59,15 +57,34 @@ public class AdministratorMenuController implements Initializable {
 		Scene scene=new Scene(root);
 		AdministratorMenuController am = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		am.setConnectionData(this.clnt);
-		primaryStage.setTitle("Customer's main menu");
+		primaryStage.setTitle("Administrator's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
+	
 	private void setConnectionData(Client clnt2) {
-		// TODO Auto-generated method stub
 		this.clnt=clnt2;
 	}
 	
+	
+	public void enterCreateNewUser(ActionEvent event) throws IOException
+	{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/CreateNewUserBoundery.fxml").openStream());
+		CreateNewUserController cnu=loader.getController();
+		cnu.setConnectionData(this);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("New user");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

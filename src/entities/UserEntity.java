@@ -32,19 +32,17 @@ public abstract class  UserEntity implements UserInterface,Serializable{
 		this.userType = userType;
 	}
 	
-	/**
-	 * Getter for the iD
+	/**Getter for the user ID
 	 * @return the iD
 	 */
-	public long getID() {
+	public long getCustomerID() {
 		return ID;
 	}
 
-	/**
-	 * Setter for the iD
+	/**Setter for the user Id
 	 * @param iD the iD to set
 	 */
-	public void setID(long iD) {
+	public void setCustomerID(long iD) {
 		ID = iD;
 	}
 
