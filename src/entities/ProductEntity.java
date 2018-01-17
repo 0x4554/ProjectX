@@ -17,12 +17,12 @@ public class ProductEntity implements Serializable{
 	//private ImageView productImage;
 //	private Image productImage;
 
+
 	
 	public ProductEntity()
 	{
 		
 	}
-
 
 	/**
 	 * Constructor for the ProductEntity.java class
@@ -33,8 +33,10 @@ public class ProductEntity implements Serializable{
 	 * @param productDescription	description
 	 * @param productDominantColor	dominant color
 	 */
+
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
 			String productDescription, String productDominantColor,byte[] productImage) {
+
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -73,16 +75,6 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	
-
-//	public ImageView getProductImage() {
-//		return productImage;
-//	}
-//
-//	public void setProductImage(ImageView productImage) {
-//		this.productImage = productImage;
-//	}
-
 
 	 /** Getter for the productImage
 	 * @return the productImage
@@ -100,12 +92,6 @@ public class ProductEntity implements Serializable{
 		this.productImage = productImage;
 	}
 	
-	
-	public void convertImageToByteArray(Image img) {
-		
-	}
-
-
 	/**
 	 * Getter for the productType
 	 * @return the productType

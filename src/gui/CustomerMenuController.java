@@ -68,28 +68,11 @@ public class CustomerMenuController implements Initializable{
 	/**
 	 * This variables are connected to the catalog class
 	 */
-	
-	ListView<ProductEntity> List;
-	/*private Label ProductNameLabel;
-	private Label ProductIDLabel;
-	private Label ProductPriceLabel;
-	private Label ProductDescriptionLabel;
-	private Label ProductTypeLabel;
-	private Label ProductColorLabel;
-	private Button AddToCartButton;*/
 	private Button SearchItemButton;
 	private TextField EnterProductname;
 	private Button backFromcatalog;
 	private Button CheckOut;
-	private Client clnt;/////////////////////
-	/**
-	 * 
-	 * Constructor for saving the calling client for moving it to the controller
-	 * @param clnt
-	 */
-	public CustomerMenuController(Client clnt){
-		this.clnt=clnt;
-	}//////////////////////////////////////////////
+	private Client clnt;
 	
 	/**
 	 * This method is the constructor for this class
@@ -99,7 +82,6 @@ public class CustomerMenuController implements Initializable{
 	{
 		this.logcon=lc;		
 	}
-	
 	/**
 	 * A necessary constructor for the App
 	 */
@@ -116,7 +98,8 @@ public class CustomerMenuController implements Initializable{
 	{
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-		
+		//CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
@@ -144,153 +127,24 @@ public class CustomerMenuController implements Initializable{
 		primaryStage.show();
 	}			
 	
-	//*Open  catalog  menu from customer main menu*//
-	/*public void enterCatalog(ActionEvent event) throws IOException {
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/gui/CatalogBoundary.fxml").openStream());
-		CatalogController catlg = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window//i changed this line -lana
-		catlg.setConnectionData(this);
-	//	 ord.setConnectionData(DEFAULT_PORT, this);
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
-		primaryStage.setTitle("Catalog");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}	*/		
-	
-	//enter to catalog try 2
+	/**
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
+	//Enter to catalog
 	public void enterCatalog(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		Stage primaryStage=new Stage();
-
-		List=new ListView<ProductEntity>();
-		List.setCellFactory(new Callback<ListView<ProductEntity>, ListCell<ProductEntity>>(){
-			 
-	            @Override
-	            public ListCell<ProductEntity> call(ListView<ProductEntity> p) {
-	                 
-	                ListCell<ProductEntity> cell = new ListCell<ProductEntity>(){
-	 
-	                    @Override
-	                    protected void updateItem(ProductEntity product, boolean status) {
-	                        super.updateItem(product, status);
-	                        if (product != null) {
-	                            setText(product.getProductName()+"  "+product.getProductDescription()+"  " + "\n"+product.getProductPrice()+"�");
-//**TO BE FIXED	                            setGraphic(new ImageView(product.getProductImage()));
-	                        }
-	                    }
-	                };
-	                return cell;
-	            }
-	        });
-	
-		List.setMinWidth(500);
-		List.setMinHeight(800);
-		
-		List.getItems().addAll(getProduct());
-		backFromcatalog=new Button("Back");
-		
-		EnterProductname=new TextField();
-		EnterProductname.setPromptText("Enter product name");
-		EnterProductname.setOnAction(e->handelThesearch(EnterProductname));
-		SearchItemButton=new Button("Search");
-		SearchItemButton.setOnAction(e->searchButton());
-		
-		HBox hBox=new HBox();
-		hBox.setPadding(new Insets(10,10,10,10));
-		hBox.setSpacing(20);
-		hBox.getChildren().addAll(backFromcatalog,EnterProductname,SearchItemButton);
-		
-		
-		VBox Vbox1=new VBox();
-		Vbox1.getChildren().addAll(List,hBox);
-			
-		// FXMLLoader loader = new FXMLLoader();
-		 //Parent root = loader.load(getClass().getResource("/gui/CatalogBoundary.fxml").openStream());
-
-		Scene sc=new Scene(Vbox1);
-		sc.getStylesheets().add("/gui/LoginStyle.css");
-		primaryStage.setTitle("Zer-Li Catalog");
-		primaryStage.setScene(sc);
-		
-		backFromcatalog.setOnAction(e ->{
-			try {
-				back(primaryStage);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		});
-	    primaryStage.show();	
-	}
-	
-	public void back(Stage TheCurrentScene) throws IOException //Method that return to the customer menu from the catalog
-	{
-		TheCurrentScene.getScene().getWindow().hide();
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-		
-		Stage primaryS=new Stage();
-		Scene scene=new Scene(root);
-		
-		primaryS.setTitle("Custumer manu");
-		primaryS.setScene(scene);
-		primaryS.show();
-	}
-	
-	public void handelThesearch(TextField f)
-	{
-		System.out.println("Because im happy "+f.getText());
-	}
-	public void searchButton( )
-	{
-		System.out.println("Searching ");
-	}
-	
-		/*public void AddToList()//Method that adds product to the catalog
-		{
-			ProductEntity product=new ProductEntity();
-			product.setProductID(productID.getText());
-			product.setProductName(productName.getText());
-			product.setProductType(productType.getText());
-			product.setProductPrice(Double.parseDouble(productPrice.getText()));
-			product.setProductDescription(productDescription.getText());
-			product.setProductDominantColor(productColor.getText());
-			this.table.getItems().add(product);
-			productID.clear();
-			productName.clear();
-			productType.clear();
-			productPrice.clear();
-			productDescription.clear();
-			productColor.clear();
+		CatalogController catlg=new CatalogController();
+		catlg.setConnectionData(this);
+		try {
+			catlg.addProductsToDB(null);
+			//catlg.showProductcatalog();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		public void DeleteFromList()//Method that delet's product from catalog
-		{
-			ObservableList<ProductEntity> ProductSelected,AllProducts;
-			AllProducts=table.getItems();
-			ProductSelected=table.getSelectionModel().getSelectedItems();
-			 ProductSelected.forEach(AllProducts::remove);
-		}
-*/
-	    public ObservableList<ProductEntity> getProduct() throws FileNotFoundException//Method that creat's a list of products
-	{   
-		ObservableList<ProductEntity> products=FXCollections.observableArrayList();
-		
-//		products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue", new ImageView(new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true))));
-//	    products.add(new ProductEntity("124","lili","boquet",(double) 15.60,"bridal","red",new ImageView(new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true))));
-//	    products.add(new ProductEntity("124","magic","boquet",(double) 80,"bridal","red",new ImageView(new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true))));
-//	    products.add(new ProductEntity("124","bird","boquet",(double) 96,"bridal","red",new ImageView(new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true))));
-
-	    
-//**TO BE FIXED WHEN IMAGE FIXED	products.add(new ProductEntity("123","lian","boquet",(double) 20,"bridal","blue", new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
-//	    products.add(new ProductEntity("124","lili","boquet",(double) 15.60,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true)));
-//	    products.add(new ProductEntity("124","magic","boquet",(double) 80,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true)));
-//	    products.add(new ProductEntity("124","bird","boquet",(double) 96,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true)));
-
-		return products;
 	}
-	
 	    //*Open  Account details  menu from customer main menu*//
 		public void enterToAccount(ActionEvent event) throws IOException {
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -312,6 +166,7 @@ public class CustomerMenuController implements Initializable{
 					 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					 FXMLLoader loader = new FXMLLoader();
 					 Parent root = loader.load(getClass().getResource("/gui/UpdateAccountBoundary.fxml").openStream());
+				//	 UpdateAccountController upac= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 				//	 ord.setConnectionData(DEFAULT_PORT, this);
 					Stage primaryStage=new Stage();
 					Scene scene=new Scene(root);
@@ -329,6 +184,11 @@ public class CustomerMenuController implements Initializable{
 				 */
 				public void logOutCustomer(ActionEvent event) throws IOException	//when click "Back" return to main menu
 				{
+					/*((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
+					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
+					//////////////////Check returning to login page//////////////////////////*/
+					
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					LoginController.signalAppClose();
 					
@@ -342,7 +202,6 @@ public class CustomerMenuController implements Initializable{
 					primaryStage.show();
 					
 					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
-					
 				}
 				
 				public void startComplaint(ActionEvent event) throws IOException {
@@ -362,7 +221,6 @@ public class CustomerMenuController implements Initializable{
 		public void initialize(URL location, ResourceBundle resources) {
 			// TODO Auto-generated method stub
 		}
-		
-	
+
 		
 }
