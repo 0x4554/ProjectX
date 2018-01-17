@@ -57,20 +57,7 @@ public class CartController implements Initializable {
 	public void showCart() throws IOException {
 		String lbl = "";
 		this.listOfProductsNames = new ArrayList<String>();
-		//this.newOrder = new OrderEntity();
-
-		//////////////////a made up list of products for testing ///////////////////
-//		for (int i = 0; i < 5; i++)
-//		{
-//**TO BE FIXED			this.newOrder.addProductToCart(new ProductEntity("a" + i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i,new Image(new FileInputStream( "C:\\Users\\pic1.jpg"))));
-//			this.newOrder.addProductToCart(new ProductEntity( i, "bbbbbbbb" + i, "c" + i, 1.1 + i, "e" + i, "f" + i));
-
-//		}
-//**TO BE FIXED	this.newOrder.getProductsInOrder().get(1).setProductImage(new Image(new FileInputStream( "C:\\Users\\pic2.jpg")));
 		byte[] b = FilesConverter.convertFileToByteArray(new File("C:\\Users\\pic1.jpg"));
-		//Image i = FilesConverter.convertByteArrayToImage(b);
-		this.newOrder.addProductToCart(new ProductEntity(1, "rose", "flower", 20.0, "pretty flower","red", b));
-		////////////////////////////////////////////////////////////////////////////
 		TreeItem<String> root;
 
 		root = new TreeItem<>(); //set the root for the prodcuts in cart tree

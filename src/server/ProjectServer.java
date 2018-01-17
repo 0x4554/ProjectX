@@ -1148,40 +1148,52 @@ public class ProjectServer extends AbstractServer
    */
   
   
-  	public String complaint(ComplaintEntity details) throws SQLException, ClassNotFoundException {
+	public String complaint(ComplaintEntity details) throws SQLException, ClassNotFoundException {
+
+		Statement stmt, stmt2;
+		ResultSet rs, rs2;
+		try
+		{
+			con = connectToDB(); //call method to connect to DB
+
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		}
+
+		catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+
+		stmt = con.createStatement();
+		stmt2 = con.createStatement();
+		rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" + details.getOrderID() + "'"); //prepare a statement
 	
-	  Statement stmt;
-	  
-	  try
-	    {
-	    con = connectToDB();	//call method to connect to DB
-	    
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
-	    }
-	  
-	    catch( SQLException e)	//catch exception
-	    {
-	      System.out.println("SQLException: " + e.getMessage() );
-	    }
-	  
-	  stmt = con.createStatement();
-	  
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" +details.getOrderID()+"'");	//prepare a statement
-	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
-	    {
-	    	InputStream inStrm=FilesConverter.convertByteArrayToInputStream(details.getFile());
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status) VALUES (?,?,?)");	//prepare a statement
-		    ps.setInt(1,details.getOrderID());																			//insert parameters into the statement
-		    ps.setString(2, details.getDescription());
-		    ps.setString(3, details.getStatus().toString());
-		    ps.setBlob(4, inStrm);
-		    ps.executeUpdate();
-		    
-		    return "Success";
-	    }
-	  return "Order does not exist";   
-  }
+		rs2 = stmt2.executeQuery("SELECT count(1) FROM projectx.complaints WHERE OrderNum = " + details.getOrderID() + "");
+		if(rs2.next())
+			if (rs2.getInt(1) == 1)			//check if a complaint for this order was already filed
+			{
+				return "Complaint was already filed";
+			} 
+		
+		else if ((rs.next())) //if such ID exists in the DB, Insert the new data
+		{
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File) VALUES (?,?,?,?)"); //prepare a statement
+			ps.setInt(1, details.getOrderID()); //insert parameters into the statement
+			ps.setString(2, details.getDescription());
+			ps.setString(3, details.getStatus().toString());
+			if (details.getFile() != null) //if a file was addded
+			{
+				InputStream inStrm = FilesConverter.convertByteArrayToInputStream(details.getFile());
+				ps.setBlob(4, inStrm);
+			} else
+				ps.setNull(4, java.sql.Types.NULL);
+			ps.executeUpdate();
+
+			return "Success";
+		}
+		return "Order does not exist";
+	}
 
   
   public ArrayList<Integer> getProductsIDS() throws SQLException, ClassNotFoundException
@@ -1541,13 +1553,21 @@ public class ProjectServer extends AbstractServer
 		if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
 			this.incomingFileName=complaint.getOrderID();
-			if(this.complaint(complaint).equals("Success")) {
+			String ret="";
+			ret =	this.complaint(complaint);
+			if(ret.equals("Success")) {
 				System.out.println("complaint added");
 			//	generalMessage = (String)("Added");
-				messageToSend.setMessage("Added"); 		//set the message for sending back to the client
+				messageToSend.setMessage("Success"); 		//set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
-			else {
+			else if(ret.equals("Complaint was already filed"))
+			{
+				System.out.println("complaint failed");
+				messageToSend.setMessage("Complaint was already filed");
+				sendToAllClients(messageToSend);
+			}
+			else if(ret.equals("Order does not exist")){
 				System.out.println("complaint failed");
 			//	generalMessage = (String)("failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
