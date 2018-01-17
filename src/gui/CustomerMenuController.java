@@ -108,15 +108,6 @@ public class CustomerMenuController implements Initializable{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-/*<<<<<<< HEAD
-=======
-	
-	
-	private void setConnectionData(Client clnt2) {
-		// TODO Auto-generated method stub
-		this.clnt=clnt2;
-	}////////////////////////////////////////////////////////
->>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git		*/
 	
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
