@@ -119,10 +119,11 @@ public class StoreManagerMenuController implements Initializable {
 	 * @throws IOException
 	 */
 	public void showCancelations(ActionEvent event) throws IOException {
+		
+		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/******ToImplement*****/.fxml").openStream());				//new window to open
-		
+		 Parent root = loader.load(getClass().getResource("/gui/CancellationRequestsBoundary.fxml").openStream());				//new window to open
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
@@ -146,7 +147,7 @@ public class StoreManagerMenuController implements Initializable {
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
-			primaryStage.setTitle("Generate Report");
+			primaryStage.setTitle("User's premission");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 	}

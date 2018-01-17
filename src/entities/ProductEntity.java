@@ -13,7 +13,7 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
     private Image productImage;
-
+private byte[] productImage;
     private byte[] image1;
 	
 	public ProductEntity()

@@ -287,15 +287,18 @@ public class ProjectServer extends AbstractServer
 				rs4 = stmt4.executeQuery("SELECT * FROM projectx.product WHERE ProductID = " +rs3.getInt(1)+""); 	//get each product's details from DB
 				while(rs4.next())
 				{
-					product = new ProductEntity(rs4.getInt(1), rs4.getString(2), rs4.getString(3), rs4.getDouble(4), rs4.getString(5), rs4.getString(7)); //**NO IMAGE YET//
+					Blob b = con.createBlob(); 					//create blob
+					b=rs.getBlob(8);							////get blob from DB
+			  		InputStream is=b.getBinaryStream();	  		//get binary Stream for blob and than use FilesConverter.convertInputStreamToByteArray(InputStream)
+			  		byte[] image = FilesConverter.convertInputStreamToByteArray(is);
+
+			  		product = new ProductEntity(rs4.getInt(1), rs4.getString(2), rs4.getString(3), rs4.getDouble(4), rs4.getString(5), rs4.getString(7), image); //**NO IMAGE YET//
 					order.addProductToCart(product); 			//add the product to the order
 				}
 			}
 			order.setOrderID(rs.getInt(1));
 			order.setUserName(rs.getString(2));
 			order.setOrderTime(rs.getTimestamp(3));
-//			order.setOrderTime(rs.getTime(3));
-//			order.setOrderDate(rs.getDate(4));
 			if(rs.getString(4) != null)
 				order.setCard(new CardEntity(rs.getString(4)));
 			if(rs.getString(5).equals(OrderEntity.SelfOrDelivery.selfPickup.toString()))  //set self pickup or delivery
@@ -317,23 +320,26 @@ public class ProjectServer extends AbstractServer
 			
 			order.setTotalPrice(rs.getDouble(8));
 			order.setReceivingTimestamp(rs.getTimestamp(9));
-//			order.setReceivingDate(rs.getDate(10));
-//			order.setReceivingTime(rs.getTime(11));
 						//** get the store **//
-			rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(12)+"");
+			rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(10)+"");
 			while(rs5.next())
 			{
 				store = new StoreEntity(rs5.getInt(1), rs5.getString(2), rs5.getInt(3));
 				order.setStore(store);
 			}
 			
-			if(rs.getString(7).equals(OrderEntity.CashOrCredit.cash.toString()))
+			if(rs.getString(11).equals(OrderEntity.CashOrCredit.cash.toString()))
 				order.setPaymendMethod(OrderEntity.CashOrCredit.cash);
 			else
 				order.setPaymendMethod(OrderEntity.CashOrCredit.credit);
+			if(rs.getTimestamp(12) != null)
+			{
+				order.setCancelRequestTime(rs.getTimestamp(12));
+			}
 	
 			listOfOrdersFromDB.add(order); //add the product from the data base to the list
 		}
+		
 		return listOfOrdersFromDB;
   }
   
@@ -344,6 +350,7 @@ public class ProjectServer extends AbstractServer
    * @return ArrayList  of orders
    * @throws SQLException
    * @throws ClassNotFoundException
+ * @throws IOException for file converting
    */
   private ArrayList<OrderEntity> getCustomerOrders(String userID) throws SQLException, ClassNotFoundException
   {
@@ -388,7 +395,11 @@ public class ProjectServer extends AbstractServer
 				rs4 = stmt4.executeQuery("SELECT * FROM projectx.product WHERE ProductID = " +rs3.getInt(1)+""); 	//get each product's details from DB
 				while(rs4.next())
 				{
-					product = new ProductEntity(rs4.getInt(1), rs4.getString(2), rs4.getString(3), rs4.getDouble(4), rs4.getString(5), rs4.getString(7)); //**NO IMAGE YET//
+					Blob b = con.createBlob(); 					//create blob
+					b=rs.getBlob(8);							////get blob from DB
+			  		InputStream is=b.getBinaryStream();	  		//get binary Stream for blob and than use FilesConverter.convertInputStreamToByteArray(InputStream)
+			  		byte[] image = FilesConverter.convertInputStreamToByteArray(is);
+					product = new ProductEntity(rs4.getInt(1), rs4.getString(2), rs4.getString(3), rs4.getDouble(4), rs4.getString(5), rs4.getString(7),image); //**NO IMAGE YET//
 					order.addProductToCart(product); 			//add the product to the order
 				}
 			}
@@ -433,7 +444,9 @@ public class ProjectServer extends AbstractServer
 	
 			listOfOrdersFromDB.add(order); //add the product from the data base to the list
 		}
+		
 		return listOfOrdersFromDB;
+	  
   }
 
  /**
@@ -467,7 +480,7 @@ public class ProjectServer extends AbstractServer
 	//	while(rs.next())
 		//	orderCounter = rs.getInt(1);
 		
-			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (UserID,OrderTime,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID) VALUES (?,?,?,?,?,?,?,?,?)"); //prepare a statement
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (UserID,OrderTime,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID,PaymentMethod) VALUES (?,?,?,?,?,?,?,?,?,?)"); //prepare a statement
 			//ps.setInt(1, orderCounter+1);  				//insert new order id into the statement
 			ps.setString(1, newOrder.getUserName());
 			
@@ -491,6 +504,10 @@ public class ProjectServer extends AbstractServer
 		//	ps.setTime(11, newOrder.getReceivingTime());
 		//ps.setInt(12, newOrder.getStore().getBranchID());
 	    	ps.setInt(9, newOrder.getStore().getBranchID());
+	    	if(newOrder.getPaymendMethod().toString().equals(OrderEntity.CashOrCredit.cash.toString()))
+	    		ps.setString(10, OrderEntity.CashOrCredit.cash.toString());
+	    	else
+	    		ps.setString(10, OrderEntity.CashOrCredit.credit.toString());
 			ps.executeUpdate();
 
 		//	ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
@@ -815,6 +832,7 @@ public class ProjectServer extends AbstractServer
    * @return returns an ArrayList of all of the products in the catalog
    * @throws ClassNotFoundException	thrown if connecting to DB failed
    * @throws SQLException	thrown if there was an SQL exception
+ * @throws IOException  for the file convertion
    */
   private ArrayList<ProductEntity> getCatalog() throws ClassNotFoundException, SQLException
   {
@@ -1163,7 +1181,7 @@ public class ProjectServer extends AbstractServer
 			sendToAllClients(messageToSend);
 			
 		}
-		if(operation.equals("getSelfDefinedProduct"))
+		if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getSelfDefinedProducts((ArrayList<String>)messageFromClient);
@@ -1268,7 +1286,7 @@ public class ProjectServer extends AbstractServer
 		{
 			try
 			{
-			retval = createNewOrder((OrderEntity)messageFromClient);		///////////////////////////////////
+			retval = createNewOrder((OrderEntity)messageFromClient);
 			}
 			catch(Exception e)
 			{
@@ -1289,7 +1307,10 @@ public class ProjectServer extends AbstractServer
 		
 		if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
 		{
-			
+			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
+			listOfOrders = getAllOrders((String)messageFromClient);
+			messageToSend.setMessage(listOfOrders);
+			sendToAllClients(messageToSend);
 		}
 	
 //		if(operation.equals("addProductToCatalog"))
@@ -1303,7 +1324,7 @@ public class ProjectServer extends AbstractServer
 		}
 		
 		
-		if(operation.equals("getAllStores"))
+		if(operation.equals("getAllStores"))				//gets all the stores in the DB
 		{
 			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllStores = getAllstoresFromDB();
@@ -1314,17 +1335,19 @@ public class ProjectServer extends AbstractServer
 //		{
 //			
 //		}
-		if(operation.equals("exitApp"))
+		
+		if(operation.equals("exitApp"))					//for when a user exits the app
 		{
 			this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
 		}
 		
-		if(operation.equals("login"))
+		if(operation.equals("login"))					//for when a user tries to log in
 		{
 			retval = this.login(client,(String)messageFromClient);
 			messageToSend.setMessage(retval);	//set the message for sending back to the client
 			sendToAllClients(messageToSend);	//send arraylist back to client
-		}	
+		}
+		
 		if(operation.equals("getProduct"))	//check***********fix*******to***********lana*******object***********************//
 		{
 		//getProductFromDB
