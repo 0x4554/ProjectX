@@ -113,8 +113,8 @@ public class CustomerOrderDetailsController implements Initializable {
 				TreeItem<String> totalprice = new TreeItem<>("Total price : "+order.getTotalPrice().toString()); 		//create a new leaf
 				OrderID.getChildren().add(totalprice); 									//set as a child 
 				
-//**NEED TO FIX 				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
-//		IMAGE STUFF		OrderID.getChildren().add(orderTime); 									//set as a child 
+				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
+				OrderID.getChildren().add(orderTime); 									//set as a child 
 //				TreeItem<String> orderDate = new TreeItem<>("Order Date : "+order.getOrderDate().toString());
 //				OrderID.getChildren().add(orderDate);
 				TreeItem<String> store = new TreeItem<>("From Store named : "+order.getStore().getBranchName());
@@ -194,15 +194,15 @@ public class CustomerOrderDetailsController implements Initializable {
 	 * @throws IOException	
 	 */
 	public void backToMainMenu(ActionEvent event) throws IOException {
-		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-
-		Stage primaryStage=new Stage();
+		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
+		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+//		ord.setConnectionData(this);
+		 Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		primaryStage.setTitle("Customer's main menu");
+		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -226,7 +226,8 @@ public class CustomerOrderDetailsController implements Initializable {
 				if(order.getOrderID() == Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)))	//get the selected order
 					orderToCancel=order;
 			}
-			if(!orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancel_requested))		//check if order cancelation was already asked
+			
+			if(!orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancel_requested) && !orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancelled))		//check if order cancelation was already asked
 			{
 			Alert alert = new Alert(AlertType.CONFIRMATION);		//set new alert for confirmation
 			alert.setTitle("Confirmation");
@@ -261,9 +262,21 @@ public class CustomerOrderDetailsController implements Initializable {
 	/**
 	 * This method handles the complaint
 	 * @param event pressed complaint button
+	 * @throws IOException 
 	 */
-	public void PressedComplaint(ActionEvent event) {
-
+	public void PressedComplaint(ActionEvent event) throws IOException {
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/ComplaintBoundary.fxml").openStream());
+		 ComplaintController cmpc= loader.getController();	//set the controller to the ComplaintBoundary to control the SearchProductGUI window
+		 cmpc.setOrderID(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)));
+		 //		 cmpc.setConnectionData(this);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Complaint");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	@Override

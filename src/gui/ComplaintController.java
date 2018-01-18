@@ -21,8 +21,11 @@ import entities.ComplaintEntity;
 import entities.ComplaintEntity.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -52,18 +55,23 @@ public class ComplaintController implements Initializable{
     private TextField picPathTxtFld;
 	
 	
-	private CustomerMenuController cstmc;
+//	private CustomerMenuController cstmc;
 	
 
 	public ComplaintController() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void setConnectionData(CustomerMenuController cmc) {
-		this.cstmc=cmc;
-	}
+//	public void setConnectionData(CustomerMenuController cmc) {
+//		this.cstmc=cmc;
+//	}
 	
-	
+	/**
+	 * This method collecets the complaint data and sends it to the server
+	 * @param event	pressed send
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void getComplaintData(ActionEvent event) throws IOException, InterruptedException{					//////////////////////////
 		String complaintDetails="";
 		String pctr;
@@ -78,24 +86,31 @@ public class ComplaintController implements Initializable{
 						cmplnt.setFile(picPathTxtFld.getText());
 					}
 					
-					Client c=this.cstmc.getClient();
+//					Client c=this.cstmc.getClient();
 					MessageToSend toServer = new MessageToSend(cmplnt,"complaint");
-					c.setConfirmationFromServer();
-					c.setDataFromUI(toServer);									//, "complaint!");
-					c.accept();
+					Client.getClientConnection().setConfirmationFromServer();
+					Client.getClientConnection().setDataFromUI(toServer);									//, "complaint!");
+					Client.getClientConnection().accept();
 					
-					while(!c.getConfirmationFromServer())
+					while(!Client.getClientConnection().getConfirmationFromServer())
 						Thread.sleep(100);
-					c.setConfirmationFromServer();
-					MessageToSend fromServer=(MessageToSend)c.getMessageFromServer();
+					Client.getClientConnection().setConfirmationFromServer();
+					MessageToSend fromServer=(MessageToSend)Client.getClientConnection().getMessageFromServer();
 					String reply=(String)fromServer.getMessage();
 					if(reply.equals("failed"))				
 						GeneralMessageController.showMessage("Order does not exist");
-					else if(reply.equals("Added")){
-						((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-						this.cstmc.showCustomerMenu();								//back to main menu
-						GeneralMessageController.showMessage("Dear customer, we got your complaint\nand we are doing everything we can\nto make it up to you");			//message to present when complaint succeeded
-					}
+			else
+						if(reply.equals("success"))
+						{
+							cancelComplaint(event);
+							GeneralMessageController.showMessage("Your complaint has been received received.\nWe will contact you soon.");
+						}
+						else if (reply.equals("Complaint was already filed"))
+						{
+							cancelComplaint(event);
+							GeneralMessageController.showMessage("Complaint was already filed for this order.");
+							
+						}
 					
 			}
 		else {
@@ -112,8 +127,15 @@ public class ComplaintController implements Initializable{
 	public void cancelComplaint(ActionEvent event) throws IOException {
 		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.cstmc.showCustomerMenu();
-		return;
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/CustomerOrderDetailsBoundary.fxml").openStream());
+		CustomerOrderDetailsController cocdc = loader.getController();
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(pRoot);
+		primaryStage.setTitle("Your Orders");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	
@@ -126,25 +148,21 @@ public class ComplaintController implements Initializable{
 	 */
 	public void uploadPhoto(String path) throws IOException, InterruptedException {
 		
-		Client c = this.cstmc.getClient();
+//		Client c = this.cstmc.getClient();
 		MessageToSend m = new MessageToSend(path, "downloadFile");
-		c.setDataFromUI(m);
-		c.accept();
+		Client.getClientConnection().setDataFromUI(m);
+		Client.getClientConnection().accept();
 		
 	//	c.uploadFileToServer(5556, path);
 	//	c.setConfirmationFromServer();
 	}
 	
 	
-	public void bckToMainMenu(ActionEvent event)throws IOException{
-		
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.cstmc.showCustomerMenu();									//open previous menu
-		return;
-	}
-	
-
-
+	/**
+	 * This method searches for a file to add
+	 * @param event	pressed add file
+	 * @throws IOException
+	 */
 	public void searchForPhoto(ActionEvent event) throws IOException{
 		
 		Stage secondaryStage=new Stage();
@@ -159,6 +177,16 @@ public class ComplaintController implements Initializable{
 	    catch(Exception e) {
 	    return;
 	    }
+	}
+	
+	/**
+	 * This method sets the orderID
+	 * @param OrderID
+	 */
+	public void setOrderID(Integer OrderID)
+	{
+		this.ordNumTxtFld.setText(OrderID.toString());
+		this.ordNumTxtFld.setEditable(false);
 	}
 	
 	

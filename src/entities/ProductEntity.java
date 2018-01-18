@@ -13,18 +13,18 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
     private byte[] productImage;
-    private byte[] image1;
+//    private byte[] image1;
 	
 	public ProductEntity()
 	{
 		
 	}
 	public byte[] getProductImage() {
-		return image1;
+		return productImage;
 	}
 
-	public void setProductImage(byte[] image1) {
-		this.image1 = image1;
+	public void setProductImage(byte[] productImage) {
+		this.productImage = productImage;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class ProductEntity implements Serializable{
 	 */
 
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,byte[]img) {
+			String productDescription, String productDominantColor,byte[]productImage) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -46,7 +46,7 @@ public class ProductEntity implements Serializable{
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-    	this.image1 = img;
+    	this.productImage = productImage;
 	}
 	
 	/*constructor with out the image*/

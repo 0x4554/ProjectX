@@ -267,7 +267,7 @@ public class CustomerMenuController implements Initializable{
 					 FXMLLoader loader = new FXMLLoader();
 					 Parent root = loader.load(getClass().getResource("/gui/ComplaintBoundary.fxml").openStream());
 					 ComplaintController cmpc= loader.getController();	//set the controller to the ComplaintBoundary to control the SearchProductGUI window
-					 cmpc.setConnectionData(this);
+//					 cmpc.setConnectionData(this);
 					Stage primaryStage=new Stage();
 					Scene scene=new Scene(root);
 					primaryStage.setTitle("Complaint");
