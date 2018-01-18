@@ -91,7 +91,6 @@ public class FilesConverter {
 	 */
 	public static Image convertByteArrayToImage(byte[] byteArray) {
 
-		//BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
 		Image image = new Image(new ByteArrayInputStream(byteArray));
 		
 		return image;

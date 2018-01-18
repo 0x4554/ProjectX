@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.*;
 //import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
@@ -32,6 +33,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.imageio.ImageIO;
 import javax.security.auth.callback.ConfirmationCallback;
+
+import client.Client;
+
 import java.util.Date;
 import entities.CardEntity;
 import entities.ComplaintEntity;
@@ -222,12 +226,13 @@ public class ProjectServer extends AbstractServer
 	  return listOfOrders;
   }
   
-  /**
-   * This method get the products matching the self defined products from the product table in the DB
+  
+/**
+ * This method get the products matching the self defined products from the product table in the DB
  * @throws ClassNotFoundException  problem connecting
  * @throws SQLException for the sql query
  * @throws IOException for the files converter
-   */
+ */
   private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
   {
 	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
@@ -279,7 +284,7 @@ public class ProjectServer extends AbstractServer
 	 return listOfProducts;												//return the found products
 	 
   }
-
+  
   /**
    * This method cancel an order and sets its status to canceled in the DB
    * @param OrderID	the order to cancel
@@ -312,6 +317,8 @@ public class ProjectServer extends AbstractServer
 	  }
 	  return retMsg = "Order cancelled";
   }
+  
+  
    /**
    * This method calculates time difference between two Timestamp objects
    * @param t1	Later Timestamp
@@ -375,7 +382,7 @@ public class ProjectServer extends AbstractServer
    * @return	an arrayList of Orders
  * @throws SQLException 	sql error
  * @throws ClassNotFoundException 
- * @throws IOException file converting
+ * @throws IOException 
    */
   private ArrayList<OrderEntity> getCancelRequests() throws SQLException, ClassNotFoundException, IOException
   {
@@ -896,10 +903,9 @@ public class ProjectServer extends AbstractServer
   	 * @return
   	 * @throws SQLException
   	 */
-  	public InputStream getPhotoFromDB(String orderNum) throws SQLException{
+  	public InputStream getInputStreamFromDB(String orderNum) throws SQLException{
   		InputStream is = null;
   		Statement stmt;
-  		Blob b = con.createBlob();							//Object to contain the data from the data base
   		
   		try {
   		con=connectToDB();									//Achieve connection to the data base
@@ -909,6 +915,8 @@ public class ProjectServer extends AbstractServer
   		}
   		
   		try {
+  	  		Blob b = con.createBlob();							//Object to contain the data from the data base
+
   			stmt=con.createStatement();
   		    ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.complaints WHERE Ordernum = '" +orderNum+"'");	//Statement to execute
   		    if (rs.next())						//if such ID exists in the DB, get the new data
@@ -1285,6 +1293,9 @@ public class ProjectServer extends AbstractServer
 	  else 
 	         return null;  
   }
+  
+
+  
 /**
  * This method return's the discount's from the table in the data base 
  * @param storeID
@@ -1375,6 +1386,22 @@ public class ProjectServer extends AbstractServer
 			sendToAllClients(messageToSend);
 			
 		}
+		
+		if(operation.equals("getUserDetails")) {
+			
+			MessageToSend reply;
+
+			CustomerEntity cust=this.getCustomerDetails((String)messageFromClient);
+			if(cust!=null) {
+			reply=new MessageToSend(cust, "customerExist");
+			client.sendToClient(reply);
+			}
+			else {
+				reply=new MessageToSend(null,"noCustomer");
+				client.sendToClient(reply);
+			}
+		}
+		
 		if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
@@ -1399,6 +1426,7 @@ public class ProjectServer extends AbstractServer
 				sendToAllClients(messageToSend);
 			}
 		}
+		
 		if(operation.equals("getCatalogByID"))/*get the discounts Hash Map for a specific store*/
 		{
 			ArrayList<Integer> listOfProducts = new ArrayList<Integer>();	//an arrayList that holds all the products in the catalog
@@ -1414,6 +1442,7 @@ public class ProjectServer extends AbstractServer
 				sendToAllClients(messageToSend);
 			}
 		}
+		
 		
 		if(operation.equals("cancelRequest"))
 		{
@@ -1505,8 +1534,18 @@ public class ProjectServer extends AbstractServer
 //		}
 		
 		if(operation.equals("createAccount")) {	
-			CustomerEntity custen=(CustomerEntity)messageFromClient;	
+			CustomerEntity custen=(CustomerEntity)messageFromClient;
+			try {
 			this.insertNewCustomer(custen);
+			MessageToSend toClient=new MessageToSend("added","retval");
+			client.sendToClient(toClient);
+			
+			}
+			catch(Exception e) {
+				MessageToSend toClient = new MessageToSend("failed","retval");
+				client.sendToClient(toClient);
+			}
+			
 		}
 		
 		
@@ -1524,7 +1563,15 @@ public class ProjectServer extends AbstractServer
 		
 		if(operation.equals("exitApp"))					//for when a user exits the app
 		{
-			this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
+			if((String)messageFromClient!=null) {
+				this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
+				System.out.println("client "+(String)messageFromClient+" logged out (App closed)");
+		
+			}
+		}
+		
+		if(operation.equals("logOut")) {
+			this.terminateConnection((String)messageFromClient);
 		}
 		
 		if(operation.equals("login"))					//for when a user tries to log in
@@ -1572,7 +1619,7 @@ public class ProjectServer extends AbstractServer
 			String ret="";
 			ret =	this.complaint(complaint);
 			if(ret.equals("Success")) {
-				System.out.println("complaint added");
+				System.out.println("complaint added by customer");
 			//	generalMessage = (String)("Added");
 				messageToSend.setMessage("Success"); 		//set the message for sending back to the client
 				sendToAllClients(messageToSend);
@@ -1584,7 +1631,7 @@ public class ProjectServer extends AbstractServer
 				sendToAllClients(messageToSend);
 			}
 			else if(ret.equals("Order does not exist")){
-				System.out.println("complaint failed");
+				System.out.println("failed to add complaint");
 			//	generalMessage = (String)("failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
 				sendToAllClients(messageToSend);
@@ -1611,7 +1658,41 @@ public class ProjectServer extends AbstractServer
 	}
   
   
-  public void insertNewCustomer(CustomerEntity ce) throws SQLException {
+  private CustomerEntity getCustomerDetails(String custName) throws SQLException {
+	// TODO Auto-generated method stub
+	  try {
+		  con=connectToDB();
+		  System.out.println("Connection to Database succeeded");
+	  }
+	  catch(Exception e) {
+		  e.printStackTrace();
+		  System.out.println("Connection to Database failed");
+	  }
+	  
+	  Statement s=con.createStatement();
+	  ResultSet rs = s.executeQuery("SELECT * FROM projectx.customers WHERE Username='"+custName+"'");
+	  if(rs.next()) {
+		  CustomerEntity ce=new CustomerEntity();
+		  ce.setUserName(rs.getString(1));
+		  ce.setID(rs.getLong(3));
+		  ce.setSubscriptionDiscount(rs.getString(4));
+		  ce.setAddress(rs.getString(5));
+		  ce.setEmailAddress(rs.getString(6));
+		  ce.setPhoneNumber(rs.getString(7));
+		  ce.setCreditCardNumber(Long.parseLong(rs.getString(9)));
+		 
+	      System.out.println("customer was pulled from database");
+	      return ce;
+	  }
+	  
+	  else {
+		  System.out.println("failed to fine customer "+custName);
+	  }
+	  
+	return null;
+}
+
+public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  
 	  try {
 		  con=connectToDB();
@@ -1622,20 +1703,30 @@ public class ProjectServer extends AbstractServer
 		  System.out.println("Connection to Database failed");
 	  }
 	  
-	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,SubscriptionDiscount,JoinTime,Credit) VALUES (?,?,?,?,?,?)");
+	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
 	  ps.setLong(3, ce.getID());
 	  ps.setString(4,ce.getSubscriptionDiscount().toString());
+	  ps.setString(5, ce.getAddress());
+	  ps.setString(6, ce.getEmailAddress());
+	  ps.setString(7, ce.getPhoneNumber());
 	  
-	  Timestamp timestamp = new Timestamp(System.currentTimeMillis());		//get current time
-//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-//      Date dateobj = new Date();
-      ps.setTimestamp(5, timestamp);
-//	  ps.setString(5, df.format(dateobj).toString());
-	  ps.setLong(6, ce.getCreditCardNumber());
+	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+      Date dateobj = new Date();
+      
+	  ps.setString(8, df.format(dateobj).toString());
+	  ps.setLong(9, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
-	
+	  
+	  ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts) VALUES (?,?,?,?)");
+	  ps.setString(1, ce.getUserName());
+	  ps.setString(2, ce.getPassword());
+	  ps.setString(3, "C");
+	  ps.setInt(4, 0);
+	  
+	  ps.executeUpdate();
+	  
 	  System.out.println("new customer added to Database");
   }
   

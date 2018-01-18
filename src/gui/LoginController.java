@@ -221,6 +221,18 @@ public class LoginController implements Initializable {
 	//*******//		Client.getClientConnection().quit();
 		}
 	}
+	
+	/**
+	 * method to log out the client from the system
+	 * 
+	 * 
+	 */
+	public static void signalLogOut() {
+		if(Client.getClientConnection()!=null) {
+			Client.getClientConnection().setDataFromUI(new MessageToSend(Client.getClientConnection().getUsername(),"logOut"));
+			Client.getClientConnection().accept();
+		}
+	}
 
 	
 	/**

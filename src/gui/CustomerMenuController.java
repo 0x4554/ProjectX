@@ -1,4 +1,5 @@
 package gui;
+import entities.CustomerEntity;
 import  entities.ProductEntity;
 
 import java.io.File;
@@ -12,6 +13,8 @@ import com.sun.org.apache.xml.internal.resolver.helpers.FileURL;
 import com.sun.xml.internal.bind.v2.runtime.property.PropertyFactory;
 import client.Client;
 import javafx.application.Application.Parameters;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,6 +47,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 import sun.tools.jar.Main;
 import java.awt.image.BufferedImage;
 
@@ -140,23 +144,82 @@ public class CustomerMenuController implements Initializable{
 		}
 	}
 	    //*Open  Account details  menu from customer main menu*//
-		public void enterToAccount(ActionEvent event) throws IOException {
+		public void enterToAccount(ActionEvent event) throws IOException, InterruptedException {
+			
+//			Client.getClientConnection().setConfirmationFromServer();
+//			MessageToSend msg=new MessageToSend(Client.getClientConnection().getUsername(), "getUserDetails");
+//			Client.getClientConnection().handleMessageFromClientUI(msg);
+//			Client.getClientConnection().accept();
+//			
+//			while(!Client.getClientConnection().getConfirmationFromServer())
+//				Thread.sleep(100);
+			
+			CustomerEntity custent=this.getCustomerData(Client.getClientConnection().getUsername());
+			if(custent==null)
+				GeneralMessageController.showMessage("There was a problem loading customer\nPlease try again later");
+			
+			else {
 			 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 			 FXMLLoader loader = new FXMLLoader();
 			 Parent root = loader.load(getClass().getResource("/gui/AccountDetailsBoundary.fxml").openStream());
 			 AccountDetailsController adc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+			 adc.setLabels(custent);
 			 adc.setConnectionData(this);
 			 //	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
+			
 			primaryStage.setTitle("Account details");
 			primaryStage.setScene(scene);
 			primaryStage.show();
-		}			
+			
+//			primaryStage.heightProperty().addListener(new ChangeListener() {
+//					@Override
+//					public void changed(ObservableValue arg0,Object arg1,Object arg2) {
+//						double height=(double) arg2;
+//					}
+//				});
+//			
+//			primaryStage.widthProperty().addListener(new ChangeListener() {
+//				@Override
+//				public void changed(ObservableValue arg0,Object arg1,Object arg2) {
+//					double height=(double) arg2;
+//				}
+//			});
+			
+			
+			}
+		}
+		
+		
+		public CustomerEntity getCustomerData(String customerName) throws InterruptedException {
+			
+			CustomerEntity ce;
+			
+			
+			MessageToSend msg=new MessageToSend(customerName, "getUserDetails");
+			Client.getClientConnection().setDataFromUI(msg);
+			Client.getClientConnection().accept();
+			
+			while(!Client.getClientConnection().getConfirmationFromServer())
+				Thread.sleep(100);
+			
+			Client.getClientConnection().setConfirmationFromServer();
+			
+			msg=Client.getClientConnection().getMessageFromServer();
+			
+			if(msg.getOperation().equals("customerExist")) 
+				return (CustomerEntity)msg.getMessage();
+			
+			else
+				return null;
+				
+		}
 		
 		
 		//*Open  Update details Window from customer main menu*//
 				public void enterToUpdateDetails(ActionEvent event) throws IOException {
+					
 					 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					 FXMLLoader loader = new FXMLLoader();
 					 Parent root = loader.load(getClass().getResource("/gui/UpdateAccountBoundary.fxml").openStream());
@@ -184,7 +247,8 @@ public class CustomerMenuController implements Initializable{
 					//////////////////Check returning to login page//////////////////////////*/
 					
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					LoginController.signalAppClose();
+					LoginController.signalLogOut();
+					Client.getClientConnection().setClientUserName(null);
 					
 					FXMLLoader loader = new FXMLLoader();
 					Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());

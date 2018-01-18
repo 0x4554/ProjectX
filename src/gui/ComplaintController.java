@@ -99,7 +99,7 @@ public class ComplaintController implements Initializable{
 					String reply=(String)fromServer.getMessage();
 					if(reply.equals("failed"))				
 						GeneralMessageController.showMessage("Order does not exist");
-					else
+			else
 						if(reply.equals("success"))
 						{
 							cancelComplaint(event);
@@ -112,18 +112,6 @@ public class ComplaintController implements Initializable{
 							
 						}
 					
-					/*
-			
-					else if(reply.equals("Added")){
-						if(!picPathTxtFld.getText().isEmpty()) { 						//if path to picture uploaded for sending it as avidence
-							pctr=picPathTxtFld.getText();
-							this.uploadPhoto(pctr);
-						}
-					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					this.cstmc.showCustomerMenu();								//back to main menu
-					GeneralMessageController.showMessage("Dear customer, we got your complaint\nand we are doing everything we can\nto make it up to you");			//message to present when complaint succeeded
-					return;
-				}				*/
 			}
 		else {
 			GeneralMessageController.showMessage("Please fill in your complaint");		//if nothing was inserted show general message
