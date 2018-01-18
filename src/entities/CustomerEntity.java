@@ -72,9 +72,9 @@ public class CustomerEntity extends UserEntity {
 	public void setSubscriptionDiscount(String subscriptionDiscount) {
 		if(subscriptionDiscount.equals("none"))
 			this.subscriptionDiscount = subscription.none;
-		else if(subscriptionDiscount.equals("Monthly"))
+		else if(subscriptionDiscount.equals("monthly"))
 			this.subscriptionDiscount=subscription.monthly;
-		else if(subscriptionDiscount.equals("Yearly"))
+		else if(subscriptionDiscount.equals("yearly"))
 			this.subscriptionDiscount=subscription.yearly;
 	}
 	/**

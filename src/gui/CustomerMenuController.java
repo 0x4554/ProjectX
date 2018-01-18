@@ -13,6 +13,8 @@ import com.sun.org.apache.xml.internal.resolver.helpers.FileURL;
 import com.sun.xml.internal.bind.v2.runtime.property.PropertyFactory;
 import client.Client;
 import javafx.application.Application.Parameters;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -166,9 +168,26 @@ public class CustomerMenuController implements Initializable{
 			 //	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
+			
 			primaryStage.setTitle("Account details");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
+//			primaryStage.heightProperty().addListener(new ChangeListener() {
+//					@Override
+//					public void changed(ObservableValue arg0,Object arg1,Object arg2) {
+//						double height=(double) arg2;
+//					}
+//				});
+//			
+//			primaryStage.widthProperty().addListener(new ChangeListener() {
+//				@Override
+//				public void changed(ObservableValue arg0,Object arg1,Object arg2) {
+//					double height=(double) arg2;
+//				}
+//			});
+			
+			
 			}
 		}
 		
@@ -228,7 +247,8 @@ public class CustomerMenuController implements Initializable{
 					//////////////////Check returning to login page//////////////////////////*/
 					
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					LoginController.signalAppClose();
+					LoginController.signalLogOut();
+					Client.getClientConnection().setClientUserName(null);
 					
 					FXMLLoader loader = new FXMLLoader();
 					Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());

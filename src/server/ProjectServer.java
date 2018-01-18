@@ -1535,7 +1535,15 @@ public class ProjectServer extends AbstractServer
 		
 		if(operation.equals("exitApp"))					//for when a user exits the app
 		{
-			this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
+			if((String)messageFromClient!=null) {
+				this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
+				System.out.println("client "+(String)messageFromClient+" logged out (App closed)");
+		
+			}
+		}
+		
+		if(operation.equals("logOut")) {
+			this.terminateConnection((String)messageFromClient);
 		}
 		
 		if(operation.equals("login"))					//for when a user tries to log in

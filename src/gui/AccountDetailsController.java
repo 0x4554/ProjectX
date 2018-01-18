@@ -73,10 +73,10 @@ public class AccountDetailsController implements Initializable{
 	 
 	 public void setLabels(CustomerEntity c) {
 		 cstNmLbl.setText(c.getUserName());
-		 idLbl.setText(Long.toString(c.getCustomerID()));
+		 idLbl.setText(Long.toString(c.getID()));
 		 phnLbl.setText(c.getPhoneNumber());
 		 mailLbl.setText(c.getEmailAddress());
-		 sbscrptLbl.setText(c.getSubscriptionDiscount().toString());
+		 sbscrptLbl.setText(c.getSubscriptionDiscount());
 		 crdtLbl.setText(Long.toString(c.getCreditCardNumber()));
 		 adrsLbl.setText(c.getAddress());
 	 }

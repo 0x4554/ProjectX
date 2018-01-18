@@ -20,13 +20,13 @@
       <Label layoutX="61.0" layoutY="241.0" text="Subscription" />
       <Label layoutX="61.0" layoutY="85.0" text="Customer name" />
       <Label layoutX="61.0" layoutY="279.0" text="Credit card number" />
-      <Label fx:id="cstNmLbl" layoutX="212.0" layoutY="85.0" text="Label" />
-      <Label fx:id="idLbl" layoutX="212.0" layoutY="121.0" text="Label" />
-      <Label fx:id="phnLbl" layoutX="212.0" layoutY="163.0" text="Label" />
-      <Label fx:id="mailLbl" layoutX="212.0" layoutY="203.0" text="Label" />
-      <Label fx:id="sbscrptLbl" layoutX="212.0" layoutY="241.0" text="Label" />
-      <Label fx:id="crdtLbl" layoutX="212.0" layoutY="279.0" text="Label" />
+      <Label fx:id="cstNmLbl" layoutX="212.0" layoutY="85.0" text="Label" textFill="#300be8" />
+      <Label fx:id="idLbl" layoutX="212.0" layoutY="121.0" text="Label" textFill="#390deb" />
+      <Label fx:id="phnLbl" layoutX="212.0" layoutY="163.0" text="Label" textFill="#4607e4" />
+      <Label fx:id="mailLbl" layoutX="212.0" layoutY="203.0" text="Label" textFill="#4c0be4" />
+      <Label fx:id="sbscrptLbl" layoutX="212.0" layoutY="241.0" text="Label" textFill="#5d0de8" />
+      <Label fx:id="crdtLbl" layoutX="212.0" layoutY="279.0" text="Label" textFill="#440ae1" />
       <Label layoutX="61.0" layoutY="317.0" text="Address" />
-      <Label fx:id="adrsLbl" layoutX="212.0" layoutY="317.0" text="Label" />
+      <Label fx:id="adrsLbl" layoutX="212.0" layoutY="317.0" text="Label" textFill="#490dee" />
    </children>
 </Pane>
