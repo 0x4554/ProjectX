@@ -198,18 +198,6 @@ public class CustomerMenuController implements Initializable{
 					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
 				}
 				
-				public void startComplaint(ActionEvent event) throws IOException {
-					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					 FXMLLoader loader = new FXMLLoader();
-					 Parent root = loader.load(getClass().getResource("/gui/ComplaintBoundary.fxml").openStream());
-					 ComplaintController cmpc= loader.getController();	//set the controller to the ComplaintBoundary to control the SearchProductGUI window
-//					 cmpc.setConnectionData(this);
-					Stage primaryStage=new Stage();
-					Scene scene=new Scene(root);
-					primaryStage.setTitle("Complaint");
-					primaryStage.setScene(scene);
-					primaryStage.show();
-				}
 				
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {

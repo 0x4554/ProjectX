@@ -160,7 +160,7 @@ public class ProjectServer extends AbstractServer
 			//** get the delivery details **//
 	rs2 = stmt2.executeQuery("SELECT * FROM projectx.delivery WHERE OrderID ="+rs.getInt(1)+"" );	//get the delivery data for the order
 	while(rs2.next())
-		delivery = new DeliveryEntity(rs2.getString(2), rs2.getString(3), rs2.getString(4), rs2.getTimestamp(5));		//create a new delivery using the data
+		delivery = new DeliveryEntity(rs2.getString(3), rs2.getString(4), rs2.getString(5), rs2.getTimestamp(6));		//create a new delivery using the data
 	order.setDeliveryDetails(delivery);
 	
 			//**get the products in the order **//
@@ -409,7 +409,7 @@ public class ProjectServer extends AbstractServer
 					//** get the delivery details **//
 			rs2 = stmt2.executeQuery("SELECT * FROM projectx.delivery WHERE OrderID ="+rs.getInt(1)+"" );	//get the delivery data for the order
 			while(rs2.next())
-				delivery = new DeliveryEntity(rs2.getString(2), rs2.getString(3), rs2.getString(4), rs2.getTimestamp(5));		//create a new delivery using the data
+				delivery = new DeliveryEntity(rs2.getString(3), rs2.getString(4), rs2.getString(5), rs2.getTimestamp(6));		//create a new delivery using the data
 			order.setDeliveryDetails(delivery);
 			
 					//**get the products in the order **//
@@ -491,8 +491,8 @@ public class ProjectServer extends AbstractServer
 		StoreEntity store;
 		DeliveryEntity delivery = null;
 		ProductEntity product;
-		Statement stmt,stmt2,stmt3,stmt4,stmt5;
-		ResultSet rs,rs2,rs3,rs4,rs5; 				//for the (order,delivery,list of products,store)
+		Statement stmt,stmt2,stmt3,stmt4,stmt5,stmt6;
+		ResultSet rs,rs2,rs3,rs4,rs5,rs6; 				//for the (order,delivery,list of products,store)
 		
 		try
 		{
@@ -508,6 +508,7 @@ public class ProjectServer extends AbstractServer
 		stmt3 = con.createStatement();
 		stmt4 = con.createStatement();
 		stmt5 = con.createStatement();
+		stmt6 = con.createStatement();
 		rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE UserID ='"+userID+"'"); //get all the stores (ID,Name,managerID) in the stores table from the data base
 	
 		while (rs.next())
@@ -517,7 +518,7 @@ public class ProjectServer extends AbstractServer
 					//** get the delivery details **//
 			rs2 = stmt2.executeQuery("SELECT * FROM projectx.delivery WHERE OrderID ="+rs.getInt(1)+"" );	//get the delivery data for the order
 			while(rs2.next())
-				delivery = new DeliveryEntity(rs2.getString(2), rs2.getString(3), rs2.getString(4), rs2.getTimestamp(5));		//create a new delivery using the data
+				delivery = new DeliveryEntity(rs2.getString(3), rs2.getString(4), rs2.getString(5), rs2.getTimestamp(6));		//create a new delivery using the data
 			order.setDeliveryDetails(delivery);
 			
 					//**get the products in the order **//
@@ -562,10 +563,18 @@ public class ProjectServer extends AbstractServer
 			order.setReceivingTimestamp(rs.getTimestamp(9));
 			//order.setReceivingTime(rs.getTime(11));
 						//** get the store **//
+			Map<Integer,Double> storeDiscoutsSales;
 			rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(10)+"");
 			while(rs5.next())
 			{
 				store = new StoreEntity(rs5.getInt(1), rs5.getString(2), rs5.getInt(3));
+				storeDiscoutsSales = new HashMap<Integer,Double>();
+				rs6 = stmt6.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+rs.getInt(10)+""); 		//get store's discounts
+				while(rs6.next())
+				{
+					storeDiscoutsSales.put(rs6.getInt(1), rs6.getDouble(2));
+				}
+				store.setStoreDiscoutsSales(storeDiscoutsSales);
 				order.setStore(store);
 			}
 			
@@ -591,7 +600,7 @@ public class ProjectServer extends AbstractServer
 	private ArrayList<String> createNewOrder(OrderEntity newOrder) throws SQLException, ClassNotFoundException {
 		ArrayList<String> returnMessage = new ArrayList<String>();
 		Statement stmt;
-		int orderCounter = 0;
+//		int orderCounter = 0;
 		try
 		{
 			con = connectToDB(); //call method to connect to DB
@@ -646,12 +655,19 @@ public class ProjectServer extends AbstractServer
 		//	ps.setInt(1, orderCounter);
 		//	ps.executeUpdate();
 			
+					//*** A query for getting the next  Auto_Icrement key (the inserted order ID  + 1 )	****///
+			ResultSet rs = stmt.executeQuery("SELECT `AUTO_INCREMENT`\r\n" + 
+					"FROM  INFORMATION_SCHEMA.TABLES\r\n" + 
+					"WHERE TABLE_SCHEMA = 'projectx'\r\n" + 
+					"AND   TABLE_NAME   = 'order';");
+			if(rs.next());
+			
 					//** now insert all the products in order to the productsInOrder table **//
 			PreparedStatement ps3;
 			for(ProductEntity product : newOrder.getProductsInOrder())
 			{
 				ps3 = con.prepareStatement("INSERT INTO projectx.productsinorder (OrderNum,ProductID) VALUES (?,?)"); //prepare a statement
-				ps3.setInt(1, orderCounter+1);
+				ps3.setInt(1, rs.getInt(1)-1);
 				ps3.setInt(2, product.getProductID());
 				ps3.executeUpdate();
 			}
@@ -659,7 +675,7 @@ public class ProjectServer extends AbstractServer
 			if(newOrder.getOrderPickup().equals(OrderEntity.SelfOrDelivery.delivery))		//if the order has a delivery
 			{
 						//** insert all the order's delivery details in to the delivery table **//
-				newOrder.getDeliveryDetails().setOrderID(orderCounter+1);	//set the orderID for the delivery
+				newOrder.getDeliveryDetails().setOrderID(rs.getInt(1)-1);	//set the orderID for the delivery
 				PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryTimestamp) VALUES (?,?,?,?,?)"); //prepare a statement
 				ps2.setInt(1, newOrder.getDeliveryDetails().getOrderID());
 				ps2.setString(2, newOrder.getDeliveryDetails().getDeliveryAddress());

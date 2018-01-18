@@ -156,6 +156,7 @@ public class CustomerOrderDetailsController implements Initializable {
 				TreeItem<String> products = new TreeItem<>("Products in the order");
 				OrderID.getChildren().add(products);
 				
+				/////////////FIX THIS!!!!!!!!!//////////////////////////////////////////////////////////FIX FIX FIX FIX
 				for(ProductEntity product : order.getProductsInOrder())
 				{
 					TreeItem<String> productName = new TreeItem<>("Product name : "+product.getProductName());
@@ -172,7 +173,12 @@ public class CustomerOrderDetailsController implements Initializable {
 //						productName.getChildren().add(productDominantColor);
 //			
 //					}
-					TreeItem<String> productPrice = new TreeItem<>("Product price : "+product.getProductPrice().toString());
+					Double price;
+					TreeItem<String> productPrice;
+					if((price = order.getStore().getStoreDiscoutsSales().get(product.getProductID())) != null)	//check for disocunt
+						productPrice = new TreeItem<>("Product price : "+price.toString());
+					else
+						productPrice = new TreeItem<>("Product price : "+product.getProductPrice().toString());
 					productName.getChildren().add(productPrice);
 					
 				}
