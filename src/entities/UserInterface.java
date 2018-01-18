@@ -19,7 +19,7 @@ public interface UserInterface {
 //	final double yearlySubscriptionDiscount = 0.1;
 	
 	public enum AccountStatus{confirmed,onHold,unconfirmed};
-	public enum subscription{monthly,yearly,none};
+	public enum Subscription{Monthly,Yearly,None};
 	/**
 	 * Getter for the userName
 	 * @return the userName

@@ -164,7 +164,7 @@ public class CustomerMenuController implements Initializable{
 			 Parent root = loader.load(getClass().getResource("/gui/AccountDetailsBoundary.fxml").openStream());
 			 AccountDetailsController adc= loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 			 adc.setLabels(custent);
-			 adc.setConnectionData(this);
+			 adc.setConnectionData(this,custent);
 			 //	 ord.setConnectionData(DEFAULT_PORT, this);
 			Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
@@ -248,7 +248,7 @@ public class CustomerMenuController implements Initializable{
 					
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					LoginController.signalLogOut();
-					Client.getClientConnection().setClientUserName(null);
+					
 					
 					FXMLLoader loader = new FXMLLoader();
 					Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
@@ -260,6 +260,7 @@ public class CustomerMenuController implements Initializable{
 					primaryStage.show();
 					
 					GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
+					Client.getClientConnection().setClientUserName(null);
 				}
 				
 				
