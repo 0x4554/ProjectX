@@ -26,6 +26,44 @@ public class ComplaintEntity implements Serializable{
 	private String description;
 	private Status status;
 	private byte [] file;
+	private String storeReply;
+	private Double compensation;
+	
+	/**
+	 * getter for the store's reply method
+	 * 
+	 * @return
+	 */
+	public String getStoreReply() {
+		return storeReply;
+	}
+	
+	/**setter for the storeReply method
+	 * 
+	 * @param storeReply
+	 */
+	public void setStoreReply(String storeReply) {
+		this.storeReply = storeReply;
+	}
+
+	
+	/**
+	 * getter for the compensation for the customer
+	 * 
+	 * @return
+	 */
+	public Double getCompensation() {
+		return compensation;
+	}
+
+	/**
+	 * setter for the compensation method
+	 * 
+	 * @param compensation
+	 */
+	public void setCompensation(Double compensation) {
+		this.compensation = compensation;
+	}
 	
 	
 	/**

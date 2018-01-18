@@ -156,8 +156,8 @@ public class StoreManagerMenuController implements Initializable {
 	public void logOutManager(ActionEvent event) throws IOException	//when click "Back" return to main menu
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-//		ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
-		LoginController.signalAppClose();
+//		
+		LoginController.signalLogOut();									//log out user from system
 		
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
@@ -167,7 +167,8 @@ public class StoreManagerMenuController implements Initializable {
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		GeneralMessageController.showMessage("Manager "+Client.getClientConnection().getUsername()+" logged out");
+		GeneralMessageController.showMessage("Store Manager "+Client.getClientConnection().getUsername()+" logged out");
+		Client.getClientConnection().setClientUserName(null);
 	}
 
 
