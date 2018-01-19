@@ -29,6 +29,19 @@ public class ComplaintEntity implements Serializable{
 	private String storeReply;
 	private Double compensation;
 	
+	public ComplaintEntity()
+	{
+		
+	}
+	
+	/**
+	 * Setter for the file
+	 * @param file the file to set
+	 */
+	public void setFile(byte[] file) {
+		this.file = file;
+	}
+
 	/**
 	 * getter for the store's reply method
 	 * 

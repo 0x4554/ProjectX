@@ -107,7 +107,6 @@ public class CustomerOrderDetailsController implements Initializable {
 			{
 				if(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13).equals(order.getOrderID().toString())) 		//check which order was selected
 				{
-				//this.listOfProductsNames.add(product.getProductName());
 				TreeItem<String> OrderID = new TreeItem<>("Order number : "+order.getOrderID().toString()); //set the branch as the product's name to be the parent of it's details
 							/* Set all the order's details to be leaves on the branch */
 				TreeItem<String> totalprice = new TreeItem<>("Total price : "+order.getTotalPrice().toString()); 		//create a new leaf
@@ -115,8 +114,6 @@ public class CustomerOrderDetailsController implements Initializable {
 				
 				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
 				OrderID.getChildren().add(orderTime); 									//set as a child 
-//				TreeItem<String> orderDate = new TreeItem<>("Order Date : "+order.getOrderDate().toString());
-//				OrderID.getChildren().add(orderDate);
 				TreeItem<String> store = new TreeItem<>("From Store named : "+order.getStore().getBranchName());
 				OrderID.getChildren().add(store);
 				
@@ -128,8 +125,6 @@ public class CustomerOrderDetailsController implements Initializable {
 				
 				TreeItem<String> orderPickup = new TreeItem<>(order.getOrderPickup().toString());
 				OrderID.getChildren().add(orderPickup);
-//				TreeItem<String> receivingDate = new TreeItem<>("Receiving date : "+order.getReceivingDate().toString());
-//				OrderID.getChildren().add(receivingDate);
 				TreeItem<String> receivingTime = new TreeItem<>("Receiving time : "+order.getReceivingTimestamp().toString());
 				OrderID.getChildren().add(receivingTime);
 				TreeItem<String> status = new TreeItem<>("Order Status : "+order.getStatus().toString());
@@ -156,7 +151,6 @@ public class CustomerOrderDetailsController implements Initializable {
 				TreeItem<String> products = new TreeItem<>("Products in the order");
 				OrderID.getChildren().add(products);
 				
-				/////////////FIX THIS!!!!!!!!!//////////////////////////////////////////////////////////FIX FIX FIX FIX
 				for(ProductEntity product : order.getProductsInOrder())
 				{
 					TreeItem<String> productName = new TreeItem<>("Product name : "+product.getProductName());
@@ -187,8 +181,6 @@ public class CustomerOrderDetailsController implements Initializable {
 				OrderID.setExpanded(true); 				//set the tree expanded by default
 				}
 			}
-//			observableList.setAll(stringSet);
-//			this.prdLst.setItems(observableList);
 			
 		this.dtlsTrVw.setRoot(root);
 		this.dtlsTrVw.setShowRoot(false); //make root expanded every time it starts
@@ -201,13 +193,12 @@ public class CustomerOrderDetailsController implements Initializable {
 	 */
 	public void backToMainMenu(ActionEvent event) throws IOException {
 
-		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
-		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-//		ord.setConnectionData(this);
-		 Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
+		CustomerOrderController ord = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
 		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();

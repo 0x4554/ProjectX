@@ -67,7 +67,7 @@ public class ComplaintController implements Initializable{
 //	}
 	
 	/**
-	 * This method collecets the complaint data and sends it to the server
+	 * This method collects the complaint data and sends it to the server
 	 * @param event	pressed send
 	 * @throws IOException
 	 * @throws InterruptedException
