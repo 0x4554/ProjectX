@@ -350,6 +350,7 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerShowComplaintImageBoundary.fxml").openStream());
 		CustomerServiceWorkerShowComplaintImageController cswscic = new CustomerServiceWorkerShowComplaintImageController();
+		cswscic = loader.getController();
 		cswscic.showImage(this.complaintImage);
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
