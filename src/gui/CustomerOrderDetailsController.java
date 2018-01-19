@@ -2,12 +2,12 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.ComplaintEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
 import javafx.collections.FXCollections;
@@ -24,19 +24,29 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-import sun.java2d.loops.GeneralRenderer;
 
 public class CustomerOrderDetailsController implements Initializable {
 
 	@FXML
 	private Button bckBtn;
+
+	@FXML
+	private TextArea cmplntDtlsTxtArea;
+
+	@FXML
+	private TextArea repliedTxtAre;
+
+	@FXML
+	private Label cmplntFldOnLable;
 
 	@FXML
 	private Button cnclOrdrBtn;
@@ -52,6 +62,7 @@ public class CustomerOrderDetailsController implements Initializable {
 
 	ObservableList<String> listOfOrders;
 	ArrayList<OrderEntity> arraylistOfOrders;
+	ArrayList<ComplaintEntity> listOfComplaints;
 	
 	/**
 	 * This method builds the ListView that contains the customer's orders
@@ -59,13 +70,24 @@ public class CustomerOrderDetailsController implements Initializable {
 	 */
 	public void showOrders() throws InterruptedException
 	{
-		MessageToSend message = new MessageToSend(Client.getClientConnection().getUsername(), "getCustomerOrders");
+					//** get complaints **//
+		MessageToSend message = new MessageToSend("", "getComplaints");
 		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		listOfComplaints = (ArrayList<ComplaintEntity>)m.getMessage();
+		
+		
+		message = new MessageToSend(Client.getClientConnection().getUsername(), "getCustomerOrders");
+		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		m = Client.getClientConnection().getMessageFromServer();
 		
 		arraylistOfOrders = (ArrayList<OrderEntity>)m.getMessage();
 		
@@ -177,14 +199,65 @@ public class CustomerOrderDetailsController implements Initializable {
 					
 				}
 				
+				this.repliedTxtAre.setVisible(false);
+				this.cmplntDtlsTxtArea.setVisible(false);
+				this.cmplntFldOnLable.setVisible(false);
+				
+				showComplaintDetails(order.getOrderID());
+				
 				root.getChildren().add(OrderID);
 				OrderID.setExpanded(true); 				//set the tree expanded by default
+				
+				
 				}
 			}
 			
 		this.dtlsTrVw.setRoot(root);
 		this.dtlsTrVw.setShowRoot(false); //make root expanded every time it starts
 	}
+	
+	/**
+	 * This method shows the complaint details
+	 * @param oderID	the order id
+	 */
+	private void showComplaintDetails(Integer orderID)
+	{
+		for(ComplaintEntity complaint : this.listOfComplaints)
+		{
+			if(complaint.getOrderID() == orderID)
+			{
+				this.cmplntDtlsTxtArea.setVisible(true);
+				this.repliedTxtAre.setVisible(true);
+				this.cmplntFldOnLable.setVisible(true);
+				this.cmplntDtlsTxtArea.setText(complaint.getDescription());		//set the complaint details to the text area
+//				if(complaint.getFile() != null)									//if there is an image 
+//				{
+//					this.shwImgBtn.setVisible(true);
+//					this.complaintImage = FilesConverter.convertByteArrayToImage(complaint.getFile());		//convert and save the image
+//				}
+//				else
+//					this.shwImgBtn.setVisible(false);
+//				this.complaint = complaint;
+				if(complaint.getStatus().toString().equals("handled"))			//if handled, show the reply
+					this.repliedTxtAre.setText(complaint.getStoreReply());
+				else
+					this.repliedTxtAre.setText("Processing");
+				this.cmplntFldOnLable.setText(complaint.getFiledOn().toString());		//set the time it was filed
+//				if(!complaint.getStatus().toString().equals("handled"))					//check if was handled
+//				{
+//					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
+//					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
+//						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
+//					else
+//						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
+//							
+//				}
+//				else
+//					this.cmplntTmToRplyLbl.setText("Handled");
+			}
+		}
+	}
+	
 	
 	/**
 	 * This method loads the main menu window

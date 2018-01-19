@@ -2,8 +2,11 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import client.Client;
 import entities.ComplaintEntity;
@@ -20,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
@@ -30,9 +34,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.FilesConverter;
 import logic.MessageToSend;
+import logic.TimeCalculation;
 
 public class CustomerServiceWorkerComplaintController implements Initializable {
 
+	private final long Hours_To_Reply = 48;
 	@FXML
 	private ListView<String> ActvCmplntLstVw;
 	
@@ -43,6 +49,12 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 
 	@FXML
 	private Button bckBtn;
+	
+	@FXML
+    private Label cmplntFldOnLable;
+
+    @FXML
+    private Label cmplntTmToRplyLbl;
 
 	@FXML
 	private Button shwImgBtn;
@@ -55,6 +67,9 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 	
 	@FXML
     private TextArea cmplntDtlsTxtArea;
+
+	@FXML
+    private TextArea repliedTxtAre;
 	
 	private ArrayList<ComplaintEntity> listOfComplaints;
 	private ArrayList<OrderEntity> listOfOrders;
@@ -266,6 +281,22 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 				else
 					this.shwImgBtn.setVisible(false);
 				this.complaint = complaint;
+				if(complaint.getStatus().toString().equals("handled"))			//if handled, show the reply
+					this.repliedTxtAre.setText(complaint.getStoreReply());
+				else
+					this.repliedTxtAre.clear();
+				this.cmplntFldOnLable.setText(complaint.getFiledOn().toString());		//set the time it was filed
+				if(!complaint.getStatus().toString().equals("handled"))					//check if was handled
+				{
+					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
+					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
+						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
+					else
+						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
+							
+				}
+				else
+					this.cmplntTmToRplyLbl.setText("Handled");
 			}
 		}
 	}

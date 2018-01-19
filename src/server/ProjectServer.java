@@ -296,6 +296,7 @@ public class ProjectServer extends AbstractServer
 		  		
 		  		complaint.setStoreReply(rs.getString(5));
 		  		complaint.setCompensation(rs.getDouble(6));
+		  		complaint.setFiledOn(rs.getTimestamp(7));
 		  		
 
 			 
@@ -1407,7 +1408,7 @@ public class ProjectServer extends AbstractServer
 		
 		else if ((rs.next())) //if such ID exists in the DB, Insert the new data
 		{
-			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File,Compensation) VALUES (?,?,?,?,?)"); //prepare a statement
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File,Compensation,FiledOn) VALUES (?,?,?,?,?,?)"); //prepare a statement
 			ps.setInt(1, details.getOrderID()); //insert parameters into the statement
 			ps.setString(2, details.getDescription());
 			ps.setString(3, details.getStatus().toString());
@@ -1418,6 +1419,7 @@ public class ProjectServer extends AbstractServer
 			} else
 				ps.setNull(4, java.sql.Types.NULL);
 			ps.setDouble(5, 0);
+			ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));		//set the time it is filed
 
 			ps.executeUpdate();
 
