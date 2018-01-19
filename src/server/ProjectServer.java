@@ -1650,6 +1650,13 @@ public class ProjectServer extends AbstractServer
 			}
 		}
 		
+		if(operation.equals("updateAccount")) {
+			String toClient = updateAccout((CustomerEntity)messageFromClient);
+			
+			messageToSend.setMessage(toClient);
+			messageToSend.setOperation("updateRetVal");
+			client.sendToClient(messageToSend);
+		}
 		
 		if(operation.equals("cancelRequest"))
 		{
@@ -1749,6 +1756,7 @@ public class ProjectServer extends AbstractServer
 			
 			}
 			catch(Exception e) {
+				e.printStackTrace();
 				MessageToSend toClient = new MessageToSend("failed","retval");
 				client.sendToClient(toClient);
 			}
@@ -1893,7 +1901,40 @@ public class ProjectServer extends AbstractServer
 	}
   
   
-  private CustomerEntity getCustomerDetails(String custName) throws SQLException {
+  private String updateAccout(CustomerEntity customer) throws SQLException {
+	// TODO Auto-generated method stub
+	 
+	  Statement stmnt;
+	  
+	  try {
+		 con=connectToDB();
+		 System.out.println("Connection to Database succeeded");
+	 }
+	 catch(Exception e) {
+		 e.printStackTrace();
+		 System.out.println("Connection to Database failed");
+	 }
+	 stmnt=con.createStatement();
+	 try {
+	 stmnt.executeUpdate("UPDATE projectx.customers SET PhoneNumber='"+customer.getPhoneNumber()+
+	 		"',Address='"+customer.getAddress()+
+	 		"',CreditCard='"+customer.getCreditCardNumber()+
+	 		"',Email='"+customer.getEmailAddress()+"'");
+	 }
+	 catch(Exception e) {
+		 
+		 e.printStackTrace();
+		 System.out.println("Account update of customer "+ customer.getUserName() +" failed");
+		
+		return "updateFailed";
+	 }
+
+		System.out.println("Account of customer "+ customer.getUserName() +" updated succesfully");
+	 return "accountUpdated";
+
+}
+
+private CustomerEntity getCustomerDetails(String custName) throws SQLException {
 	// TODO Auto-generated method stub
 	  try {
 		  con=connectToDB();
