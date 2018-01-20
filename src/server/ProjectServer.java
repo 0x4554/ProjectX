@@ -650,13 +650,15 @@ public class ProjectServer extends AbstractServer
  * @throws ClassNotFoundException 
  * @throws IOException 
    */
-  private ArrayList<OrderEntity> getCancelRequests(Integer BranchID) throws SQLException, ClassNotFoundException, IOException
+  private ArrayList<OrderEntity> getCancelRequests(String BranchID) throws SQLException, ClassNotFoundException, IOException
   {
+	  							//receives a string containing the specific store ID OR "all" for all stores
 	  ArrayList<OrderEntity> listOfOrdersFromDB = new ArrayList<OrderEntity>();
 		OrderEntity order;
 		StoreEntity store;
 		DeliveryEntity delivery = null;
 		ProductEntity product;
+		String specificStore="";
 		Statement stmt,stmt2,stmt3,stmt4,stmt5;
 		ResultSet rs,rs2,rs3,rs4,rs5; 				//for the (order,delivery,list of products,store)
 		try
@@ -673,7 +675,11 @@ public class ProjectServer extends AbstractServer
 		stmt3 = con.createStatement();
 		stmt4 = con.createStatement();
 		stmt5 = con.createStatement();
-	    rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE OrderStatus = 'cancel_requested'"); //get all the stores (ID,Name,managerID) in the stores table from the data base
+		if(!BranchID.equals("all"))		//if a specific store is asked
+		{
+			specificStore = "AND BranchID = "+Integer.parseInt(BranchID);
+		}
+	    rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE OrderStatus = 'cancel_requested'"+specificStore); //get all the stores (ID,Name,managerID) in the stores table from the data base
 		
 		while (rs.next())
 		{
@@ -1221,6 +1227,8 @@ public class ProjectServer extends AbstractServer
   	 * 
   	 * @param inStrm - InputStream to convert
   	 * @return  - array of bytes
+  	 * @throws ClassNotFoundException for connection
+  	 * @throws SQLException for SQL
   	 * @throws IOException 
   	 */
   /*	public byte[] convertInputStreamToByteArray(InputStream inStrm) throws IOException {
@@ -1240,8 +1248,87 @@ public class ProjectServer extends AbstractServer
   		return retByteArray;
   	}								*/
     	
-  	
-  	
+  	/**
+  	 * This method returns a specific store based on the userName
+  	 * @param Username the username of the store employee
+  	 * @return	the store
+  	 * @throws ClassNotFoundException	DB connection
+  	 * @throws SQLException	for SQL
+  	 */
+  	private StoreEntity getSpecificStore(String Username) throws ClassNotFoundException, SQLException
+  	{
+  		StoreEntity store = null;
+		Statement stmt,stmt2;;
+		try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+		stmt = con.createStatement();
+		stmt2=con.createStatement();
+		
+		ResultSet rs = stmt2.executeQuery("SELECT BranchID FROM projectx.storeemployee WHERE UserName = '"+Username+"'");		//get the specific Branch ID
+		Integer branchID=null;
+		if(rs.next())
+			 branchID = rs.getInt(1);
+		ResultSet rs1 = stmt.executeQuery("SELECT BranchID,BranchName,BranchManager FROM projectx.store WHERE BranchID = "+branchID+""); //get all the stores (ID,Name,managerID) in the stores table from the data base
+
+		while (rs1.next())
+		{
+			store = new StoreEntity(rs1.getInt(1), rs1.getString(2), rs1.getInt(3)); //create a new instance of a store
+		
+
+		stmt = con.createStatement();
+		ResultSet rs2;
+		Map<Integer,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
+			rs2 = stmt.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+ store.getBranchID()); //get all the discounts for each store
+
+			if(rs2.next())
+			{
+				storeDiscoutsSales = new HashMap<Integer, Double>();			//create  a new hashMap for discounts
+				storeDiscoutsSales.put(rs2.getInt(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
+
+				while (rs2.next())
+				{
+					storeDiscoutsSales.put(rs2.getInt(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
+				}
+				store.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
+
+			}
+
+		
+		stmt = con.createStatement();
+		ResultSet rs3;
+		ArrayList<Integer> listOfStoreWorkers;			//holds the list of store workers for the store entity
+			rs3 = stmt.executeQuery("SELECT WorkerID FROM projectx.storeemployee WHERE BranchID = "+ store.getBranchID()); //get all the discounts for each store
+			
+			if(rs3.next())
+			{
+				listOfStoreWorkers = new ArrayList<Integer>();			//create  a new arrayList for workers
+				if(rs3.getInt(1) == store.getStoreManagerWorkerID()) {		//if the worker is the manager 
+					store.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
+				}else													//if a simple store worker
+					listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
+
+				while (rs3.next())
+				{
+					if(rs3.getInt(1) == store.getStoreManagerWorkerID()) {		//if the worker is the manager 
+						store.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
+					}else													//if a simple store worker
+						listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
+				}
+				store.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
+
+			}
+
+	}
+
+		return store;
+  	}
   	
   	/**
   	 * This method gets the list of stores from the DB
@@ -1268,14 +1355,11 @@ public class ProjectServer extends AbstractServer
 		while (rs1.next())
 		{
 			store = new StoreEntity(rs1.getInt(1), rs1.getString(2), rs1.getInt(3)); //create a new instance of a store
-//			listOfStoresFromDB.add(store); //add the product from the data base to the list
 		
 
 		stmt = con.createStatement();
 		ResultSet rs2;
 		Map<Integer,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
-	//	for (StoreEntity store2 : listOfStoresFromDB)
-//		{
 			rs2 = stmt.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+ store.getBranchID()); //get all the discounts for each store
 
 			if(rs2.next())
@@ -1290,25 +1374,10 @@ public class ProjectServer extends AbstractServer
 				store.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
 
 			}
-//			if(!(rs2.next()))						//if the store has no discounts
-//			{
-//				store.setStoreDiscoutsSales(null);
-//			} else
-//			{
-//				storeDiscoutsSales = new HashMap<Integer, Double>();			//create  a new hashMap for discounts
-//				while (rs2.next())
-//				{
-//					storeDiscoutsSales.put(rs2.getInt(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
-//				}
-//				store.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
-//			}
-//		}
 		
 		stmt = con.createStatement();
 		ResultSet rs3;
 		ArrayList<Integer> listOfStoreWorkers;			//holds the list of store workers for the store entity
-//		for (StoreEntity store2 : listOfStoresFromDB)
-//		{
 			rs3 = stmt.executeQuery("SELECT WorkerID FROM projectx.storeemployee WHERE BranchID = "+ store.getBranchID()); //get all the discounts for each store
 			
 			if(rs3.next())
@@ -1329,22 +1398,6 @@ public class ProjectServer extends AbstractServer
 				store.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
 
 			}
-//			if(!(rs3.next()))						//if the store has no workers
-//			{
-//				store.setStoreWorkers(null);;
-//			} else
-//			{
-//				listOfStoreWorkers = new ArrayList<Integer>();			//create  a new arrayList for workers
-//				while (rs3.next())
-//				{
-//					if(rs3.getInt(1) == store.getStoreManagerWorkerID()) {		//if the worker is the manager 
-//						store.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
-//					}else													//if a simple store worker
-//						listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
-//				}
-//				store.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
-//			}
-//		}
 			listOfStoresFromDB.add(store); //add the product from the data base to the list
 	}
 
@@ -1763,7 +1816,7 @@ public class ProjectServer extends AbstractServer
 		if(operation.equals("getCancelRequests"))		//get all the orders which have a cancel request
 		{
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
-			listOfOrders = getCancelRequests();
+			listOfOrders = getCancelRequests((String)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
 			sendToAllClients(messageToSend);
 		}
@@ -1865,6 +1918,13 @@ public class ProjectServer extends AbstractServer
 			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllStores = getAllstoresFromDB();
 			messageToSend.setMessage(listOfAllStores);		//set the message for sending back to the client
+			sendToAllClients(messageToSend);
+		}
+		if(operation.equals("getSpecificStore"))
+		{
+			StoreEntity store ;		//an arrayList that holds all the stores in the DB
+			store = getSpecificStore((String)messageFromClient);
+			messageToSend.setMessage(store);		//set the message for sending back to the client
 			sendToAllClients(messageToSend);
 		}
 //		if(operation.equals("addProductToCatalog"))

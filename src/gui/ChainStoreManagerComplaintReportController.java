@@ -52,26 +52,12 @@ public class ChainStoreManagerComplaintReportController implements Initializable
 	        
 	        for(ComplaintEntity complaint : complaints)
 	        {
-//	        	Calendar cal = Calendar.getInstance();
-//	        	cal.setTimeInMillis(complaint.getFiledOn().getTime());
-//	        	int year = cal.get(Calendar.MONTH);
-//	        	int i =complaint.getFiledOn().getMonth();
-//	        	int j =complaint.getFiledOn().getMonth()%3;
 	        	if(complaint.getFiledOn().getMonth()%3 +1 == 1)
 	        		firstMonth++;
 	        	else if(complaint.getFiledOn().getMonth()%3 +1 == 2)
 	        		secondMonth++;
 	        	else 
 	        		thirdMonth++;
-
-//	        	{
-//	        		if(product.getProductType().equals("flower"))
-//	        			flower++;
-//	        		else if (product.getProductType().equals("bridal"))
-//	        			bridal++;
-//	        		else if (product.getProductType().equals("birthDay"))
-//	        			birthDay++;
-//	        	}
 	        	
 	        }
 	        dataSeries1.getData().add(new XYChart.Data(askedQuarter[0], firstMonth));
@@ -80,20 +66,6 @@ public class ChainStoreManagerComplaintReportController implements Initializable
 	        
 	        chart.getData().add(dataSeries1);
 	        
-//			this.listOfOrders = orders;
-//			this.ordrLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE); //unable multiple selection
-//			totalEarnings=0.0;
-//			this.listOfOrderString = FXCollections.observableArrayList(); //the observable list to enter to the list  view
-	//
-//			for (OrderEntity order : this.listOfOrders)
-//			{
-//				this.listOfOrderString.add("Order Number : " +order.getOrderID()+" total : "+ order.getTotalPrice());
-//				this.totalEarnings += order.getTotalPrice();		//sum  the earnings
-//			}
-	//
-//			this.ordrLstVw.setItems(this.listOfOrderString); //set items to the list of active complaints
-//			this.ttlLbl.setText(this.totalEarnings.toString());
-
 		}
 	    
 	    /**
