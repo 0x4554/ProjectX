@@ -67,7 +67,7 @@ public class ComplaintController implements Initializable{
 //	}
 	
 	/**
-	 * This method collecets the complaint data and sends it to the server
+	 * This method collects the complaint data and sends it to the server
 	 * @param event	pressed send
 	 * @throws IOException
 	 * @throws InterruptedException
@@ -100,7 +100,7 @@ public class ComplaintController implements Initializable{
 					if(reply.equals("failed"))				
 						GeneralMessageController.showMessage("Order does not exist");
 			else
-						if(reply.equals("success"))
+						if(reply.equals("Success"))
 						{
 							cancelComplaint(event);
 							GeneralMessageController.showMessage("Your complaint has been received received.\nWe will contact you soon.");

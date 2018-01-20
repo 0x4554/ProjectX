@@ -1,11 +1,9 @@
 package entities;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import logic.FilesConverter;
 
@@ -28,7 +26,39 @@ public class ComplaintEntity implements Serializable{
 	private byte [] file;
 	private String storeReply;
 	private Double compensation;
+	private Timestamp FiledOn;
+	public ComplaintEntity()
+	{
+		
+	}
 	
+	
+	/**
+	 * Getter for the filedOn
+	 * @return the filedOn
+	 */
+	public Timestamp getFiledOn() {
+		return FiledOn;
+	}
+
+
+	/**
+	 * Setter for the filedOn
+	 * @param filedOn the filedOn to set
+	 */
+	public void setFiledOn(Timestamp filedOn) {
+		FiledOn = filedOn;
+	}
+
+
+	/**
+	 * Setter for the file
+	 * @param file the file to set
+	 */
+	public void setFile(byte[] file) {
+		this.file = file;
+	}
+
 	/**
 	 * getter for the store's reply method
 	 * 

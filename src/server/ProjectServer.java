@@ -97,7 +97,258 @@ public class ProjectServer extends AbstractServer
 	  ConnectedClients.removeConnectedClient(username);
   }
 
+  /**
+   * This method is for handling a complaint as a customer service worker
+   * @param complaint the complaint
+   * @return
+ * @throws SQLException 
+ * @throws ClassNotFoundException 
+   */
+  private String handleComplaint(ComplaintEntity complaint) throws SQLException, ClassNotFoundException
+  {
+	  Statement stmt;
+	  String retMsg="";
+	
+	  try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+	  stmt = con.createStatement();
+	  
+	  try {
+	  stmt.executeUpdate("UPDATE projectx.complaints SET Status = 'handled', Reply = '"+complaint.getStoreReply()+"',Compensation = "+complaint.getCompensation()+" WHERE Ordernum = " + complaint.getOrderID()+ "");
+	  }
+	  catch(Exception e)
+	  {
+		  e.printStackTrace();
+		  return retMsg = "faild to handle the complaint.";
+	  }
+	  /// **** compensate the customer ****/////
+	  return retMsg = "complaint has been handled";
+  }
+  /**
+   * This method gets all the orders with complaints on them
+   * @param listOfcomplaints
+   * @return	arrayList of orders
+ * @throws ClassNotFoundException connection to DB
+ * @throws SQLException for the SQL 
+ * @throws IOException for the file converting
+   */
+  private ArrayList<OrderEntity> getAllComplaintOrders(ArrayList<ComplaintEntity> listOfcomplaints) throws ClassNotFoundException, SQLException, IOException
+  {
+	  Statement stmt,stmt2,stmt3,stmt4,stmt5,stmt6;
+	  ResultSet rs,rs2,rs3,rs4,rs5,rs6;
+	  OrderEntity order;
+	  DeliveryEntity delivery = null;
+	  StoreEntity store;
+	  ProductEntity product;
+	  ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
+	  try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+				System.out.println("Connection to Data Base succeeded");
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+		}
+	 
+	  stmt = con.createStatement();
+	  stmt2 = con.createStatement();
+	  stmt3=con.createStatement();
+	  stmt4=con.createStatement();
+	  stmt5=con.createStatement();
+	  stmt6=con.createStatement();
+	 
+	 for(ComplaintEntity complaint : listOfcomplaints)
+	 {
+		
+		 rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = "+complaint.getOrderID()+"");	//get all orders matching the complaint's order ID
+		 while(rs.next())
+		  {
+			  order = new OrderEntity();
+				
+				//** get the delivery details **//
+		rs2 = stmt2.executeQuery("SELECT * FROM projectx.delivery WHERE OrderID ="+rs.getInt(1)+"" );	//get the delivery data for the order
+		while(rs2.next())
+			delivery = new DeliveryEntity(rs2.getString(3), rs2.getString(4), rs2.getString(5), rs2.getTimestamp(6));		//create a new delivery using the data
+		order.setDeliveryDetails(delivery);
+		
+				//**get the products in the order **//
+		rs3 = stmt3.executeQuery("SELECT ProductID FROM projectx.productsinorder WHERE Ordernum = " +rs.getInt(1)+ "");
+		while(rs3.next())
+		{
+			rs4 = stmt4.executeQuery("SELECT * FROM projectx.product WHERE ProductID = " +rs3.getInt(1)+""); 	//get each product's details from DB
+			while(rs4.next())
+			{
+				Blob b = con.createBlob(); 					//create blob
+				b=rs.getBlob(8);							////get blob from DB
+		  		InputStream is=b.getBinaryStream();	  		//get binary Stream for blob and than use FilesConverter.convertInputStreamToByteArray(InputStream)
+		  		byte[] image = FilesConverter.convertInputStreamToByteArray(is);
 
+		  		product = new ProductEntity(rs4.getInt(1), rs4.getString(2), rs4.getString(3), rs4.getDouble(4), rs4.getString(5), rs4.getString(7), image); //**NO IMAGE YET//
+				order.addProductToCart(product); 			//add the product to the order
+			}
+		}
+		order.setOrderID(rs.getInt(1));
+		order.setUserName(rs.getString(2));
+		order.setOrderTime(rs.getTimestamp(3));
+		if(rs.getString(4) != null)
+			order.setCard(new CardEntity(rs.getString(4)));
+		if(rs.getString(5).equals(OrderEntity.SelfOrDelivery.selfPickup.toString()))  //set self pickup or delivery
+			order.setOrderPickup(OrderEntity.SelfOrDelivery.selfPickup);
+		else
+			order.setOrderPickup(OrderEntity.SelfOrDelivery.delivery);
+		
+		if(rs.getString(6).equals(OrderEntity.OrderStatus.active.toString()))		//check order status
+			order.setStatus(OrderEntity.OrderStatus.active);
+		else if(rs.getString(6).equals(OrderEntity.OrderStatus.cancel_requested.toString()))
+			order.setStatus(OrderEntity.OrderStatus.cancel_requested);
+		else
+			order.setStatus(OrderEntity.OrderStatus.cancelled);
+		
+		if(rs.getInt(7) == 0)				//check if order was paid for
+			order.setPaid(false);
+		else
+			order.setPaid(true);
+		
+		order.setTotalPrice(rs.getDouble(8));
+		order.setReceivingTimestamp(rs.getTimestamp(9));
+					//** get the store **//
+		rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(10)+"");
+		Map<Integer,Double> storeDiscoutsSales;
+		while(rs5.next())
+		{
+			store = new StoreEntity(rs5.getInt(1), rs5.getString(2), rs5.getInt(3));
+			storeDiscoutsSales = new HashMap<Integer,Double>();
+			rs6 = stmt6.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+rs.getInt(10)+""); 		//get store's discounts
+			while(rs6.next())
+			{
+				storeDiscoutsSales.put(rs6.getInt(1), rs6.getDouble(2));
+			}
+			store.setStoreDiscoutsSales(storeDiscoutsSales);
+			order.setStore(store);
+		}
+		
+		if(rs.getString(7).equals(OrderEntity.CashOrCredit.cash.toString()))
+			order.setPaymendMethod(OrderEntity.CashOrCredit.cash);
+		else
+			order.setPaymendMethod(OrderEntity.CashOrCredit.credit);
+
+		listOfOrders.add(order); //add the product from the data base to the list
+		
+//		stmt.close();				//close all statements for reuse
+//		stmt2.close();
+//		stmt3.close();
+//		stmt4.close();
+//		stmt5.close();
+		  }
+	 }
+	 return listOfOrders;
+	 
+	  
+  }
+
+  /**
+   * This method gets the complaints from the DB
+   * @return	arrayList of complaints
+   * @throws SQLException	for SQL 
+   * @throws ClassNotFoundException DB connection
+   * @throws IOException	file converting
+   */
+  private ArrayList<ComplaintEntity> getComplaints(ArrayList<String> storeNameQuarter) throws SQLException, IOException, ClassNotFoundException
+  {
+	  ArrayList<ComplaintEntity> listOfComplaints = new ArrayList<ComplaintEntity>();
+	///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<"number"> for the wanted quarter of "all" ////
+	  String[] firstQuarter = {"January","February","March"};
+	  String[] secondQuarter = {"April","May","June"};
+	  String[] thirdQuarter = {"July","August","September"};
+	  String[] forthQuarter = {"October","November","December"};
+	  String[] askedQuarter = null;
+	  String storeOrders="",where="",store="";
+	  ComplaintEntity complaint;
+		 Statement stmt;
+		 ResultSet rs;
+		 try
+			{
+				con = connectToDB(); //call method to connect to DB
+				if (con != null)
+					System.out.println("Connection to Data Base succeeded");
+			} catch (SQLException e) //catch exception
+			{
+				System.out.println("SQLException: " + e.getMessage());
+			}
+		  //determine which quarter is asked by the client
+		  if(storeNameQuarter.get(1).equals("1"))
+			  askedQuarter=firstQuarter;
+		  else if (storeNameQuarter.get(1).equals("2"))
+			  askedQuarter=secondQuarter;
+		  else if (storeNameQuarter.get(1).equals("3"))
+			  askedQuarter=thirdQuarter;
+		  else if (storeNameQuarter.get(1).equals("4"))
+			  askedQuarter=forthQuarter;
+		 stmt=con.createStatement();
+		  if(!storeNameQuarter.get(0).equals("all"))							//check if asked for all orders OR a specific store orders
+		  {
+			  storeOrders = "AND A.BranchID = (SELECT BranchID FROM projectx.store WHERE BranchName = '"+storeNameQuarter.get(0)+"') ";
+			  where="WHERE";
+			  store = storeOrders.substring(3);
+		  }
+		  if(storeNameQuarter.get(1).equals("all"))
+		  {
+			  rs = stmt.executeQuery("Select * FROM projectx.complaints "+where+" "+store);
+		  }
+		  else
+		  {
+		  rs = stmt.executeQuery("SELECT B.Ordernum,B.Description,B.Status,B.File,B.Reply,B.Compensation,B.FiledOn"
+		  		+ " FROM"
+		  		+ " projectx.complaints B ,projectx.order A "
+		  		+ "WHERE"
+		  		+ " ( monthname(B.FiledOn)= '"+askedQuarter[0]+"' OR"
+		  		+ " monthname(B.FiledOn)= '"+askedQuarter[1]+"' OR"
+		  		+ " monthname(B.FiledOn)= '"+askedQuarter[2]+"' )"
+		  				+ " AND A.Ordernum = B.Ordernum "+storeOrders);
+		  }
+		
+		 while(rs.next())
+		 {
+			 complaint = new ComplaintEntity();									//create new product
+			 complaint.setOrderID(rs.getInt(1));
+			 complaint.setDescription(rs.getString(2));
+			 if(rs.getString(3).equals("processing"))
+					 complaint.setStatus(ComplaintEntity.Status.processing);
+			 else 
+				 complaint.setStatus(ComplaintEntity.Status.handled);
+			 
+			 					////***handle file***////
+			 
+				Blob b = con.createBlob(); 					//create blob
+				byte[] image = null;
+				if(rs.getBlob(4) != null)					//check if file is added to the complaint
+				{
+				b=rs.getBlob(4);							////get blob from DB
+		  		InputStream is=b.getBinaryStream();	  		//get binary Stream for blob and than use FilesConverter.convertInputStreamToByteArray(InputStream)
+		  		image = FilesConverter.convertInputStreamToByteArray(is);
+		  		complaint.setFile(image);					//set the file
+				}
+				else 
+					complaint.setFile(image);
+		  		
+		  		complaint.setStoreReply(rs.getString(5));
+		  		complaint.setCompensation(rs.getDouble(6));
+		  		complaint.setFiledOn(rs.getTimestamp(7));
+		  		
+
+			 
+			 listOfComplaints.add(complaint);
+		 }
+		 return listOfComplaints;				
+  }
 /**
    * This method gets all of the orders in the DB OR  a specific store's orders
    * @return	arrayList of orders in the DB
@@ -108,7 +359,7 @@ public class ProjectServer extends AbstractServer
    */
   private ArrayList<OrderEntity> getAllOrders(ArrayList<String> storeNameQuarter) throws ClassNotFoundException, SQLException, IOException
   {
-	///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<"number"> for the wanted quarter ////
+	///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<"number"> for the wanted quarter of "all" ////
 	  String[] firstQuarter = {"January","February","March"};
 	  String[] secondQuarter = {"April","May","June"};
 	  String[] thirdQuarter = {"July","August","September"};
@@ -116,12 +367,12 @@ public class ProjectServer extends AbstractServer
 	  String[] askedQuarter = null;
 	  
 	  
-	  Statement stmt,stmt2,stmt3,stmt4,stmt5;
+	  Statement stmt,stmt2,stmt3,stmt4,stmt5,stmt6;
 	  OrderEntity order;
 	  DeliveryEntity delivery = null;
 	  ProductEntity product;
 	  StoreEntity store;
-	  ResultSet rs,rs2,rs3,rs4,rs5;
+	  ResultSet rs,rs2,rs3,rs4,rs5,rs6;
 	  ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 	  try
 		{
@@ -137,7 +388,7 @@ public class ProjectServer extends AbstractServer
 	  stmt3=con.createStatement();
 	  stmt4=con.createStatement();
 	  stmt5=con.createStatement();
-	  
+	  stmt6=con.createStatement();
 	  //determine which quarter is asked by the client
 	  if(storeNameQuarter.get(1).equals("1"))
 		  askedQuarter=firstQuarter;
@@ -152,11 +403,18 @@ public class ProjectServer extends AbstractServer
 	  {
 		  storeOrders = "AND A.BranchID = (SELECT BranchID FROM projectx.store WHERE BranchName = '"+storeNameQuarter.get(0)+"') ";
 	  }
+	  if(storeNameQuarter.get(1).equals("all"))
+	  {
+		  rs = stmt.executeQuery("SELECT * FROM projectx.order");
+	  }
+	  else
+	  {
 	  rs = stmt.executeQuery("SELECT * FROM projectx.order A "
 	  		+ "WHERE"
 	  		+ "( monthname(A.OrderTime)= '"+askedQuarter[0]+"' OR"
 	  		+ " monthname(A.OrderTime)= '"+askedQuarter[1]+"' OR"
 	  		+ " monthname(A.OrderTime)= '"+askedQuarter[2]+"' )"+storeOrders);
+	  }
 	  while(rs.next())
 	  {
 		  order = new OrderEntity();
@@ -209,9 +467,17 @@ public class ProjectServer extends AbstractServer
 	order.setReceivingTimestamp(rs.getTimestamp(9));
 				//** get the store **//
 	rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(10)+"");
+	Map<Integer,Double> storeDiscoutsSales;
 	while(rs5.next())
 	{
 		store = new StoreEntity(rs5.getInt(1), rs5.getString(2), rs5.getInt(3));
+		storeDiscoutsSales = new HashMap<Integer,Double>();
+		rs6 = stmt6.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+rs.getInt(10)+""); 		//get store's discounts
+		while(rs6.next())
+		{
+			storeDiscoutsSales.put(rs6.getInt(1), rs6.getDouble(2));
+		}
+		store.setStoreDiscoutsSales(storeDiscoutsSales);
 		order.setStore(store);
 	}
 	
@@ -1002,51 +1268,85 @@ public class ProjectServer extends AbstractServer
 		while (rs1.next())
 		{
 			store = new StoreEntity(rs1.getInt(1), rs1.getString(2), rs1.getInt(3)); //create a new instance of a store
-			listOfStoresFromDB.add(store); //add the product from the data base to the list
-		}
+//			listOfStoresFromDB.add(store); //add the product from the data base to the list
+		
 
 		stmt = con.createStatement();
 		ResultSet rs2;
 		Map<Integer,Double> storeDiscoutsSales; 	//holds all the discounts of the store sale
-		for (StoreEntity store2 : listOfStoresFromDB)
-		{
-			rs2 = stmt.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+ store2.getBranchID()); //get all the discounts for each store
-			if(!(rs2.next()))						//if the store has no discounts
-			{
-				store2.setStoreDiscoutsSales(null);
-			} else
+	//	for (StoreEntity store2 : listOfStoresFromDB)
+//		{
+			rs2 = stmt.executeQuery("SELECT ProductID,ProductPrice FROM projectx.discount WHERE BranchID = "+ store.getBranchID()); //get all the discounts for each store
+
+			if(rs2.next())
 			{
 				storeDiscoutsSales = new HashMap<Integer, Double>();			//create  a new hashMap for discounts
+				storeDiscoutsSales.put(rs2.getInt(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
+
 				while (rs2.next())
 				{
 					storeDiscoutsSales.put(rs2.getInt(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
 				}
-				store2.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
+				store.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
+
 			}
-		}
+//			if(!(rs2.next()))						//if the store has no discounts
+//			{
+//				store.setStoreDiscoutsSales(null);
+//			} else
+//			{
+//				storeDiscoutsSales = new HashMap<Integer, Double>();			//create  a new hashMap for discounts
+//				while (rs2.next())
+//				{
+//					storeDiscoutsSales.put(rs2.getInt(1), rs2.getDouble(2)); //insert each store's discounts to a hashMap
+//				}
+//				store.setStoreDiscoutsSales(storeDiscoutsSales); //insert the hashMap of discounts to the storeEntity
+//			}
+//		}
 		
 		stmt = con.createStatement();
 		ResultSet rs3;
 		ArrayList<Integer> listOfStoreWorkers;			//holds the list of store workers for the store entity
-		for (StoreEntity store2 : listOfStoresFromDB)
-		{
-			rs3 = stmt.executeQuery("SELECT WorkerID FROM projectx.storeemployee WHERE BranchID = "+ store2.getBranchID()); //get all the discounts for each store
-			if(!(rs3.next()))						//if the store has no workers
-			{
-				store2.setStoreWorkers(null);;
-			} else
+//		for (StoreEntity store2 : listOfStoresFromDB)
+//		{
+			rs3 = stmt.executeQuery("SELECT WorkerID FROM projectx.storeemployee WHERE BranchID = "+ store.getBranchID()); //get all the discounts for each store
+			
+			if(rs3.next())
 			{
 				listOfStoreWorkers = new ArrayList<Integer>();			//create  a new arrayList for workers
+				if(rs3.getInt(1) == store.getStoreManagerWorkerID()) {		//if the worker is the manager 
+					store.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
+				}else													//if a simple store worker
+					listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
+
 				while (rs3.next())
 				{
-					if(rs3.getInt(1) == store2.getStoreManagerWorkerID()) {		//if the worker is the manager 
-						store2.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
+					if(rs3.getInt(1) == store.getStoreManagerWorkerID()) {		//if the worker is the manager 
+						store.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
 					}else													//if a simple store worker
 						listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
 				}
-				store2.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
+				store.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
+
 			}
-		}
+//			if(!(rs3.next()))						//if the store has no workers
+//			{
+//				store.setStoreWorkers(null);;
+//			} else
+//			{
+//				listOfStoreWorkers = new ArrayList<Integer>();			//create  a new arrayList for workers
+//				while (rs3.next())
+//				{
+//					if(rs3.getInt(1) == store.getStoreManagerWorkerID()) {		//if the worker is the manager 
+//						store.setStoreManagerWorkerID(rs3.getInt(1));			//set manager to store
+//					}else													//if a simple store worker
+//						listOfStoreWorkers.add(rs3.getInt(1)); 				//insert each store worker's worker id to the list
+//				}
+//				store.setStoreWorkers(listOfStoreWorkers);				//set the list of workers for the store
+//			}
+//		}
+			listOfStoresFromDB.add(store); //add the product from the data base to the list
+	}
 
 		return listOfStoresFromDB;
 	}
@@ -1202,16 +1502,19 @@ public class ProjectServer extends AbstractServer
 		
 		else if ((rs.next())) //if such ID exists in the DB, Insert the new data
 		{
-			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File) VALUES (?,?,?,?)"); //prepare a statement
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File,Compensation,FiledOn) VALUES (?,?,?,?,?,?)"); //prepare a statement
 			ps.setInt(1, details.getOrderID()); //insert parameters into the statement
 			ps.setString(2, details.getDescription());
 			ps.setString(3, details.getStatus().toString());
-			if (details.getFile() != null) //if a file was addded
+						if (details.getFile() != null) //if a file was addded
 			{
 				InputStream inStrm = FilesConverter.convertByteArrayToInputStream(details.getFile());
 				ps.setBlob(4, inStrm);
 			} else
 				ps.setNull(4, java.sql.Types.NULL);
+			ps.setDouble(5, 0);
+			ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));		//set the time it is filed
+
 			ps.executeUpdate();
 
 			return "Success";
@@ -1528,7 +1831,7 @@ public class ProjectServer extends AbstractServer
 		if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
 		{
 			
-							///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<int> for the wanted quarter ////
+							///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<int> for the wanted quarter or "all" ////
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 			listOfOrders = getAllOrders((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
@@ -1620,7 +1923,35 @@ public class ProjectServer extends AbstractServer
 //			
 //			sendToAllClients(generalMessage);	//send string back to client
 		}
-		
+		if(operation.equals("handleComplaint"))
+		{
+			String retmsg = "";
+			try
+			{
+				retmsg = handleComplaint((ComplaintEntity)messageFromClient);
+			}
+			catch(Exception e)
+			{
+				retmsg="We are sorry,Something went wrong, Please try again later.";
+				e.printStackTrace();
+			}
+			messageToSend.setMessage(retmsg);
+			sendToAllClients(messageToSend);
+		}
+		if(operation.equals("getComplaintOrders"))	//for getting all the orders with comlpaints
+		{
+			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
+			listOfOrders = getAllComplaintOrders((ArrayList<ComplaintEntity>)messageFromClient);
+			messageToSend.setMessage(listOfOrders);
+			sendToAllClients(messageToSend);
+		}
+		if(operation.equals("getComplaints"))		//for getting all complaints
+		{
+			ArrayList<ComplaintEntity> listOfComplaints = new ArrayList<ComplaintEntity>();		//an arrayList that holds all the stores in the DB
+			listOfComplaints = getComplaints((ArrayList<String>)messageFromClient);
+			messageToSend.setMessage(listOfComplaints);		//set the message for sending back to the client
+			sendToAllClients(messageToSend);
+		}
 		if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
 			this.incomingFileName=complaint.getOrderID();
