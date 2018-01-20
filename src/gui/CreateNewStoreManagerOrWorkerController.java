@@ -29,25 +29,26 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 
     ChooseUserToCreateController cutc;
 	AdministratorMenuController am;
-	String ant;
+	String antity;
 	
-	public CreateNewStoreManagerOrWorkerController(String ant) {
-		this.ant=ant;
+	public void setAntity(String s)
+	{
+		this.antity=s;
 	}
 	
-	 public void setConnectionData(ChooseUserToCreateController c)
+	 public void setConnectionData(ChooseUserToCreateController m)
 	 {
-		 this.cutc=c;
+		 this.cutc=m;
 	 }
 	
-	public void createNewUser(String ant) throws IOException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
+	public void createNewUser() throws IOException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
 		if(checkRequiredFields()) 												//check required fields are ok
 			if(!pswrdTxt.getText().equals(pswrd2Txt.getText())) {				//check matching passwords
 				GeneralMessageController.showMessage("Passwords are not the same\nPlease try again");
 				return;
 			}
 			else {
-				if(this.ant=="Store Manager")						//check which user to create. create store manager
+				if(this.antity=="Store Manager")						//check which user to create. create store manager
 				{
 					StoreManagerEntity sm = new StoreManagerEntity();
 					sm.setBranch(Integer.parseInt(brnchTxt.getText()));
@@ -57,13 +58,13 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 					sm.setUserName(nmTxt.getText());
 					sm.setCustomerID(Long.parseLong(idTxt.getText()));
 					sm.setWorkerid(Integer.parseInt(idTxt.getText()));
-					sm.setUserType(this.ant);
+					sm.setUserType(this.antity);
 					
 					MessageToSend msg=new MessageToSend(sm, "createAccount");			//defining the job for the server
 					Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 					Client.getClientConnection().accept();								//sending data to server
 				}
-				else if(this.ant=="Store Worker")				//Create store worker
+				else if(this.antity=="Store Worker")				//Create store worker
 				{
 					StoreWorkerEntity sw = new StoreWorkerEntity(Integer.parseInt(idTxt.getText()),Integer.parseInt(brnchTxt.getText()));
 					sw.setBranch(Integer.parseInt(brnchTxt.getText()));
@@ -72,7 +73,7 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 					sw.setPassword(pswrdTxt.getText());
 					sw.setPhoneNumber(pnumTxt.getText());
 					sw.setUserName(nmTxt.getText());
-					sw.setUserType(this.ant);
+					sw.setUserType(this.antity);
 					sw.setWorkerid(Integer.parseInt(idTxt.getText()));
 					
 					MessageToSend msg=new MessageToSend(sw, "createAccount");			//defining the job for the server
@@ -107,11 +108,11 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 	 * @param event pressed back button
 	 * @throws IOException
 	 */	
-	/*public void bckBtnHandler(ActionEvent event) throws IOException {
+	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		this.am.showAdministratorMenu();								
 		return;
-	}*/
+	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

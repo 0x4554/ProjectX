@@ -61,17 +61,21 @@ public class ChooseUserToCreateController implements Initializable{
 		 */
 		public void enterOK(ActionEvent event) throws InterruptedException, IOException 
 		{
-			String ant = new String();
+			String antity = "";
 			if(prmCmb.getSelectionModel().getSelectedItem().equals("Store Manager") || prmCmb.getSelectionModel().getSelectedItem().equals("Store Worker"))
 			{
-				ant=prmCmb.getSelectionModel().getSelectedItem();
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+				antity=prmCmb.getSelectionModel().getSelectedItem();
+				
 				FXMLLoader loader = new FXMLLoader();
 				Parent root = loader.load(getClass().getResource("/gui/CreateNewStoreManagerOrWorkerBoundary.fxml").openStream());
+				
+				
 				CreateNewStoreManagerOrWorkerController cns = loader.getController();
-				cns.setConnectionData(this);
 				Stage primaryStage=new Stage();
 				Scene scene=new Scene(root);
+				cns.setAntity(antity);
+				cns.setConnectionData(this);
 				
 				primaryStage.setTitle("Create");
 				primaryStage.setScene(scene);
