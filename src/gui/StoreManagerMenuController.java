@@ -102,7 +102,7 @@ public class StoreManagerMenuController implements Initializable {
 	public void generateReport(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/******ToImplement*****/.fxml").openStream());				//new window to open
+		 Parent root = loader.load(getClass().getResource("/gui/StoreManagerViewReportsBoundary.fxml").openStream());				//new window to open
 		 /*load here needed controller*/
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);

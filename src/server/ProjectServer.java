@@ -650,7 +650,7 @@ public class ProjectServer extends AbstractServer
  * @throws ClassNotFoundException 
  * @throws IOException 
    */
-  private ArrayList<OrderEntity> getCancelRequests() throws SQLException, ClassNotFoundException, IOException
+  private ArrayList<OrderEntity> getCancelRequests(Integer BranchID) throws SQLException, ClassNotFoundException, IOException
   {
 	  ArrayList<OrderEntity> listOfOrdersFromDB = new ArrayList<OrderEntity>();
 		OrderEntity order;
