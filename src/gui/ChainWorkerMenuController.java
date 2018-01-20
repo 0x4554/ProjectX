@@ -3,7 +3,6 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import entities.ChainWorkerEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,21 +54,24 @@ public class ChainWorkerMenuController implements Initializable{
 			((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 			FXMLLoader loader = new FXMLLoader();
 			Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
-			//CreateNewOrderController cnoc = loader.getController(); 
 			Stage primaryStage = new Stage();
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("Login");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 	}
-	
-	public void addProduct()
+	public void AddDeletEditProduct(ActionEvent event) throws IOException, InterruptedException
 	{
-		
-	}
-	public void deleteProduct()
-	{
-		
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/AddDeleteEditProductBoundary.fxml").openStream());
+		AddDeleteEditProductController edit=loader.getController();
+		edit.ShowAllProduct();
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Add Product");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 	
 	@Override

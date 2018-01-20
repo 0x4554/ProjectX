@@ -1,9 +1,12 @@
 package entities;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import logic.FilesConverter;
 
 public class ProductEntity implements Serializable{
 	private Integer productID;
@@ -12,8 +15,7 @@ public class ProductEntity implements Serializable{
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
-    private Image productImage;
-private byte[] productImage;
+    private byte[] productImage;
     private byte[] image1;
 	
 	public ProductEntity()
@@ -25,9 +27,14 @@ private byte[] productImage;
 	}
 
 	public void setProductImage(byte[] image1) {
+		
 		this.image1 = image1;
 	}
-
+public void setProductImage(String filePath) throws IOException {
+		
+		File file = new File (filePath);
+		this.image1 = FilesConverter.convertFileToByteArray(file);
+	}
 	/**
 	 * Constructor for the ProductEntity.java class
 	 * @param productID	the product's id

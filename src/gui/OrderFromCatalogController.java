@@ -168,13 +168,17 @@ public class OrderFromCatalogController implements Initializable{
                         if (product != null) {
                                                 	
                         	Button addToCart =new Button("Add To Cart");
-                      //  	ImageView imgv=new ImageView(product.getProductImage());
                         	
                         	addToCart.setOnAction(new EventHandler<ActionEvent>() {//set the back button with an action event
                            	 @Override
                            	  public void handle(ActionEvent event) {
                            		 
-               							AddProductToCart(product);
+               							try {
+											AddProductToCart(product);
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
                               }
                            });
                         	/********************************************added all ***********************************************************/
@@ -222,10 +226,8 @@ public class OrderFromCatalogController implements Initializable{
 		/**********************************************************change it**********************************/
        for(int i=0;i<this.productsInOrder.size();i++)
        {
-    	   System.out.println(productsInOrder.get(i).getProductID());
     	   newOrder.setProductsInOrder(productsInOrder.get(i));
        }
-	//	newOrder.setProductsInOrder(productsInOrder);
 		/*****************************************************************************************************/
 		cnoc.setOrderDetails(newOrder);
 		primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
@@ -236,11 +238,12 @@ public class OrderFromCatalogController implements Initializable{
 	/**
 	 * This method add a product choose by the customer to the cart
 	 * @param product
+	 * @throws IOException 
 	 */
-	public void AddProductToCart(ProductEntity product)
+	public void AddProductToCart(ProductEntity product) throws IOException
 	{
 		productsInOrder.add(product);
-		System.out.println("hey its added babe"+product.getProductID());
+		GeneralMessageController.showMessage("Product : "+product.getProductName()+"  ,ID:  "+product.getProductID()+"\nAdded to cart");
 	}
 	
 	/*************************************************************Update Price**********************************************/
@@ -281,19 +284,8 @@ public class OrderFromCatalogController implements Initializable{
 		dataFromServer = (ArrayList<Integer>)m.getMessage();
 		return dataFromServer;
 }
-/*	public ArrayList<ProductEntity> getProductsFromDB_ByID() throws InterruptedException {
-		MessageToSend mts=new MessageToSend(null,"getCatalogByID");
-		ArrayList<ProductEntity> dataFromServer = null;
-		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept();										//sends to server
-		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
-			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
-		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
-		return dataFromServer;
-	}
-	*/
+
+	
 	/*********************************************************************************************************************/
 	/**
 	 * This method return's the product entity requested by product ID 
