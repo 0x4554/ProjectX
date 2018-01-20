@@ -86,8 +86,10 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 	public void showComplaints() throws InterruptedException {
 		
 			//****Get all the complaints from the server****////
-		MessageToSend message = new MessageToSend("", "getComplaints");
-		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
+		ArrayList<String> msg = new ArrayList<String>();
+		msg.add("all");
+		msg.add("all");
+		MessageToSend message = new MessageToSend(msg, "getComplaints");		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);

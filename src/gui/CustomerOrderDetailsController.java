@@ -71,7 +71,10 @@ public class CustomerOrderDetailsController implements Initializable {
 	public void showOrders() throws InterruptedException
 	{
 					//** get complaints **//
-		MessageToSend message = new MessageToSend("", "getComplaints");
+		ArrayList<String> msg = new ArrayList<String>();
+		msg.add("all");
+		msg.add("all");
+		MessageToSend message = new MessageToSend(msg, "getComplaints");
 		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
