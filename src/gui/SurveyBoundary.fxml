@@ -20,7 +20,7 @@
          </font>
       </Label>
       <Label layoutX="102.0" layoutY="107.0" text="Please fill in the survey (1-Not Satisfied ; 10-Very Satisfied)" />
-      <Label layoutX="141.0" layoutY="145.0" text="Q1" />
+      <Label fx:id="q1Lbl" layoutX="141.0" layoutY="145.0" text="Q1" />
       <RadioButton fx:id="q1r1" layoutX="116.0" layoutY="174.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q1" />
@@ -30,13 +30,13 @@
       <RadioButton fx:id="q1r3" layoutX="202.0" layoutY="175.0" mnemonicParsing="false" text="3" toggleGroup="$q1" />
       <RadioButton fx:id="q1r4" layoutX="246.0" layoutY="175.0" mnemonicParsing="false" text="4" toggleGroup="$q1" />
       <RadioButton fx:id="q1r5" layoutX="289.0" layoutY="175.0" mnemonicParsing="false" text="5" toggleGroup="$q1" />
-      <Label layoutX="141.0" layoutY="207.0" text="Q2" />
-      <Label layoutX="142.0" layoutY="270.0" text="Q3" />
-      <Label layoutX="142.0" layoutY="330.0" text="Q4" />
+      <Label fx:id="q2Lbl" layoutX="141.0" layoutY="207.0" text="Q2" />
+      <Label fx:id="q3Lbl" layoutX="142.0" layoutY="270.0" text="Q3" />
+      <Label fx:id="q4Lbl" layoutX="142.0" layoutY="330.0" text="Q4" />
       <Button fx:id="sbmtBtn" layoutX="332.0" layoutY="492.0" mnemonicParsing="false" onAction="#getSurveyAnswers" text="Submit" />
       <Button fx:id="bckBtn" layoutX="196.0" layoutY="492.0" mnemonicParsing="false" onAction="#bckToPrevMnu" text="Back" />
-      <Label layoutX="144.0" layoutY="384.0" text="Q5" />
-      <Label layoutX="146.0" layoutY="437.0" text="Q6" />
+      <Label fx:id="q5Lbl" layoutX="144.0" layoutY="384.0" text="Q5" />
+      <Label fx:id="q6Lbl" layoutX="146.0" layoutY="437.0" text="Q6" />
       <RadioButton fx:id="q1r6" layoutX="334.0" layoutY="176.0" mnemonicParsing="false" text="6" toggleGroup="$q1" />
       <RadioButton fx:id="q1r7" layoutX="379.0" layoutY="175.0" mnemonicParsing="false" text="7" toggleGroup="$q1" />
       <RadioButton fx:id="q1r8" layoutX="419.0" layoutY="176.0" mnemonicParsing="false" text="8" toggleGroup="$q1" />
