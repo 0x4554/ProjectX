@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewStoreManagerOrWorkerController">
+   <children>
+      <Label layoutX="270.0" layoutY="34.0" text="Create">
+         <font>
+            <Font size="42.0" />
+         </font>
+      </Label>
+      <Label layoutX="90.0" layoutY="118.0" text="Name:" />
+      <Label layoutX="90.0" layoutY="162.0" text="ID:" />
+      <Label layoutX="90.0" layoutY="206.0" text="Email:" />
+      <Label layoutX="90.0" layoutY="254.0" text="Phone number:" />
+      <Label layoutX="90.0" layoutY="302.0" text="Choose Password:" />
+      <Label layoutX="90.0" layoutY="348.0" text="Confirm password:" />
+      <TextField fx:id="nmTxt" layoutX="257.0" layoutY="113.0" />
+      <TextField fx:id="idTxt" layoutX="257.0" layoutY="157.0" />
+      <TextField fx:id="emlTxt" layoutX="257.0" layoutY="201.0" />
+      <TextField fx:id="pnumTxt" layoutX="257.0" layoutY="249.0" />
+      <Button fx:id="bckBtn" layoutX="176.0" layoutY="436.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
+      <Button fx:id="crtBtn" layoutX="319.0" layoutY="436.0" mnemonicParsing="false" onAction="#createNewUser" text="Create" />
+      <Label layoutX="90.0" layoutY="392.0" text="Branche:" />
+      <TextField fx:id="brnchTxt" layoutX="257.0" layoutY="387.0" />
+      <Label layoutX="209.0" layoutY="486.0" text="All fields are required" textFill="#d71111" />
+      <PasswordField fx:id="pswrdTxt" layoutX="257.0" layoutY="297.0" />
+      <PasswordField fx:id="pswrd2Txt" layoutX="257.0" layoutY="343.0" />
+   </children>
+</Pane>

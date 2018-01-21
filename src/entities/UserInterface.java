@@ -19,7 +19,7 @@ public interface UserInterface {
 //	final double yearlySubscriptionDiscount = 0.1;
 	
 	public enum AccountStatus{confirmed,onHold,unconfirmed};
-	public enum subscription{monthly,yearly,none};
+	public enum Subscription{Monthly,Yearly,None};
 	/**
 	 * Getter for the userName
 	 * @return the userName
@@ -70,5 +70,13 @@ public interface UserInterface {
 	 * @param emailAddress the new Email address
 	 */
 	public void setEmailAddress(String emailAddress);
+	/**Setter for the user Id
+	 * @param iD the iD to set
+	 */
+	public void setID(long iD);
+	/**Getter for the user ID
+	 * @return the iD
+	 */
+	public long getID();
 	
 }

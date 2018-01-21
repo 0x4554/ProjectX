@@ -13,9 +13,9 @@
       <Label fx:id="usrLbl" layoutX="40.0" layoutY="94.0" prefHeight="21.0" prefWidth="89.0" text="User name*:" />
       <Label fx:id="idLbl" layoutX="40.0" layoutY="138.0" prefHeight="21.0" prefWidth="74.0" text="User ID*:" />
       <Label fx:id="pswrdLbl" layoutX="41.0" layoutY="181.0" prefHeight="21.0" prefWidth="130.0" text="Choose password*:" />
-      <Label fx:id="pswrd2Lbl" layoutX="41.0" layoutY="221.0" prefHeight="21.0" prefWidth="158.0" text="Enter password again*:" />
+      <Label fx:id="pswrd2Lbl" layoutX="41.0" layoutY="221.0" prefHeight="21.0" prefWidth="158.0" text="Confirm password*:" />
       <Label fx:id="subscrptLbl" layoutX="40.0" layoutY="263.0" prefHeight="21.0" prefWidth="101.0" text="Subscription*:" textFill="#141414" />
-      <Label layoutX="171.0" layoutY="14.0" prefHeight="21.0" prefWidth="233.0" text="New Customer">
+      <Label layoutX="123.0" layoutY="16.0" prefHeight="40.0" prefWidth="264.0" text="New Customer">
          <font>
             <Font size="32.0" />
          </font>
@@ -29,8 +29,8 @@
       <TextField fx:id="usrFld" layoutX="209.0" layoutY="89.0" prefHeight="31.0" prefWidth="197.0" />
       <TextField fx:id="idFld" layoutX="209.0" layoutY="133.0" prefHeight="31.0" prefWidth="197.0" />
       <TextField fx:id="crdFld" layoutX="209.0" layoutY="305.0" prefHeight="31.0" prefWidth="197.0" />
-      <Button fx:id="bckBtn" layoutX="179.0" layoutY="455.0" mnemonicParsing="false" onAction="#bckBtnHandler" prefHeight="31.0" prefWidth="63.0" text="Back" />
-      <Button fx:id="crtBtn" layoutX="277.0" layoutY="455.0" mnemonicParsing="false" onAction="#createNewUser" text="Create" />
+      <Button fx:id="bckBtn" layoutX="179.0" layoutY="480.0" mnemonicParsing="false" onAction="#bckBtnHandler" prefHeight="31.0" prefWidth="63.0" text="Back" />
+      <Button fx:id="crtBtn" layoutX="277.0" layoutY="480.0" mnemonicParsing="false" onAction="#createNewUser" text="Create" />
       <ComboBox fx:id="subscrptCmb" layoutX="210.0" layoutY="258.0" prefHeight="31.0" prefWidth="197.0" promptText="Chooose subscription" />
       <PasswordField fx:id="pswrdFld" layoutX="207.0" layoutY="176.0" prefHeight="31.0" prefWidth="197.0" />
       <PasswordField fx:id="pswrd2Fld" layoutX="207.0" layoutY="216.0" prefHeight="31.0" prefWidth="197.0" />
@@ -38,5 +38,7 @@
       <Label layoutX="41.0" layoutY="399.0" text="Phone number*:" />
       <TextField fx:id="emlFld" layoutX="207.0" layoutY="346.0" prefHeight="31.0" prefWidth="197.0" />
       <TextField fx:id="phnFld" layoutX="207.0" layoutY="394.0" prefHeight="31.0" prefWidth="197.0" />
+      <Label layoutX="41.0" layoutY="450.0" text="Address*" />
+      <TextField fx:id="adrsFld" layoutX="209.0" layoutY="446.0" prefHeight="26.0" prefWidth="197.0" />
    </children>
 </Pane>

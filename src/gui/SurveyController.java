@@ -9,9 +9,12 @@ import entities.SurveyEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import logic.MessageToSend;
 
 public class SurveyController implements Initializable {
 	
@@ -94,24 +97,40 @@ public class SurveyController implements Initializable {
 	@FXML
 	private Button bckBtn;
 	
+	@FXML
+	private Label missingLbl;
+	
 	private SurveyEntity srvy;
+	private StoreWorkerMenuController swmc;
+	
+	public void setConnectionData(StoreWorkerMenuController storeWorkerMenu) {
+		swmc = storeWorkerMenu;
+		srvy=new SurveyEntity();
+	}
+	
 	
 	public boolean validateAnswers() {
-		if(!q1.getSelectedToggle().isSelected() || !q2.getSelectedToggle().isSelected() || !q3.getSelectedToggle().isSelected() || !q4.getSelectedToggle().isSelected() || !q5.getSelectedToggle().isSelected() || !q6.getSelectedToggle().isSelected())
+		if(q1.getSelectedToggle()==null || q2.getSelectedToggle()==null || q3.getSelectedToggle()==null || q4.getSelectedToggle()==null || q5.getSelectedToggle()==null || q6.getSelectedToggle()==null)
 			return false;
 		
 		return true;
 	}
 
 
-	public void getSurveyAnswers(ActionEvent event) throws IOException {
+	public void getSurveyAnswers(ActionEvent event) throws IOException, InterruptedException {
 		if(!validateAnswers())
-			GeneralMessageController.showMessage("Please fill in missing fields");
+			missingLbl.setVisible(true);
 		
 		else {
-			srvy.setUsername(Client.getClientConnection().getUsername());
-			srvy.setAnswers(Integer.parseInt(q1.getSelectedToggle().getUserData().toString()), Integer.parseInt(q2.getSelectedToggle().getUserData().toString()), Integer.parseInt(q3.getSelectedToggle().getUserData().toString()), Integer.parseInt(q4.getSelectedToggle().getUserData().toString()), Integer.parseInt(q5.getSelectedToggle().getUserData().toString()), Integer.parseInt(q6.getSelectedToggle().getUserData().toString()));
-			
+			RadioButton r1=(RadioButton)q1.getSelectedToggle();
+			RadioButton r2=(RadioButton)q2.getSelectedToggle();
+			RadioButton r3=(RadioButton)q3.getSelectedToggle();
+			RadioButton r4=(RadioButton)q4.getSelectedToggle();
+			RadioButton r5=(RadioButton)q5.getSelectedToggle();
+			RadioButton r6=(RadioButton)q6.getSelectedToggle();
+			srvy.setAnswers(Integer.parseInt(r1.getText()), Integer.parseInt(r2.getText()), Integer.parseInt(r3.getText()), Integer.parseInt(r4.getText()), Integer.parseInt(r5.getText()), Integer.parseInt(r6.getText()));
+			//this.srvy.setAnswers(1, 1, 2, 2, 3, 3);
+			this.submitSurveyAnswers(event,this.srvy);
 		}
 	}
 	
@@ -120,21 +139,42 @@ public class SurveyController implements Initializable {
 	 * Saves the survey answers in the database
 	 * 
 	 * @param event - event to hide window when done
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 */
-	public void submitSurveyAnswers(ActionEvent event) {
+	public void submitSurveyAnswers(ActionEvent event,SurveyEntity se) throws InterruptedException, IOException {
+		MessageToSend toServer = new MessageToSend(srvy,"SurveyAnswers");
+		Client.getClientConnection().setDataFromUI(toServer);
+		Client.getClientConnection().accept();
+		
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			Thread.sleep(100);
+		
+		Client.getClientConnection().setConfirmationFromServer();
+		
+		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("Problem"))
+			GeneralMessageController.showMessage("There was a problem\nPlease inform the technical support and try again later");
+		else{
+			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+			this.swmc.showStoreWorkerMenu();
+			GeneralMessageController.showMessage("Survey was sent successfully");
+		}
+		
+		
 		
 	}
 	
 	
-	public void bckToPrevMnu(ActionEvent event) {
-		
+	public void bckToPrevMnu(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		this.swmc.showStoreWorkerMenu();
 	}
 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
+		missingLbl.setVisible(false);
 	}
 	
 	

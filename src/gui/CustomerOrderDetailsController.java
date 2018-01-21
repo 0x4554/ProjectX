@@ -2,12 +2,12 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.ComplaintEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
 import javafx.collections.FXCollections;
@@ -24,19 +24,29 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-import sun.java2d.loops.GeneralRenderer;
 
 public class CustomerOrderDetailsController implements Initializable {
 
 	@FXML
 	private Button bckBtn;
+
+	@FXML
+	private TextArea cmplntDtlsTxtArea;
+
+	@FXML
+	private TextArea repliedTxtAre;
+
+	@FXML
+	private Label cmplntFldOnLable;
 
 	@FXML
 	private Button cnclOrdrBtn;
@@ -52,6 +62,7 @@ public class CustomerOrderDetailsController implements Initializable {
 
 	ObservableList<String> listOfOrders;
 	ArrayList<OrderEntity> arraylistOfOrders;
+	ArrayList<ComplaintEntity> listOfComplaints;
 	
 	/**
 	 * This method builds the ListView that contains the customer's orders
@@ -59,13 +70,27 @@ public class CustomerOrderDetailsController implements Initializable {
 	 */
 	public void showOrders() throws InterruptedException
 	{
-		MessageToSend message = new MessageToSend(Client.getClientConnection().getUsername(), "getCustomerOrders");
+					//** get complaints **//
+		ArrayList<String> msg = new ArrayList<String>();
+		msg.add("all");
+		msg.add("all");
+		MessageToSend message = new MessageToSend(msg, "getComplaints");
 		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		listOfComplaints = (ArrayList<ComplaintEntity>)m.getMessage();
+		
+		
+		message = new MessageToSend(Client.getClientConnection().getUsername(), "getCustomerOrders");
+		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		m = Client.getClientConnection().getMessageFromServer();
 		
 		arraylistOfOrders = (ArrayList<OrderEntity>)m.getMessage();
 		
@@ -107,16 +132,13 @@ public class CustomerOrderDetailsController implements Initializable {
 			{
 				if(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13).equals(order.getOrderID().toString())) 		//check which order was selected
 				{
-				//this.listOfProductsNames.add(product.getProductName());
 				TreeItem<String> OrderID = new TreeItem<>("Order number : "+order.getOrderID().toString()); //set the branch as the product's name to be the parent of it's details
 							/* Set all the order's details to be leaves on the branch */
 				TreeItem<String> totalprice = new TreeItem<>("Total price : "+order.getTotalPrice().toString()); 		//create a new leaf
 				OrderID.getChildren().add(totalprice); 									//set as a child 
 				
-//**NEED TO FIX 				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
-//		IMAGE STUFF		OrderID.getChildren().add(orderTime); 									//set as a child 
-//				TreeItem<String> orderDate = new TreeItem<>("Order Date : "+order.getOrderDate().toString());
-//				OrderID.getChildren().add(orderDate);
+				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
+				OrderID.getChildren().add(orderTime); 									//set as a child 
 				TreeItem<String> store = new TreeItem<>("From Store named : "+order.getStore().getBranchName());
 				OrderID.getChildren().add(store);
 				
@@ -128,8 +150,6 @@ public class CustomerOrderDetailsController implements Initializable {
 				
 				TreeItem<String> orderPickup = new TreeItem<>(order.getOrderPickup().toString());
 				OrderID.getChildren().add(orderPickup);
-//				TreeItem<String> receivingDate = new TreeItem<>("Receiving date : "+order.getReceivingDate().toString());
-//				OrderID.getChildren().add(receivingDate);
 				TreeItem<String> receivingTime = new TreeItem<>("Receiving time : "+order.getReceivingTimestamp().toString());
 				OrderID.getChildren().add(receivingTime);
 				TreeItem<String> status = new TreeItem<>("Order Status : "+order.getStatus().toString());
@@ -172,21 +192,75 @@ public class CustomerOrderDetailsController implements Initializable {
 //						productName.getChildren().add(productDominantColor);
 //			
 //					}
-					TreeItem<String> productPrice = new TreeItem<>("Product price : "+product.getProductPrice().toString());
+					Double price;
+					TreeItem<String> productPrice;
+					if((price = order.getStore().getStoreDiscoutsSales().get(product.getProductID())) != null)	//check for disocunt
+						productPrice = new TreeItem<>("Product price : "+price.toString());
+					else
+						productPrice = new TreeItem<>("Product price : "+product.getProductPrice().toString());
 					productName.getChildren().add(productPrice);
 					
 				}
 				
+				this.repliedTxtAre.setVisible(false);
+				this.cmplntDtlsTxtArea.setVisible(false);
+				this.cmplntFldOnLable.setVisible(false);
+				
+				showComplaintDetails(order.getOrderID());
+				
 				root.getChildren().add(OrderID);
 				OrderID.setExpanded(true); 				//set the tree expanded by default
+				
+				
 				}
 			}
-//			observableList.setAll(stringSet);
-//			this.prdLst.setItems(observableList);
 			
 		this.dtlsTrVw.setRoot(root);
 		this.dtlsTrVw.setShowRoot(false); //make root expanded every time it starts
 	}
+	
+	/**
+	 * This method shows the complaint details
+	 * @param oderID	the order id
+	 */
+	private void showComplaintDetails(Integer orderID)
+	{
+		for(ComplaintEntity complaint : this.listOfComplaints)
+		{
+			if(complaint.getOrderID() == orderID)
+			{
+				this.cmplntDtlsTxtArea.setVisible(true);
+				this.repliedTxtAre.setVisible(true);
+				this.cmplntFldOnLable.setVisible(true);
+				this.cmplntDtlsTxtArea.setText(complaint.getDescription());		//set the complaint details to the text area
+//				if(complaint.getFile() != null)									//if there is an image 
+//				{
+//					this.shwImgBtn.setVisible(true);
+//					this.complaintImage = FilesConverter.convertByteArrayToImage(complaint.getFile());		//convert and save the image
+//				}
+//				else
+//					this.shwImgBtn.setVisible(false);
+//				this.complaint = complaint;
+				if(complaint.getStatus().toString().equals("handled"))			//if handled, show the reply
+					this.repliedTxtAre.setText(complaint.getStoreReply());
+				else
+					this.repliedTxtAre.setText("Processing");
+				this.cmplntFldOnLable.setText(complaint.getFiledOn().toString());		//set the time it was filed
+//				if(!complaint.getStatus().toString().equals("handled"))					//check if was handled
+//				{
+//					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
+//					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
+//						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
+//					else
+//						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
+//							
+//				}
+//				else
+//					this.cmplntTmToRplyLbl.setText("Handled");
+			}
+		}
+	}
+	
 	
 	/**
 	 * This method loads the main menu window
@@ -194,15 +268,14 @@ public class CustomerOrderDetailsController implements Initializable {
 	 * @throws IOException	
 	 */
 	public void backToMainMenu(ActionEvent event) throws IOException {
-		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-		CustomerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
-		primaryStage.setTitle("Customer's main menu");
+		Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
+		CustomerOrderController ord = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -226,7 +299,8 @@ public class CustomerOrderDetailsController implements Initializable {
 				if(order.getOrderID() == Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)))	//get the selected order
 					orderToCancel=order;
 			}
-			if(!orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancel_requested))		//check if order cancelation was already asked
+			
+			if(!orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancel_requested) && !orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancelled))		//check if order cancelation was already asked
 			{
 			Alert alert = new Alert(AlertType.CONFIRMATION);		//set new alert for confirmation
 			alert.setTitle("Confirmation");
@@ -261,9 +335,21 @@ public class CustomerOrderDetailsController implements Initializable {
 	/**
 	 * This method handles the complaint
 	 * @param event pressed complaint button
+	 * @throws IOException 
 	 */
-	public void PressedComplaint(ActionEvent event) {
-
+	public void PressedComplaint(ActionEvent event) throws IOException {
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/ComplaintBoundary.fxml").openStream());
+		 ComplaintController cmpc= loader.getController();	//set the controller to the ComplaintBoundary to control the SearchProductGUI window
+		 cmpc.setOrderID(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)));
+		 //		 cmpc.setConnectionData(this);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Complaint");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	@Override

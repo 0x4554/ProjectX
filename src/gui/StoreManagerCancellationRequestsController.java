@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import client.Client;
 import entities.OrderEntity;
 import entities.ProductEntity;
+import entities.StoreEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -57,6 +58,7 @@ public class StoreManagerCancellationRequestsController implements Initializable
 
 	ObservableList<String> listOfOrders;
 	ArrayList<OrderEntity> arraylistOfOrders;
+	private StoreEntity store;
 
     
 	/**
@@ -65,7 +67,8 @@ public class StoreManagerCancellationRequestsController implements Initializable
 	 */
 	public void showOrders() throws InterruptedException
 	{
-		MessageToSend message = new MessageToSend(null, "getCancelRequests");
+		
+		MessageToSend message = new MessageToSend(Integer.toString(this.store.getBranchID()), "getCancelRequests");
 		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
@@ -92,6 +95,15 @@ public class StoreManagerCancellationRequestsController implements Initializable
 
 		this.ordrLstVw.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle); 
 
+	}
+	
+	/**
+	 * This method sets the store
+	 * @param store	the store
+	 */
+	public void setStore(StoreEntity store)
+	{
+		this.store=store;
 	}
 	
 	/**
@@ -283,14 +295,14 @@ public class StoreManagerCancellationRequestsController implements Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		try
-		{
-			showOrders();
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try
+//		{
+//			showOrders();
+//		} catch (InterruptedException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 	}
 

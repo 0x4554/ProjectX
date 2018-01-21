@@ -163,6 +163,7 @@ public class LoginController implements Initializable {
 	 */
 	private void toUserMenu(String userType) throws IOException
 	{
+		
 		//Depending on the user's type (customer,store manager...) choose which menu to present to the UI
 		switch (userType)
 		{
@@ -221,6 +222,18 @@ public class LoginController implements Initializable {
 	//*******//		Client.getClientConnection().quit();
 		}
 	}
+	
+	/**
+	 * method to log out the client from the system
+	 * 
+	 * 
+	 */
+	public static void signalLogOut() {
+		if(Client.getClientConnection()!=null) {
+			Client.getClientConnection().setDataFromUI(new MessageToSend(Client.getClientConnection().getUsername(),"logOut"));
+			Client.getClientConnection().accept();
+		}
+	}
 
 	
 	/**
@@ -230,7 +243,7 @@ public class LoginController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
 		this.srvrIPTxtFld.setText("localhost");	//set the default server's ip to local host
-		this.usrNmTxtFld.setText("katya");
+		this.usrNmTxtFld.setText("lana");
 		this.psswrdTxtFld.setText("123");
 	}
 

@@ -1,11 +1,9 @@
 package entities;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import logic.FilesConverter;
 
@@ -26,6 +24,76 @@ public class ComplaintEntity implements Serializable{
 	private String description;
 	private Status status;
 	private byte [] file;
+	private String storeReply;
+	private Double compensation;
+	private Timestamp FiledOn;
+	public ComplaintEntity()
+	{
+		
+	}
+	
+	
+	/**
+	 * Getter for the filedOn
+	 * @return the filedOn
+	 */
+	public Timestamp getFiledOn() {
+		return FiledOn;
+	}
+
+
+	/**
+	 * Setter for the filedOn
+	 * @param filedOn the filedOn to set
+	 */
+	public void setFiledOn(Timestamp filedOn) {
+		FiledOn = filedOn;
+	}
+
+
+	/**
+	 * Setter for the file
+	 * @param file the file to set
+	 */
+	public void setFile(byte[] file) {
+		this.file = file;
+	}
+
+	/**
+	 * getter for the store's reply method
+	 * 
+	 * @return
+	 */
+	public String getStoreReply() {
+		return storeReply;
+	}
+	
+	/**setter for the storeReply method
+	 * 
+	 * @param storeReply
+	 */
+	public void setStoreReply(String storeReply) {
+		this.storeReply = storeReply;
+	}
+
+	
+	/**
+	 * getter for the compensation for the customer
+	 * 
+	 * @return
+	 */
+	public Double getCompensation() {
+		return compensation;
+	}
+
+	/**
+	 * setter for the compensation method
+	 * 
+	 * @param compensation
+	 */
+	public void setCompensation(Double compensation) {
+		this.compensation = compensation;
+	}
 	
 	
 	/**

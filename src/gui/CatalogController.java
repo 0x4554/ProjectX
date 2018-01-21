@@ -212,7 +212,116 @@ public class CatalogController implements Initializable{
 		primaryStage.show();
 	}
 	
+<<<<<<< HEAD
 	/******************************Data base**********************************************************/
+=======
+	public void showProductcatalog() throws IOException//fix this shit//
+, InterruptedException
+	{		 
+		products.setAll(getProduct());//get the product list
+		
+		List.setCellFactory(new Callback<ListView<ProductEntity>, ListCell<ProductEntity>>(){
+			 
+	            @Override
+	            public ListCell<ProductEntity> call(ListView<ProductEntity> p) {
+	                 
+	                ListCell<ProductEntity> cell = new ListCell<ProductEntity>(){
+	 
+	                    @Override
+	                    protected void updateItem(ProductEntity product, boolean status) {
+	                        super.updateItem(product, status);
+	                        if (product != null) {
+	                        	
+	                        //	ImageView imgv=new ImageView(FilesConverter.convertByteArrayToImage(product.getProductImage()));
+	                        	
+	                        	if(product.getProductImage()!=null)
+	                        	{
+	                        		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
+	                        		ImageView img_view=new ImageView(j);
+	                        		img_view.setFitHeight(130);
+	                        		img_view.setFitWidth(130);;
+	                                setGraphic(img_view);
+	                              /*****************************************************************************************************************/
+	                        	}	                        	
+	                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
+	                            setFont(Font.font(18));
+	                        }
+	                    }
+	                };
+	                return cell;
+	            }
+	        });
+		
+		List.setItems(products);//set the items
+		/*set list view size*/
+		List.setMinWidth(500);
+		List.setMinHeight(300);
+		
+        /*set buttons*/
+		backFromcatalog=new Button("Back");
+		
+		/*set an Hbox*/
+		HBox hBox=new HBox();
+		hBox.setPadding(new Insets(10,10,10,10));
+		hBox.setSpacing(20);
+		hBox.getChildren().addAll(backFromcatalog);
+		
+		/*set a Vbox*/
+		VBox Vbox1=new VBox(10);
+		Vbox1.setPadding(new Insets(30,30,30,30));
+		Vbox1.getChildren().addAll(List,hBox);
+
+		/*set scene*/
+		Scene sc=new Scene(Vbox1);
+		sc.getStylesheets().add("/gui/LoginStyle.css");
+		this.primaryStage.setTitle("Zer-Li Catalog");
+		this.primaryStage.setScene(sc);
+		
+		
+        backFromcatalog.setOnAction(new EventHandler<ActionEvent>() {//set the back button with an action event
+            	 @Override
+            	  public void handle(ActionEvent event) {
+            		    ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+            		    try {
+							bckToMainMenu();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+            			
+               }
+            });
+	   this.primaryStage.show();	
+	}
+	
+	public ObservableList<ProductEntity> getProduct() throws InterruptedException //this method creat's a list of products
+	{
+		ObservableList<ProductEntity> prod=FXCollections.observableArrayList();
+		ArrayList<Integer> product_id=new ArrayList<Integer>();
+		product_id=getProductsFromDB_ByID();
+		
+		ArrayList<ProductEntity> products=new ArrayList<ProductEntity>();
+		
+		for(int i=0;i<product_id.size();i++)
+		{
+			ProductEntity product_temp=new ProductEntity();
+			product_temp=getProducts(product_id.get(i));
+			if(product_temp!=null)
+			products.add(product_temp);
+		}
+		for(ProductEntity i: products)
+		{
+			prod.add(i);
+		}
+		System.out.println(prod);
+		/*prod.add(new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue", new Image(getClass().getResourceAsStream("/images/pic1.jpg"),(double)100,(double)100,true,true)));
+	    prod.add(new ProductEntity(124,"lili","boquet",(double) 15.60,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic2.jpg"),(double)100,(double)100,true,true)));
+	    prod.add(new ProductEntity(125,"magic","boquet",(double) 80,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic3.jpg"),(double)100,(double)100,true,true)));
+	    prod.add(new ProductEntity(126,"bird","boquet",(double) 96,"bridal","red",new Image(getClass().getResourceAsStream("/images/pic4.jpg"),(double)100,(double)100,true,true)));*/
+		return prod;
+	}
+	
+>>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 	/**
 	 * The method return's all the product's in the chain main catalog
 	 * @return
@@ -233,6 +342,36 @@ public class CatalogController implements Initializable{
 	   }
 	
 	
+<<<<<<< HEAD
+=======
+	/*public String DeleteProductsFromDB() throws InterruptedException {
+		String msg;
+		//ProductEntity p=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue");
+		//MessageToSend mts=new MessageToSend(p,"deleteProductFromCatalog");
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		 msg = (String)m.getMessage();
+		return msg;
+}*/
+	public ProductEntity searchProductInCatalog(int productid) throws InterruptedException/******* lana**********************************/
+	{
+		ProductEntity p=new ProductEntity();
+		MessageToSend mts=new MessageToSend(productid,"getProduct");
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		p = (ProductEntity)m.getMessage();
+		System.out.println(p.getProductID()+p.getProductDominantColor());
+		return p;
+	}
+>>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

@@ -72,13 +72,13 @@ public class AdministratorMenuController implements Initializable {
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CreateNewUserBoundery.fxml").openStream());
-		CreateNewUserController cnu=loader.getController();
+		Parent root = loader.load(getClass().getResource("/gui/ChooseUserToCreateBoundary.fxml").openStream());
+		ChooseUserToCreateController cnu=loader.getController();
 		cnu.setConnectionData(this);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		
-		primaryStage.setTitle("New user");
+		primaryStage.setTitle("Choose premission");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -98,7 +98,8 @@ public class AdministratorMenuController implements Initializable {
 	public void logOut(ActionEvent event) throws IOException	
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		LoginController.signalAppClose();
+		
+		LoginController.signalLogOut();
 		
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
@@ -109,8 +110,8 @@ public class AdministratorMenuController implements Initializable {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
-		GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
-		
+		GeneralMessageController.showMessage("Administrator "+Client.getClientConnection().getUsername()+" logged out");
+		Client.getClientConnection().setClientUserName(null);
 	}
 
 }

@@ -46,7 +46,7 @@ public void setProductImage(String filePath) throws IOException {
 	 */
 
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,byte[]img) {
+			String productDescription, String productDominantColor,byte[]productImage) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -54,7 +54,7 @@ public void setProductImage(String filePath) throws IOException {
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-    	this.image1 = img;
+    	this.image1 = productImage;
 	}
 	
 	/*constructor with out the image*/
