@@ -3,20 +3,10 @@
 // license found at www.lloseng.com 
 package server;
 
-import java.io.BufferedOutputStream;
-
+//import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.*;
-//import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.Socket;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,19 +14,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import javax.imageio.ImageIO;
-import javax.security.auth.callback.ConfirmationCallback;
-
-import client.Client;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import entities.CardEntity;
 import entities.ComplaintEntity;
 import entities.CustomerEntity;
@@ -45,18 +30,11 @@ import entities.OrderEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
 import entities.SurveyEntity;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import logic.ConnectedClients;
 import logic.FilesConverter;
 import logic.MessageToSend;
-import ocsf.server.*;
-import ocsf.*;
-import gui.GeneralMessageController;
-import gui.StoreManagerMenuController;
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -2107,6 +2085,21 @@ public class ProjectServer extends AbstractServer
 //			
 //			sendToAllClients(generalMessage);	//send string back to client
 		}
+		if(operation.equals("getSurvey"))
+		{
+			SurveyEntity survey = getSurvey();
+			messageToSend.setMessage(survey);
+			messageToSend.setOperation("getSurvey");
+			client.sendToClient(messageToSend);
+		}
+		
+		if(operation.equals("updateSurveyQs"))
+		{
+			String result = updateSurveyQuestions((SurveyEntity)messageFromClient);
+			messageToSend.setMessage(result);
+			messageToSend.setOperation("surveyUpdateResult");
+			client.sendToClient(messageToSend);
+		}
 		
 		if(operation.equals("SurveyAnswers")) {
 			String result = this.updateSurveyAnswers((SurveyEntity)messageFromClient);
@@ -2195,9 +2188,72 @@ public class ProjectServer extends AbstractServer
 //		sendToAllClients(messageToSend);
 		
 	}
+	
+  /**
+   * This method updates the questions in the DB
+   * @param survey the new survey
+   * @return success/faild
+ * @throws SQLException for SQL
+   */
+  private String updateSurveyQuestions(SurveyEntity survey) throws SQLException
+  {
+	  Statement stmt;
+	  try {
+			 con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			 ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		 }
+		 catch(Exception e) {
+			 e.printStackTrace();
+			 System.out.println("Connection to Database failed");
+			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		 }
+	  
+	  stmt= con.createStatement();
+	  try {
+	  for(int i=1;i<=6;i++)
+		  stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestion(i)+"' WHERE Questionnum = "+i+"");
+	  }
+	  catch(Exception e)
+	  {
+		 ServerMain.serverController.showMessageToUI("There was a problem updating the questions");
+		  ServerMain.serverController.showMessageToUI(e.getMessage());
+		  e.printStackTrace();
+		  return "faild";
+	  }
+	  return "Updated";
+  }
   
-  
-  private String updateSurveyAnswers(SurveyEntity surveyAns) throws SQLException {
+  /**
+   * This method get the survey from the DB
+   * @return	the survey
+   * @throws SQLException	for SQL
+   */
+  private SurveyEntity getSurvey() throws SQLException
+  {
+	  Statement stmt;
+	  ResultSet rs;
+	  SurveyEntity survey = new SurveyEntity();
+	  try {
+			 con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			 ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		 }
+		 catch(Exception e) {
+			 e.printStackTrace();
+			 System.out.println("Connection to Database failed");
+			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		 }
+	  stmt = con.createStatement();
+	   rs = stmt.executeQuery("SELECT * FROM projcetx.survey");
+	   while(rs.next())
+	   {
+		   
+	   }
+	  
+  }
+	
+    private String updateSurveyAnswers(SurveyEntity surveyAns) throws SQLException {
 	// TODO Auto-generated method stub
 	  int counter=0,r;
 	  Statement stmnt;
@@ -2205,10 +2261,12 @@ public class ProjectServer extends AbstractServer
 	  try {
 		 con=connectToDB();
 		 System.out.println("Connection to Database succeeded");
+		 ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
 	 }
 	 catch(Exception e) {
 		 e.printStackTrace();
 		 System.out.println("Connection to Database failed");
+		 ServerMain.serverController.showMessageToUI("Connection to Database failed");
 	 }
 	 for(int i=1;i<7;i++) {
 			 r=surveyAns.getQuestionRank(i);
@@ -2232,8 +2290,8 @@ public class ProjectServer extends AbstractServer
 			 
 	 return "Success";
   }
-
-private String updateAccout(CustomerEntity customer) throws SQLException {
+  
+  private String updateAccout(CustomerEntity customer) throws SQLException {
 	// TODO Auto-generated method stub
 	 
 	  Statement stmnt;
@@ -2345,6 +2403,7 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  
 	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
       Date dateobj = new Date();
+      
       
 	  ps.setString(8, df.format(dateobj).toString());
 	  ps.setLong(9, ce.getCreditCardNumber());

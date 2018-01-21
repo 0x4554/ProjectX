@@ -56,6 +56,10 @@ public class EditUsersPremissionController implements Initializable{
 		this.mmc=m;
 	}
 	
+	
+	/**
+	 * Permissions varieties 
+	 */
 	private void premissionsComboBox()
 	{
 		ArrayList<String> al = new ArrayList<String>();	

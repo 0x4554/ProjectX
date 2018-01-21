@@ -169,6 +169,8 @@ public class CatalogController implements Initializable{
 	                        super.updateItem(product, status);
 	                        if (product != null) {
 	                        	
+	                        //	ImageView imgv=new ImageView(FilesConverter.convertByteArrayToImage(product.getProductImage()));
+	                        	
 	                        	if(product.getProductImage()!=null)
 	                        	{
 	                        		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
@@ -317,10 +319,10 @@ public class CatalogController implements Initializable{
 		return msg;
 }
 	
-	public String DeleteProductsFromDB() throws InterruptedException {
+	/*public String DeleteProductsFromDB() throws InterruptedException {
 		String msg;
-		ProductEntity p=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue");
-		MessageToSend mts=new MessageToSend(p,"deleteProductFromCatalog");
+		//ProductEntity p=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue");
+		//MessageToSend mts=new MessageToSend(p,"deleteProductFromCatalog");
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
@@ -329,7 +331,7 @@ public class CatalogController implements Initializable{
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		 msg = (String)m.getMessage();
 		return msg;
-}
+}*/
 	public ProductEntity searchProductInCatalog(int productid) throws InterruptedException/******* lana**********************************/
 	{
 		ProductEntity p=new ProductEntity();

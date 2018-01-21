@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ServerController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server_gui.ServerController">
    <children>
       <Pane layoutX="-133.0" layoutY="-141.0" prefHeight="617.0" prefWidth="1154.0">
          <children>
@@ -19,7 +19,7 @@
             </Label>
             <HBox layoutX="147.0" layoutY="220.0" prefHeight="321.0" prefWidth="987.0">
                <children>
-                  <TextArea fx:id="cnslTxtArea" prefHeight="321.0" prefWidth="1025.0" HBox.hgrow="ALWAYS" />
+                  <TextArea fx:id="cnslTxtArea" editable="false" prefHeight="321.0" prefWidth="1025.0" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <Button fx:id="tnOffBtn" layoutX="580.0" layoutY="559.0" mnemonicParsing="false" onAction="#closeServer" text="Turn Off Server" />

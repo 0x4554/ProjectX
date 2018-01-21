@@ -13,7 +13,7 @@
       <Label fx:id="usrLbl" layoutX="40.0" layoutY="94.0" prefHeight="21.0" prefWidth="89.0" text="User name*:" />
       <Label fx:id="idLbl" layoutX="40.0" layoutY="138.0" prefHeight="21.0" prefWidth="74.0" text="User ID*:" />
       <Label fx:id="pswrdLbl" layoutX="41.0" layoutY="181.0" prefHeight="21.0" prefWidth="130.0" text="Choose password*:" />
-      <Label fx:id="pswrd2Lbl" layoutX="41.0" layoutY="221.0" prefHeight="21.0" prefWidth="158.0" text="Enter password again*:" />
+      <Label fx:id="pswrd2Lbl" layoutX="41.0" layoutY="221.0" prefHeight="21.0" prefWidth="158.0" text="Confirm password*:" />
       <Label fx:id="subscrptLbl" layoutX="40.0" layoutY="263.0" prefHeight="21.0" prefWidth="101.0" text="Subscription*:" textFill="#141414" />
       <Label layoutX="123.0" layoutY="16.0" prefHeight="40.0" prefWidth="264.0" text="New Customer">
          <font>
