@@ -3,20 +3,10 @@
 // license found at www.lloseng.com 
 package server;
 
-import java.io.BufferedOutputStream;
-
+//import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.*;
-//import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.Socket;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,19 +14,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import javax.imageio.ImageIO;
-import javax.security.auth.callback.ConfirmationCallback;
-
-import client.Client;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import entities.CardEntity;
 import entities.ComplaintEntity;
 import entities.CustomerEntity;
@@ -44,18 +29,11 @@ import entities.DeliveryEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import logic.ConnectedClients;
 import logic.FilesConverter;
 import logic.MessageToSend;
-import ocsf.server.*;
-import ocsf.*;
-import gui.GeneralMessageController;
-import gui.StoreManagerMenuController;
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
 
 /**
  * This class overrides some of the methods in the abstract 
