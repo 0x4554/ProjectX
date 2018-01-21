@@ -93,10 +93,14 @@ public class CustomerServiceWorkerMenuController implements Initializable {
 	
 	
 	public void updatePressed(ActionEvent event) throws IOException, InterruptedException {
+		
+		int cnt=0;
+		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/UpdateSurveyBoundary.fxml").openStream());
 		UpdateSurveyController usc = loader.getController();
+		usc.setConnectionData(this);
 		
 		MessageToSend msg=new MessageToSend(null,"getSurveyQs");
 		Client.getClientConnection().setDataFromUI(msg);
@@ -106,8 +110,12 @@ public class CustomerServiceWorkerMenuController implements Initializable {
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer();
 		
-		SurveyEntity se=(SurveyEntity)Client.getClientConnection().getMessageFromServer().getMessage();
-		usc.setTextFields(se);
+		String[] questions = (String[])Client.getClientConnection().getMessageFromServer().getMessage();
+		for(String s:questions)
+			if(s==null)
+				cnt++;
+		if(cnt==0)
+			usc.setTextFields(questions);
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);

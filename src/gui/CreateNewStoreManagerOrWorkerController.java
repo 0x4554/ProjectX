@@ -60,7 +60,7 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 					sm.setPhoneNumber(pnumTxt.getText());
 					sm.setPassword(pswrdTxt.getText());
 					sm.setUserName(nmTxt.getText());
-					sm.setCustomerID(Long.parseLong(idTxt.getText()));
+					sm.setID(Long.parseLong(idTxt.getText()));
 					sm.setWorkerid(Integer.parseInt(idTxt.getText()));
 					sm.setUserType(this.antity);
 					
@@ -72,7 +72,7 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 				{
 					StoreWorkerEntity sw = new StoreWorkerEntity(Integer.parseInt(idTxt.getText()),Integer.parseInt(brnchTxt.getText()));
 					sw.setBranch(Integer.parseInt(brnchTxt.getText()));
-					sw.setCustomerID(Integer.parseInt(idTxt.getText()));
+					sw.setID(Integer.parseInt(idTxt.getText()));
 					sw.setEmailAddress(emlTxt.getText());
 					sw.setPassword(pswrdTxt.getText());
 					sw.setPhoneNumber(pnumTxt.getText());

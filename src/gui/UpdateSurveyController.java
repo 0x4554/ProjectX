@@ -48,14 +48,14 @@ public class UpdateSurveyController implements Initializable{
 	    @FXML
 	    private Label hidenLbl;
 	    
-	    private CustomerServiceExpertMenuController csemc;
+	    private CustomerServiceWorkerMenuController csemc;
 	    
 	    public UpdateSurveyController() {
 	    	
 	    }
 	    
 	    
-	    public void setConnectionData(CustomerServiceExpertMenuController cs) {
+	    public void setConnectionData(CustomerServiceWorkerMenuController cs) {
 	    	csemc=cs;
 	    }
 	    
@@ -85,12 +85,12 @@ public class UpdateSurveyController implements Initializable{
 	    		
 	    		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("Updated")) {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showCustomerServiceExpertMenu();
+	    			this.csemc.showCostumerServiceWorkerMenu();
 	    			GeneralMessageController.showMessage("Questions updated successfully");
 	    		}
 	    		else {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showCustomerServiceExpertMenu();
+	    			this.csemc.showCostumerServiceWorkerMenu();
 	    			GeneralMessageController.showMessage("Update failed\nplease contact technical support and try again later");
 	    		}
 	    		
@@ -141,10 +141,11 @@ public class UpdateSurveyController implements Initializable{
 	     * method for canceling the updated and returning to the previous menu
 	     * 
 	     * @param event the current screen for hiding it
+	     * @throws IOException 
 	     */
-	    public void cancelUpdate(ActionEvent event) {
+	    public void cancelUpdate(ActionEvent event) throws IOException {
 	    	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    	this.csemc.showCustomerServiceExpertMenu();	
+	    	this.csemc.showCostumerServiceWorkerMenu();	
 	    }
 	    
 	    
@@ -153,19 +154,20 @@ public class UpdateSurveyController implements Initializable{
 	     * 
 	     * @param survey - the survey's current question that should be updated
 	     */
-	    public void setTextFields(SurveyEntity survey) {
-	    	q1TxtFld.setText(survey.getQuestion(1));
-	    	q2TxtFld.setText(survey.getQuestion(2));
-	    	q3TxtFld.setText(survey.getQuestion(3));
-	    	q4TxtFld.setText(survey.getQuestion(4));
-	    	q5TxtFld.setText(survey.getQuestion(5));
-	    	q6TxtFld.setText(survey.getQuestion(6));
+	    public void setTextFields(String[] questions) {
+	    
+	    	q1TxtFld.setText(questions[0]);
+	    	q2TxtFld.setText(questions[1]);
+	    	q3TxtFld.setText(questions[2]);
+	    	q4TxtFld.setText(questions[3]);
+	    	q5TxtFld.setText(questions[4]);
+	    	q6TxtFld.setText(questions[5]);
+	    	hidenLbl.setVisible(false);
 	    }
 
 
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
 			// TODO Auto-generated method stub
-			hidenLbl.setVisible(false);
 		}
 }

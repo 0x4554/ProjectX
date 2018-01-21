@@ -2093,6 +2093,13 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
+		if(operation.equals("getSurveyQs")) {
+			
+			String [] qsText = getSurveyQuestions();
+			messageToSend.setMessage(qsText);
+			client.sendToClient(messageToSend);
+		}
+		
 		if(operation.equals("updateSurveyQs"))
 		{
 			String result = updateSurveyQuestions((SurveyEntity)messageFromClient);
@@ -2189,7 +2196,40 @@ public class ProjectServer extends AbstractServer
 		
 	}
 	
-  /**
+  private String[] getSurveyQuestions() throws SQLException {
+	// TODO Auto-generated method stub
+	  int i=0;
+	  String[] ques=new String[6];
+	  Statement stmnt;
+	  try {
+		  con=connectToDB();
+		  System.out.println("Connection to Database succeeded");
+		  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+	  }
+	  catch(Exception e) {
+		  System.out.println("Connection to Database failed");
+		  ServerMain.serverController.showMessageToUI("Connection to Database failed");
+	  }
+	  stmnt=con.createStatement();
+	  ResultSet rs = stmnt.executeQuery("SELECT QuestionText FROM projectx.survey");
+	  
+	  if(!rs.next())
+		  return null;
+	  else {
+		  ques[i]=rs.getString(1);
+		  i++;
+  }
+	  
+	  while(rs.next()) {
+			ques[i]=rs.getString(1);
+			i++;
+		}
+	
+			  
+	return ques;
+}
+
+/**
    * This method updates the questions in the DB
    * @param survey the new survey
    * @return success/faild
@@ -2212,7 +2252,7 @@ public class ProjectServer extends AbstractServer
 	  stmt= con.createStatement();
 	  try {
 	  for(int i=1;i<=6;i++)
-		  stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestion(i)+"' WHERE Questionnum = "+i+"");
+		  stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestionText(i)+"' WHERE Questionnum = "+i+"");
 	  }
 	  catch(Exception e)
 	  {
@@ -2231,9 +2271,10 @@ public class ProjectServer extends AbstractServer
    */
   private SurveyEntity getSurvey() throws SQLException
   {
+	  int rank;
 	  Statement stmt;
 	  ResultSet rs;
-	  SurveyEntity survey = new SurveyEntity();
+	  SurveyEntity survey = null;
 	  try {
 			 con=connectToDB();
 			 System.out.println("Connection to Database succeeded");
@@ -2246,11 +2287,18 @@ public class ProjectServer extends AbstractServer
 		 }
 	  stmt = con.createStatement();
 	   rs = stmt.executeQuery("SELECT * FROM projcetx.survey");
-	   while(rs.next())
-	   {
-		   
+	   if(rs.next()) {
+		   survey = new SurveyEntity();
+		   while(rs.next())
+	   		{
+		   		survey.setQuestionText(Integer.parseInt(rs.getString(1)), rs.getString(2));
+		   		for(int i=1;i<=10;i++) {
+		   			rank=rs.getInt(i);
+		   			survey.setTotalRanks(Integer.parseInt(rs.getString(1)), i, rank);
+		   			}
+	   		}
 	   }
-	  
+	  return survey;
   }
 	
     private String updateSurveyAnswers(SurveyEntity surveyAns) throws SQLException {
