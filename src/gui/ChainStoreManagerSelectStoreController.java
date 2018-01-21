@@ -261,7 +261,7 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 											//The survey report//
 		if (this.cstStsfctnChckBx.isSelected())
 		{
-			satisfactoryReport(); 						//method for satisfactory report
+			satisfactionReport(); 						//method for satisfactin report
 		}
 	}
 	
@@ -362,27 +362,27 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	}
 	
 	/**
-	 * This method loads the satisfactory report;
+	 * This method loads the satisfaction report;
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	private void satisfactoryReport() throws InterruptedException, IOException
+	private void satisfactionReport() throws InterruptedException, IOException
 	{
 		// **** get  survey from DB for the selected quarter ***//
-		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
-		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
-		Client.getClientConnection().accept();
-		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
-			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer(); //reset to false
-		messageToSend = Client.getClientConnection().getMessageFromServer();
-		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
+//		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
+//		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
+//		Client.getClientConnection().accept();
+//		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
+//			Thread.sleep(100);
+//		Client.getClientConnection().setConfirmationFromServer(); //reset to false
+//		messageToSend = Client.getClientConnection().getMessageFromServer();
+//		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
 
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/----------------------.fxml").openStream());
-		//CustomerServiceWorkerHandleComplaintController cswscic = new CustomerServiceWorkerHandleComplaintController();
-		//cswscic = loader.getController();
-		//cswscic.setComplaint(this.complaint);
+		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerSatisfactionReportBoundary.fxml").openStream());
+		ChainStoreManagerSatisfactionReportController c = new ChainStoreManagerSatisfactionReportController();
+		c = loader.getController();
+		c.showOrders(null);
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("Satisfactory report for " + this.selectedStore.getBranchName());
