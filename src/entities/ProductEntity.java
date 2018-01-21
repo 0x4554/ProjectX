@@ -12,16 +12,19 @@ public class ProductEntity implements Serializable{
 	private Double productPrice;
 	private String productDescription;
 	private String productDominantColor;
-	private byte[] productImage;
-
-	//private ImageView productImage;
-//	private Image productImage;
-
-
+    private byte[] productImage;
+//    private byte[] image1;
 	
 	public ProductEntity()
 	{
 		
+	}
+	public byte[] getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(byte[] productImage) {
+		this.productImage = productImage;
 	}
 
 	/**
@@ -35,8 +38,7 @@ public class ProductEntity implements Serializable{
 	 */
 
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor,byte[] productImage) {
-
+			String productDescription, String productDominantColor,byte[]productImage) {
 		super();
 		this.productID = productID;
 		this.productName = productName;
@@ -44,7 +46,20 @@ public class ProductEntity implements Serializable{
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-		this.productImage = productImage;
+    	this.productImage = productImage;
+	}
+	
+	/*constructor with out the image*/
+	
+	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
+			String productDescription, String productDominantColor) {
+		//super();
+		this.productID = productID;
+		this.productName = productName;
+		this.productType = productType;
+		this.productPrice = productPrice;
+		this.productDescription = productDescription;
+		this.productDominantColor = productDominantColor;
 	}
 	
 	/**
@@ -75,23 +90,21 @@ public class ProductEntity implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-
-	 /** Getter for the productImage
-	 * @return the productImage
-	 */
-	public byte[] getProductImage() {
+	
+	/*public Image getProductImage() {
 		return productImage;
 	}
 
-
-	/**
-	 * Setter for the productImage
-	 * @param productImage the productImage to set
-	 */
-	public void setProductImage(byte[] productImage) {
+	public void setProductImage(Image productImage) {
 		this.productImage = productImage;
 	}
+*/
+
+    
 	
+	public void convertImageToByteArray(Image img) {
+		
+	}
 	/**
 	 * Getter for the productType
 	 * @return the productType

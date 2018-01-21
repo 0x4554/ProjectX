@@ -17,7 +17,7 @@ public class CustomerEntity extends UserEntity {
 	private long creditCardNumber;
 	private String address;
 //	private long customerID;
-	private subscription subscriptionDiscount;
+	private Subscription subscriptionDiscount;
 	private AccountStatus accountStatus;
 	
 	/**
@@ -63,20 +63,22 @@ public class CustomerEntity extends UserEntity {
 	 * @return the subscriptionDiscount
 	 */
 	public String getSubscriptionDiscount() {
-		return subscriptionDiscount.toString();
+		return this.subscriptionDiscount.name();
 	}
+	
 	/**
 	 * Setter for the subscriptionDiscount
 	 * @param subscriptionDiscount the subscriptionDiscount to set
 	 */
 	public void setSubscriptionDiscount(String subscriptionDiscount) {
-		if(subscriptionDiscount.equals("none"))
-			this.subscriptionDiscount = subscription.none;
+		if(subscriptionDiscount.equals("None"))
+			this.subscriptionDiscount = Subscription.None;
 		else if(subscriptionDiscount.equals("Monthly"))
-			this.subscriptionDiscount=subscription.monthly;
+			this.subscriptionDiscount=Subscription.Monthly;
 		else if(subscriptionDiscount.equals("Yearly"))
-			this.subscriptionDiscount=subscription.yearly;
+			this.subscriptionDiscount=Subscription.Yearly;
 	}
+	
 	/**
 	 * Getter for the accountStatus
 	 * @return the accountStatus

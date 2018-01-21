@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -49,7 +50,6 @@ import logic.MessageToSend;
  * @author Tal Gross
  * Project Name gitProjectX
  */
-
 
 public class CatalogController implements Initializable{
 	
@@ -169,11 +169,19 @@ public class CatalogController implements Initializable{
 	                        super.updateItem(product, status);
 	                        if (product != null) {
 	                        	
-	                        	ImageView imgv=new ImageView(FilesConverter.convertByteArrayToImage(product.getProductImage()));
+	                        //	ImageView imgv=new ImageView(FilesConverter.convertByteArrayToImage(product.getProductImage()));
 	                        	
+	                        	if(product.getProductImage()!=null)
+	                        	{
+	                        		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
+	                        		ImageView img_view=new ImageView(j);
+	                        		img_view.setFitHeight(130);
+	                        		img_view.setFitWidth(130);;
+	                                setGraphic(img_view);
+	                              /*****************************************************************************************************************/
+	                        	}	                        	
 	                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
 	                            setFont(Font.font(18));
-	                            setGraphic(imgv);
 	                        }
 	                    }
 	                };
@@ -226,8 +234,18 @@ public class CatalogController implements Initializable{
 	public ObservableList<ProductEntity> getProduct() throws InterruptedException //this method creat's a list of products
 	{
 		ObservableList<ProductEntity> prod=FXCollections.observableArrayList();
+		ArrayList<Integer> product_id=new ArrayList<Integer>();
+		product_id=getProductsFromDB_ByID();
+		
 		ArrayList<ProductEntity> products=new ArrayList<ProductEntity>();
-		products=getProductsFromDB();
+		
+		for(int i=0;i<product_id.size();i++)
+		{
+			ProductEntity product_temp=new ProductEntity();
+			product_temp=getProducts(product_id.get(i));
+			if(product_temp!=null)
+			products.add(product_temp);
+		}
 		for(ProductEntity i: products)
 		{
 			prod.add(i);
@@ -240,34 +258,56 @@ public class CatalogController implements Initializable{
 		return prod;
 	}
 	
-	
 	/**
-	 * This method gets the products from the DB (table catalog) and set's them in the catalog
+	 * This method returns the id of the products in the catalog table
 	 * @return
 	 * @throws InterruptedException
 	 */
-	public ArrayList<ProductEntity> getProductsFromDB() throws InterruptedException {
-				MessageToSend mts=new MessageToSend(null,"getCatalog");
-				ArrayList<ProductEntity> dataFromServer = null;
-				Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-				Client.getClientConnection().accept();										//sends to server
-				while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
-					Thread.sleep(100);
-				Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
-				MessageToSend m = Client.getClientConnection().getMessageFromServer();
-				dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
-				return dataFromServer;
-	}
+	public ArrayList<Integer> getProductsFromDB_ByID() throws InterruptedException {
+		MessageToSend mts=new MessageToSend(null,"getCatalogByID");
+		ArrayList<Integer> dataFromServer = null;
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		dataFromServer = (ArrayList<Integer>)m.getMessage();
+		return dataFromServer;
+}
 	
+	/**
+	 * This method return's the product entity requested by product ID 
+	 * @param productID-the product we want to get from the data base
+	 * @return
+	 * @throws InterruptedException 
+	 */
+	public ProductEntity getProducts(int productID) throws InterruptedException
+	{	
+		ProductEntity p;
+		MessageToSend mts=new MessageToSend(productID,"getProduct");
+		//ArrayList<ProductEntity> dataFromServer = null;
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		p = (ProductEntity)m.getMessage();
+		//p=dataFromServer.get(0);
+		return p;
+	}
 	public String addProductsToDB(ProductEntity product) throws InterruptedException, IOException {
 		String msg;
+		/***************************************added this*********************************************/
 	 byte [] d;
 		//Image g=new Image(getClass().getResourceAsStream("/images/pic1.jpg"));
-		File f=new File("C:\\pictures\\pic1.jpg");/***/
-		
-		d=FilesConverter.convertFileToByteArray(f);/***/
+		File f=new File("C:\\pictures\\pic1.jpg");
+		d=FilesConverter.convertFileToByteArray(f);
 		
 		ProductEntity product1=new ProductEntity(123,"lian","boquet",(double) 20,"bridal","blue",	d);
+		/***************************************************************************************************/
+		
 		MessageToSend mts=new MessageToSend(product1,"addProductToCatalog");
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
@@ -295,7 +335,7 @@ public class CatalogController implements Initializable{
 	public ProductEntity searchProductInCatalog(int productid) throws InterruptedException/******* lana**********************************/
 	{
 		ProductEntity p=new ProductEntity();
-		MessageToSend mts=new MessageToSend(productid,"serachProductInCatalog");
+		MessageToSend mts=new MessageToSend(productid,"getProduct");
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies

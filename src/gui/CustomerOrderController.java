@@ -98,7 +98,8 @@ public class CustomerOrderController implements Initializable {
 	 */	
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.cm.showCustomerMenu();										//open previous menu
+		CustomerMenuController cmc = new CustomerMenuController();
+		cmc.showCustomerMenu();										//open previous menu
 		return;
 	}
 	

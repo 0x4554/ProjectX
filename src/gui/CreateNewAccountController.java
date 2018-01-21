@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.sun.corba.se.impl.ior.GenericTaggedComponent;
+
 import client.Client;
 import entities.CustomerEntity;
 import entities.UserEntity;
@@ -57,6 +59,7 @@ public class CreateNewAccountController implements Initializable {
     @FXML private ComboBox<String> subscrptCmb;
     @FXML private TextField emlFld;
     @FXML private TextField phnFld;
+    @FXML private TextField adrsFld;
 
 
     private ObservableList<String> list;
@@ -89,7 +92,17 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 	
-	
+	/**
+	 * when create button pressed
+	 * check if all required fields are filled in
+	 * @return false if there is empty required field
+	 */
+	public boolean checkRequiredFields() {
+		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || adrsFld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
+			return false;
+
+		return true;
+	}
 	
 	
 	/**
@@ -98,8 +111,9 @@ public class CreateNewAccountController implements Initializable {
 	 * checks if all required fields are filled in
 	 * @param event
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 */
-	public void createNewUser() throws IOException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
+	public void createNewUser(ActionEvent event) throws IOException, InterruptedException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
 		if(checkRequiredFields()) 												//check required fields are ok
 			if(!pswrdFld.getText().equals(pswrd2Fld.getText())) {				//check matching passwords
 				GeneralMessageController.showMessage("Passwords are not the same\nPlease try again");
@@ -113,14 +127,30 @@ public class CreateNewAccountController implements Initializable {
 				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
 				cust.setEmailAddress(emlFld.getText());
 				cust.setPhoneNumber(phnFld.getText());
+				cust.setAddress(adrsFld.getText());
 
 				if(!crdFld.getText().isEmpty()) 								//if credit card is entered
 					cust.setCreditCardNumber(Long.parseLong(crdFld.getText()));
+				
 				
 				MessageToSend msg=new MessageToSend(cust, "createAccount");			//defining the job for the server
 				Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 				Client.getClientConnection().accept();								//sending data to server
 				
+				
+				while(!Client.getClientConnection().getConfirmationFromServer())
+					Thread.sleep(100);
+				
+				Client.getClientConnection().setConfirmationFromServer();
+				
+				if(Client.getClientConnection().getMessageFromServer().getMessage().equals("added")) {
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					this.mmc.showManagerMenu();										//open previous menu
+					GeneralMessageController.showMessage("New customer "+cust.getUserName()+" was added succesfully");
+				}
+				else {
+					GeneralMessageController.showMessage("There was a problem, please try again");
+				}
 			}
 		else {
 			GeneralMessageController.showMessage("Please fill in all the required fields");
@@ -128,17 +158,13 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
-	/**
-	 * when create button pressed
-	 * check if all required fields are filled in
-	 * @return false if there is empty required field
-	 */
-	public boolean checkRequiredFields() {
+	
+	/*public boolean checkRequiredFields() {
 		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
 			return false;
 
 		return true;
-	}
+	}*/
 	
 	/**
 	 * when back button pressed

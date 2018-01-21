@@ -2,9 +2,11 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import client.Client;
 import entities.ComplaintEntity;
@@ -20,62 +22,74 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import logic.FilesConverter;
 import logic.MessageToSend;
+import logic.TimeCalculation;
 
-public class CustomerOrderDetailsController implements Initializable {
+public class CustomerServiceWorkerComplaintController implements Initializable {
+
+	private final long Hours_To_Reply = 48;
+	@FXML
+	private ListView<String> ActvCmplntLstVw;
+	
+	@FXML
+	private ListView<String> InActvCmplntLstVw;
+	
+	private ListView<String> listToDisplayDetails;  	//to use each list apart
 
 	@FXML
 	private Button bckBtn;
+	
+	@FXML
+    private Label cmplntFldOnLable;
+
+    @FXML
+    private Label cmplntTmToRplyLbl;
 
 	@FXML
-	private TextArea cmplntDtlsTxtArea;
+	private Button shwImgBtn;
 
 	@FXML
-	private TextArea repliedTxtAre;
-
-	@FXML
-	private Label cmplntFldOnLable;
-
-	@FXML
-	private Button cnclOrdrBtn;
-
-	@FXML
-	private Button cmplntBtn;
-
-	@FXML
-	private ListView<String> ordrLstVw;
+	private Button hndlcmplntBtn;
 
 	@FXML
 	private TreeView<String> dtlsTrVw;
-
-	ObservableList<String> listOfOrders;
-	ArrayList<OrderEntity> arraylistOfOrders;
-	ArrayList<ComplaintEntity> listOfComplaints;
 	
+	@FXML
+    private TextArea cmplntDtlsTxtArea;
+
+	@FXML
+    private TextArea repliedTxtAre;
+	
+	private ArrayList<ComplaintEntity> listOfComplaints;
+	private ArrayList<OrderEntity> listOfOrders;
+	private Image complaintImage;
+	private ComplaintEntity complaint;
+
+	private ObservableList<String> listOfActiveComplaintString;
+	private ObservableList<String> listOfInActiveComplaintSting;
+
 	/**
-	 * This method builds the ListView that contains the customer's orders
-	 * @throws InterruptedException
+	 * This method shows the list of complaints
+	 * @throws InterruptedException 
 	 */
-	public void showOrders() throws InterruptedException
-	{
-					//** get complaints **//
+	public void showComplaints() throws InterruptedException {
+		
+			//****Get all the complaints from the server****////
 		ArrayList<String> msg = new ArrayList<String>();
 		msg.add("all");
 		msg.add("all");
-		MessageToSend message = new MessageToSend(msg, "getComplaints");
-		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
+		MessageToSend message = new MessageToSend(msg, "getComplaints");		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);
@@ -83,34 +97,72 @@ public class CustomerOrderDetailsController implements Initializable {
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		listOfComplaints = (ArrayList<ComplaintEntity>)m.getMessage();
 		
-		
-		message = new MessageToSend(Client.getClientConnection().getUsername(), "getCustomerOrders");
+		 	//****Get all the complaint's orders***////
+		message = new MessageToSend(listOfComplaints, "getComplaintOrders");
 		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		m = Client.getClientConnection().getMessageFromServer();
+		this.listOfOrders = (ArrayList<OrderEntity>)m.getMessage();
 		
-		arraylistOfOrders = (ArrayList<OrderEntity>)m.getMessage();
+		this.ActvCmplntLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);		//unable multiple selection
 		
-		this.ordrLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);		//unable multiple selection
+		this.listOfActiveComplaintString = FXCollections.observableArrayList();		//the observable list to enter to the list  view
+		this.listOfInActiveComplaintSting = FXCollections.observableArrayList();
 		
-		this.listOfOrders = FXCollections.observableArrayList();		//the observable list to enter to the list  view
-		
-		for(OrderEntity order : arraylistOfOrders)		//build list view to contain all orders
+		for(ComplaintEntity complaint : this.listOfComplaints)
 		{
-			this.listOfOrders.add("Order number "+order.getOrderID());
+			if(complaint.getStatus().toString().equals("processing"))
+				this.listOfActiveComplaintString.add("Complaint for order number "+complaint.getOrderID());
+			else
+				this.listOfInActiveComplaintSting.add("Complaint for order number "+complaint.getOrderID());
 		}
+//		for(OrderEntity order : listOfOrders)		//build list view to contain all orders
+//		{
+//			if()
+//			this.listOfActiveComplaintString.add("Complaint for order number "+order.getOrderID());
+//		}
 		
-		this.ordrLstVw.setItems(this.listOfOrders);		//set items to the list
+//		this listOfActiveComplaintString.add("I)
+		this.ActvCmplntLstVw.setItems(this.listOfActiveComplaintString);		//set items to the list of active complaints
 
-		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
-			showOrderDetails(event);
+		this.InActvCmplntLstVw.setItems(this.listOfInActiveComplaintSting); 	//set items to the list of Closed complaints
+		
+
+		EventHandler<MouseEvent> ActiveComplaintMouseEventHandle = (MouseEvent event) -> {
+			selectedActiveComplaint(event);
 		};
 
-		this.ordrLstVw.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle); 
+		this.ActvCmplntLstVw.addEventHandler(MouseEvent.MOUSE_CLICKED, ActiveComplaintMouseEventHandle); 
+		
+		EventHandler<MouseEvent> InActiveComplaintMouseEventHandle = (MouseEvent event) -> {
+			selectedInActiveComplaint(event);
+		};
 
+		this.InActvCmplntLstVw.addEventHandler(MouseEvent.MOUSE_CLICKED, InActiveComplaintMouseEventHandle);
+		this.shwImgBtn.setVisible(false);
+	}
+	
+	/**
+	 * This method handles if pressed on an active complaint
+	 * @param event	selected active complaint
+	 */
+	public void selectedActiveComplaint(MouseEvent event)
+	{
+		this.listToDisplayDetails = this.ActvCmplntLstVw;		//set the selected listView for showing details
+		showOrderDetails(event);
+	}
+	
+	/**
+	 * This method handles if pressed on an active complaint
+	 * @param event	selected active complaint
+	 */
+	public void selectedInActiveComplaint(MouseEvent event)
+	{
+		this.listToDisplayDetails = this.InActvCmplntLstVw;				//set the selected listView for showing details
+		showOrderDetails(event);
 	}
 	
 	/**
@@ -119,18 +171,18 @@ public class CustomerOrderDetailsController implements Initializable {
 	 */
 	public void showOrderDetails(MouseEvent event)
 	{
-		if(this.ordrLstVw.getSelectionModel().isEmpty())	//if nothing was selected
+		if(this.listToDisplayDetails.getSelectionModel().isEmpty())	//if nothing was selected
 			return;
 		TreeItem<String> root;
-
+		
 		root = new TreeItem<>(); //set the root for the tree
 		root.setExpanded(true); //set it to expanded by default  
 
 	
 					//**------Build a treeView that contains all the order's details-------**//
-			for (OrderEntity order : arraylistOfOrders)
+			for (OrderEntity order : listOfOrders)
 			{
-				if(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13).equals(order.getOrderID().toString())) 		//check which order was selected
+				if(this.listToDisplayDetails.getSelectionModel().getSelectedItem().substring(27).equals(order.getOrderID().toString())) 		//check which order was selected
 				{
 				TreeItem<String> OrderID = new TreeItem<>("Order number : "+order.getOrderID().toString()); //set the branch as the product's name to be the parent of it's details
 							/* Set all the order's details to be leaves on the branch */
@@ -139,7 +191,7 @@ public class CustomerOrderDetailsController implements Initializable {
 				
 				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
 				OrderID.getChildren().add(orderTime); 									//set as a child 
-				TreeItem<String> store = new TreeItem<>("From Store named : "+order.getStore().getBranchName());
+			TreeItem<String> store = new TreeItem<>("From Store named : "+order.getStore().getBranchName());
 				OrderID.getChildren().add(store);
 				
 				if(order.getCard() != null)		//if there is a card
@@ -202,19 +254,12 @@ public class CustomerOrderDetailsController implements Initializable {
 					
 				}
 				
-				this.repliedTxtAre.setVisible(false);
-				this.cmplntDtlsTxtArea.setVisible(false);
-				this.cmplntFldOnLable.setVisible(false);
-				
 				showComplaintDetails(order.getOrderID());
 				
 				root.getChildren().add(OrderID);
 				OrderID.setExpanded(true); 				//set the tree expanded by default
-				
-				
 				}
-			}
-			
+			}			
 		this.dtlsTrVw.setRoot(root);
 		this.dtlsTrVw.setShowRoot(false); //make root expanded every time it starts
 	}
@@ -229,125 +274,104 @@ public class CustomerOrderDetailsController implements Initializable {
 		{
 			if(complaint.getOrderID() == orderID)
 			{
-				this.cmplntDtlsTxtArea.setVisible(true);
-				this.repliedTxtAre.setVisible(true);
-				this.cmplntFldOnLable.setVisible(true);
 				this.cmplntDtlsTxtArea.setText(complaint.getDescription());		//set the complaint details to the text area
-//				if(complaint.getFile() != null)									//if there is an image 
-//				{
-//					this.shwImgBtn.setVisible(true);
-//					this.complaintImage = FilesConverter.convertByteArrayToImage(complaint.getFile());		//convert and save the image
-//				}
-//				else
-//					this.shwImgBtn.setVisible(false);
-//				this.complaint = complaint;
+				if(complaint.getFile() != null)									//if there is an image 
+				{
+					this.shwImgBtn.setVisible(true);
+					this.complaintImage = FilesConverter.convertByteArrayToImage(complaint.getFile());		//convert and save the image
+				}
+				else
+					this.shwImgBtn.setVisible(false);
+				this.complaint = complaint;
 				if(complaint.getStatus().toString().equals("handled"))			//if handled, show the reply
 					this.repliedTxtAre.setText(complaint.getStoreReply());
 				else
-					this.repliedTxtAre.setText("Processing");
+					this.repliedTxtAre.clear();
 				this.cmplntFldOnLable.setText(complaint.getFiledOn().toString());		//set the time it was filed
-//				if(!complaint.getStatus().toString().equals("handled"))					//check if was handled
-//				{
-//					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
-//					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
-//						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
-//					else
-//						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
-//							
-//				}
-//				else
-//					this.cmplntTmToRplyLbl.setText("Handled");
+				if(!complaint.getStatus().toString().equals("handled"))					//check if was handled
+				{
+					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
+					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
+						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
+					else
+						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
+							
+				}
+				else
+					this.cmplntTmToRplyLbl.setText("Handled");
 			}
 		}
 	}
-	
+
 	
 	/**
-	 * This method loads the main menu window
-	 * @param event	pressed back
-	 * @throws IOException	
+	 * This method loads the handle complaint window
+	 * @param event	pressed handle complaint
+	 * @throws IOException 
+	 */
+	public void handlecomplaint(ActionEvent event) throws IOException {
+
+		
+		if(!this.ActvCmplntLstVw.getSelectionModel().isEmpty())
+		{
+			if(this.complaint.getStatus().toString().equals("handled"))
+			{
+				GeneralMessageController.showMessage("This complaint has already been handled");
+				return;
+			}
+			else
+			{
+				((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
+				FXMLLoader loader = new FXMLLoader();
+				Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerHandleComplaintBoundary.fxml").openStream());
+				CustomerServiceWorkerHandleComplaintController cswscic = new CustomerServiceWorkerHandleComplaintController();
+				cswscic = loader.getController();
+				cswscic.setComplaint(this.complaint);
+				Stage primaryStage = new Stage();
+				Scene scene = new Scene(root);
+				primaryStage.setTitle("Customer Service worker main menu");
+				primaryStage.setScene(scene);
+				primaryStage.show();
+			}
+		}
+		else
+		{
+			GeneralMessageController.showMessage("No complaint was chosen");
+			return;
+		}
+	}
+
+	/**
+	 * This method loads the complaint image
+	 * @param event	pressed show complaint image
+	 * @throws IOException 
+	 */
+	public void showImage(ActionEvent event) throws IOException {
+		
+//		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerShowComplaintImageBoundary.fxml").openStream());
+		CustomerServiceWorkerShowComplaintImageController cswscic = new CustomerServiceWorkerShowComplaintImageController();
+		cswscic = loader.getController();
+		cswscic.showImage(this.complaintImage);
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Complaint image");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	/**
+	 * This method loads the main menu
 	 */
 	public void backToMainMenu(ActionEvent event) throws IOException {
 
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CustomerOrderMenuBoundary.fxml").openStream());
-		CustomerOrderController ord = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerMenuBoundary.fxml").openStream());
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-		primaryStage.setTitle("Order");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-
-	/**
-	 * This method handle the customer's cancellation request
-	 * @param event	pressed cancel order
-	 * @throws IOException 
-	 * @throws InterruptedException 
-	 */
-	public void pressedCancelOrder(ActionEvent event) throws IOException, InterruptedException 
-	{
-		OrderEntity orderToCancel = null;
-		
-		if(this.ordrLstVw.getSelectionModel().isEmpty())	//if nothing was selected
-			GeneralMessageController.showMessage("No order was selected.");
-		else
-		{
-			for(OrderEntity order : this.arraylistOfOrders)
-			{
-				if(order.getOrderID() == Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)))	//get the selected order
-					orderToCancel=order;
-			}
-			
-			if(!orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancel_requested) && !orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancelled))		//check if order cancelation was already asked
-			{
-			Alert alert = new Alert(AlertType.CONFIRMATION);		//set new alert for confirmation
-			alert.setTitle("Confirmation");
-			alert.setHeaderText("Cancel order");
-			alert.setContentText("Are you sure you want to cancel this order");
-
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == ButtonType.OK){						//if pressed OK
-				MessageToSend message = new MessageToSend(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)), "cancelRequest");	//get the order ID
-
-				Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
-				Client.getClientConnection().accept();										//sends to server
-				while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
-					Thread.sleep(100);
-				Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
-				MessageToSend m = Client.getClientConnection().getMessageFromServer();
-				GeneralMessageController.showMessage((String)m.getMessage());
-				showOrders();
-			} else {
-			    // ... user chose CANCEL or closed the dialog
-			}
-			}
-			else
-				GeneralMessageController.showMessage("Cancellation was already requested for the order");
-			
-		}
-		
-		
-
-	}
-
-	/**
-	 * This method handles the complaint
-	 * @param event pressed complaint button
-	 * @throws IOException 
-	 */
-	public void PressedComplaint(ActionEvent event) throws IOException {
-		
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/gui/ComplaintBoundary.fxml").openStream());
-		 ComplaintController cmpc= loader.getController();	//set the controller to the ComplaintBoundary to control the SearchProductGUI window
-		 cmpc.setOrderID(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)));
-		 //		 cmpc.setConnectionData(this);
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
-		primaryStage.setTitle("Complaint");
+		primaryStage.setTitle("Customer Service worker main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -355,14 +379,7 @@ public class CustomerOrderDetailsController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		try
-		{
-			showOrders();
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 
 }

@@ -239,10 +239,11 @@ public class CustomerCheckOutController implements Initializable {
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		
 		ArrayList<String> dataFromServer = (ArrayList<String>)m.getMessage();
-		GeneralMessageController.showMessage(dataFromServer.get(0));
+		
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
 		showCustomerMenu();
+		GeneralMessageController.showMessage(dataFromServer.get(0));
 		
 		
 	}

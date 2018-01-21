@@ -53,7 +53,7 @@ public class StoreWorkerMenuController implements Initializable{
 		Scene scene=new Scene(root);
 		StoreWorkerMenuController swm = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		swm.setConnectionData(this);
-		primaryStage.setTitle("Manager's main menu");
+		primaryStage.setTitle("Store worker main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
@@ -71,7 +71,7 @@ public class StoreWorkerMenuController implements Initializable{
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 //		ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
-		LoginController.signalAppClose();
+		LoginController.signalLogOut();
 		
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
@@ -81,7 +81,30 @@ public class StoreWorkerMenuController implements Initializable{
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		GeneralMessageController.showMessage("Manager "+Client.getClientConnection().getUsername()+" logged out");
+		GeneralMessageController.showMessage("Store worker "+Client.getClientConnection().getUsername()+" logged out");
+		Client.getClientConnection().setClientUserName(null);
+	}
+	
+	/**
+	 * method to be called when store worker wishes to upload new survey
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
+	public void startNewSurvey(ActionEvent event) throws IOException {
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/SurveyBoundary.fxml").openStream());
+		SurveyController sc=loader.getController();
+		sc.setConnectionData(this);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("New Survey");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 	
 	

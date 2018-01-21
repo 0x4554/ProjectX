@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import entities.UserEntity;
 import client.Client;
 import entities.CustomerEntity;
 import entities.StoreManagerEntity;
@@ -111,7 +112,6 @@ public class CreateNewUserController implements Initializable{
 		this.am.showAdministratorMenu();										//open previous menu
 		return;
 	}
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

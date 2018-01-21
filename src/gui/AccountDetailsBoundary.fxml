@@ -5,22 +5,28 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0" prefWidth="495.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AccountDetailsController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="495.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AccountDetailsController">
    <children>
       <Label layoutX="165.0" layoutY="29.0" text="Account Details">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="64.0" layoutY="100.0" text="Customer Name" />
-      <Label layoutX="64.0" layoutY="146.0" text="Customer ID" />
-      <Label layoutX="61.0" layoutY="190.0" text=" Status" />
-      <Label layoutX="61.0" layoutY="237.0" text="Credit Card Number" />
-      <Button fx:id="bckBtn" layoutX="128.0" layoutY="284.0" mnemonicParsing="false" onAction="#bckBtnHandler" prefHeight="31.0" prefWidth="69.0" text="Back" />
-      <Button fx:id="updBtn" layoutX="333.0" layoutY="284.0" mnemonicParsing="false" text="Update" />
-      <Label fx:id="cstLbl" layoutX="228.0" layoutY="100.0" prefHeight="21.0" prefWidth="200.0" text="Label" />
-      <Label fx:id="idLbl" layoutX="228.0" layoutY="146.0" prefHeight="21.0" prefWidth="200.0" text="Label" />
-      <Label fx:id="sttLbl" layoutX="228.0" layoutY="190.0" prefHeight="21.0" prefWidth="209.0" text="Label" />
-      <Label fx:id="crdLbl" layoutX="228.0" layoutY="237.0" prefHeight="21.0" prefWidth="200.0" text="Label" />
+      <Label layoutX="62.0" layoutY="121.0" text="Customer ID" />
+      <Button fx:id="bckBtn" layoutX="127.0" layoutY="370.0" mnemonicParsing="false" onAction="#bckBtnHandler" prefHeight="31.0" prefWidth="69.0" text="Back" />
+      <Button fx:id="updBtn" layoutX="332.0" layoutY="370.0" mnemonicParsing="false" onAction="#updateDetails" text="Update" />
+      <Label layoutX="61.0" layoutY="163.0" text="Phone Number" />
+      <Label layoutX="61.0" layoutY="203.0" text="Email" />
+      <Label layoutX="61.0" layoutY="241.0" text="Subscription" />
+      <Label layoutX="61.0" layoutY="85.0" text="Customer name" />
+      <Label layoutX="61.0" layoutY="279.0" text="Credit card number" />
+      <Label fx:id="cstNmLbl" layoutX="212.0" layoutY="85.0" text="Label" textFill="#300be8" />
+      <Label fx:id="idLbl" layoutX="212.0" layoutY="121.0" text="Label" textFill="#390deb" />
+      <Label fx:id="phnLbl" layoutX="212.0" layoutY="163.0" text="Label" textFill="#4607e4" />
+      <Label fx:id="mailLbl" layoutX="212.0" layoutY="203.0" text="Label" textFill="#4c0be4" />
+      <Label fx:id="sbscrptLbl" layoutX="212.0" layoutY="241.0" text="Label" textFill="#5d0de8" />
+      <Label fx:id="crdtLbl" layoutX="212.0" layoutY="279.0" text="Label" textFill="#440ae1" />
+      <Label layoutX="61.0" layoutY="317.0" text="Address" />
+      <Label fx:id="adrsLbl" layoutX="212.0" layoutY="317.0" text="Label" textFill="#490dee" />
    </children>
 </Pane>

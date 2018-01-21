@@ -1,5 +1,6 @@
 package entities;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,11 @@ import java.util.Map;
  */
 public class SurveyEntity implements Serializable{
 
+
+	public SurveyEntity() {
+		
+	}
+
 	//private Map<String,ArrayList<Integer>> questionsAndAnswers;		//*The String (key) is the question and the ArrayList holds all of the answers to that question*//
 
 	private String q1Txt;
@@ -35,7 +41,6 @@ public class SurveyEntity implements Serializable{
 	private int q5Rnk;
 	private int q6Rnk;
 	
-	private String username;				//holds the user that took the survey
 	
 	
 	/**
@@ -49,7 +54,7 @@ public class SurveyEntity implements Serializable{
 	 * @param q6 - q6 answer
 	 */
 	public void setAnswers(int q1,int q2,int q3,int q4,int q5,int q6) {
-		q1Rnk=q1;
+		q1Rnk= q1;
 		q2Rnk=q2;
 		q3Rnk=q3;
 		q4Rnk=q4;
@@ -124,9 +129,37 @@ public class SurveyEntity implements Serializable{
 	}
 	
 	
-	public void setUsername(String name) {
-			this.username=name;
+	/**
+	 * this method return the rank for each question in the survey
+	 * 
+	 * @param questionNum
+	 * @return
+	 */
+	public int getQuestionRank(int questionNum) {
+	switch(questionNum) {
+		case 1:
+			return q1Rnk;
+	
+		case 2:
+			return q2Rnk;
+	
+		case 3:
+			return q3Rnk;
+		
+		case 4:
+			return q4Rnk;
+		
+		case 5:
+			return q5Rnk;
+		
+		case 6:
+			return q6Rnk;
+		
+		default:
+			return -1;
 	}
+}
+	
 	
 	
 }

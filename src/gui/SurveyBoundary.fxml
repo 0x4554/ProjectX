@@ -19,68 +19,99 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Label layoutX="102.0" layoutY="107.0" text="Please fill in the survey (1-Not Satisfied ; 5-Very Satisfied)" />
+      <Label layoutX="102.0" layoutY="107.0" text="Please fill in the survey (1-Not Satisfied ; 10-Very Satisfied)" />
       <Label layoutX="141.0" layoutY="145.0" text="Q1" />
       <RadioButton fx:id="q1r1" layoutX="116.0" layoutY="174.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q1" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="q1r2" layoutX="169.0" layoutY="174.0" mnemonicParsing="false" text="2" toggleGroup="$q1" />
-      <RadioButton fx:id="q1r3" layoutX="221.0" layoutY="174.0" mnemonicParsing="false" text="3" toggleGroup="$q1" />
-      <RadioButton fx:id="q1r4" layoutX="280.0" layoutY="174.0" mnemonicParsing="false" text="4" toggleGroup="$q1" />
-      <RadioButton fx:id="q1r5" layoutX="332.0" layoutY="174.0" mnemonicParsing="false" text="5" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r2" layoutX="160.0" layoutY="175.0" mnemonicParsing="false" text="2" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r3" layoutX="202.0" layoutY="175.0" mnemonicParsing="false" text="3" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r4" layoutX="246.0" layoutY="175.0" mnemonicParsing="false" text="4" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r5" layoutX="289.0" layoutY="175.0" mnemonicParsing="false" text="5" toggleGroup="$q1" />
       <Label layoutX="141.0" layoutY="207.0" text="Q2" />
-      <RadioButton fx:id="q2r1" layoutX="117.0" layoutY="236.0" mnemonicParsing="false" text="1">
+      <Label layoutX="142.0" layoutY="270.0" text="Q3" />
+      <Label layoutX="142.0" layoutY="330.0" text="Q4" />
+      <Button fx:id="sbmtBtn" layoutX="332.0" layoutY="492.0" mnemonicParsing="false" onAction="#getSurveyAnswers" text="Submit" />
+      <Button fx:id="bckBtn" layoutX="196.0" layoutY="492.0" mnemonicParsing="false" onAction="#bckToPrevMnu" text="Back" />
+      <Label layoutX="144.0" layoutY="384.0" text="Q5" />
+      <Label layoutX="146.0" layoutY="437.0" text="Q6" />
+      <RadioButton fx:id="q1r6" layoutX="334.0" layoutY="176.0" mnemonicParsing="false" text="6" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r7" layoutX="379.0" layoutY="175.0" mnemonicParsing="false" text="7" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r8" layoutX="419.0" layoutY="176.0" mnemonicParsing="false" text="8" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r9" layoutX="463.0" layoutY="176.0" mnemonicParsing="false" text="9" toggleGroup="$q1" />
+      <RadioButton fx:id="q1r10" layoutX="507.0" layoutY="176.0" mnemonicParsing="false" text="10" toggleGroup="$q1" />
+      <RadioButton fx:id="q2r1" layoutX="114.0" layoutY="231.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q2" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="q2r2" layoutX="169.0" layoutY="236.0" mnemonicParsing="false" text="2" toggleGroup="$q2" />
-      <RadioButton fx:id="q2r3" layoutX="221.0" layoutY="236.0" mnemonicParsing="false" text="3" toggleGroup="$q2" />
-      <RadioButton fx:id="q2r4" layoutX="280.0" layoutY="236.0" mnemonicParsing="false" text="4" toggleGroup="$q2" />
-      <RadioButton fx:id="q2r5" layoutX="332.0" layoutY="236.0" mnemonicParsing="false" text="5" toggleGroup="$q2" />
-      <Label layoutX="142.0" layoutY="270.0" text="Q3" />
-      <RadioButton fx:id="q3r1" layoutX="117.0" layoutY="294.0" mnemonicParsing="false" text="1">
+      <RadioButton fx:id="q2r2" layoutX="158.0" layoutY="232.0" mnemonicParsing="false" text="2" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r3" layoutX="200.0" layoutY="232.0" mnemonicParsing="false" text="3" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r4" layoutX="244.0" layoutY="232.0" mnemonicParsing="false" text="4" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r5" layoutX="287.0" layoutY="232.0" mnemonicParsing="false" text="5" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r6" layoutX="332.0" layoutY="233.0" mnemonicParsing="false" text="6" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r7" layoutX="377.0" layoutY="232.0" mnemonicParsing="false" text="7" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r8" layoutX="417.0" layoutY="233.0" mnemonicParsing="false" text="8" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r9" layoutX="461.0" layoutY="233.0" mnemonicParsing="false" text="9" toggleGroup="$q2" />
+      <RadioButton fx:id="q2r10" layoutX="505.0" layoutY="233.0" mnemonicParsing="false" text="10" toggleGroup="$q2" />
+      <RadioButton fx:id="q3r1" layoutX="114.0" layoutY="292.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q3" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="q3r2" layoutX="169.0" layoutY="294.0" mnemonicParsing="false" text="2" toggleGroup="$q3" />
-      <RadioButton fx:id="q3r3" layoutX="221.0" layoutY="294.0" mnemonicParsing="false" text="3" toggleGroup="$q3" />
-      <RadioButton fx:id="q3r4" layoutX="280.0" layoutY="293.0" mnemonicParsing="false" text="4" toggleGroup="$q3" />
-      <RadioButton fx:id="q3r5" layoutX="332.0" layoutY="294.0" mnemonicParsing="false" text="5" toggleGroup="$q3" />
-      <Label layoutX="142.0" layoutY="330.0" text="Q4" />
-      <Button fx:id="sbmtBtn" layoutX="332.0" layoutY="492.0" mnemonicParsing="false" onAction="#submitSurveyAnswers" text="Submit" />
-      <Button fx:id="bckBtn" layoutX="196.0" layoutY="492.0" mnemonicParsing="false" onAction="#bckToPrevMnu" text="Back" />
-      <RadioButton fx:id="q4r1" layoutX="116.0" layoutY="354.0" mnemonicParsing="false" text="1">
+      <RadioButton fx:id="q3r2" layoutX="158.0" layoutY="293.0" mnemonicParsing="false" text="2" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r3" layoutX="200.0" layoutY="293.0" mnemonicParsing="false" text="3" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r4" layoutX="244.0" layoutY="293.0" mnemonicParsing="false" text="4" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r5" layoutX="287.0" layoutY="293.0" mnemonicParsing="false" text="5" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r6" layoutX="332.0" layoutY="294.0" mnemonicParsing="false" text="6" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r7" layoutX="377.0" layoutY="293.0" mnemonicParsing="false" text="7" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r8" layoutX="417.0" layoutY="294.0" mnemonicParsing="false" text="8" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r9" layoutX="461.0" layoutY="294.0" mnemonicParsing="false" text="9" toggleGroup="$q3" />
+      <RadioButton fx:id="q3r10" layoutX="505.0" layoutY="294.0" mnemonicParsing="false" text="10" toggleGroup="$q3" />
+      <RadioButton fx:id="q4r1" layoutX="116.0" layoutY="349.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q4" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="q4r2" layoutX="169.0" layoutY="354.0" mnemonicParsing="false" text="2" toggleGroup="$q4" />
-      <RadioButton fx:id="q4r3" layoutX="221.0" layoutY="354.0" mnemonicParsing="false" text="3" toggleGroup="$q4" />
-      <RadioButton fx:id="q4r4" layoutX="281.0" layoutY="354.0" mnemonicParsing="false" text="4" toggleGroup="$q4" />
-      <RadioButton fx:id="q4r5" layoutX="333.0" layoutY="354.0" mnemonicParsing="false" text="5" toggleGroup="$q4" />
-      <Label layoutX="144.0" layoutY="384.0" text="Q5" />
-      <RadioButton fx:id="q5r1" layoutX="117.0" layoutY="409.0" mnemonicParsing="false" text="1">
+      <RadioButton fx:id="q4r2" layoutX="160.0" layoutY="350.0" mnemonicParsing="false" text="2" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r3" layoutX="202.0" layoutY="350.0" mnemonicParsing="false" text="3" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r4" layoutX="246.0" layoutY="350.0" mnemonicParsing="false" text="4" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r5" layoutX="289.0" layoutY="350.0" mnemonicParsing="false" text="5" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r6" layoutX="334.0" layoutY="351.0" mnemonicParsing="false" text="6" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r7" layoutX="379.0" layoutY="350.0" mnemonicParsing="false" text="7" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r8" layoutX="419.0" layoutY="351.0" mnemonicParsing="false" text="8" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r9" layoutX="463.0" layoutY="351.0" mnemonicParsing="false" text="9" toggleGroup="$q4" />
+      <RadioButton fx:id="q4r10" layoutX="507.0" layoutY="351.0" mnemonicParsing="false" text="10" toggleGroup="$q4" />
+      <RadioButton fx:id="q5r1" layoutX="117.0" layoutY="408.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q5" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="q5r2" layoutX="169.0" layoutY="409.0" mnemonicParsing="false" text="2" toggleGroup="$q5" />
-      <RadioButton fx:id="q5r3" layoutX="221.0" layoutY="409.0" mnemonicParsing="false" text="3" toggleGroup="$q5" />
-      <RadioButton fx:id="q5r4" layoutX="280.0" layoutY="409.0" mnemonicParsing="false" text="4" toggleGroup="$q5" />
-      <RadioButton fx:id="q5r5" layoutX="332.0" layoutY="409.0" mnemonicParsing="false" text="5" toggleGroup="$q5" />
-      <Label layoutX="146.0" layoutY="437.0" text="Q6" />
-      <RadioButton fx:id="q6r1" layoutX="118.0" layoutY="461.0" mnemonicParsing="false" text="1">
+      <RadioButton fx:id="q5r2" layoutX="161.0" layoutY="409.0" mnemonicParsing="false" text="2" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r3" layoutX="203.0" layoutY="409.0" mnemonicParsing="false" text="3" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r4" layoutX="247.0" layoutY="409.0" mnemonicParsing="false" text="4" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r5" layoutX="290.0" layoutY="409.0" mnemonicParsing="false" text="5" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r6" layoutX="335.0" layoutY="410.0" mnemonicParsing="false" text="6" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r7" layoutX="380.0" layoutY="409.0" mnemonicParsing="false" text="7" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r8" layoutX="420.0" layoutY="410.0" mnemonicParsing="false" text="8" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r9" layoutX="464.0" layoutY="410.0" mnemonicParsing="false" text="9" toggleGroup="$q5" />
+      <RadioButton fx:id="q5r10" layoutX="508.0" layoutY="410.0" mnemonicParsing="false" text="10" toggleGroup="$q5" />
+      <RadioButton fx:id="q6r1" layoutX="120.0" layoutY="459.0" mnemonicParsing="false" text="1">
          <toggleGroup>
             <ToggleGroup fx:id="q6" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="q6r2" layoutX="169.0" layoutY="461.0" mnemonicParsing="false" text="2" toggleGroup="$q6" />
-      <RadioButton fx:id="q6r3" layoutX="221.0" layoutY="461.0" mnemonicParsing="false" text="3" toggleGroup="$q6" />
-      <RadioButton fx:id="q6r4" layoutX="280.0" layoutY="461.0" mnemonicParsing="false" text="4" toggleGroup="$q6" />
-      <RadioButton fx:id="q6r5" layoutX="332.0" layoutY="461.0" mnemonicParsing="false" text="5" toggleGroup="$q6" />
+      <RadioButton fx:id="q6r2" layoutX="164.0" layoutY="460.0" mnemonicParsing="false" text="2" toggleGroup="$q6" />
+      <RadioButton fx:id="q6r3" layoutX="206.0" layoutY="460.0" mnemonicParsing="false" text="3" toggleGroup="$q6" />
+      <RadioButton fx:id="q6r4" layoutX="250.0" layoutY="460.0" mnemonicParsing="false" text="4" toggleGroup="$q6" />
+      <RadioButton fx:id="q6r5" layoutX="293.0" layoutY="460.0" mnemonicParsing="false" text="5" toggleGroup="$q6" />
+      <RadioButton layoutX="338.0" layoutY="461.0" mnemonicParsing="false" text="6" toggleGroup="$q6" />
+      <RadioButton layoutX="383.0" layoutY="460.0" mnemonicParsing="false" text="7" toggleGroup="$q6" />
+      <RadioButton layoutX="423.0" layoutY="461.0" mnemonicParsing="false" text="8" toggleGroup="$q6" />
+      <RadioButton layoutX="467.0" layoutY="461.0" mnemonicParsing="false" text="9" toggleGroup="$q6" />
+      <RadioButton layoutX="511.0" layoutY="461.0" mnemonicParsing="false" text="10" toggleGroup="$q6" />
+      <Label fx:id="missingLbl" layoutX="154.0" layoutY="131.0" text="*Please fill in all the questions before submition" textFill="#f81717" />
    </children>
 </Pane>

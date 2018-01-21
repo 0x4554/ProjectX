@@ -36,8 +36,8 @@ public class StoreEntity extends Object implements Serializable{
 		this.branchID = branchID;
 		this.BranchName = branchName;
 		this.storeManagerWorkerID=storeManager;
-		this.storeWorkers= new ArrayList<Integer>();
-		this.storeDiscoutsSales = new HashMap<Integer,Double>();
+//		this.storeWorkers= new ArrayList<Integer>();
+//		this.storeDiscoutsSales = new HashMap<Integer,Double>();
 	}
 	/**
 	 * This method adds a worker to the store workers list

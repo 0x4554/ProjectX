@@ -55,6 +55,7 @@ public class LoginController implements Initializable {
 	private CustomerServiceWorkerMenuController cswmc;
 	private ChainStoreManagerMenuController csmmc;
 	private CustomerServiceExpertMenuController csemc;
+	private ChainWorkerMenuController cwmn;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -200,6 +201,12 @@ public class LoginController implements Initializable {
 			csemc.showCustomerServiceExpertMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service expert");
 			break;
+			
+		case "CW":	//chain worker
+			cwmn = new ChainWorkerMenuController();
+			cwmn.showChainWorkerMenu();
+			GeneralMessageController.showMessage("Logged in as a chain worker");
+			break;
 		}
 	}
 	
@@ -212,6 +219,18 @@ public class LoginController implements Initializable {
 			Client.getClientConnection().setDataFromUI(new MessageToSend(Client.getClientConnection().getUsername(),"exitApp"));
 			Client.getClientConnection().accept();
 	//*******//		Client.getClientConnection().quit();
+		}
+	}
+	
+	/**
+	 * method to log out the client from the system
+	 * 
+	 * 
+	 */
+	public static void signalLogOut() {
+		if(Client.getClientConnection()!=null) {
+			Client.getClientConnection().setDataFromUI(new MessageToSend(Client.getClientConnection().getUsername(),"logOut"));
+			Client.getClientConnection().accept();
 		}
 	}
 
