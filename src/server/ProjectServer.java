@@ -2401,19 +2401,22 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  ps.setString(6, ce.getEmailAddress());
 	  ps.setString(7, ce.getPhoneNumber());
 	  
-	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-      Date dateobj = new Date();
+//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+//      Date dateobj = new Date();
+      Timestamp timestamp = new Timestamp(System.currentTimeMillis());
       
-      
-	  ps.setString(8, df.format(dateobj).toString());
+	  ps.setTimestamp(8,timestamp);
 	  ps.setLong(9, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
 	  
-	  ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts) VALUES (?,?,?,?)");
+	  ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts,Email,PhoneNumber,UserId) VALUES (?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
 	  ps.setString(3, "C");
 	  ps.setInt(4, 0);
+	  ps.setString(5, ce.getEmailAddress());
+	  ps.setString(6, ce.getPhoneNumber());
+	  ps.setLong(7, ce.getID());
 	  
 	  ps.executeUpdate();
 	  
