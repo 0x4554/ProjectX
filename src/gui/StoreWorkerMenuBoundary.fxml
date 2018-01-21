@@ -10,7 +10,7 @@
    <children>
       <Pane layoutX="-206.0" layoutY="-179.0" prefHeight="549.0" prefWidth="895.0">
          <children>
-            <Label layoutX="485.0" layoutY="210.0" prefHeight="56.0" prefWidth="192.0" text="Main Menue" textAlignment="CENTER">
+            <Label layoutX="468.0" layoutY="209.0" prefHeight="56.0" prefWidth="192.0" text="Main Menu" textAlignment="CENTER">
                <font>
                   <Font size="30.0" />
                </font>
@@ -19,7 +19,7 @@
             <Button fx:id="cmplnDetBtn" layoutX="475.0" layoutY="324.0" mnemonicParsing="false" text="View complaints ditails" />
             <Button fx:id="ctlgBtn" layoutX="499.0" layoutY="376.0" mnemonicParsing="false" text="Update catalog" />
             <Button fx:id="lgBtn" layoutX="523.0" layoutY="479.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-            <Button fx:id="srvBtn" layoutX="528.0" layoutY="428.0" mnemonicParsing="false" text="Survey" />
+            <Button fx:id="srvBtn" layoutX="528.0" layoutY="428.0" mnemonicParsing="false" onAction="#startNewSurvey" text="Survey" />
          </children>
       </Pane>
    </children>

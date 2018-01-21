@@ -2084,6 +2084,14 @@ public class ProjectServer extends AbstractServer
 //			
 //			sendToAllClients(generalMessage);	//send string back to client
 		}
+		
+		if(operation.equals("SurveyAnswers")) {
+			String result = this.updateSurveyAnswers((SurveyEntity)messageFromClient);
+			messageToSend.setMessage(result);
+			messageToSend.setOperation("surveyUpdateResult");
+			client.sendToClient(messageToSend);
+		}
+		
 		if(operation.equals("handleComplaint"))
 		{
 			String retmsg = "";
@@ -2164,7 +2172,43 @@ public class ProjectServer extends AbstractServer
 //		sendToAllClients(messageToSend);
 		
 	}
-  
+	
+	
+    private String updateSurveyAnswers(SurveyEntity surveyAns) throws SQLException {
+	// TODO Auto-generated method stub
+	  int counter=0,r;
+	  Statement stmnt;
+	  String []numToWord= {"Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"};
+	  try {
+		 con=connectToDB();
+		 System.out.println("Connection to Database succeeded");
+	 }
+	 catch(Exception e) {
+		 e.printStackTrace();
+		 System.out.println("Connection to Database failed");
+	 }
+	 for(int i=1;i<7;i++) {
+			 r=surveyAns.getQuestionRank(i);
+			 stmnt=con.createStatement();
+			 try {
+		 		 ResultSet rs = stmnt.executeQuery("SELECT "+numToWord[r]+" From projectx.survey WHERE Questionnum="+i);
+		 		 if(rs.next()) {
+		 			 counter = rs.getInt(1);
+			 		 counter++;
+			 		 stmnt.executeUpdate("UPDATE projectx.survey SET "+numToWord[r]+" = "+counter+" WHERE Questionnum="+i);
+				 }
+			 		 
+			 	 }
+			 	 catch(Exception e) {
+		 
+			 		 e.printStackTrace();
+			 		 System.out.println("Error occured while updating the survey answers");
+			 		 return "Probelm";
+			 	 }
+	 }
+			 
+	 return "Success";
+  }
   
   private String updateAccout(CustomerEntity customer) throws SQLException {
 	// TODO Auto-generated method stub

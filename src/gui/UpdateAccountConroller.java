@@ -104,10 +104,10 @@ public class UpdateAccountConroller implements Initializable{
      * @throws InterruptedException 
      */
     public void updateAccountDetailsPressed(ActionEvent event) throws IOException, InterruptedException {
-    	if(checkValidFields()) {
-    		if(aprvChkBox.isSelected()) {
-    			updateFieldsData();
-    			if(sendUpdates()) {
+    	if(checkValidFields()) {													//checks all fields are filled
+    		if(aprvChkBox.isSelected()) {											//checks verification checkbox
+    			updateFieldsData();													//reads data from fields for customers details update
+    			if(sendUpdates()) {													//handles send to server
     				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
     				this.adc.getCustomerMenu().enterToAccount(event);				//presents the previous window
     				
@@ -118,7 +118,7 @@ public class UpdateAccountConroller implements Initializable{
     				GeneralMessageController.showMessage("Update failed\nplease contact the store for help");
     		}
     		else 
-    			aprvChngsLbl.setVisible(true);
+    			aprvChngsLbl.setVisible(true);										//reveals hidden label
     	}
     	
     	else {
@@ -132,7 +132,7 @@ public class UpdateAccountConroller implements Initializable{
      * @return true if update succeeded or false if update failed
      * @throws InterruptedException
      */
-    public boolean sendUpdates() throws InterruptedException {
+    public boolean sendUpdates() throws InterruptedException {							//changes are verified and if everything is OK it is sent to the server
     	MessageToSend toServer= new MessageToSend(customerEnt,"updateAccount");
 		Client.getClientConnection().setDataFromUI(toServer);
 		Client.getClientConnection().accept();
@@ -153,8 +153,8 @@ public class UpdateAccountConroller implements Initializable{
      * method for updating the current customer details
      * 
      */
-    public void updateFieldsData() {
-    	this.customerEnt.setPhoneNumber(phnNumTxtFld.getText());
+    public void updateFieldsData() {										
+    	this.customerEnt.setPhoneNumber(phnNumTxtFld.getText());			//all changes are saved to the current customer
     	this.customerEnt.setEmailAddress(mailTxtFld.getText());
     	this.customerEnt.setCreditCardNumber(Long.parseLong(crdtCrdTxtFld.getText()));
     	this.customerEnt.setAddress(adrsTxtFld.getText());
@@ -165,8 +165,8 @@ public class UpdateAccountConroller implements Initializable{
      * 
      */
     public void setFields() {
-    	aprvChngsLbl.setVisible(false);
-		phnNumTxtFld.setText(customerEnt.getPhoneNumber());
+    	aprvChngsLbl.setVisible(false);										//hidden label, showed only when customer didnt approve changes
+		phnNumTxtFld.setText(customerEnt.getPhoneNumber());					//other text fields are filled automatically in current details
 		adrsTxtFld.setText(customerEnt.getAddress());
 		crdtCrdTxtFld.setText(Long.toString(customerEnt.getCreditCardNumber()));
 		mailTxtFld.setText(customerEnt.getEmailAddress());
@@ -176,7 +176,7 @@ public class UpdateAccountConroller implements Initializable{
     public void cancelUpdate(ActionEvent event) throws IOException, InterruptedException {
     	
     	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.adc.getCustomerMenu().enterToAccount(event);
+		this.adc.getCustomerMenu().enterToAccount(event);				//load previous window
     }
     
 
