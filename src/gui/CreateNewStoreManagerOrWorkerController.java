@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import client.Client;
 import entities.StoreManagerEntity;
 import entities.StoreWorkerEntity;
+import entities.UserInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,18 +16,29 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-
+/**
+ * this class shows user account
+ * and allows to change user details
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CreateNewStoreManagerOrWorkerController implements Initializable {
 
     @FXML private TextField nmTxt;
     @FXML private TextField idTxt;
     @FXML private TextField emlTxt;
     @FXML private TextField pnumTxt;
-    @FXML private TextField pswrdTxt;
-    @FXML private TextField pswrd2Txt;
+    @FXML private PasswordField pswrdTxt;
+    @FXML private PasswordField pswrd2Txt;
     @FXML private TextField brnchTxt;
     @FXML private Button bckBtn;
     @FXML private Button crtBtn;
@@ -45,8 +57,17 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 		 this.cutc=m;
 	 }
 	
-	public void createNewUser() throws IOException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
+	 
+	 /**
+	  * when create button pressed 
+	  * sets data to the server
+	  * @param event
+	  * @throws IOException
+	 * @throws InterruptedException 
+	  */
+	public void createNewUser(ActionEvent event) throws IOException, InterruptedException {							////////*hide window if neccessary param ActionEvent event -->event(bla bla).hide()
 		if(checkRequiredFields()) 												//check required fields are ok
+		{
 			if(!pswrdTxt.getText().equals(pswrd2Txt.getText())) {				//check matching passwords
 				GeneralMessageController.showMessage("Passwords are not the same\nPlease try again");
 				return;
@@ -60,11 +81,10 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 					sm.setPhoneNumber(pnumTxt.getText());
 					sm.setPassword(pswrdTxt.getText());
 					sm.setUserName(nmTxt.getText());
-					sm.setCustomerID(Long.parseLong(idTxt.getText()));
-					sm.setWorkerid(Integer.parseInt(idTxt.getText()));
-					sm.setUserType(this.antity);
+					sm.setID(Long.parseLong(idTxt.getText()));
+					sm.setUserType("SM");
 					
-					MessageToSend msg=new MessageToSend(sm, "createAccount");			//defining the job for the server
+					MessageToSend msg=new MessageToSend(sm, "createUser");			//defining the job for the server
 					Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 					Client.getClientConnection().accept();								//sending data to server
 				}
@@ -72,30 +92,50 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 				{
 					StoreWorkerEntity sw = new StoreWorkerEntity(Integer.parseInt(idTxt.getText()),Integer.parseInt(brnchTxt.getText()));
 					sw.setBranch(Integer.parseInt(brnchTxt.getText()));
-					sw.setCustomerID(Integer.parseInt(idTxt.getText()));
+					sw.setID(Long.parseLong(idTxt.getText()));
 					sw.setEmailAddress(emlTxt.getText());
 					sw.setPassword(pswrdTxt.getText());
 					sw.setPhoneNumber(pnumTxt.getText());
 					sw.setUserName(nmTxt.getText());
-					sw.setUserType(this.antity);
-					sw.setWorkerid(Integer.parseInt(idTxt.getText()));
+					sw.setUserType("SW");
 					
-					MessageToSend msg=new MessageToSend(sw, "createAccount");			//defining the job for the server
+					MessageToSend msg=new MessageToSend(sw, "createUser");			//defining the job for the server
 					Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 					Client.getClientConnection().accept();								//sending data to server
 				}
 				
+				while(!Client.getClientConnection().getConfirmationFromServer())
+					Thread.sleep(100);
 				
+				Client.getClientConnection().setConfirmationFromServer();
 				
+				if(Client.getClientConnection().getMessageFromServer().getMessage().equals("added")) {
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					 FXMLLoader loader = new FXMLLoader();
+					 Parent root = loader.load(getClass().getResource("/gui/AdministratorMenuBoundary.fxml").openStream());
+					 
+					Stage primaryStage=new Stage();
+					Scene scene=new Scene(root);
+					primaryStage.setTitle("Administrator menu");
+					primaryStage.setScene(scene);
+					primaryStage.show();									//open previous menu
+					GeneralMessageController.showMessage("New user was added succesfully");
+				}
+				else {
+					GeneralMessageController.showMessage("There was a problem, please try again");
+				}
 			}
+			
+		}
 		else {
 			GeneralMessageController.showMessage("Please fill in all the required fields");
-		}
+			}
 		
 	}
 	
 	/**
 	 * when create button pressed
+	 * if all fields are filled in
 	 * check if all required fields are filled in
 	 * @return false if there is empty required field
 	 */

@@ -43,8 +43,13 @@ import entities.CustomerEntity;
 import entities.DeliveryEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
+import entities.ServiceExpertEntity;
 import entities.StoreEntity;
+import entities.StoreManagerEntity;
+import entities.StoreWorkerEntity;
 import entities.SurveyEntity;
+import entities.UserEntity;
+import entities.UserInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -2035,6 +2040,23 @@ public class ProjectServer extends AbstractServer
 			
 		}
 		
+		if(operation.equals("createUser"))					//if create new user
+		{
+			UserInterface user = (UserInterface)messageFromClient;
+			try {
+				this.insertNewUser(user);
+				MessageToSend toClient = new MessageToSend("added", "retval");       
+				client.sendToClient(toClient); 										
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				 ServerMain.serverController.showMessageToUI( e.getMessage());
+				MessageToSend toClient = new MessageToSend("failed","retval");
+				client.sendToClient(toClient);
+			}
+		}
+		
 		
 		if(operation.equals("getAllStores"))				//gets all the stores in the DB
 		{
@@ -2337,7 +2359,7 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
-	  ps.setLong(3, ce.getCustomerID());
+	  ps.setLong(3, ce.getID());
 	  ps.setString(4,ce.getSubscriptionDiscount().toString());
 	  ps.setString(5, ce.getAddress());
 	  ps.setString(6, ce.getEmailAddress());
@@ -2362,8 +2384,65 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 		ServerMain.serverController.showMessageToUI("new customer added to Database");
 
   }
-  
-  
+
+/**
+ * create new user
+ * checks which user to create
+ * @param ue user interface 
+ * @throws SQLException
+ */
+public void insertNewUser(UserInterface ue) throws SQLException {
+	  
+	  try {
+		  con=connectToDB();
+		  if (con != null)
+			{
+				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
+	  }
+	  catch(Exception e) {
+		  e.printStackTrace();
+		  System.out.println("Connection to Database failed");
+		  ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+	  }
+	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts,Email,PhoneNumber,UserId) VALUES (?,?,?,?,?,?,?)");
+	  ps.setString(1, ue.getUserName());
+	  ps.setString(2, ue.getPassword());
+	  ps.setString(3,ue.getUserType());
+	  ps.setString(4, "0");
+	  ps.setString(5, ue.getEmailAddress());
+	  ps.setString(6, ue.getPhoneNumber());
+	  ps.setLong(7, ue.getID());
+	 
+	  ps.executeUpdate();										//add new customer to Database
+	  String g = ue.getUserType();
+	  if(ue.getUserType().equals("SM") || ue.getUserType().equals("SW"))		//create only for store manager or store worker
+	  {
+		  ps=con.prepareStatement("INSERT INTO projectx.storeemployee (WorkerID,BranchID,UserName) VALUES (?,?,?)");
+		  ps.setLong(1,ue.getID());
+		  if(ue.getUserType().equals("SM"))			//check if user is store manager
+		  {
+			  StoreManagerEntity sm =(StoreManagerEntity)ue;
+			  ps.setInt(2,sm.getBranchID());
+		  }
+		  else if(ue.getUserType().equals("SW"))	//check if user is store worker
+		  {
+			  StoreWorkerEntity sw =(StoreWorkerEntity)ue;
+			  ps.setInt(2,sw.getBranchID());
+		  }
+		  ps.setString(3,ue.getUserName());
+		  
+		  ps.executeUpdate();
+	  }
+	  
+	  
+	  System.out.println("new user added to Database");
+	  ServerMain.serverController.showMessageToUI("new user added to Database");
+	  
+
+}
+
   //Class methods ***************************************************
   
 //  /**
