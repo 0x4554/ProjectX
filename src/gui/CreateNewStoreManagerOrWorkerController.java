@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 import client.Client;
 import entities.StoreManagerEntity;
 import entities.StoreWorkerEntity;
-import entities.UserInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

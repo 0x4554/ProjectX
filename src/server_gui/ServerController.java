@@ -1,4 +1,4 @@
-package gui;
+package server_gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -2,7 +2,6 @@ package server;
 
 import gui.GeneralMessageController;
 import gui.LoginController;
-import gui.ServerController;
 import gui.StoreManagerMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import logic.MessageToSend;
+import server_gui.ServerController;
 
 public class ServerMain extends Application {
 
@@ -46,14 +46,14 @@ public class ServerMain extends Application {
 //		  int port = 0; //Port to listen on
 		    
 		   
-		     this.sv = new ProjectServer(port);
+//		     this.sv = new ProjectServer(port);
 		    
 		    try {
 		    	this.primaryStage = primaryStage;	//get the primary Stage
 				FXMLLoader loader = new FXMLLoader();
 
 
-				Parent root = loader.load(getClass().getResource("/gui/ServerBoundary.fxml").openStream());	//load the login window(the login fxml file is in a different package /gui/)
+				Parent root = loader.load(getClass().getResource("/server_gui/ServerBoundary.fxml").openStream());	//load the login window(the login fxml file is in a different package /gui/)
 
 				this.serverController = loader.getController();
 				this.serverController.server=this;
@@ -69,6 +69,8 @@ public class ServerMain extends Application {
 		    {
 		    	e.printStackTrace();
 		    }
+		    this.sv = new ProjectServer(port);
+		    
 		    try 
 		    {
 		      sv.listen(); //Start listening for connections
