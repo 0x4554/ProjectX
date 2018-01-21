@@ -2,9 +2,12 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.ProductEntity;
+import entities.StoreEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import logic.ConnectedClients;
+import logic.MessageToSend;
 
 public class StoreManagerMenuController implements Initializable {
 	private Client clnt;
@@ -30,6 +34,7 @@ public class StoreManagerMenuController implements Initializable {
 	private Button edtPrmsnsBtn;
 	@FXML
 	private Button logOutBtn;
+	private StoreEntity store;
 	
 	
 	/**
@@ -66,18 +71,15 @@ public class StoreManagerMenuController implements Initializable {
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		StoreManagerMenuController mmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		mmc.setConnectionData(this.clnt);
+		StoreManagerMenuController smmc = new StoreManagerMenuController();
+		smmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+	//	smmc.setStore();
 		primaryStage.setTitle("Store manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
 	}
-	
-	private void setConnectionData(Client clnt2) {
-		// TODO Auto-generated method stub
-		this.clnt=clnt2;
-	}
+
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
@@ -92,6 +94,33 @@ public class StoreManagerMenuController implements Initializable {
 			primaryStage.show();
 	}
 	
+	/**
+	 * This method sets the store of the manager
+	 * @param store
+	 * @throws InterruptedException for the sleep 
+	 */
+	public void setStore() 
+	{
+		try {
+		MessageToSend messageToSend = new MessageToSend(Client.getClientConnection().getUsername(), "getSpecificStore");
+		Client.getClientConnection().setDataFromUI(messageToSend);							//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend message = Client.getClientConnection().getMessageFromServer();
+		
+		StoreEntity store = (StoreEntity) message.getMessage();
+
+		this.store= store;				//save the store
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+			LoginController.signalLogOut();
+		}
+	}
+	
 	
 	/**
 	 * This method will be called for moving to the window of generating new report.
@@ -102,8 +131,12 @@ public class StoreManagerMenuController implements Initializable {
 	public void generateReport(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/******ToImplement*****/.fxml").openStream());				//new window to open
+		 Parent root = loader.load(getClass().getResource("/gui/StoreManagerViewReportsBoundary.fxml").openStream());				//new window to open
 		 /*load here needed controller*/
+		 StoreManagerViewReportsConroller s = new StoreManagerViewReportsConroller();
+		 s = loader.getController();
+		 s.setStore(this.store);
+		 s.showStoreDetails();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
@@ -117,13 +150,19 @@ public class StoreManagerMenuController implements Initializable {
 	 * 
 	 * @param event - calling window for hiding it
 	 * @throws IOException
+	 * @throws InterruptedException  for sleep
 	 */
-	public void showCancelations(ActionEvent event) throws IOException {
+	public void showCancelations(ActionEvent event) throws IOException, InterruptedException {
 		
 		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/gui/CancellationRequestsBoundary.fxml").openStream());				//new window to open
+		 StoreManagerCancellationRequestsController s = new StoreManagerCancellationRequestsController();
+		 Parent root = loader.load(getClass().getResource("/gui/CancellationRequestsBoundary.fxml").openStream());	
+		
+		 s = loader.getController();
+		 s.setStore(this.store);
+		 s.showOrders();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
@@ -176,7 +215,7 @@ public class StoreManagerMenuController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
+		setStore();
 	}
 
 }
