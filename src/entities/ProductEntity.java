@@ -16,25 +16,8 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
     private byte[] productImage;
-    private byte[] image1;
 	
-	public ProductEntity()
-	{
-		
-	}
-	public byte[] getProductImage() {
-		return image1;
-	}
-
-	public void setProductImage(byte[] image1) {
-		
-		this.image1 = image1;
-	}
-public void setProductImage(String filePath) throws IOException {
-		
-		File file = new File (filePath);
-		this.image1 = FilesConverter.convertFileToByteArray(file);
-	}
+	
 	/**
 	 * Constructor for the ProductEntity.java class
 	 * @param productID	the product's id
@@ -45,6 +28,10 @@ public void setProductImage(String filePath) throws IOException {
 	 * @param productDominantColor	dominant color
 	 */
 
+	public ProductEntity()
+	{
+		
+	}
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
 			String productDescription, String productDominantColor,byte[]productImage) {
 		super();
@@ -54,26 +41,28 @@ public void setProductImage(String filePath) throws IOException {
 		this.productPrice = productPrice;
 		this.productDescription = productDescription;
 		this.productDominantColor = productDominantColor;
-    	this.image1 = productImage;
+    	this.productImage = productImage;
 	}
 	
-	/*constructor with out the image*/
-	
-	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor) {
-		//super();
-		this.productID = productID;
-		this.productName = productName;
-		this.productType = productType;
-		this.productPrice = productPrice;
-		this.productDescription = productDescription;
-		this.productDominantColor = productDominantColor;
-	}
 	
 	/**
 	 * Getter for the productID
 	 * @return the productID
 	 */
+	
+	public byte[] getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(byte[] image1) {
+		
+		this.productImage = image1;
+	}
+public void setProductImage(String filePath) throws IOException {
+		
+		File file = new File (filePath);
+		this.productImage = FilesConverter.convertFileToByteArray(file);
+	}
 	public Integer getProductID() {
 		return productID;
 	}
@@ -97,21 +86,6 @@ public void setProductImage(String filePath) throws IOException {
 	 */
 	public void setProductName(String productName) {
 		this.productName = productName;
-	}
-	
-	/*public Image getProductImage() {
-		return productImage;
-	}
-
-	public void setProductImage(Image productImage) {
-		this.productImage = productImage;
-	}
-*/
-
-    
-	
-	public void convertImageToByteArray(Image img) {
-		
 	}
 	/**
 	 * Getter for the productType

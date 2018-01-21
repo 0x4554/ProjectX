@@ -520,94 +520,6 @@ public class ProjectServer extends AbstractServer
  * @throws SQLException for the sql query
  * @throws IOException for the files converter
    */
-    private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
-    {
-  	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
-  	 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
-  	 ProductEntity product;
-  	 Blob productImage;
-  	 Statement stmt;
-  	 ResultSet rs;
-  	 try
-  		{
-  			con = connectToDB(); //call method to connect to DB
-  			if (con != null)
-  				System.out.println("Connection to Data Base succeeded");
-  		} catch (SQLException e) //catch exception
-  		{
-  			System.out.println("SQLException: " + e.getMessage());
-  		}
-  	 Double minPrice,maxPrice;
-  	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
-  	 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
-  	 
-  	 String type = "";
-  	 type=requests.get(2); 											//get the product type
-  	 
-  	 String dominantColor ="";
-  	 if(!(requests.size()<4)) 								//if dominant color was chosen
-  	 {
-  		dominantColor = "AND ProductDominentColor = '"+ requests.get(3)+"'";
-  	 }
-  	 stmt=con.createStatement();
-  	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+" AND "+maxPrice+" AND ProductType = '"+type+"'"+dominantColor+"");
-  	 while(rs.next())
-  	 {
-  		 product = new ProductEntity();									//create new product
-  		 product.setProductID(rs.getInt(1));
-  		 product.setProductName(rs.getString(2));
-  		 product.setProductType(rs.getString(3));
-  		 product.setProductPrice(rs.getDouble(4));
-  		 product.setProductDescription(rs.getString(5));
-  		 				//**get the blob for the image from the DB**//
-  		 productImage =con.createBlob();
-  		 productImage = rs.getBlob(6);
-  private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
-  {
-	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
-	 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
-	 ProductEntity product;
-	 Blob productImage;
-	 Statement stmt;
-	 ResultSet rs;
-	 try
-		{
-			con = connectToDB(); //call method to connect to DB
-			if (con != null)
-			{
-				System.out.println("Connection to Data Base succeeded");
-				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
-			}
-		} catch (SQLException e) //catch exception
-		{
-			System.out.println("SQLException: " + e.getMessage());
-			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
-		}
-	 Double minPrice,maxPrice;
-	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
-	 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
-	 
-	 String type = "";
-	 type=requests.get(2); 											//get the product type
-	 
-	 String dominantColor ="";
-	 if(!(requests.size()<4)) 								//if dominant color was chosen
-	 {
-		dominantColor = "AND ProductDominantColor = '"+ requests.get(3)+"'";
-	 }
-	 stmt=con.createStatement();
-	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+" AND "+maxPrice+" AND ProductType = '"+type+"'"+dominantColor+"");
-	 while(rs.next())
-	 {
-		 product = new ProductEntity();									//create new product
-		 product.setProductID(rs.getInt(1));
-		 product.setProductName(rs.getString(2));
-		 product.setProductType(rs.getString(3));
-		 product.setProductPrice(rs.getDouble(4));
-		 product.setProductDescription(rs.getString(5));
-		 				//**get the blob for the image from the DB**//
-		 productImage =con.createBlob();
-		 productImage = rs.getBlob(6);
   private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
   {
 	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
@@ -1219,7 +1131,7 @@ public class ProjectServer extends AbstractServer
 	    ResultSet rs = stmt.executeQuery("SELECT * FROM product WHERE ProductName = '" +product.getProductName()+"'");	//Prepare a statement
 	    if(!(rs.next()))	//If no such ID exists in the DB, Insert the new data
 	    {
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO product (ProductName,ProductType,ProductPrice,ProductDescription,ProductImage,ProductDominentColor) VALUES (?,?,?,?,?,?)");	//prepare a statement
+		    PreparedStatement ps = con.prepareStatement("INSERT INTO product (ProductName,ProductType,ProductPrice,ProductDescription,ProductImage,ProductDominantColor) VALUES (?,?,?,?,?,?)");	//prepare a statement
 		    ps.setString(1, product.getProductName());
 		    ps.setString(2, product.getProductType());
 		    ps.setDouble(3, product.getProductPrice());
@@ -1761,7 +1673,7 @@ public class ProjectServer extends AbstractServer
 	//  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//see if the product exists in the catalog
 	   // if((rs.next()))																						//if such ID exists in the DB, delete .
 	 //   {
-		    PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominentColor=? WHERE ProductName=?");	//prepare a statement
+		    PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? WHERE ProductName=?");	//prepare a statement
 		    ps.setString(1, product.getProductName());
 		    ps.setString(2, product.getProductType());
 		    ps.setDouble(3, product.getProductPrice());
@@ -1811,8 +1723,6 @@ public class ProjectServer extends AbstractServer
 		stmt = con.createStatement();
 		stmt2 = con.createStatement();
 		rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" + details.getOrderID() + "'"); //prepare a statement
-	
-	  Statement stmt;
 	  
 	  try
 	    {
@@ -1829,7 +1739,7 @@ public class ProjectServer extends AbstractServer
 	  
 	  stmt = con.createStatement();
 	  
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" +details.getOrderID()+"'");	//prepare a statement
+	  rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" +details.getOrderID()+"'");	//prepare a statement
 	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
 	    {
 	    	InputStream inStrm=FilesConverter.convertByteArrayToInputStream(details.getFile());

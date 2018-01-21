@@ -30,8 +30,18 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import logic.MessageToSend;
 
+/**
+ * This class handles with add and delete from the catalog requests
+ *AddDeleteCatalogController.java
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ * Project Name gitProjectX
+ */
 public class AddDeleteCatalogController implements Initializable{
 	
+	/*FXML*/
 	@FXML private Label addInstrulbl;
 	@FXML private Label deleteInstrulbl;
 	@FXML private Label warninglbl;
@@ -46,14 +56,24 @@ public class AddDeleteCatalogController implements Initializable{
 	@FXML private ListView<ProductEntity> listProducts;
 	@FXML private ListView<ProductEntity> listCatalog;
 	
-    ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>();
+    ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>(); //Contain's the product entities returned from the data base
 
+    /**
+     * The method clear's the selections in the list view
+     * @param event
+     */
    public void ClearSelections(ActionEvent event)
    {
 	   listCatalog.getSelectionModel().clearSelection();
 	   listProducts.getSelectionModel().clearSelection();
    }
     
+   /**
+    * The method add's product to the catalog
+    * @param event
+    * @throws IOException
+    * @throws InterruptedException
+    */
   public void AddToCatalog(ActionEvent event) throws IOException, InterruptedException {
     	
     	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
