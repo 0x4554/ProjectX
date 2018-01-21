@@ -55,6 +55,7 @@ public class AddDeleteEditProductController implements Initializable {
 	@FXML private Button getDetailsBtn;
 	@FXML private Button UpdateBtn;
 	@FXML private Button clearBtn;
+	@FXML private Button clearSelectionBtn;
 	
 	
 	@FXML private TextField NameTxt;
@@ -80,7 +81,10 @@ public class AddDeleteEditProductController implements Initializable {
 	{
 		
 	}
-	
+	public void ClearSelections(ActionEvent event)
+	   {
+		   list.getSelectionModel().clearSelection();
+	   }
 	
 public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedException
 {
@@ -194,11 +198,12 @@ public void DeleteProduct(ActionEvent event) throws InterruptedException, IOExce
 	{
 		if(DeleteProductFromDB(ProductsToDelete.get(i)).equals("Success"))
 		{
-				GeneralMessageController.showMessage("Product : "+ProductsToDelete.get(i).getProductName()+"was deleted succsessfuly");
+			if(DeleteProductFromCatalogDB(ProductsToDelete.get(i)).equals("Deleted"))
+				GeneralMessageController.showMessage("Product : "+ProductsToDelete.get(i).getProductName()+"\nwas deleted succsessfuly");
 		}
 		else 
 		{
-			GeneralMessageController.showMessage("Product : "+ProductsToDelete.get(i).getProductName()+"was not deleted");
+			   GeneralMessageController.showMessage("Product : "+ProductsToDelete.get(i).getProductName()+"\nwas not deleted");
 		}
 	}
 	ShowAllProduct();
@@ -275,7 +280,7 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 			DescriptionTxt.clear();
 			ImageTxt.clear();
 			ColorTxt.clear();
-			GeneralMessageController.showMessage("Product was added successfully");
+			GeneralMessageController.showMessage("Product :"+product.getProductName()+"  ID:  "+product.getProductID()+"\nwas added successfully");
 			}
 }
 
@@ -289,9 +294,6 @@ public void ClearFields(ActionEvent event)
 	ColorTxt.clear();
 }
 
-
-
-//search for photo in the data base	
 public void searchForPhoto(ActionEvent event) throws IOException{
 		
 		Stage secondaryStage=new Stage();
@@ -307,7 +309,6 @@ public void searchForPhoto(ActionEvent event) throws IOException{
 	    return;
 	    }
 	}
-
 
 public void ShowAllProduct() throws InterruptedException
 {               
@@ -355,7 +356,6 @@ public void ShowAllProduct() throws InterruptedException
 list.setItems(Products);//set the items to the ListView
 }
 
-
 public void back(ActionEvent event) throws IOException
 {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
@@ -367,8 +367,6 @@ public void back(ActionEvent event) throws IOException
 		primaryStage.setScene(scene);
 		primaryStage.show();
 }
-
-
 
 
 
@@ -391,6 +389,19 @@ public String UpdateProductInDB(ProductEntity productToUpdate,ProductEntity oldP
 	return msg;
 }
 
+public String DeleteProductFromCatalogDB(ProductEntity productToDelete) throws InterruptedException
+{
+	   		String msg;
+	   		MessageToSend mts=new MessageToSend(productToDelete,"deleteProductFromCatalog");
+	   		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+	   		Client.getClientConnection().accept();										//sends to server
+	   		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+	   			Thread.sleep(100);
+	   		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+	   		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+	   		 msg = (String)m.getMessage();
+	   		return msg;   
+}
 
 public String addProductsToDB(ProductEntity product) throws InterruptedException, IOException {
 	String msg;	
@@ -406,8 +417,6 @@ public String addProductsToDB(ProductEntity product) throws InterruptedException
 	return msg;
 }	
 
-
-/********************This method works great**************************/
 public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
 {
 	MessageToSend mts=new MessageToSend(null,"getAllProducts");
@@ -421,7 +430,6 @@ public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
 	dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
 	return dataFromServer;
 }
-	
 	
 public String DeleteProductFromDB(ProductEntity productToDelete) throws InterruptedException
 {
@@ -442,7 +450,7 @@ public String DeleteProductFromDB(ProductEntity productToDelete) throws Interrup
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		Type_list.add("Bridal");
-		Type_list.add("Birthday");
+		Type_list.add("Flower Boquet");
 		Type_list.add("Special");
 		typeCmb.setItems(Type_list);
 	}

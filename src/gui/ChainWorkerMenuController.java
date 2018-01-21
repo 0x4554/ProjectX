@@ -3,6 +3,8 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import client.Client;
 import entities.ChainWorkerEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,6 +53,7 @@ public class ChainWorkerMenuController implements Initializable{
 	 */
 	public void back(ActionEvent event) throws IOException
 	{
+		    LoginController.signalAppClose();
 			((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 			FXMLLoader loader = new FXMLLoader();
 			Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
@@ -59,7 +62,10 @@ public class ChainWorkerMenuController implements Initializable{
 			primaryStage.setTitle("Login");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			GeneralMessageController.showMessage("Bye Bye "+Client.getClientConnection().getUsername()+" we hope to see you soon");
+
 	}
+	
 	public void AddDeletEditProduct(ActionEvent event) throws IOException, InterruptedException
 	{
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
@@ -69,7 +75,21 @@ public class ChainWorkerMenuController implements Initializable{
 		edit.ShowAllProduct();
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-		primaryStage.setTitle("Add Product");
+		primaryStage.setTitle("Edit Product's");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	public void AddDeletCatalog(ActionEvent event) throws IOException, InterruptedException
+	{
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/AddDeleteCatalogBoundary.fxml").openStream());
+		AddDeleteCatalogController edit=loader.getController();
+		edit.Show();
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Edit Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
