@@ -2404,6 +2404,7 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
       Date dateobj = new Date();
       
+      
 	  ps.setString(8, df.format(dateobj).toString());
 	  ps.setLong(9, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
