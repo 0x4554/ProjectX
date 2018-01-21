@@ -34,6 +34,13 @@ public class SurveyEntity implements Serializable{
 	private String q5Txt;
 	private String q6Txt;
 	
+	private int[] questionOneAnswers = new int[10];
+	private int[] questionTwoAnswers = new int[10];
+	private int[] questionThreeAnswers = new int[10];
+	private int[] questionFourAnswers = new int[10];
+	private int[] questionFiveAnswers = new int[10];
+	private int[] questionSixAnswers = new int[10];
+	
 	private int q1Rnk;
 	private int q2Rnk;
 	private int q3Rnk;

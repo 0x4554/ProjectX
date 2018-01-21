@@ -29,6 +29,7 @@ import entities.DeliveryEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
+import entities.SurveyEntity;
 import logic.ConnectedClients;
 import logic.FilesConverter;
 import logic.MessageToSend;
@@ -2084,6 +2085,21 @@ public class ProjectServer extends AbstractServer
 //			
 //			sendToAllClients(generalMessage);	//send string back to client
 		}
+		if(operation.equals("getSurvey"))
+		{
+			SurveyEntity survey = getSurvey();
+			messageToSend.setMessage(survey);
+			messageToSend.setOperation("getSurvey");
+			client.sendToClient(messageToSend);
+		}
+		
+		if(operation.equals("updateSurveyQs"))
+		{
+			String result = updateSurveyQuestions((SurveyEntity)messageFromClient);
+			messageToSend.setMessage(result);
+			messageToSend.setOperation("surveyUpdateResult");
+			client.sendToClient(messageToSend);
+		}
 		
 		if(operation.equals("SurveyAnswers")) {
 			String result = this.updateSurveyAnswers((SurveyEntity)messageFromClient);
@@ -2173,6 +2189,69 @@ public class ProjectServer extends AbstractServer
 		
 	}
 	
+  /**
+   * This method updates the questions in the DB
+   * @param survey the new survey
+   * @return success/faild
+ * @throws SQLException for SQL
+   */
+  private String updateSurveyQuestions(SurveyEntity survey) throws SQLException
+  {
+	  Statement stmt;
+	  try {
+			 con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			 ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		 }
+		 catch(Exception e) {
+			 e.printStackTrace();
+			 System.out.println("Connection to Database failed");
+			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		 }
+	  
+	  stmt= con.createStatement();
+	  try {
+	  for(int i=1;i<=6;i++)
+		  stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestion(i)+"' WHERE Questionnum = "+i+"");
+	  }
+	  catch(Exception e)
+	  {
+		 ServerMain.serverController.showMessageToUI("There was a problem updating the questions");
+		  ServerMain.serverController.showMessageToUI(e.getMessage());
+		  e.printStackTrace();
+		  return "faild";
+	  }
+	  return "Updated";
+  }
+  
+  /**
+   * This method get the survey from the DB
+   * @return	the survey
+   * @throws SQLException	for SQL
+   */
+  private SurveyEntity getSurvey() throws SQLException
+  {
+	  Statement stmt;
+	  ResultSet rs;
+	  SurveyEntity survey = new SurveyEntity();
+	  try {
+			 con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			 ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		 }
+		 catch(Exception e) {
+			 e.printStackTrace();
+			 System.out.println("Connection to Database failed");
+			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		 }
+	  stmt = con.createStatement();
+	   rs = stmt.executeQuery("SELECT * FROM projcetx.survey");
+	   while(rs.next())
+	   {
+		   
+	   }
+	  
+  }
 	
     private String updateSurveyAnswers(SurveyEntity surveyAns) throws SQLException {
 	// TODO Auto-generated method stub
@@ -2182,10 +2261,12 @@ public class ProjectServer extends AbstractServer
 	  try {
 		 con=connectToDB();
 		 System.out.println("Connection to Database succeeded");
+		 ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
 	 }
 	 catch(Exception e) {
 		 e.printStackTrace();
 		 System.out.println("Connection to Database failed");
+		 ServerMain.serverController.showMessageToUI("Connection to Database failed");
 	 }
 	 for(int i=1;i<7;i++) {
 			 r=surveyAns.getQuestionRank(i);
