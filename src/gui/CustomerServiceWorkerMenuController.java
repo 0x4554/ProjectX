@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.SurveyEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 
 public class CustomerServiceWorkerMenuController implements Initializable {
 
@@ -21,6 +23,8 @@ public class CustomerServiceWorkerMenuController implements Initializable {
 	private Button cmplntBtn;
 	@FXML
 	private Button lgOutBtn;
+	@FXML
+	private Button updtSrvyBtn;
 
 	/**
 	 * A necessary constructor for the App
@@ -85,7 +89,40 @@ public class CustomerServiceWorkerMenuController implements Initializable {
 		primaryStage.show();
 		
 		GeneralMessageController.showMessage("Logged out");
-
+	}
+	
+	
+	public void updatePressed(ActionEvent event) throws IOException, InterruptedException {
+		
+		int cnt=0;
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/UpdateSurveyBoundary.fxml").openStream());
+		UpdateSurveyController usc = loader.getController();
+		usc.setConnectionData(this);
+		
+		MessageToSend msg=new MessageToSend(null,"getSurveyQs");
+		Client.getClientConnection().setDataFromUI(msg);
+		Client.getClientConnection().accept();
+		
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();
+		
+		String[] questions = (String[])Client.getClientConnection().getMessageFromServer().getMessage();
+		for(String s:questions)
+			if(s==null)
+				cnt++;
+		if(cnt==0)
+			usc.setTextFields(questions);
+		
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("Login");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 
 	@Override
