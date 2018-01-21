@@ -9,10 +9,14 @@ import entities.StoreManagerEntity;
 import entities.StoreWorkerEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import logic.MessageToSend;
 
 public class CreateNewStoreManagerOrWorkerController implements Initializable {
@@ -110,8 +114,14 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 	 */	
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.am.showAdministratorMenu();								
-		return;
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/ChooseUserToCreateBoundary.fxml").openStream());
+		 
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Choose user");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 	
 	@Override

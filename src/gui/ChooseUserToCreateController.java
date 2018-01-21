@@ -46,7 +46,7 @@ public class ChooseUserToCreateController implements Initializable{
 		{
 			ArrayList<String> al = new ArrayList<String>();	
 			al.add("Service Expert");
-			al.add("Service Department");
+			al.add("Customer Servise Worker");
 			al.add("Store Worker");
 			al.add("Store Manager");
 			
@@ -61,25 +61,32 @@ public class ChooseUserToCreateController implements Initializable{
 		 */
 		public void enterOK(ActionEvent event) throws InterruptedException, IOException 
 		{
-			String antity = "";
-			if(prmCmb.getSelectionModel().getSelectedItem().equals("Store Manager") || prmCmb.getSelectionModel().getSelectedItem().equals("Store Worker"))
+			if(!(prmCmb.getSelectionModel().isEmpty()))					//check if permission choose
 			{
-				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-				antity=prmCmb.getSelectionModel().getSelectedItem();
+				String antity = "";
+				if(prmCmb.getSelectionModel().getSelectedItem().equals("Store Manager") || prmCmb.getSelectionModel().getSelectedItem().equals("Store Worker"))
+				{
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					antity=prmCmb.getSelectionModel().getSelectedItem();
 				
-				FXMLLoader loader = new FXMLLoader();
-				Parent root = loader.load(getClass().getResource("/gui/CreateNewStoreManagerOrWorkerBoundary.fxml").openStream());
+					FXMLLoader loader = new FXMLLoader();
+					Parent root = loader.load(getClass().getResource("/gui/CreateNewStoreManagerOrWorkerBoundary.fxml").openStream());
 				
 				
-				CreateNewStoreManagerOrWorkerController cns = loader.getController();
-				Stage primaryStage=new Stage();
-				Scene scene=new Scene(root);
-				cns.setAntity(antity);
-				cns.setConnectionData(this);
+					CreateNewStoreManagerOrWorkerController cns = loader.getController();
+					Stage primaryStage=new Stage();
+					Scene scene=new Scene(root);
+					cns.setAntity(antity);
+					cns.setConnectionData(this);
 				
-				primaryStage.setTitle("Create");
-				primaryStage.setScene(scene);
-				primaryStage.show();
+					primaryStage.setTitle("Create");
+					primaryStage.setScene(scene);
+					primaryStage.show();
+				}
+			}
+			else			
+			{
+				GeneralMessageController.showMessage("Please choose user's premission");
 			}
 				
 		}
@@ -91,8 +98,14 @@ public class ChooseUserToCreateController implements Initializable{
 		 */	
 		public void bckBtnHandler(ActionEvent event) throws IOException {
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.am.showAdministratorMenu();										//open previous menu
-			return;
+			 FXMLLoader loader = new FXMLLoader();
+			 Parent root = loader.load(getClass().getResource("/gui/AdministratorMenuBoundary.fxml").openStream());
+			 
+			Stage primaryStage=new Stage();
+			Scene scene=new Scene(root);
+			primaryStage.setTitle("Administrator menu");
+			primaryStage.setScene(scene);
+			primaryStage.show();
 		}
 		
 	@Override
