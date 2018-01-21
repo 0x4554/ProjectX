@@ -44,13 +44,18 @@ import entities.DeliveryEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
 import entities.StoreEntity;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import logic.ConnectedClients;
 import logic.FilesConverter;
 import logic.MessageToSend;
 import ocsf.server.*;
 import ocsf.*;
 import gui.GeneralMessageController;
+import gui.StoreManagerMenuController;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -95,6 +100,7 @@ public class ProjectServer extends AbstractServer
   {
    System.out.println(username + " logged out");
 	  ConnectedClients.removeConnectedClient(username);
+	ServerMain.serverController.showMessageToUI(username + " logged out");
   }
 
   /**
@@ -113,10 +119,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 	  stmt = con.createStatement();
 	  
@@ -126,6 +136,7 @@ public class ProjectServer extends AbstractServer
 	  catch(Exception e)
 	  {
 		  e.printStackTrace();
+		  ServerMain.serverController.showMessageToUI(e.getMessage());
 		  return retMsg = "faild to handle the complaint.";
 	  }
 	  /// **** compensate the customer ****/////
@@ -152,10 +163,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 	 
 	  stmt = con.createStatement();
@@ -278,10 +293,14 @@ public class ProjectServer extends AbstractServer
 			{
 				con = connectToDB(); //call method to connect to DB
 				if (con != null)
+				{
 					System.out.println("Connection to Data Base succeeded");
+					ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+				}
 			} catch (SQLException e) //catch exception
 			{
 				System.out.println("SQLException: " + e.getMessage());
+				ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 			}
 		  //determine which quarter is asked by the client
 		  if(storeNameQuarter.get(1).equals("1"))
@@ -378,10 +397,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 	  stmt = con.createStatement();
 	  stmt2 = con.createStatement();
@@ -511,10 +534,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 	 Double minPrice,maxPrice;
 	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
@@ -566,10 +593,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 	  stmt = con.createStatement();
 	  
@@ -579,6 +610,7 @@ public class ProjectServer extends AbstractServer
 	  catch(Exception e)
 	  {
 		  e.printStackTrace();
+		  ServerMain.serverController.showMessageToUI( e.getMessage());
 		  return retMsg = "faild to cancel the order.";
 	  }
 	  return retMsg = "Order cancelled";
@@ -611,10 +643,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 	  try {
 	  stmt = con.createStatement();
@@ -636,6 +672,7 @@ public class ProjectServer extends AbstractServer
 	  catch(Exception e)
 	  {
 		  e.printStackTrace();
+		  ServerMain.serverController.showMessageToUI( e.getMessage());
 		  return retMsg="cancel request failed.";
 	  }
 	  
@@ -665,10 +702,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 		stmt = con.createStatement();
 		stmt2 = con.createStatement();
@@ -777,10 +818,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 		stmt = con.createStatement();
 		stmt2 = con.createStatement();
@@ -885,12 +930,16 @@ public class ProjectServer extends AbstractServer
 			con = connectToDB(); //call method to connect to DB
 
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		}
 
 		catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -987,10 +1036,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 			e.printStackTrace();
 		}
 		stmt = con.createStatement();
@@ -1010,6 +1063,7 @@ public class ProjectServer extends AbstractServer
 				returnMessage.add("failed"); 							//state failed to log in
 				returnMessage.add("user is already logged in"); 		//reason for failure
 				System.out.println("connected user tried to login again - blocked");
+				ServerMain.serverController.showMessageToUI( "connected user tried to login again - blocked");
 				return returnMessage;
 			} else if (data[1].equals(rs.getString(2))) 				//if password received matches the data base 
 			{
@@ -1073,14 +1127,19 @@ public class ProjectServer extends AbstractServer
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	      
+	    if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	     
 	    }
-//	    System.out.println("Message received: " + msg + " from " + client);
+	  
 	    try
 	    {//first check if the ID already exists in the DB
 	    stmt = con.createStatement();
@@ -1101,6 +1160,7 @@ public class ProjectServer extends AbstractServer
 	    catch(Exception e)
 	    {
 	    	e.printStackTrace();
+	    	ServerMain.serverController.showMessageToUI(  e.getMessage());
 	    	retval="Something went wrong";
 	    }
 	    return retval;
@@ -1147,13 +1207,19 @@ public class ProjectServer extends AbstractServer
   		 try
  	    {
  	    con = connectToDB();	//call method to connect to DB
- 	      
+ 	   if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
  	    }
  	    catch( SQLException e)	//catch exception
  	    {
  	      System.out.println("SQLException: " + e.getMessage() );
+ 	     ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
  	    }
   		 System.out.println("uploadind file to Data Base");
+  		ServerMain.serverController.showMessageToUI(  "uploadind file to Data Base");
    		stmt=con.createStatement();
 	    ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.complaints WHERE Ordernum = '" +incomingFileName+"'");	//prepare a statement
 	    if((rs.next()))	//if no such ID exists in the DB, Insert the new data
@@ -1180,10 +1246,17 @@ public class ProjectServer extends AbstractServer
   		Statement stmt;
   		
   		try {
-  		con=connectToDB();									//Achieve connection to the data base
+  		con=connectToDB();	
+  		if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
+  		//Achieve connection to the data base
   		}
   		catch(Exception e) {
   			System.out.println("failed connecting to db");	
+  			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
   		}
   		
   		try {
@@ -1197,6 +1270,7 @@ public class ProjectServer extends AbstractServer
   		    
   		}catch(Exception e) {
   			e.printStackTrace();
+  			ServerMain.serverController.showMessageToUI(  e.getMessage());
   		}
   		
   		return is;							//returned value
@@ -1263,10 +1337,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 		stmt = con.createStatement();
 		stmt2=con.createStatement();
@@ -1344,10 +1422,14 @@ public class ProjectServer extends AbstractServer
 		{
 			con = connectToDB(); //call method to connect to DB
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		} catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 		stmt = con.createStatement();
 		ResultSet rs1 = stmt.executeQuery("SELECT BranchID,BranchName,BranchManager FROM projectx.store"); //get all the stores (ID,Name,managerID) in the stores table from the data base
@@ -1420,12 +1502,16 @@ public class ProjectServer extends AbstractServer
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
+	    if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	    }
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.catalog A , projectx.product B WHERE A.ProductID = B.ProductID");	//get all the products in the catalog table from the data base
@@ -1455,12 +1541,16 @@ public class ProjectServer extends AbstractServer
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
+	    if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	    }
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//prepare a statement
@@ -1494,12 +1584,16 @@ public class ProjectServer extends AbstractServer
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
+	    if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		} 
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	    }
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//prepare a statement
@@ -1534,12 +1628,16 @@ public class ProjectServer extends AbstractServer
 			con = connectToDB(); //call method to connect to DB
 
 			if (con != null)
+			{
 				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 		}
 
 		catch (SQLException e) //catch exception
 		{
 			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 		}
 
 		stmt = con.createStatement();
@@ -1583,12 +1681,16 @@ public class ProjectServer extends AbstractServer
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
+	    if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	    }
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT productID FROM projectx.catalog");	//get all the products in the catalog table from the data base
@@ -1613,12 +1715,16 @@ public class ProjectServer extends AbstractServer
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
+	    if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	    }
 	  stmt = con.createStatement();
 	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.product WHERE ProductID ='" +productID+"'");	//query for extracting a prodcut's details
@@ -1668,12 +1774,16 @@ public class ProjectServer extends AbstractServer
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
+	    if (con != null)
+		{
+			System.out.println("Connection to Data Base succeeded");
+			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+		}
 	    }
 	    catch( SQLException e)	//catch exception
 	    {
 	      System.out.println("SQLException: " + e.getMessage() );
+	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	    }
 	  stmt = con.createStatement();
 	  
@@ -1699,6 +1809,7 @@ public class ProjectServer extends AbstractServer
   {
     System.out.println
       ("Server listening for connections on port " + getPort());
+    ServerMain.serverController.showMessageToUI(  "Server listening for connections on port " + getPort());
   }
   
   /**
@@ -1709,6 +1820,7 @@ public class ProjectServer extends AbstractServer
   {
     System.out.println
       ("Server has stopped listening for connections.");
+    ServerMain.serverController.showMessageToUI(  "Server has stopped listening for connections.");
   }
   /**
    * This method handles the message received from the client
@@ -1733,6 +1845,7 @@ public class ProjectServer extends AbstractServer
 		
 		try {
 		System.out.println("<user>"+operation);
+		 ServerMain.serverController.showMessageToUI( "<user>"+operation);
 		
 		if(operation.equals("getCatalog"))
 		{
@@ -1778,6 +1891,8 @@ public class ProjectServer extends AbstractServer
 			}
 			else {
 				System.out.println("Operation failed");
+				 ServerMain.serverController.showMessageToUI( "Operation failed");
+
 				messageToSend.setMessage(null); //set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
@@ -1794,6 +1909,7 @@ public class ProjectServer extends AbstractServer
 			}
 			else {
 				System.out.println("Operation failed");                                    //fail to fulfill the operation
+				 ServerMain.serverController.showMessageToUI( "Operation failed");
 				messageToSend.setMessage(null);                                          //set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
@@ -1832,11 +1948,13 @@ public class ProjectServer extends AbstractServer
 			
 			if(this.addToCatalog(product).equals("Success")) {
 				System.out.println("product added sucessesfuly to the catalog DB");
+				 ServerMain.serverController.showMessageToUI( "product added sucessesfuly to the catalog DB");
 				messageToSend.setMessage("Added"); 		//set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
 			else {
 				System.out.println("Inserting failed");
+				 ServerMain.serverController.showMessageToUI( "Inserting failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
@@ -1849,11 +1967,13 @@ public class ProjectServer extends AbstractServer
 			if(this.deleteProductFromCatalog(product).equals("Success")) {
 				
 				System.out.println("product deleted sucessesfuly from the catalog DB");
+				 ServerMain.serverController.showMessageToUI( "product deleted sucessesfuly from the catalog DB");
 				messageToSend.setMessage("Deleted"); 		//set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
 			else {
 				System.out.println("Deletion failed");
+				 ServerMain.serverController.showMessageToUI( "Deletion failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
@@ -1868,6 +1988,7 @@ public class ProjectServer extends AbstractServer
 			{
 				retval.add("We are sorry,Something went wrong, Please try again later.");
 				e.printStackTrace();
+				 ServerMain.serverController.showMessageToUI( e.getMessage());
 			}
 			messageToSend.setMessage(retval);
 			sendToAllClients(messageToSend);
@@ -1906,6 +2027,7 @@ public class ProjectServer extends AbstractServer
 			}
 			catch(Exception e) {
 				e.printStackTrace();
+				 ServerMain.serverController.showMessageToUI( e.getMessage());
 				MessageToSend toClient = new MessageToSend("failed","retval");
 				client.sendToClient(toClient);
 			}
@@ -1937,6 +2059,7 @@ public class ProjectServer extends AbstractServer
 			if((String)messageFromClient!=null) {
 				this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
 				System.out.println("client "+(String)messageFromClient+" logged out (App closed)");
+				 ServerMain.serverController.showMessageToUI( "client "+(String)messageFromClient+" logged out (App closed)");
 		
 			}
 		}
@@ -1994,6 +2117,7 @@ public class ProjectServer extends AbstractServer
 			{
 				retmsg="We are sorry,Something went wrong, Please try again later.";
 				e.printStackTrace();
+				 ServerMain.serverController.showMessageToUI( e.getMessage());
 			}
 			messageToSend.setMessage(retmsg);
 			sendToAllClients(messageToSend);
@@ -2019,6 +2143,7 @@ public class ProjectServer extends AbstractServer
 			ret =	this.complaint(complaint);
 			if(ret.equals("Success")) {
 				System.out.println("complaint added by customer");
+				 ServerMain.serverController.showMessageToUI("complaint added by customer");
 			//	generalMessage = (String)("Added");
 				messageToSend.setMessage("Success"); 		//set the message for sending back to the client
 				sendToAllClients(messageToSend);
@@ -2026,11 +2151,13 @@ public class ProjectServer extends AbstractServer
 			else if(ret.equals("Complaint was already filed"))
 			{
 				System.out.println("complaint failed");
+				 ServerMain.serverController.showMessageToUI("complaint failed");
 				messageToSend.setMessage("Complaint was already filed");
 				sendToAllClients(messageToSend);
 			}
 			else if(ret.equals("Order does not exist")){
 				System.out.println("failed to add complaint");
+				ServerMain.serverController.showMessageToUI("failed to add complaint");
 			//	generalMessage = (String)("failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
 				sendToAllClients(messageToSend);
@@ -2040,6 +2167,8 @@ public class ProjectServer extends AbstractServer
 		if(operation.equals("downloadFile")) {
 			
 			System.out.println("Server downloading file sent from client");
+			ServerMain.serverController.showMessageToUI("Server downloading file sent from client");
+
 			String filePath=(String)messageToSend.getMessage();
 			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
 			
@@ -2049,6 +2178,8 @@ public class ProjectServer extends AbstractServer
 		
 		catch(Exception ex) {
 			ex.printStackTrace();
+			ServerMain.serverController.showMessageToUI(ex.getMessage());
+
 			}
 		
 	
@@ -2064,11 +2195,16 @@ public class ProjectServer extends AbstractServer
 	  
 	  try {
 		 con=connectToDB();
-		 System.out.println("Connection to Database succeeded");
+		 if (con != null)
+			{
+				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 	 }
 	 catch(Exception e) {
 		 e.printStackTrace();
 		 System.out.println("Connection to Database failed");
+		 ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	 }
 	 stmnt=con.createStatement();
 	 try {
@@ -2081,11 +2217,15 @@ public class ProjectServer extends AbstractServer
 		 
 		 e.printStackTrace();
 		 System.out.println("Account update of customer "+ customer.getUserName() +" failed");
+			ServerMain.serverController.showMessageToUI("Account update of customer "+ customer.getUserName() +" failed");
+
 		
 		return "updateFailed";
 	 }
 
 		System.out.println("Account of customer "+ customer.getUserName() +" updated succesfully");
+		ServerMain.serverController.showMessageToUI("Account of customer "+ customer.getUserName() +" updated succesfully");
+
 	 return "accountUpdated";
 
 }
@@ -2094,11 +2234,16 @@ private CustomerEntity getCustomerDetails(String custName) throws SQLException {
 	// TODO Auto-generated method stub
 	  try {
 		  con=connectToDB();
-		  System.out.println("Connection to Database succeeded");
+		  if (con != null)
+			{
+				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 	  }
 	  catch(Exception e) {
 		  e.printStackTrace();
 		  System.out.println("Connection to Database failed");
+		  ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	  }
 	  
 	  Statement s=con.createStatement();
@@ -2114,11 +2259,15 @@ private CustomerEntity getCustomerDetails(String custName) throws SQLException {
 		  ce.setCreditCardNumber(Long.parseLong(rs.getString(9)));
 		 
 	      System.out.println("customer was pulled from database");
+			ServerMain.serverController.showMessageToUI("customer was pulled from database");
+
 	      return ce;
 	  }
 	  
 	  else {
-		  System.out.println("failed to fine customer "+custName);
+		  System.out.println("failed to find customer "+custName);
+			ServerMain.serverController.showMessageToUI("failed to find customer "+custName);
+
 	  }
 	  
 	return null;
@@ -2128,11 +2277,16 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  
 	  try {
 		  con=connectToDB();
-		  System.out.println("Connection to Database succeeded");
+		  if (con != null)
+			{
+				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
 	  }
 	  catch(Exception e) {
 		  e.printStackTrace();
 		  System.out.println("Connection to Database failed");
+		  ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	  }
 	  
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
@@ -2160,42 +2314,44 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  ps.executeUpdate();
 	  
 	  System.out.println("new customer added to Database");
+		ServerMain.serverController.showMessageToUI("new customer added to Database");
+
   }
   
   
   //Class methods ***************************************************
   
-  /**
-   * This method is responsible for the creation of 
-   * the server instance (there is no UI in this phase).
-   *
-   * @param args[0] The port number to listen on.  Defaults to 5555 
-   *          if no argument is entered.
-   */
-	 public static void main(String[] args) 
-  {
-    int port = 0; //Port to listen on
-    
-    try
-    {
-      port = Integer.parseInt(args[0]); //Get port from command line
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-	
-    ProjectServer sv = new ProjectServer(port);
-    
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println("ERROR - Could not listen for clients!");
-    }
-  }			
+//  /**
+//   * This method is responsible for the creation of 
+//   * the server instance (there is no UI in this phase).
+//   *
+//   * @param args[0] The port number to listen on.  Defaults to 5555 
+//   *          if no argument is entered.
+//   */
+//	 public static void main(String[] args) 
+//  {
+//    int port = 0; //Port to listen on
+//    
+//    try
+//    {
+//      port = Integer.parseInt(args[0]); //Get port from command line
+//    }
+//    catch(Throwable t)
+//    {
+//      port = DEFAULT_PORT; //Set port to 5555
+//    }
+//	
+//    ProjectServer sv = new ProjectServer(port);
+//    
+//    try 
+//    {
+//      sv.listen(); //Start listening for connections
+//    } 
+//    catch (Exception ex) 
+//    {
+//      System.out.println("ERROR - Could not listen for clients!");
+//    }
+//  }			
 
 
 }

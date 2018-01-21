@@ -10,11 +10,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import entities.StoreEntity;
+import gui.GeneralMessageController;
 import gui.MainBoundary;
+import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
+import logic.MainLaunch;
 import logic.MessageToSend;
 //import common.*;
 import ocsf.client.AbstractClient;

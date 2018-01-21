@@ -73,7 +73,7 @@ public class StoreManagerMenuController implements Initializable {
 		Scene scene=new Scene(root);
 		StoreManagerMenuController smmc = new StoreManagerMenuController();
 		smmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-		smmc.setStore();
+	//	smmc.setStore();
 		primaryStage.setTitle("Store manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -215,7 +215,7 @@ public class StoreManagerMenuController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
+		setStore();
 	}
 
 }
