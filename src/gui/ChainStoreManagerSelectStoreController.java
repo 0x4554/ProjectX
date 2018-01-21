@@ -116,15 +116,8 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 
 		this.storeLstVw.addEventHandler(MouseEvent.MOUSE_CLICKED, chooseStoreMouseEvent);
 		Visible(false);
-
-		//		this.storeNames = new ArrayList<String>();		//an arrayList of the store names
-		//		this.listOfStoresEntities = new HashMap<String,StoreEntity>();		//a hashMap to hold the stores 
-		//
-		//		for(StoreEntity store : listOfStoresFromDB)
-		//		{
-		//			this.listOfStoresEntities.put(store.getBranchName(), store);		//add the store to the storeEntity list
-		//			storeNames.add(store.getBranchName());		//add the store name to the list of names
-		//		}
+		this.cstStsfctnChckBx.setVisible(true);
+		this.gnrtRprtBtn.setVisible(true);
 	}
 
 	/**
@@ -181,8 +174,6 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 					}
 				}
 
-				//	showComplaintDetails(order.getOrderID());
-
 				root.getChildren().add(BranchName);
 				BranchName.setExpanded(true); //set the tree expanded by default
 				Visible(true);
@@ -200,69 +191,73 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	private void Visible(boolean val)
 	{
 		this.qtrRvnChkBx.setVisible(val);
-		this.cstStsfctnChckBx.setVisible(val);
 		this.OrdrRprtChckBx.setVisible(val);
 		this.qtrlyCmplntChckBx.setVisible(val);
 		this.cmplntQrtrCmb.setVisible(val);
 		this.rvnQrtrCmb.setVisible(val);
-		this.gnrtRprtBtn.setVisible(val);
+		
 	}
 
 	/**
 	 * This method generates the asked reports
-	 * @param event	pressed generate reports
+	 * 
+	 * @param event
+	 *            pressed generate reports
 	 * @throws IOException
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public void generateReports(ActionEvent event) throws IOException, InterruptedException {
-		if(!this.qtrRvnChkBx.isSelected() && !this.cstStsfctnChckBx.isSelected() && !this.OrdrRprtChckBx.isSelected() && !this.qtrlyCmplntChckBx.isSelected())		//check if no report was chosen
+		if (!this.qtrRvnChkBx.isSelected() && !this.cstStsfctnChckBx.isSelected() && !this.OrdrRprtChckBx.isSelected() && !this.qtrlyCmplntChckBx.isSelected()) //check if no report was chosen
 		{
 			GeneralMessageController.showMessage("No report was chosen");
 			return;
 		}
-		for (StoreEntity store : listOfStoresFromDB)		//get the selected store
+		if (!this.storeLstVw.getSelectionModel().isEmpty())
 		{
-			if (this.storeLstVw.getSelectionModel().getSelectedItem().substring(13).equals(store.getBranchName())) //check which order was selected
-				this.selectedStore = store;
-		}
-		
-		if (this.qtrRvnChkBx.isSelected())			//if selected a quarterly revenue report
-		{
-			if (this.rvnQrtrCmb.getSelectionModel().isEmpty())		//if didn't select a quarter
+			for (StoreEntity store : listOfStoresFromDB) //get the selected store
 			{
-				GeneralMessageController.showMessage("For a quarterly revenue report, must choose a quarter");
-				return;
+				if (this.storeLstVw.getSelectionModel().getSelectedItem().substring(13).equals(store.getBranchName())) //check which order was selected
+					this.selectedStore = store;
 			}
-			else
+
+			if (this.qtrRvnChkBx.isSelected()) //if selected a quarterly revenue report
 			{
-				quarterlyRevenueReport();		//call method for revenue report
+				if (this.rvnQrtrCmb.getSelectionModel().isEmpty()) //if didn't select a quarter
+				{
+					GeneralMessageController.showMessage("For a quarterly revenue report, must choose a quarter");
+					return;
+				} else
+				{
+					quarterlyRevenueReport(); //call method for revenue report
+				}
 			}
-		}
-		
-		if(this.qtrlyCmplntChckBx.isSelected())						//if selected a quarterly complaint report
-		{
-			if (this.cmplntQrtrCmb.getSelectionModel().isEmpty())		//if didn't select a quarter
+
+			if (this.qtrlyCmplntChckBx.isSelected()) //if selected a quarterly complaint report
 			{
-				GeneralMessageController.showMessage("For a quarterly Complaint report, must choose a quarter");
-				return;
+				if (this.cmplntQrtrCmb.getSelectionModel().isEmpty()) //if didn't select a quarter
+				{
+					GeneralMessageController.showMessage("For a quarterly Complaint report, must choose a quarter");
+					return;
+				} else
+				{
+					quarterlyComplaintsReport(); //call method for complaint report
+				}
 			}
-			else
+
+			//the Orders report//
+			if (this.OrdrRprtChckBx.isSelected())
 			{
-			quarterlyComplaintsReport();			//call method for complaint report
+				OrderReport(); //call merthod for order report
 			}
-		}
-		
-									//the Orders report//
-		if (this.OrdrRprtChckBx.isSelected())
-		{
-			OrderReport();							//call merthod for order report
-		}
-		
-											//The survey report//
+
+		} //The survey report//
 		if (this.cstStsfctnChckBx.isSelected())
 		{
-			satisfactionReport(); 						//method for satisfactin report
+			satisfactionReport(); //method for satisfactin report
 		}
+		this.qtrRvnChkBx.setSelected(false);
+		this.OrdrRprtChckBx.setSelected(false);
+		this.qtrlyCmplntChckBx.setSelected(false);
 	}
 	
 	/**
@@ -369,23 +364,23 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	private void satisfactionReport() throws InterruptedException, IOException
 	{
 		// **** get  survey from DB for the selected quarter ***//
-//		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
-//		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
-//		Client.getClientConnection().accept();
-//		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
-//			Thread.sleep(100);
-//		Client.getClientConnection().setConfirmationFromServer(); //reset to false
-//		messageToSend = Client.getClientConnection().getMessageFromServer();
-//		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
+		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
+		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
+		Client.getClientConnection().accept();
+		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer(); //reset to false
+		messageToSend = Client.getClientConnection().getMessageFromServer();
+		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
 
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerSatisfactionReportBoundary.fxml").openStream());
 		ChainStoreManagerSatisfactionReportController c = new ChainStoreManagerSatisfactionReportController();
 		c = loader.getController();
-		c.showOrders(null);
+		c.showOrders(this.survey);
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-		primaryStage.setTitle("Satisfactory report for " + this.selectedStore.getBranchName());
+		primaryStage.setTitle("Satisfactory report");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 

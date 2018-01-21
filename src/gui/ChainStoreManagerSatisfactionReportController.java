@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import entities.OrderEntity;
 import entities.ProductEntity;
 import entities.SurveyEntity;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +17,20 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Region;
 
+/**
+ * This class is used for the satisfaction report
+ * ChainStoreManagerSatisfactionReportController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ChainStoreManagerSatisfactionReportController implements Initializable {
 
 	 @FXML
@@ -28,55 +42,36 @@ public class ChainStoreManagerSatisfactionReportController implements Initializa
 
 	   private ObservableList<String> list;
 	    /**
-	     * This method shows the table of orders
+	     * This method shows the chart of the survey result
 	     * @param orders
 	     */
 	    public void showOrders(SurveyEntity survey) {
-	    	
-	    	int a1=0,a2=0,a3=0,a4,a5,a6,a7,a8,a9,a10;
 	    	this.chart.setTitle("Survey results");
+	    	this.list = FXCollections.observableArrayList();
 	    	ArrayList<XYChart.Series<String, String>> dataSeries = new ArrayList<XYChart.Series<String, String>>(10);
-	       // XYChart.Series<String,String>[] dataSeries = new XYChart<String, String>();
-//	        for(XYChart.Series d : dataSeries)
-//	        	d= new XYChart.Series();
 	    	for(int i=0 ; i<10;i++)
 	    	{
-	    		dataSeries.add(new XYChart.Series()) ;
+	    		dataSeries.add(new XYChart.Series()) ;			//new char series
 	    	}
 	    	
 	    	
 	        for(int i=0;i<10;i++)
-	        	dataSeries.get(i).setName(Integer.toString(i+1));
+	        	dataSeries.get(i).setName("Ans. "+Integer.toString(i+1));			//name of each bar
 
-	      
-	        
-//	        for(OrderEntity order : orders)
-//	        {
-//	        	for(ProductEntity product : order.getProductsInOrder())
-//	        	{
-//	        		if(product.getProductType().equals("flower"))
-//	        			flower++;
-//	        		else if (product.getProductType().equals("bridal"))
-//	        			bridal++;
-//	        		else if (product.getProductType().equals("birthDay"))
-//	        			birthDay++;
-//	        	}
-//	        	
-//	        }
 	        for(int i=0;i<10;i++)
 	        {
-	        dataSeries.get(i).getData().add(new XYChart.Data("Q1", 4));
-	        dataSeries.get(i).getData().add(new XYChart.Data("Q2"  , 3));
-	        dataSeries.get(i).getData().add(new XYChart.Data("Q3"  , 1));
-	        dataSeries.get(i).getData().add(new XYChart.Data("Q4"  , 0));
-	        dataSeries.get(i).getData().add(new XYChart.Data("Q5"  , 8));
-	        dataSeries.get(i).getData().add(new XYChart.Data("Q6"  , 15));
+	        dataSeries.get(i).getData().add(new XYChart.Data("Q1", survey.getTotalRanks(1, i+1)));
+	        dataSeries.get(i).getData().add(new XYChart.Data("Q2"  , survey.getTotalRanks(2, i+1)));
+	        dataSeries.get(i).getData().add(new XYChart.Data("Q3"  , survey.getTotalRanks(3, i+1)));
+	        dataSeries.get(i).getData().add(new XYChart.Data("Q4"  , survey.getTotalRanks(4, i+1)));
+	        dataSeries.get(i).getData().add(new XYChart.Data("Q5"  , survey.getTotalRanks(5, i+1)));
+	        dataSeries.get(i).getData().add(new XYChart.Data("Q6"  , survey.getTotalRanks(6, i+1)));
 	        chart.getData().add(dataSeries.get(i));
 	        }
-//	        chart.getData().add(dataSeries[i]);
 	        
 	        ArrayList<String> questions = new ArrayList<String>();
-	        ///get the questions/////////////////////////////
+	        for(int i=1;i<=6;i++)
+	        	questions.add("Question No. "+i+" : "+survey.getQuestionText(i));
 	        list.setAll(questions);
 	        this.QLstVw.setItems(list);
 	        

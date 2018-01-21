@@ -2286,18 +2286,19 @@ public class ProjectServer extends AbstractServer
 			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
 		 }
 	  stmt = con.createStatement();
-	   rs = stmt.executeQuery("SELECT * FROM projcetx.survey");
-	   if(rs.next()) {
-		   survey = new SurveyEntity();
+	   rs = stmt.executeQuery("SELECT * FROM projectx.survey");
+	   survey = new SurveyEntity();
+	  
+		  
 		   while(rs.next())
 	   		{
 		   		survey.setQuestionText(Integer.parseInt(rs.getString(1)), rs.getString(2));
-		   		for(int i=1;i<=10;i++) {
+		   		for(int i=3;i<=12;i++) {
 		   			rank=rs.getInt(i);
 		   			survey.setTotalRanks(Integer.parseInt(rs.getString(1)), i, rank);
 		   			}
 	   		}
-	   }
+	   
 	  return survey;
   }
 	
