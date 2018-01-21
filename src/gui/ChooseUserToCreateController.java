@@ -17,7 +17,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
-
+/**
+ * this class shows user account
+ * and allows to change user details
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ChooseUserToCreateController implements Initializable{
 
 	@FXML private ComboBox<String> prmCmb;
@@ -74,6 +84,24 @@ public class ChooseUserToCreateController implements Initializable{
 				
 				
 					CreateNewStoreManagerOrWorkerController cns = loader.getController();
+					Stage primaryStage=new Stage();
+					Scene scene=new Scene(root);
+					cns.setAntity(antity);
+					cns.setConnectionData(this);
+				
+					primaryStage.setTitle("Create");
+					primaryStage.setScene(scene);
+					primaryStage.show();
+				}
+				else
+				{
+					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					antity=prmCmb.getSelectionModel().getSelectedItem();
+				
+					FXMLLoader loader = new FXMLLoader();
+					Parent root = loader.load(getClass().getResource("/gui/CreateNewServiceExpertOrWorkerBoundary.fxml").openStream());
+				
+					CreateNewServiceExpertOrWorkerController cns = loader.getController();
 					Stage primaryStage=new Stage();
 					Scene scene=new Scene(root);
 					cns.setAntity(antity);
