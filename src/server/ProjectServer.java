@@ -1583,6 +1583,40 @@ public class ProjectServer extends AbstractServer
 	  }
 	  return AllProducts;
   }
+  
+  /**The method returns all the users from the data base table
+   * Array list with user name and type
+   * @return
+   * @throws SQLException
+   * @throws IOException
+   * @throws ClassNotFoundException
+   */
+  public ArrayList<String> getAllUsersFromDB() throws SQLException, IOException, ClassNotFoundException
+  {
+	  ArrayList<String> AllUsers=new ArrayList<String>();
+	  Statement stmt;
+	  Blob b = con.createBlob();							//Object to contain the data from the data base
+	  InputStream is = null;
+	  try
+	    {
+	    con = connectToDB();	//call method to connect to DB
+	    if(con!=null)
+	    System.out.println("Connection to Data Base succeeded");  
+	    }
+	    catch( SQLException e)	//catch exception
+	    {
+	      System.out.println("SQLException: " + e.getMessage() );
+	    }
+	  stmt = con.createStatement();
+	  ResultSet rs = stmt.executeQuery("SELECT Username,UserType FROM projectx.user");	//get all the users in the user table from the data base
+	  while(rs.next())
+	  {
+		  AllUsers.add(rs.getString(1)+"~"+rs.getString(2));
+		  /*AllUsers.add(rs.getString(1));
+		  AllUsers.add(rs.getString(2));*/
+	  }
+	  return AllUsers;
+  }
   /**
    *This method  Insert's product to catalog
    * @param prd the product we want to add to the catalog
@@ -1909,6 +1943,14 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(listOfProducts);		//set the message for sending back to the client
 			sendToAllClients(messageToSend);
 			
+		}
+		
+		if(operation.equals("getAllUsers"))
+		{
+			ArrayList<String> listOfUsers = new ArrayList<String>();			//an array list that holds all the users in the catalog
+			listOfUsers=getAllUsersFromDB();
+			messageToSend.setMessage(listOfUsers);
+			sendToAllClients(messageToSend);
 		}
 		
 		if(operation.equals("getUserDetails")) {
