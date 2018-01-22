@@ -4,10 +4,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="176.0" prefWidth="283.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GeneralMessageController">
+<AnchorPane prefHeight="217.0" prefWidth="337.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GeneralMessageController">
    <children>
       <AnchorPane layoutX="-118.0" layoutY="-302.0" prefHeight="200.0" prefWidth="200.0" />
       <Label fx:id="generaMsglLabel" layoutX="38.0" layoutY="42.0" text="Label" />
-      <Button fx:id="generalMsgButton" layoutX="116.0" layoutY="121.0" mnemonicParsing="false" onAction="#hideGeneralMessage" text="OK" />
+      <Button fx:id="generalMsgButton" layoutX="148.0" layoutY="141.0" mnemonicParsing="false" onAction="#hideGeneralMessage" text="OK" />
    </children>
 </AnchorPane>

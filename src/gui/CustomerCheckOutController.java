@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import client.Client;
 import entities.DeliveryEntity;
@@ -37,6 +38,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import logic.MessageToSend;
+import logic.TimeCalculation;
 
 public class CustomerCheckOutController implements Initializable {
 
@@ -199,7 +201,14 @@ public class CustomerCheckOutController implements Initializable {
 			return;
 		}
 		
-		setTimeAndDateOfOrder();		//call method to set time and date		
+		setTimeAndDateOfOrder();		//call method to set time and date	
+	    if(this.newOrder.getReceivingTimestamp().getTime()  - System.currentTimeMillis()  < 0)		//check if picked a date earlier than Now
+	    {
+	    	GeneralMessageController.showMessage("Picked time earlier than the current time");
+	    	return;
+	    }
+	    
+	    
 		
 		if(this.dlvrCkBx.isSelected())		// if selected delivery
 		{
@@ -243,7 +252,13 @@ public class CustomerCheckOutController implements Initializable {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
 		showCustomerMenu();
-		GeneralMessageController.showMessage(dataFromServer.get(0));
+		
+		if(TimeUnit.MILLISECONDS.toHours(this.newOrder.getReceivingTimestamp().getTime() - System.currentTimeMillis()) < 3)				//if chose a time of less than three hours
+	    {
+	    	GeneralMessageController.showMessage(dataFromServer.get(0)+"\nThe order will be placed immediately,\n and will be delivered within three hours.");
+	    }
+		else
+			GeneralMessageController.showMessage(dataFromServer.get(0));
 		
 		
 	}
@@ -269,8 +284,9 @@ public class CustomerCheckOutController implements Initializable {
 	/**
 	 * This method sets the time and date of the order for receiving the order
 	 * @throws ParseException
+	 * @throws IOException for the load message
 	 */
-	private void setTimeAndDateOfOrder() throws ParseException
+	private void setTimeAndDateOfOrder() throws ParseException, IOException
 	{
 		LocalDate date =this.datePicker.getValue();		//get the localDate from the date picker
 		Date receivingDate = java.sql.Date.valueOf(date);
