@@ -110,7 +110,7 @@ public class CustomerMenuController implements Initializable{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	
+
 	//*Open order menu from customer main menu*//
 	public void enterToOrder(ActionEvent event) throws IOException {
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -126,22 +126,24 @@ public class CustomerMenuController implements Initializable{
 	}			
 	
 	/**
-	 * 
-	 * @param event
+	 * The method open's the Catalog Window
+	 * @param event on clicking "View Catalog" Button
 	 * @throws IOException
+	 * @throws InterruptedException
 	 */
-	//Enter to catalog
-	public void enterCatalog(ActionEvent event) throws IOException {
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		CatalogController catlg=new CatalogController();
-		catlg.setConnectionData(this);
-		try {
-			//catlg.addProductsToDB(null);
-			catlg.showProductcatalog();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void enterCatalog(ActionEvent event) throws IOException, InterruptedException
+	{
+	((Node) event.getSource()).getScene().getWindow().hide(); //Hide Current window
+	FXMLLoader loader = new FXMLLoader();
+	Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
+	CatalogController catl=loader.getController();
+	catl.showCatalog();                                              //Call the method show catalog
+	Stage primaryStage=new Stage();                       //Set Stage->Show()
+	Scene scene=new Scene(pRoot);
+	primaryStage.setTitle("Zer-Li Catalog");
+	primaryStage.setScene(scene);
+	primaryStage.show();
+	
 	}
 	    //*Open  Account details  menu from customer main menu*//
 		public void enterToAccount(ActionEvent event) throws IOException, InterruptedException {

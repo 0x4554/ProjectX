@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="733.0" prefWidth="645.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CatalogController">
+   <children>
+      <Label layoutX="41.0" layoutY="27.0" text="Zer-Li Catalog">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <ListView fx:id="listV" layoutX="41.0" layoutY="78.0" prefHeight="577.0" prefWidth="563.0" />
+      <Button fx:id="backC" layoutX="43.0" layoutY="675.0" mnemonicParsing="false" onAction="#bckToMainMenu" text="Back" />
+   </children>
+</Pane>

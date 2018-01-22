@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="691.0" prefWidth="1124.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddDeleteEditProductController">
+   <children>
+      <Label layoutX="486.0" layoutY="24.0" text="Edit Products ">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <ListView fx:id="list" layoutX="50.0" layoutY="88.0" prefHeight="516.0" prefWidth="457.0" />
+      <Button fx:id="BackBtn" layoutX="50.0" layoutY="623.0" mnemonicParsing="false" onAction="#back" text="Back" />
+      <Label layoutX="50.0" layoutY="42.0" text="Products List">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="543.0" layoutY="88.0" text="Product ID" />
+      <Label fx:id="Namelbl" layoutX="544.0" layoutY="149.0" text="Product Name *" />
+      <Label fx:id="Typelbl" layoutX="544.0" layoutY="205.0" text="Product Type *" />
+      <Label fx:id="Pricelbl" layoutX="544.0" layoutY="266.0" text="Product Price *" />
+      <Label fx:id="Descriptionbl" layoutX="543.0" layoutY="321.0" text="Product Description" />
+      <Label fx:id="Imagebl" layoutX="543.0" layoutY="380.0" text="Product Image" />
+      <TextField fx:id="IDTxt" editable="false" layoutX="760.0" layoutY="83.0" promptText="Products ID" />
+      <TextField fx:id="NameTxt" layoutX="760.0" layoutY="144.0" promptText="Enter Product Name" />
+      <TextField fx:id="PriceTxt" layoutX="760.0" layoutY="261.0" promptText="Enter Product Price" />
+      <ComboBox fx:id="typeCmb" layoutX="760.0" layoutY="200.0" prefHeight="31.0" prefWidth="186.0" />
+      <TextField fx:id="DescriptionTxt" layoutX="760.0" layoutY="321.0" prefHeight="31.0" prefWidth="186.0" promptText="Enter Product Description" />
+      <TextField fx:id="ImageTxt" layoutX="760.0" layoutY="375.0" prefHeight="31.0" prefWidth="186.0" promptText="Choose Image " />
+      <TextField fx:id="ColorTxt" layoutX="760.0" layoutY="437.0" prefHeight="31.0" prefWidth="186.0" promptText="Enter Product  Dominent Color" />
+      <Label fx:id="Colorlbl" layoutX="543.0" layoutY="442.0" text="Product Dominent Color *" />
+      <Button fx:id="UploudBtn" layoutX="983.0" layoutY="375.0" mnemonicParsing="false" onAction="#searchForPhoto" text="Upload Photo" textFill="#5aae79" />
+      <Button fx:id="addBtn" layoutX="545.0" layoutY="589.0" mnemonicParsing="false" onAction="#AddProduct" text="Add Product" textFill="#55bc6a" />
+      <Button fx:id="deleteBtn" layoutX="674.0" layoutY="589.0" mnemonicParsing="false" onAction="#DeleteProduct" prefHeight="31.0" prefWidth="124.0" text="Delete Product" textFill="#52b97d" />
+      <Button fx:id="UpdateBtn" layoutX="821.0" layoutY="589.0" mnemonicParsing="false" onAction="#UpdateProduct" text="Update Product" textFill="#57bc64" />
+      <Button fx:id="getDetailsBtn" layoutX="973.0" layoutY="589.0" mnemonicParsing="false" onAction="#SetProductDetails" text="Get Product" textFill="#59b26f" />
+      <Button fx:id="clearBtn" layoutX="543.0" layoutY="632.0" mnemonicParsing="false" onAction="#ClearFields" prefHeight="31.0" prefWidth="106.0" text="Clear Fields" textFill="#53bf82" />
+      <Button fx:id="clearSelectionBtn" layoutX="674.0" layoutY="632.0" mnemonicParsing="false" onAction="#ClearSelections" prefHeight="31.0" prefWidth="124.0" text="Clear Selection" textFill="#4db564" />
+      <Label layoutX="542.0" layoutY="484.0" text="Add-select from the list and press &quot;Add&quot; button." textFill="#5aae79" />
+      <Label layoutX="542.0" layoutY="505.0" text="Delete-select from the list and press &quot;Delet&quot; button." textFill="#5aae79" />
+      <Label layoutX="542.0" layoutY="526.0" text="Edit-select the wanted product the press &quot;Get Product&quot; button ," textFill="#5aae79" />
+      <Label layoutX="541.0" layoutY="547.0" text="edit and press &quot;Update Product&quot; button." textFill="#5aae79" />
+   </children>
+</Pane>

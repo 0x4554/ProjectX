@@ -61,33 +61,25 @@ public class OrderFromCatalogController implements Initializable{
 	@FXML
 	private HBox hb;
 	
-    private ArrayList<ProductEntity>productsFromTable;/*The array will contain the Products neede to be inserted to the catalog*/
-    
-    private ArrayList<ProductEntity> productsInOrder;
-    
+    private ArrayList<ProductEntity>productsFromTable;/*The array will contain the Products inserted to the catalog*/
+    private ArrayList<ProductEntity> productsInOrder;/*The array will contain the products in the order*/
     Stage primaryStage=new Stage();
-    
     private OrderEntity newOrder;
     
-    
-    
 	CreateNewOrderController ordCon =new CreateNewOrderController();
-
-
-   /*I added getProductsFromDB_ByID(store id method), i added updatePrice method, i added serial number in the the discount table,
-     *I added discountnumber in the counters table in the DB, i changed the method get product in the server, i have changed this class ,
-     *I added getItemFrom Catalog method in create new order class*/
     
 	/**
-	 * Constructor for the class
+	 * Constructor 
 	 */
 	public OrderFromCatalogController()
 	{
-		List=new ListView<ProductEntity>();
+		List=new ListView<ProductEntity>();/*Initialize the list's*/
 		productsInOrder=new ArrayList<ProductEntity>();
 	}
+	
+	/*************************************************************Method's****************************************/
 	/**
-	 * The method show's the catalog customized to the store that the customer choose to shop
+	 * The method show's the catalog customized to the store that the customer choose to shop from
 	 * @param store is the instance of the store that the customer choose
 	 * @throws InterruptedException
 	 */
@@ -98,54 +90,32 @@ public class OrderFromCatalogController implements Initializable{
 	    Iterator<Integer> itr ;
 	    productsFromTable=new ArrayList<ProductEntity>();
 	    ObservableList<ProductEntity> prod=FXCollections.observableArrayList();
+	    productsFromTable=getCatalog();
 	    newOrder=order;
-	    
+	 
+	   
+	    /*Get Store discounts*/
 	    storeid=order.getStore().getBranchID();
 		HashMap<Integer, Double> discount=new HashMap<Integer,Double>();//Integer->product id-key, Double->product price is the value
-		discount=getDiscounts(storeid);                                     //get the discount for the specific store
-		itr=discount.keySet().iterator();                                         //get the key's from the hash map of discounts
-		
-		ArrayList<Integer> products =new ArrayList<Integer>();//product id's from the Catalog 
-		
-		/*************************************************************************added yesterday**********************************/
-		//ArrayList<ProductEntity> pr=new ArrayList<ProductEntity>();
-		/*****************************************************************************************************************************/
-
-		/*****************************************comma products added pr*******************************/
-		products=getProductsFromDB_ByID();                            //get the product id's from the catalog table in the data base
-		//pr=getProductsFromDB_ByID();
-
-		/*************************************************************************************************************************/
-
-		
-		
-		/*Here we insert  the product's that need to be in the catalog */
-		for(i=0;i<products.size();i++)
-		{
-			/**********************************************************comma did i pr added*******************************/
-			ProductEntity product_temp=new ProductEntity();
-			product_temp=getProduct(products.get(i));
-			if(product_temp!=null)
-			   productsFromTable.add(getProduct(products.get(i)));//get product using product id from the product table
-			//productsFromTable.add(pr.get(i));
-			/**************************************************************************************************************/
-		}		
+		discount=getDiscounts(storeid);                                                                 //get the discount for the specific store
+	
 		i=0;
 		
-		/***************************************************put them in comma******************************************/
+		if(discount!=null) //If there are discounts for this store
+		{
+			itr=discount.keySet().iterator();                                                                             //get the key's from the hash map of discounts
 		/*Update store prices*/
 	    while (itr.hasNext())
 	    {	
 	    	temp_key=(int) itr.next();
-	    		if(temp_key==products.get(i))                                 // if there is a discount for this product then update
+	    		if(temp_key==productsFromTable.get(i).getProductID())                                 // If there is a discount for this product then update
 	    		{
 	    			newPrice=discount.get(temp_key);
 	    			updatePrice(temp_key,newPrice);
 		        }
 	    		i++;
-		}
-		/**********************************************************************************************************************/
-		
+		   }
+		}		
 		
 	    /*******************************************************Build the catalog view**********************************************/
 	    
@@ -168,16 +138,19 @@ public class OrderFromCatalogController implements Initializable{
                         if (product != null) {
                                                 	
                         	Button addToCart =new Button("Add To Cart");
-                      //  	ImageView imgv=new ImageView(product.getProductImage());
                         	
-                        	addToCart.setOnAction(new EventHandler<ActionEvent>() {//set the back button with an action event
+                        	addToCart.setOnAction(new EventHandler<ActionEvent>() {//Set the back button with an action event
                            	 @Override
                            	  public void handle(ActionEvent event) {
                            		 
-               							AddProductToCart(product);
+               							try {
+											AddProductToCart(product);
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
                               }
                            });
-                        	/********************************************added all ***********************************************************/
                         	if(product.getProductImage()!=null)
                         	{
                         		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
@@ -188,8 +161,6 @@ public class OrderFromCatalogController implements Initializable{
                         		addToCart.setMinWidth(130);
                             	vb.getChildren().addAll(v,addToCart);
                                 setGraphic(vb);
-
-                              /*****************************************************************************************************************/
                         	}
                         	else {
                         		setGraphic(addToCart);
@@ -218,15 +189,10 @@ public class OrderFromCatalogController implements Initializable{
 		CreateNewOrderController cnoc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-		
-		/**********************************************************change it**********************************/
-       for(int i=0;i<this.productsInOrder.size();i++)
+       for(int i=0;i<this.productsInOrder.size();i++)//Transfer the products to products in order list
        {
-    	   System.out.println(productsInOrder.get(i).getProductID());
     	   newOrder.setProductsInOrder(productsInOrder.get(i));
        }
-	//	newOrder.setProductsInOrder(productsInOrder);
-		/*****************************************************************************************************/
 		cnoc.setOrderDetails(newOrder);
 		primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
 		primaryStage.setScene(scene);
@@ -234,18 +200,18 @@ public class OrderFromCatalogController implements Initializable{
 	}
 	
 	/**
-	 * This method add a product choose by the customer to the cart
+	 * This method add's a product chosen by the customer to the cart
 	 * @param product
+	 * @throws IOException 
 	 */
-	public void AddProductToCart(ProductEntity product)
+	public void AddProductToCart(ProductEntity product) throws IOException
 	{
 		productsInOrder.add(product);
-		System.out.println("hey its added babe"+product.getProductID());
+		GeneralMessageController.showMessage("Product : "+product.getProductName()+"  ,ID:  "+product.getProductID()+"\nAdded to cart");
 	}
 	
-	/*************************************************************Update Price**********************************************/
 	/**
-	 * This method updates the price of the product                                                                    
+	 * This method updates the price of the product according to the discount's promoted at the store                                                            
 	 * @param key is the product id we pulled from the discount table
 	 * @param price is the new price after sale on the product
 	 */
@@ -263,59 +229,22 @@ public class OrderFromCatalogController implements Initializable{
 		}
 	}
 	
-	/************************************************put this in comma and replaced it ***********************/
-	/**
-	 * This method returns the id of the products in the catalog table
-	 * @return
-	 * @throws InterruptedException
-	 */
-	public ArrayList<Integer> getProductsFromDB_ByID() throws InterruptedException {
-		MessageToSend mts=new MessageToSend(null,"getCatalogByID");
-		ArrayList<Integer> dataFromServer = null;
-		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept();										//sends to server
-		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
-			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
-		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		dataFromServer = (ArrayList<Integer>)m.getMessage();
-		return dataFromServer;
-}
-/*	public ArrayList<ProductEntity> getProductsFromDB_ByID() throws InterruptedException {
-		MessageToSend mts=new MessageToSend(null,"getCatalogByID");
-		ArrayList<ProductEntity> dataFromServer = null;
-		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept();										//sends to server
-		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
-			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
-		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
-		return dataFromServer;
-	}
-	*/
-	/*********************************************************************************************************************/
-	/**
-	 * This method return's the product entity requested by product ID 
-	 * @param productID-the product we want to get from the data base
-	 * @return
-	 * @throws InterruptedException 
-	 */
-	public ProductEntity getProduct(int productID) throws InterruptedException
-	{	
-		ProductEntity p;
-		MessageToSend mts=new MessageToSend(productID,"getProduct");
-		//ArrayList<ProductEntity> dataFromServer = null;
-		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept();										//sends to server
-		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
-			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
-		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		p = (ProductEntity)m.getMessage();
-		//p=dataFromServer.get(0);
-		return p;
-	}
+	/************************************************Data Base***********************************************************/
+	
+	 public ArrayList<ProductEntity> getCatalog() throws InterruptedException
+	   {
+				MessageToSend mts=new MessageToSend(null,"getCatalog");
+				ArrayList<ProductEntity> dataFromServer = null;
+				Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+				Client.getClientConnection().accept();										//sends to server
+				while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+					Thread.sleep(100);
+				Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+				MessageToSend m = Client.getClientConnection().getMessageFromServer();
+				dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
+				return dataFromServer;
+	   }
+
 	
 	/**
 	 * This method return the relevant discounts for the specific store in order to attach the sale's to the catalog
