@@ -79,7 +79,6 @@ public class CreateNewServiceExpertOrWorkerController implements Initializable{
 						se.setPhoneNumber(pnumTxt.getText());
 						se.setPassword(pswrd1Txt.getText());
 						se.setUserName(nmTxt.getText());
-						//sm.setWorkerid(Long.parseLong(idTxt.getText()));
 						se.setID(Long.parseLong(idTxt.getText()));
 						se.setUserType("SE");
 						
@@ -96,7 +95,6 @@ public class CreateNewServiceExpertOrWorkerController implements Initializable{
 						csw.setPhoneNumber(pnumTxt.getText());
 						csw.setUserName(nmTxt.getText());
 						csw.setUserType("CSW");
-						//sw.setWorkerid(Integer.parseInt(idTxt.getText()));
 						
 						MessageToSend msg=new MessageToSend(csw, "createUser");			//defining the job for the server
 						Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message

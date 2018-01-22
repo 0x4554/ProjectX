@@ -7,9 +7,18 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
+import client.Client;
+import entities.ComplaintEntity;
+import entities.CustomerEntity;
+import entities.CustomerServiceWorkerEntity;
+import entities.OrderEntity;
+import entities.ServiceExpertEntity;
+import entities.StoreManagerEntity;
+import entities.StoreWorkerEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,7 +28,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
@@ -37,14 +49,15 @@ import logic.MessageToSend;
 
 public class EditUsersPremissionController implements Initializable{
 	
-	@FXML private Label usrLbl;
-	@FXML private TextField usrFld;
 	@FXML private Button bckBtn;
 	@FXML private Button okBtn;
 	@FXML private ComboBox<String> prmsCmb;
+	@FXML private ListView<String> userLstVw;
 	
-	private StoreManagerMenuController mmc;
+	private AdministratorMenuController amc;
 	private ObservableList<String> list;
+	private ObservableList<String> users;
+	private ArrayList<String> listOfUsers;
 	
 	/**
 	 * Necessary constructor for the APP
@@ -52,10 +65,38 @@ public class EditUsersPremissionController implements Initializable{
 	public EditUsersPremissionController() {
 	}
 	
-	
-	public void setConnectionData(StoreManagerMenuController m)
+	/**
+	 * shows all the users in database
+	 * @throws InterruptedException
+	 */
+	public void getUsers() throws InterruptedException
 	{
-		this.mmc=m;
+		
+		MessageToSend message = new MessageToSend("", "getAllUsers");
+		Client.getClientConnection().setDataFromUI(message);						//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		listOfUsers = (ArrayList<String>)m.getMessage();
+		
+		this.userLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);		//unable multiple selection
+		
+		this.users = FXCollections.observableArrayList();		//the observable list to enter to the list  view
+		
+		for(String user : listOfUsers)		//build list view to contain all orders
+		{
+			this.users.add("User name: "+user.split("~")[0] + " User type: "+user.split("~")[1]);
+		}
+		
+		this.userLstVw.setItems(this.users);		//set items to the list
+
+	}
+	
+	public void setConnectionData(AdministratorMenuController m)
+	{
+		this.amc=m;
 	}
 	
 	
@@ -142,7 +183,7 @@ public class EditUsersPremissionController implements Initializable{
 
 
 	/**
-	 * Permissions varieties 
+	 * Permissions varieties in combobox
 	 */
 	private void premissionsComboBox()
 	{
@@ -150,12 +191,55 @@ public class EditUsersPremissionController implements Initializable{
 		al.add("Customer");
 		al.add("Store Worker");
 		al.add("Store Manager");
+		al.add("Customer Service Expert");
+		al.add("Customer Service Worker");
 		
 		list = FXCollections.observableArrayList(al);
 		prmsCmb.setItems(list);
 	}
+	/**
+	 * checks which user was chosen and changes his permission
+	 * @param event ok button pressed
+	 * @throws IOException
+	 */
+	public void editPremission(ActionEvent event) throws IOException
+	{
+		if(checkInsert())
+		{
+			if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer"))
+			{
+				
+			}
+			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Store Worker"))
+			{
+				
+			}
+			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Store Manager"))
+			{
+				
+			}
+			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer Service Expert"))
+			{
+				
+			}
+			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer Service Worker"))
+			{
+				
+			}
+		}
+		else
+			GeneralMessageController.showMessage("Choose user's premission");
+			
+	}
+
 	
-	
+	public boolean checkInsert()
+	{
+		if(prmsCmb.getSelectionModel().isEmpty())
+			return false;
+		else
+			return true;
+	}
 	
 	/**
 	 * when back button pressed
@@ -164,7 +248,7 @@ public class EditUsersPremissionController implements Initializable{
 	 */	
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.mmc.showManagerMenu();										//open previous menu
+		this.amc.showAdministratorMenu();										//open previous menu
 		return;
 	}
 	

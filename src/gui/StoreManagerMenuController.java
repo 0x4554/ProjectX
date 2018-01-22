@@ -30,8 +30,6 @@ public class StoreManagerMenuController implements Initializable {
 	private Button gnrtRprtBtn;
 	@FXML
 	private Button shwCnclBtn;
-	@FXML	
-	private Button edtPrmsnsBtn;
 	@FXML
 	private Button logOutBtn;
 	private StoreEntity store;
@@ -171,25 +169,7 @@ public class StoreManagerMenuController implements Initializable {
 			primaryStage.show();
 	}
 	
-	/**
-	 * This method will be called for moving to the window of changing users permissions.
-	 * 
-	 * @param event - calling window for hiding it
-	 * @throws IOException
-	 */
-	public void usersPermissions(ActionEvent event) throws IOException{
-		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		 FXMLLoader loader = new FXMLLoader();
-		 Parent root = loader.load(getClass().getResource("/gui/EditUsersPremissionBoundary.fxml").openStream());				//new window to open
-		 EditUsersPremissionController eup = loader.getController();
-		 eup.setConnectionData(this);
-		 Stage primaryStage=new Stage();
-			Scene scene=new Scene(root);
-			
-			primaryStage.setTitle("User's premission");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-	}
+	
 	
 	
 	public void logOutManager(ActionEvent event) throws IOException	//when click "Back" return to main menu

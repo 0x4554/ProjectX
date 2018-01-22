@@ -29,9 +29,10 @@ import javafx.stage.Stage;
 
 public class AdministratorMenuController implements Initializable {
 
-	@FXML private Button rprtBtn;
+	@FXML private Button prmtBtn;
     @FXML private Button usrBtn;
     @FXML private Button lgBtn;
+    
     
     private Client clnt;
 	
@@ -67,7 +68,11 @@ public class AdministratorMenuController implements Initializable {
 		this.clnt=clnt2;
 	}
 	
-	
+	/**
+	 * opens new window to choose which user to create
+	 * @param event create new user button pressed
+	 * @throws IOException
+	 */
 	public void enterCreateNewUser(ActionEvent event) throws IOException
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -83,7 +88,27 @@ public class AdministratorMenuController implements Initializable {
 		primaryStage.show();
 	}
 	
-	
+	/**
+	 * This method will be called for moving to the window of changing users permissions.
+	 * 
+	 * @param event - calling window for hiding it
+	 * @throws IOException
+	 * @throws InterruptedException 
+	 */
+	public void usersPermissions(ActionEvent event) throws IOException, InterruptedException{
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		 FXMLLoader loader = new FXMLLoader();
+		 Parent root = loader.load(getClass().getResource("/gui/EditUsersPremissionBoundary.fxml").openStream());				//new window to open
+		 EditUsersPremissionController eup = loader.getController();
+		 eup.setConnectionData(this);
+		 eup.getUsers();
+		 Stage primaryStage=new Stage();
+			Scene scene=new Scene(root);
+			
+			primaryStage.setTitle("User's premission");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -92,7 +117,7 @@ public class AdministratorMenuController implements Initializable {
 	}
 	/**
 	 * when log out button pressed
-	 * @param event
+	 * @param event log out button pressed
 	 * @throws IOException
 	 */
 	public void logOut(ActionEvent event) throws IOException	

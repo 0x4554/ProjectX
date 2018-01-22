@@ -28,8 +28,7 @@ import logic.MessageToSend;
 
 public class StoreWorkerMenuController implements Initializable{
 
-	@FXML private Button cmplnBtn;
-    @FXML private Button cmplnDetBtn;
+
     @FXML private Button ctlgBtn;
     @FXML private Button lgBtn;
     @FXML private Button srvBtn;

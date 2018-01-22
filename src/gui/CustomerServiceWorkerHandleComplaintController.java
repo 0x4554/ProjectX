@@ -70,9 +70,9 @@ public class CustomerServiceWorkerHandleComplaintController implements Initializ
 			return;
 		}
 		
-		if(this.rfndChkBx.isSelected() && this.amntRfdTxtBx.getText().isEmpty())	//check if filled compensation
+		if(this.rfndChkBx.isSelected() && (this.amntRfdTxtBx.getText().isEmpty() || Double.parseDouble(this.amntRfdTxtBx.getText()) <= 0))	//check if filled compensation
 		{
-			GeneralMessageController.showMessage("Enter amount for compensation, or uncheck the check box");
+			GeneralMessageController.showMessage("Enter valid amount for compensation, or uncheck the check box");
 			return;
 		}
 		
