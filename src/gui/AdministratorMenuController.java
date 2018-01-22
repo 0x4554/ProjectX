@@ -92,7 +92,7 @@ public class AdministratorMenuController implements Initializable {
 	}
 	/**
 	 * when log out button pressed
-	 * @param event
+	 * @param event log out button pressed
 	 * @throws IOException
 	 */
 	public void logOut(ActionEvent event) throws IOException	
