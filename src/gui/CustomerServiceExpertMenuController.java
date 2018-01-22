@@ -27,25 +27,29 @@ public class CustomerServiceExpertMenuController implements Initializable {
 	 * A necessary constructor for the App
 	 * @throws IOException 
 	 */
-	public CustomerServiceExpertMenuController() throws IOException {
-			FXMLLoader loader = new FXMLLoader();
-			Parent root = loader.load(getClass().getResource("/gui/CustomerServiceExpertMenuBoundary.fxml").openStream());
-			
-			Stage primaryStage=new Stage();
-			Scene scene=new Scene(root);
-			CustomerServiceExpertMenuController csem = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-			csem.setConnectionData(this.clnt);
-			primaryStage.setTitle("Customer service expert menu");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-	}
+	  public CustomerServiceExpertMenuController() {
+	  }
 	
+	  
+	  /**
+	   * open customer service expert menu
+	   * @throws IOException
+	   */
+	public void showCustomerServiceExpertMenu() throws IOException
+	{
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceExpertMenuBoundary.fxml").openStream());
+		
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		CustomerServiceExpertMenuController csem = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
+		csem.setConnectionData(this.clnt);
+		primaryStage.setTitle("Customer service expert menu");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 	private void setConnectionData(Client clnt2) {
 		this.clnt=clnt2;
-	}
-	
-	public void showCustomerServiceExpertMenu()
-	{
 	}
 	
 	@Override
