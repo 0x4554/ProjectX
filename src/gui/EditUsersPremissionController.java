@@ -64,7 +64,10 @@ public class EditUsersPremissionController implements Initializable{
 	public EditUsersPremissionController() {
 	}
 	
-	
+	/**
+	 * shows all the users in database
+	 * @throws InterruptedException
+	 */
 	public void getUsers() throws InterruptedException
 	{
 		
@@ -87,13 +90,6 @@ public class EditUsersPremissionController implements Initializable{
 		}
 		
 		this.userLstVw.setItems(this.users);		//set items to the list
-
-//		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
-//			showUsers(event);
-//		};
-
-//		this.userLstVw.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle); 
-
 
 	}
 	
@@ -119,8 +115,8 @@ public class EditUsersPremissionController implements Initializable{
 		prmsCmb.setItems(list);
 	}
 	/**
-	 * 
-	 * @param event
+	 * checks which user was chosen and changes his permission
+	 * @param event ok button pressed
 	 * @throws IOException
 	 */
 	public void editPremission(ActionEvent event) throws IOException

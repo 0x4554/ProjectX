@@ -68,7 +68,11 @@ public class AdministratorMenuController implements Initializable {
 		this.clnt=clnt2;
 	}
 	
-	
+	/**
+	 * opens new window to choose which user to create
+	 * @param event create new user button pressed
+	 * @throws IOException
+	 */
 	public void enterCreateNewUser(ActionEvent event) throws IOException
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
