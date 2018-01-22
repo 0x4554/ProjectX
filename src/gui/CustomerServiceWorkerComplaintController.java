@@ -284,7 +284,13 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 					this.shwImgBtn.setVisible(false);
 				this.complaint = complaint;
 				if(complaint.getStatus().toString().equals("handled"))			//if handled, show the reply
+				{
 					this.repliedTxtAre.setText(complaint.getStoreReply());
+					if(complaint.getCompensation() != 0)						//if the customer was compensated
+					{
+						this.repliedTxtAre.appendText("\nCompensation : "+complaint.getCompensation().toString());
+					}
+				}
 				else
 					this.repliedTxtAre.clear();
 				this.cmplntFldOnLable.setText(complaint.getFiledOn().toString());		//set the time it was filed
@@ -293,6 +299,8 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
 					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
 						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
+					else if(timeDiff >48)																//check for valid time
+						this.cmplntTmToRplyLbl.setText("Invalid time");
 					else
 						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
 							
