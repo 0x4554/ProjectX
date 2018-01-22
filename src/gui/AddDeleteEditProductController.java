@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -14,7 +12,6 @@ import entities.ProductEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,12 +28,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import logic.FilesConverter;
 import logic.MessageToSend;
 
 public class AddDeleteEditProductController implements Initializable {
@@ -63,18 +58,21 @@ public class AddDeleteEditProductController implements Initializable {
 	@FXML private TextField PriceTxt;
 	@FXML private TextField DescriptionTxt;
 	@FXML private TextField ImageTxt;
-	@FXML private TextField ColorTxt;
+//	@FXML private TextField ColorTxt;
 	@FXML private TextField IDTxt;
 	
 	
 	@FXML private Label warninglbl;
 	@FXML private ListView<ProductEntity> list;
 	@FXML private ComboBox<String> typeCmb=new ComboBox<String>();
+	 
+	@FXML private ComboBox<String> dmntClrCmb;
 	
 	
 	public ObservableList<String> Type_list=FXCollections.observableArrayList();
     ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>();
-	
+    public ObservableList<String> color_list=FXCollections.observableArrayList();
+	private ArrayList<String> dominantColors;
 	
 	//constructor
 	public AddDeleteEditProductController()
@@ -104,18 +102,40 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		else return;
 		
 		if(!(PriceTxt.getText().equals("")))
-		    product.setProductPrice(Double.parseDouble(PriceTxt.getText()));
+		{	try
+		{
+			//	 product.setProductPrice(Double.parseDouble(PriceTxt.getText()));	
+				 Double price=Double.parseDouble(PriceTxt.getText());
+					if(price>0 && price <500)
+					       product.setProductPrice(price);
+					else
+						{
+						GeneralMessageController.showMessage("Product price is out of limits");
+			            return;
+						}
+				 
+		}
+		catch(NumberFormatException e)
+		{
+			GeneralMessageController.showMessage("Incorrect price");
+		}
+		//    product.setProductPrice(Double.parseDouble(PriceTxt.getText()));
+		}
 		else return;
 		
 		if(!(DescriptionTxt.getText().equals("")))
 		product.setProductDescription(DescriptionTxt.getText());
-		else return;
+		else product.setProductDescription("");
 		
 		if(!(ImageTxt.getText().equals("")))
 		    product.setProductImage(ImageTxt.getText());	
 		
-		if(!(ColorTxt.getText().equals("")))
-		    product.setProductDominantColor(ColorTxt.getText());
+		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
+			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
+		else
+			return;
+//		if(!(ColorTxt.getText().equals("")))
+//		    product.setProductDominantColor(ColorTxt.getText());
 	}else
 		{
 		flag=0;
@@ -133,9 +153,10 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		PriceTxt.clear();
 		DescriptionTxt.clear();
 		ImageTxt.clear();
-		ColorTxt.clear();
+//		ColorTxt.clear();
 		IDTxt.clear();
 		typeCmb.setValue("");
+		dmntClrCmb.setValue("");
 	}
 	else 
 	{
@@ -144,9 +165,10 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		PriceTxt.clear();
 		DescriptionTxt.clear();
 		ImageTxt.clear();
-		ColorTxt.clear();
+//		ColorTxt.clear();
 		IDTxt.clear();
 		typeCmb.setValue("");
+		dmntClrCmb.setValue("");
 		return;
 	}
 	
@@ -168,7 +190,8 @@ public void SetProductDetails(ActionEvent event) throws IOException
 		typeCmb.setValue(product.getProductType());
 		PriceTxt.setText(product.getProductPrice().toString());
 		DescriptionTxt.setText(product.getProductDescription());
-		ColorTxt.setText(product.getProductDominantColor());
+//		ColorTxt.setText(product.getProductDominantColor());
+		dmntClrCmb.setValue(product.getProductDominantColor());
 	}
 	else
 	{
@@ -233,14 +256,30 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 		}
 		if (!(PriceTxt.getText().equals("")))//price fiel is not empty
 				{
-			Double price=Double.parseDouble(PriceTxt.getText());
-			if(price>0 && price <500)
-			       product.setProductPrice(price);
-			else
-				{
-				GeneralMessageController.showMessage("Product price is out of limits");
-	            return;
-				}
+			try
+			{
+				Double price=Double.parseDouble(PriceTxt.getText());
+				if(price>0 && price <500)
+				       product.setProductPrice(price);
+				else
+					{
+					GeneralMessageController.showMessage("Product price is out of limits");
+		            return;
+					}
+			}
+			catch(NumberFormatException e)
+			{
+				GeneralMessageController.showMessage("Incorrect price");
+				return;
+			}
+//			Double price=Double.parseDouble(PriceTxt.getText());
+//			if(price>0 && price <500)
+//			       product.setProductPrice(price);
+//			else
+//				{
+//				GeneralMessageController.showMessage("Product price is out of limits");
+//	            return;
+//				}
 			}
 		else
 		{
@@ -252,15 +291,24 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 		}
 		else product.setProductDescription("");
 
-		if(!(ColorTxt.getText().equals("")))
+		if(!dmntClrCmb.getSelectionModel().isEmpty())
 		{
-			product.setProductDominantColor(ColorTxt.getText());
+			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
 		}
 		else 
 		{
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
 		}
+//		if(!(ColorTxt.getText().equals("")))
+//		{
+//			product.setProductDominantColor(ColorTxt.getText());
+//		}
+//		else 
+//		{
+//			GeneralMessageController.showMessage("Please Enter All Fields");
+//			return;
+//		}
 		if(!(ImageTxt.getText().equals("")))//picture was added/***********may be optionally***********/
 		{
 	    product.setProductImage(ImageTxt.getText());
@@ -279,7 +327,8 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 			typeCmb.setValue("");
 			DescriptionTxt.clear();
 			ImageTxt.clear();
-			ColorTxt.clear();
+			dmntClrCmb.setValue("");
+//			ColorTxt.clear();
 			GeneralMessageController.showMessage("Product :"+product.getProductName()+"  ID:  "+product.getProductID()+"\nwas added successfully");
 			}
 }
@@ -291,7 +340,8 @@ public void ClearFields(ActionEvent event)
 	typeCmb.setValue("");
 	PriceTxt.clear();
 	DescriptionTxt.clear();
-	ColorTxt.clear();
+	dmntClrCmb.setValue("");
+//	ColorTxt.clear();
 }
 
 public void searchForPhoto(ActionEvent event) throws IOException{
@@ -453,6 +503,18 @@ public String DeleteProductFromDB(ProductEntity productToDelete) throws Interrup
 		Type_list.add("Flower Boquet");
 		Type_list.add("Special");
 		typeCmb.setItems(Type_list);
+		
+		this.dominantColors = new ArrayList<String>();		//set  the dominant colors
+		this.dominantColors.add("none");
+		this.dominantColors.add("Blue");
+		this.dominantColors.add("Red");
+		this.dominantColors.add("White");
+		this.dominantColors.add("Yellow");
+		this.dominantColors.add("Purple");
+		this.dominantColors.add("Green");
+		
+		this.color_list.setAll(this.dominantColors);
+		this.dmntClrCmb.setItems(color_list);
 	}
 
 }
