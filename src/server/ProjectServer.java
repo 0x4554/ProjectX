@@ -1723,16 +1723,17 @@ public class ProjectServer extends AbstractServer
 		    return "Success";                                                                           
 	   // }
 }
-  /**
-   * This method handles the creation of new customers complaint
-   * 
-   * @param details	- String of the complaint info ("complaint!"complaintnumber|complaintDescription)
-   * @return
-   * @throws SQLException
-   * @throws ClassNotFoundException
-   */
-  
-  
+ /**
+  * this method handles the creation of new customers complaint
+  * 
+  * 
+  * @param details	- String of the complaint info ("complaint!"complaintnumber|complaintDescription)
+  * @return
+  * @throws SQLException
+  * @throws ClassNotFoundException
+  */
+ 
+ 
 	public String complaint(ComplaintEntity details) throws SQLException, ClassNotFoundException {
 
 		Statement stmt, stmt2;
@@ -1757,38 +1758,35 @@ public class ProjectServer extends AbstractServer
 		stmt = con.createStatement();
 		stmt2 = con.createStatement();
 		rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" + details.getOrderID() + "'"); //prepare a statement
-	  
-	  try
-	    {
-	    con = connectToDB();	//call method to connect to DB
-	    
-	    if(con!=null)
-	    System.out.println("Connection to Data Base succeeded");  
-	    }
-	  
-	    catch( SQLException e)	//catch exception
-	    {
-	      System.out.println("SQLException: " + e.getMessage() );
-	    }
-	  
-	  stmt = con.createStatement();
-	  
-	  rs = stmt.executeQuery("SELECT * FROM projectx.order WHERE Ordernum = '" +details.getOrderID()+"'");	//prepare a statement
-	    if((rs.next()))																						//if such ID exists in the DB, Insert the new data
-	    {
-	    	InputStream inStrm=FilesConverter.convertByteArrayToInputStream(details.getFile());
-		    PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status) VALUES (?,?,?)");	//prepare a statement
-		    ps.setInt(1,details.getOrderID());																			//insert parameters into the statement
-		    ps.setString(2, details.getDescription());
-		    ps.setString(3, details.getStatus().toString());
-		    ps.setBlob(4, inStrm);
-		    ps.executeUpdate();
-		    
-		    return "Success";
-	    }
-	  return "Order does not exist";   
-  }
+	
+		rs2 = stmt2.executeQuery("SELECT count(1) FROM projectx.complaints WHERE OrderNum = " + details.getOrderID() + "");
+		if(rs2.next())
+			if (rs2.getInt(1) == 1)			//check if a complaint for this order was already filed
+			{
+				return "Complaint was already filed";
+			} 
+		
+		else if ((rs.next())) //if such ID exists in the DB, Insert the new data
+		{
+			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.complaints (OrderNum,Description,Status,File,Compensation,FiledOn) VALUES (?,?,?,?,?,?)"); //prepare a statement
+			ps.setInt(1, details.getOrderID()); //insert parameters into the statement
+			ps.setString(2, details.getDescription());
+			ps.setString(3, details.getStatus().toString());
+						if (details.getFile() != null) //if a file was addded
+			{
+				InputStream inStrm = FilesConverter.convertByteArrayToInputStream(details.getFile());
+				ps.setBlob(4, inStrm);
+			} else
+				ps.setNull(4, java.sql.Types.NULL);
+			ps.setDouble(5, 0);
+			ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));		//set the time it is filed
 
+			ps.executeUpdate();
+
+			return "Success";
+		}
+		return "Order does not exist";
+	}
  
   /** This method handles product search messages received from the client.
   *    Search is with ID
@@ -2221,6 +2219,36 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setOperation("surveyUpdateResult");
 			client.sendToClient(messageToSend);
 		}
+		if(operation.equals("handleComplaint"))
+	{
+		String retmsg = "";
+		try
+		{
+			retmsg = handleComplaint((ComplaintEntity)messageFromClient);
+		}
+		catch(Exception e)
+		{
+			retmsg="We are sorry,Something went wrong, Please try again later.";
+			e.printStackTrace();
+			 ServerMain.serverController.showMessageToUI( e.getMessage());
+		}
+		messageToSend.setMessage(retmsg);
+		sendToAllClients(messageToSend);
+	}
+	if(operation.equals("getComplaintOrders"))	//for getting all the orders with comlpaints
+	{
+		ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
+		listOfOrders = getAllComplaintOrders((ArrayList<ComplaintEntity>)messageFromClient);
+		messageToSend.setMessage(listOfOrders);
+		sendToAllClients(messageToSend);
+	}
+	if(operation.equals("getComplaints"))		//for getting all complaints
+	{
+		ArrayList<ComplaintEntity> listOfComplaints = new ArrayList<ComplaintEntity>();		//an arrayList that holds all the stores in the DB
+		listOfComplaints = getComplaints((ArrayList<String>)messageFromClient);
+		messageToSend.setMessage(listOfComplaints);		//set the message for sending back to the client
+		sendToAllClients(messageToSend);
+	}
 		if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
 			this.incomingFileName=complaint.getOrderID();
@@ -2362,18 +2390,19 @@ public class ProjectServer extends AbstractServer
 			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
 		 }
 	  stmt = con.createStatement();
-	   rs = stmt.executeQuery("SELECT * FROM projcetx.survey");
-	   if(rs.next()) {
-		   survey = new SurveyEntity();
+	   rs = stmt.executeQuery("SELECT * FROM projectx.survey");
+	   survey = new SurveyEntity();
+	  
+		  
 		   while(rs.next())
 	   		{
 		   		survey.setQuestionText(Integer.parseInt(rs.getString(1)), rs.getString(2));
-		   		for(int i=1;i<=10;i++) {
+		   		for(int i=3;i<=12;i++) {
 		   			rank=rs.getInt(i);
 		   			survey.setTotalRanks(Integer.parseInt(rs.getString(1)), i, rank);
 		   			}
 	   		}
-	   }
+	   
 	  return survey;
   }
 	
@@ -2525,19 +2554,22 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  ps.setString(6, ce.getEmailAddress());
 	  ps.setString(7, ce.getPhoneNumber());
 	  
-	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-      Date dateobj = new Date();
+//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
+//      Date dateobj = new Date();
+      Timestamp timestamp = new Timestamp(System.currentTimeMillis());
       
-      
-	  ps.setString(8, df.format(dateobj).toString());
+	  ps.setTimestamp(8,timestamp);
 	  ps.setLong(9, ce.getCreditCardNumber());
 	  ps.executeUpdate();										//add new customer to Database
 	  
-	  ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts) VALUES (?,?,?,?)");
+	  ps=con.prepareStatement("INSERT INTO projectx.user (Username,Password,UserType,LoginAttempts,Email,PhoneNumber,UserId) VALUES (?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
 	  ps.setString(3, "C");
 	  ps.setInt(4, 0);
+	  ps.setString(5, ce.getEmailAddress());
+	  ps.setString(6, ce.getPhoneNumber());
+	  ps.setLong(7, ce.getID());
 	  
 	  ps.executeUpdate();
 	  

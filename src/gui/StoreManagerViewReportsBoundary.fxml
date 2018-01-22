@@ -14,11 +14,10 @@
       <TreeView fx:id="storeDtlsTrVw" layoutX="85.0" layoutY="65.0" prefHeight="288.0" prefWidth="210.0" />
       <Label layoutX="158.0" layoutY="29.0" text="Store details" />
       <CheckBox fx:id="qtrRvnChkBx" layoutX="333.0" layoutY="65.0" mnemonicParsing="false" text="Quarterly revenue report" />
-      <CheckBox fx:id="qtrlyCmplntChckBx" layoutX="333.0" layoutY="154.0" mnemonicParsing="false" text="Quarterly complaint report" />
-      <CheckBox fx:id="cstStsfctnChckBx" layoutX="333.0" layoutY="235.0" mnemonicParsing="false" text="Cunstomer satisfaction survey" />
+      <CheckBox fx:id="qtrlyCmplntChckBx" layoutX="333.0" layoutY="188.0" mnemonicParsing="false" text="Quarterly complaint report" />
       <CheckBox fx:id="OrdrRprtChckBx" layoutX="333.0" layoutY="312.0" mnemonicParsing="false" text="Order reports" />
       <ComboBox fx:id="rvnQrtrCmb" layoutX="561.0" layoutY="60.0" prefHeight="31.0" prefWidth="163.0" promptText="Choose quarter" />
-      <ComboBox fx:id="cmplntQrtrCmb" layoutX="561.0" layoutY="149.0" prefHeight="31.0" prefWidth="163.0" promptText="Choose quarter" />
+      <ComboBox fx:id="cmplntQrtrCmb" layoutX="552.0" layoutY="183.0" prefHeight="31.0" prefWidth="163.0" promptText="Choose quarter" />
       <Button fx:id="gnrtRprtBtn" layoutX="567.0" layoutY="375.0" mnemonicParsing="false" onAction="#generateReports" text="Generate reports" />
       <Button fx:id="bckBtn" layoutX="30.0" layoutY="375.0" mnemonicParsing="false" onAction="#backToMenu" text="Back" />
    </children>
