@@ -6,20 +6,18 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.StoreWorkerMenuController">
+<AnchorPane prefHeight="416.0" prefWidth="629.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.StoreWorkerMenuController">
    <children>
-      <Pane layoutX="-206.0" layoutY="-179.0" prefHeight="549.0" prefWidth="895.0">
+      <Pane layoutX="30.0" layoutY="35.0" prefHeight="348.0" prefWidth="659.0">
          <children>
-            <Label layoutX="468.0" layoutY="209.0" prefHeight="56.0" prefWidth="192.0" text="Main Menu" textAlignment="CENTER">
+            <Label layoutX="252.0" layoutY="63.0" prefHeight="56.0" prefWidth="157.0" text="Main Menu" textAlignment="CENTER">
                <font>
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button fx:id="cmplnBtn" layoutX="501.0" layoutY="275.0" mnemonicParsing="false" text="New complaint" />
-            <Button fx:id="cmplnDetBtn" layoutX="475.0" layoutY="324.0" mnemonicParsing="false" text="View complaints ditails" />
-            <Button fx:id="ctlgBtn" layoutX="499.0" layoutY="376.0" mnemonicParsing="false" text="Update catalog" />
-            <Button fx:id="lgBtn" layoutX="523.0" layoutY="479.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
-            <Button fx:id="srvBtn" layoutX="528.0" layoutY="428.0" mnemonicParsing="false" onAction="#startNewSurvey" text="Survey" />
+            <Button fx:id="ctlgBtn" layoutX="270.0" layoutY="152.0" mnemonicParsing="false" text="Update catalog" />
+            <Button fx:id="lgBtn" layoutX="294.0" layoutY="255.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+            <Button fx:id="srvBtn" layoutX="299.0" layoutY="204.0" mnemonicParsing="false" onAction="#startNewSurvey" text="Survey" />
          </children>
       </Pane>
    </children>
