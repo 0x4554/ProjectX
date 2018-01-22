@@ -1,9 +1,12 @@
 package entities;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import logic.FilesConverter;
 
 public class ProductEntity implements Serializable{
 	private Integer productID;
@@ -13,20 +16,8 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
     private byte[] productImage;
-//    private byte[] image1;
 	
-	public ProductEntity()
-	{
-		
-	}
-	public byte[] getProductImage() {
-		return productImage;
-	}
-
-	public void setProductImage(byte[] productImage) {
-		this.productImage = productImage;
-	}
-
+	
 	/**
 	 * Constructor for the ProductEntity.java class
 	 * @param productID	the product's id
@@ -37,6 +28,10 @@ public class ProductEntity implements Serializable{
 	 * @param productDominantColor	dominant color
 	 */
 
+	public ProductEntity()
+	{
+		
+	}
 	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
 			String productDescription, String productDominantColor,byte[]productImage) {
 		super();
@@ -49,23 +44,25 @@ public class ProductEntity implements Serializable{
     	this.productImage = productImage;
 	}
 	
-	/*constructor with out the image*/
-	
-	public ProductEntity(Integer productID, String productName, String productType, Double productPrice,
-			String productDescription, String productDominantColor) {
-		//super();
-		this.productID = productID;
-		this.productName = productName;
-		this.productType = productType;
-		this.productPrice = productPrice;
-		this.productDescription = productDescription;
-		this.productDominantColor = productDominantColor;
-	}
 	
 	/**
 	 * Getter for the productID
 	 * @return the productID
 	 */
+	
+	public byte[] getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(byte[] image1) {
+		
+		this.productImage = image1;
+	}
+public void setProductImage(String filePath) throws IOException {
+		
+		File file = new File (filePath);
+		this.productImage = FilesConverter.convertFileToByteArray(file);
+	}
 	public Integer getProductID() {
 		return productID;
 	}
@@ -89,21 +86,6 @@ public class ProductEntity implements Serializable{
 	 */
 	public void setProductName(String productName) {
 		this.productName = productName;
-	}
-	
-	/*public Image getProductImage() {
-		return productImage;
-	}
-
-	public void setProductImage(Image productImage) {
-		this.productImage = productImage;
-	}
-*/
-
-    
-	
-	public void convertImageToByteArray(Image img) {
-		
 	}
 	/**
 	 * Getter for the productType

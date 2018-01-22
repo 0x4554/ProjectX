@@ -70,5 +70,13 @@ public interface UserInterface {
 	 * @param emailAddress the new Email address
 	 */
 	public void setEmailAddress(String emailAddress);
+	/**Setter for the user Id
+	 * @param iD the iD to set
+	 */
+	public void setID(long iD);
+	/**Getter for the user ID
+	 * @return the iD
+	 */
+	public long getID();
 	
 }

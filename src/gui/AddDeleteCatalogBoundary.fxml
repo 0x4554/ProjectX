@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="823.0" prefWidth="967.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddDeleteCatalogController">
+   <children>
+      <Label layoutX="407.0" layoutY="24.0" text="Edit Catalog">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <ListView fx:id="listProducts" layoutX="54.0" layoutY="158.0" prefHeight="571.0" prefWidth="392.0" />
+      <ListView fx:id="listCatalog" layoutX="527.0" layoutY="158.0" prefHeight="571.0" prefWidth="381.0" />
+      <Button fx:id="ClearBtn" layoutX="764.0" layoutY="756.0" mnemonicParsing="false" onAction="#ClearSelections" text="Clear selections" textFill="#4db564" />
+      <Button fx:id="addBtn" layoutX="692.0" layoutY="756.0" mnemonicParsing="false" onAction="#AddToCatalog" text="Add " textFill="#4db564" />
+      <Button fx:id="deleteBtn" layoutX="527.0" layoutY="756.0" mnemonicParsing="false" onAction="#DeleteProductFromCatalog" text="Delete" textFill="#4db564" />
+      <Button fx:id="BackBtn" layoutX="54.0" layoutY="756.0" mnemonicParsing="false" onAction="#back" text="Back" />
+      <Button fx:id="searchBtn" layoutX="612.0" layoutY="756.0" mnemonicParsing="false" text="Search" textFill="#4db564" />
+      <Label layoutX="211.0" layoutY="122.0" text="Products" textFill="#4db564">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="684.0" layoutY="128.0" text="Catalog" textFill="#4db564">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="addInstrulbl" layoutX="63.0" layoutY="67.0" text="Add-please select product from the products list and press &quot;Add&quot; button." textFill="#4db564" />
+      <Label fx:id="deleteInstrulbl" layoutX="63.0" layoutY="88.0" text="Delete-please choose the product to delete and press &quot;Delet&quot; button." textFill="#4db564" />
+   </children>
+</Pane>

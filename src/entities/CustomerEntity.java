@@ -16,7 +16,7 @@ public class CustomerEntity extends UserEntity {
 
 	private long creditCardNumber;
 	private String address;
-//	private long customerID;
+	private long customerID;
 	private Subscription subscriptionDiscount;
 	private AccountStatus accountStatus;
 	
@@ -92,6 +92,15 @@ public class CustomerEntity extends UserEntity {
 	 */
 	public void setAccountStatus(AccountStatus accountStatus) {
 		this.accountStatus = accountStatus;
+	}
+	public void setCustomerID(long parseLong) {
+		this.customerID=parseLong;
+		// TODO Auto-generated method stub
+		
+	}
+	public long getCustomerID() {
+		// TODO Auto-generated method stub
+		return this.customerID;
 	}
 	
 	

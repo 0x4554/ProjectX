@@ -103,8 +103,8 @@ public class CreateNewOrderController implements Initializable {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CustomerSelfDefinedProductBoundary.fxml").openStream());
-		CustomerSelfDefinedProducyController csdpc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+		Parent root = loader.load(getClass().getResource("/gui/CustomerSelfDefiendProductBoundary.fxml").openStream());
+		CustomerSelfDefinedProductController csdpc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
 
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
