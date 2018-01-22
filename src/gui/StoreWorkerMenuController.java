@@ -106,6 +106,21 @@ public class StoreWorkerMenuController implements Initializable{
 		primaryStage.show();
 	}
 	
+public void PromoteSale(ActionEvent event) throws IOException, InterruptedException {
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/StoreWorkerPromoteSale.fxml").openStream());
+		StoreWorkerPromoteSaleController sc=loader.getController();
+		//sc.setConnectionData(this);
+		sc.ShowAllProduct();
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Promote Sale");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
 	
 	
 	@Override

@@ -19,6 +19,5 @@
       <Label fx:id="cataloglbl" layoutX="132.0" layoutY="87.0" text="Catalog" textFill="#4db579" />
       <Label fx:id="productlbl" layoutX="422.0" layoutY="87.0" text="Product" textFill="#45ab6a" />
       <Button fx:id="backBtn" layoutX="263.0" layoutY="340.0" mnemonicParsing="false" onAction="#back" text="Log Out" />
-      <Button fx:id="promoteSaleBtn" layoutX="65.0" layoutY="185.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="185.0" text="Promote sale" />
    </children>
 </Pane>

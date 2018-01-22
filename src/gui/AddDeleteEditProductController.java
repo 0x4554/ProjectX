@@ -41,6 +41,7 @@ import logic.MessageToSend;
 
 public class AddDeleteEditProductController implements Initializable {
 
+	/*FXML*/
 	@FXML private Label Namelbl;
 	@FXML private Label Typelbl;
 	@FXML private Label Pricelbl;
@@ -57,7 +58,6 @@ public class AddDeleteEditProductController implements Initializable {
 	@FXML private Button clearBtn;
 	@FXML private Button clearSelectionBtn;
 	
-	
 	@FXML private TextField NameTxt;
 	@FXML private TextField TypeTxt;
 	@FXML private TextField PriceTxt;
@@ -65,7 +65,6 @@ public class AddDeleteEditProductController implements Initializable {
 	@FXML private TextField ImageTxt;
 	@FXML private TextField ColorTxt;
 	@FXML private TextField IDTxt;
-	
 	
 	@FXML private Label warninglbl;
 	@FXML private ListView<ProductEntity> list;
@@ -76,16 +75,27 @@ public class AddDeleteEditProductController implements Initializable {
     ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>();
 	
 	
-	//constructor
+	/*Constructor*/
 	public AddDeleteEditProductController()
 	{
 		
 	}
+	/**
+	 * The method clear's the selection's made in the list view
+	 * @param event
+	 */
 	public void ClearSelections(ActionEvent event)
 	   {
 		   list.getSelectionModel().clearSelection();
 	   }
 	
+	
+	/**
+	 * The method update's the chosen product
+	 * @param event "Update Product" button clicked
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedException
 {
 	ProductEntity product=new ProductEntity();
