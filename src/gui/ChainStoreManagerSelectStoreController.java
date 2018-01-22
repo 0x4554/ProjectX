@@ -258,6 +258,7 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 		this.qtrRvnChkBx.setSelected(false);
 		this.OrdrRprtChckBx.setSelected(false);
 		this.qtrlyCmplntChckBx.setSelected(false);
+		this.cstStsfctnChckBx.setSelected(false);
 	}
 	
 	/**
@@ -411,7 +412,7 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	public void backToMenu(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerMenuController.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerMenuBoundary.fxml").openStream());
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("Chain Store manager main menu");
