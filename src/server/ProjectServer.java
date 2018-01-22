@@ -1926,6 +1926,12 @@ public class ProjectServer extends AbstractServer
 			}
 		}
 		
+		if(operation.equals("updatePermission")) {
+			String value = this.updatePermissions((String[])messageFromClient);
+			messageToSend.setMessage(value);
+			client.sendToClient(messageToSend);
+		}
+		
 		if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
@@ -2069,6 +2075,7 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(listOfAllStores);		//set the message for sending back to the client
 			sendToAllClients(messageToSend);
 		}
+		
 		if(operation.equals("getSpecificStore"))
 		{
 			StoreEntity store ;		//an arrayList that holds all the stores in the DB
@@ -2076,6 +2083,7 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(store);		//set the message for sending back to the client
 			sendToAllClients(messageToSend);
 		}
+		
 		if(operation.equals("exitApp"))					//for when a user exits the app
 		{
 			if((String)messageFromClient!=null) {
@@ -2114,6 +2122,7 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(listOfAllProducts);	        //set the message for sending back to the client
 			sendToAllClients(messageToSend);	            //send arrayList back to client
 		}
+		
 		if(operation.equals("deleteProduct"))	
 		{
 			//ArrayList<ProductEntity> listOfAllProducts = new ArrayList<ProductEntity>();		//an arrayList that holds all the stores in the DB
@@ -2230,7 +2239,56 @@ public class ProjectServer extends AbstractServer
 		
 	}
 	
-  private String[] getSurveyQuestions() throws SQLException {
+  
+  /**
+   * method for editing user permission in the data base
+   * 
+   * @param object
+   * @return
+   * @throws SQLException
+   */
+  private String updatePermissions(String[] userPermission) throws SQLException {
+	// TODO Auto-generated method stub
+	  Statement stmnt;
+	  String ret="";
+	  try {
+		  con=connectToDB();
+		  System.out.println("Connection to Database succeeded");
+		  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+	  }
+	  catch(Exception e) {
+		  System.out.println("Connection to Database failed");
+		  ServerMain.serverController.showMessageToUI("Connection to Database failed");
+	  }
+	  stmnt=con.createStatement();
+	  ResultSet rs = stmnt.executeQuery("SELECT UserType FROM projectx.user WHERE Username='"+userPermission[0]+"'");
+	  
+	  if(!rs.next())
+		  return "noUser";
+	  else{
+		  if(userPermission[1].equals("C")) {
+			  stmnt.execute("DELETE FROM projectx.user WHERE Username='"+userPermission[0]+"'");
+			  ret+="customer";
+		  	}
+		  else {
+		  stmnt.executeUpdate("UPDATE projectx.user SET UserType='"+userPermission[1]+"' WHERE Username='"+userPermission[0]+"'");
+		  ret+="Updated";
+		  }
+		  return ret;
+//		  String s=rs.getString(1);
+//		  if(!s.equals("C")) && !userPermission[1].equals("Customer")) {		//insert also into customers
+//			  stmnt.executeUpdate("UPDATE projectx.user SET UserType='C' WHERE Usernname="+userPermission[0]);
+//			 // stmnt.executeUpdate("")							/*insert into customers*/
+//		  }
+//		  else {
+//			  stmnt.executeUpdate("UPDATE projectx.user SET UserType="+userPermission[1]+" WHERE Username="+userPermission[0]);
+//			  return "updated";
+//		  }
+//		return "error";
+	  }
+}
+
+private String[] getSurveyQuestions() throws SQLException {
 	// TODO Auto-generated method stub
 	  int i=0;
 	  String[] ques=new String[6];
