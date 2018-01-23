@@ -14,7 +14,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.ConnectedClients;
@@ -45,7 +47,9 @@ public class LoginController implements Initializable {
 	@FXML
 	private Button lgnBtn;
 	@FXML
-	private Button crtNwAccntBtn;
+	private Hyperlink whatLnk;
+	@FXML
+    private TextArea ipTxtArea;
 	
 	public static String hostIP;
 	private CustomerMenuController cmc;
@@ -56,6 +60,7 @@ public class LoginController implements Initializable {
 	private ChainStoreManagerMenuController csmmc;
 	private CustomerServiceExpertMenuController csemc;
 	private ChainWorkerMenuController cwmn;
+	private boolean hideflg;
 	
 	/**
 	 * This method sets the host's IP to the static parameter
@@ -234,6 +239,17 @@ public class LoginController implements Initializable {
 			Client.getClientConnection().accept();
 		}
 	}
+	
+	
+	/**
+	 * method for hiding or revealing the ip explanation text area
+	 * 
+	 * @param event
+	 */
+	public void linkListener(ActionEvent event) {
+		hideflg=!hideflg;
+		ipTxtArea.setVisible(hideflg);
+	}
 
 	
 	/**
@@ -245,6 +261,7 @@ public class LoginController implements Initializable {
 		this.srvrIPTxtFld.setText("localhost");	//set the default server's ip to local host
 		this.usrNmTxtFld.setText("lana");
 		this.psswrdTxtFld.setText("123");
+		this.ipTxtArea.setVisible(false);
 	}
 
 }

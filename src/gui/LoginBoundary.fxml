@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
@@ -15,8 +17,8 @@
       <TextField id="usrNmTxtFld" fx:id="usrNmTxtFld" layoutX="100.0" layoutY="37.0" />
       <PasswordField id="psswrdTxtFld" fx:id="psswrdTxtFld" layoutX="100.0" layoutY="97.0" />
       <TextField id="srvrIPTxtFld" fx:id="srvrIPTxtFld" layoutX="100.0" layoutY="205.0" />
-      <Button id="lgnBtn" fx:id="lgnBtn" layoutX="159.0" layoutY="256.0" mnemonicParsing="false" onAction="#pressedLogin" text="Login" />
-      <Button id="CrtNwAccntBtn" fx:id="crtNwAccntBtn" layoutX="187.0" layoutY="382.0" mnemonicParsing="false" text="Create a new account" />
-      <Label layoutX="5.0" layoutY="387.0" text="Don't have an account?" />
+      <Button id="lgnBtn" fx:id="lgnBtn" layoutX="157.0" layoutY="405.0" mnemonicParsing="false" onAction="#pressedLogin" text="Login" />
+      <Hyperlink fx:id="whatLnk" layoutX="100.0" layoutY="238.0" onAction="#linkListener" text="What is that?" />
+      <TextArea fx:id="ipTxtArea" layoutX="46.0" layoutY="268.0" prefHeight="124.0" prefWidth="275.0" text="An IP (stands for Internet Protocol)&#10;is the address of the server&#10;computer which provides&#10;services to you.&#10;if you don't know your server's&#10;IP address, contact our technical &#10;support for help." />
    </children>
 </AnchorPane>
