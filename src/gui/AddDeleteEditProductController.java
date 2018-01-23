@@ -163,8 +163,8 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		
 		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
-		else
-			return;
+//		else
+//			return;
 //		if(!(ColorTxt.getText().equals("")))
 //		    product.setProductDominantColor(ColorTxt.getText());
 		else {
