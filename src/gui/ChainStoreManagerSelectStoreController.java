@@ -32,6 +32,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the store and report selection in the chain store's reports menu 
+ * ChainStoreManagerSelectStoreController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ChainStoreManagerSelectStoreController implements Initializable {
 
 	private Integer branchID;
@@ -73,15 +85,6 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	ArrayList<OrderEntity> listOfOrdersFromDB;
 	ArrayList<ComplaintEntity> listOfComplaintsFromDB;
 	SurveyEntity survey;
-	//	/**
-	//	 * This method inserts all the store names into the combobox
-	//	 * @throws InterruptedException
-	//	 */
-	//	public void loadStoresIntoComboBox()
-	//	{
-	//		this.list = FXCollections.observableArrayList(storeNames);	//set to an observableArrayList
-	//		this.strCmb.setItems(this.list);							//set the list to the comboBox
-	//	}
 
 	/**
 	 * This method gets the list of stores Entities from the server into ListOfStoresEntities and creates a list of store names
@@ -134,8 +137,8 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 		}
 		TreeItem<String> root;
 
-		root = new TreeItem<>(); //set the root for the tree
-		root.setExpanded(true); //set it to expanded by default  
+		root = new TreeItem<>(); 					//set the root for the tree
+		root.setExpanded(true);						 //set it to expanded by default  
 
 		//**------Build a treeView that contains all the order's details-------**//
 		for (StoreEntity store : listOfStoresFromDB)
@@ -293,8 +296,8 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	
 	/**
 	 * This method loads the complaint report
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	 * @throws InterruptedException  for sleep
+	 * @throws IOException 	for loaders
 	 */
 	private void quarterlyComplaintsReport() throws InterruptedException, IOException {
 		// **** get all Complaints from DB for the selected quarter ***//
@@ -326,8 +329,8 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	
 	/**
 	 * This method loads the order report
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	 * @throws InterruptedException  for sleep
+	 * @throws IOException 	for loader
 	 */
 	private void OrderReport() throws InterruptedException, IOException
 	{
@@ -359,8 +362,8 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	
 	/**
 	 * This method loads the satisfaction report;
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	 * @throws InterruptedException for sleep
+	 * @throws IOException for loader
 	 */
 	private void satisfactionReport() throws InterruptedException, IOException
 	{
@@ -407,7 +410,7 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	 * 
 	 * @param event
 	 *            button back
-	 * @throws IOException
+	 * @throws IOException loader
 	 */
 	public void backToMenu(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window

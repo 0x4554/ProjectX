@@ -45,6 +45,11 @@ public class AccountDetailsController implements Initializable{
 	 private CustomerMenuController cm;
 	 private CustomerEntity customer;
 	 
+	 /**
+	  * Setter method
+	  * @param m the previous menu controller
+	  * @param customerEnt the customer entity
+	  */
 	 public void setConnectionData(CustomerMenuController m,CustomerEntity customerEnt)
 		{
 			this.cm=m;
@@ -92,7 +97,10 @@ public class AccountDetailsController implements Initializable{
 			return;
 		}
 	 
-	 
+	 /**
+	  * This method sets the labels 
+	  * @param c	the customer details
+	  */
 	 public void setLabels(CustomerEntity c) {
 		 
 		 cstNmLbl.setText(c.getUserName());
@@ -104,7 +112,10 @@ public class AccountDetailsController implements Initializable{
 		 adrsLbl.setText(c.getAddress());
 	 }
 	 
-	 
+	 /**
+	  * Getter for the controller
+	  * @return
+	  */
 	 public CustomerMenuController getCustomerMenu() {
 		 return this.cm;
 	 }

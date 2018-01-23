@@ -12,7 +12,18 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
-
+/**
+ * This class is a controller for adding a card to an order
+ * AddCardController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class AddCardController implements Initializable{
 	
 	@FXML
@@ -23,9 +34,22 @@ public class AddCardController implements Initializable{
 	
 	private OrderEntity newOrder;
 	
+	/**
+	 * Setter for the new order
+	 * @param newOrder
+	 */
 	public void setOrder(OrderEntity newOrder)
 	{
 		this.newOrder=newOrder;
+	}
+	
+	/**
+	 * This method sets the text for the card if already added before
+	 * @param text	the existing card text
+	 */
+	public void setText(String text)
+	{
+		this.crdTxtArea.setText(text);
 	}
 	/**
 	 * This method handles the card confirmation and add it to the order

@@ -2,14 +2,10 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import client.Client;
-import entities.CardEntity;
 import entities.OrderEntity;
-import entities.ProductEntity;
 import entities.StoreEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,14 +18,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import logic.MessageToSend;
-import sun.reflect.generics.tree.Tree;
 
 public class CreateNewOrderController implements Initializable {
 
@@ -126,6 +116,8 @@ public class CreateNewOrderController implements Initializable {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CardBoundary.fxml").openStream());
 		AddCardController acc = loader.getController();
+		if(this.newOrder.getCard() != null)									//check if card already exists
+			acc.setText(this.newOrder.getCard().getText());
 		acc.setOrder(this.newOrder);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
