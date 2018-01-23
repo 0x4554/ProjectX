@@ -163,6 +163,13 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		
 		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
+<<<<<<< HEAD
+=======
+//		else
+//			return;
+//		if(!(ColorTxt.getText().equals("")))
+//		    product.setProductDominantColor(ColorTxt.getText());
+>>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;

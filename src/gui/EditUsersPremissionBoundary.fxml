@@ -19,7 +19,7 @@
             </Label>
             <ComboBox fx:id="prmsCmb" layoutX="34.0" layoutY="432.0" prefHeight="31.0" prefWidth="186.0" promptText="Choose premission" />
             <Button fx:id="bckBtn" layoutX="413.0" layoutY="432.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
-            <Button fx:id="okBtn" layoutX="298.0" layoutY="432.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="51.0" text="OK" />
+            <Button fx:id="okBtn" layoutX="298.0" layoutY="432.0" mnemonicParsing="false" onAction="#editPremission" prefHeight="31.0" prefWidth="51.0" text="OK" />
             <ListView fx:id="userLstVw" layoutX="34.0" layoutY="71.0" prefHeight="342.0" prefWidth="648.0" />
          </children>
       </Pane>

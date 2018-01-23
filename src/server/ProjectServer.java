@@ -2167,6 +2167,23 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(listOfOrders);
 			sendToAllClients(messageToSend);
 		}
+		if(operation.equals("createUser"))
+		{
+			UserInterface user=(UserInterface)messageFromClient;
+			try {
+			this.insertNewUser(user);
+			MessageToSend toClient=new MessageToSend("added","retval");
+			client.sendToClient(toClient);
+			
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+				 ServerMain.serverController.showMessageToUI( e.getMessage());
+				MessageToSend toClient = new MessageToSend("failed","retval");
+				client.sendToClient(toClient);
+			}
+			
+		}
 		if(operation.equals("createAccount")) {	
 			CustomerEntity custen=(CustomerEntity)messageFromClient;
 			try {
@@ -2629,7 +2646,7 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
-	  ps.setLong(3, ce.getCustomerID());
+	  ps.setLong(3, ce.getID());
 	  ps.setString(4,ce.getSubscriptionDiscount().toString());
 	  ps.setString(5, ce.getAddress());
 	  ps.setString(6, ce.getEmailAddress());
