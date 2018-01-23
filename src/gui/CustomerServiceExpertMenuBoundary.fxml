@@ -12,8 +12,8 @@
             <Font size="27.0" />
          </font>
       </Label>
-      <Button fx:id="avrBtn" layoutX="342.0" layoutY="114.0" mnemonicParsing="false" text="Add veribal report" />
-      <Button fx:id="vsrBtn" layoutX="118.0" layoutY="114.0" mnemonicParsing="false" text="View satisfaction report" />
+      <Button fx:id="avrBtn" layoutX="342.0" layoutY="114.0" mnemonicParsing="false" onAction="#uploadReportPressed" text="Add verbal report" />
+      <Button fx:id="vsrBtn" layoutX="118.0" layoutY="114.0" mnemonicParsing="false" text="Analyze survey answers" />
       <Button fx:id="logBtn" layoutX="264.0" layoutY="169.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
    </children>
 </Pane>

@@ -52,6 +52,30 @@ public class CustomerServiceExpertMenuController implements Initializable {
 		this.clnt=clnt2;
 	}
 	
+	
+	/**
+	 * method to handle the upload verbal report button
+	 * 
+	 * @param event
+	 * @throws IOException 
+	 */
+	public void uploadReportPressed(ActionEvent event) throws IOException {
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/UploadVerbalReportBoundary.fxml").openStream());
+		UploadVerbalReportController uvrc=loader.getController();
+		uvrc.setConnectionData(this);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("Upload report");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

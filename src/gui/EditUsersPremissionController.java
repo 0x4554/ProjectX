@@ -49,15 +49,23 @@ import logic.MessageToSend;
 
 public class EditUsersPremissionController implements Initializable{
 	
-	@FXML private Button bckBtn;
-	@FXML private Button okBtn;
-	@FXML private ComboBox<String> prmsCmb;
-	@FXML private ListView<String> userLstVw;
+	@FXML
+	private Button bckBtn;
+	
+	@FXML
+	private Button okBtn;
+	
+	@FXML
+	private ComboBox<String> prmsCmb;
+	
+	@FXML 
+	private ListView<String> userLstVw;
 	
 	private AdministratorMenuController amc;
 	private ObservableList<String> list;
 	private ObservableList<String> users;
 	private ArrayList<String> listOfUsers;
+	private String username;
 	
 	/**
 	 * Necessary constructor for the APP
@@ -109,10 +117,12 @@ public class EditUsersPremissionController implements Initializable{
 	 */
 	public void editPermissions(ActionEvent event) throws InterruptedException, IOException {
 	
-		if(!usrFld.getText().isEmpty() && !prmsCmb.getSelectionModel().isEmpty()) {
-				
+		if( !prmsCmb.getSelectionModel().isEmpty() &&  userLstVw.getSelectionModel().getSelectedItem()!=null) {
+			String s=userLstVw.getSelectionModel().getSelectedItem();
+			s = s.substring(s.indexOf(":")+1, s.length());
+			username=s.substring(1,s.indexOf("U")-1);
 			String []userAndPermission=new String[2];
-			userAndPermission[0]=usrFld.getText();
+			userAndPermission[0]=username;
 			userAndPermission[1]=permissionsParser(prmsCmb.getValue());
 			
 			MessageToSend toServer=new MessageToSend(userAndPermission,"updatePermission");
@@ -125,7 +135,7 @@ public class EditUsersPremissionController implements Initializable{
 			
 			if(Client.getClientConnection().getMessageFromServer().getMessage().equals("Updated")) {
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-				this.mmc.showManagerMenu();
+				this.amc.showAdministratorMenu();
 				GeneralMessageController.showMessage("User permission updated successfully");
 			}
 			else if(Client.getClientConnection().getMessageFromServer().getMessage().equals("noUser")) {
@@ -137,20 +147,24 @@ public class EditUsersPremissionController implements Initializable{
 			}
 			else {
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-				this.mmc.showManagerMenu();
+				this.amc.showAdministratorMenu();
 				GeneralMessageController.showMessage("Update failed\nPlease contact technical support and try again later");
 			}
 		}
 		else {
-			GeneralMessageController.showMessage("Please fill in all required fields");
+			GeneralMessageController.showMessage("Please complete the proccess");
 		}
 		
-//		if(prmsCmb.getValue().equals("Customer")) {
-//			TurnToCustomer();
-//	}
+
 	}
 	
 	
+	/**
+	 * method for changing the permission to Customer
+	 * 
+	 * @param event - for hiding the current screen
+	 * @throws IOException
+	 */
 	private void createNewCustomer(ActionEvent event) throws IOException {
 		// TODO Auto-generated method stub
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
@@ -159,7 +173,7 @@ public class EditUsersPremissionController implements Initializable{
 		 
 		 CreateNewAccountController cna=loader.getController();
 		 cna.setConnectionData(this);
-		 cna.setField(usrFld.getText());
+		 cna.setField(username);
 		 Stage primaryStage=new Stage();
 		 Scene scene=new Scene(root);
 			
@@ -177,6 +191,10 @@ public class EditUsersPremissionController implements Initializable{
 			return "SW";
 		else if(str.equals("Store Manager"))
 			return "SM";
+		else if (str.equals("Customer Service Expert"))
+			return "CSE";
+		else if(str.equals("Customer Service Worker"))
+			return "CSW";
 		else
 			return null;
 	}
@@ -197,49 +215,8 @@ public class EditUsersPremissionController implements Initializable{
 		list = FXCollections.observableArrayList(al);
 		prmsCmb.setItems(list);
 	}
-	/**
-	 * checks which user was chosen and changes his permission
-	 * @param event ok button pressed
-	 * @throws IOException
-	 */
-	public void editPremission(ActionEvent event) throws IOException
-	{
-		if(checkInsert())
-		{
-			if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer"))
-			{
-				
-			}
-			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Store Worker"))
-			{
-				
-			}
-			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Store Manager"))
-			{
-				
-			}
-			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer Service Expert"))
-			{
-				
-			}
-			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer Service Worker"))
-			{
-				
-			}
-		}
-		else
-			GeneralMessageController.showMessage("Choose user's premission");
-			
-	}
 
 	
-	public boolean checkInsert()
-	{
-		if(prmsCmb.getSelectionModel().isEmpty())
-			return false;
-		else
-			return true;
-	}
 	
 	/**
 	 * when back button pressed
@@ -253,14 +230,15 @@ public class EditUsersPremissionController implements Initializable{
 	}
 	
 	
-	public void showEdittingOptions(ActionEvent event) throws IOException {
+	public void showEdittingOptions(ActionEvent event) throws IOException, InterruptedException {
 
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("/gui/EditUsersPremissionBoundary.fxml").openStream());				//new window to open
 		 EditUsersPremissionController eup = loader.getController();
-		 eup.setConnectionData(this.mmc);
+		 eup.setConnectionData(this.amc);
+		 eup.getUsers();
 		 Stage primaryStage=new Stage();
-			Scene scene=new Scene(root);
+		 Scene scene=new Scene(root);
 			
 			primaryStage.setTitle("User's premission");
 			primaryStage.setScene(scene);
