@@ -48,6 +48,7 @@ import entities.StoreWorkerEntity;
 import entities.SurveyEntity;
 import entities.UserEntity;
 import entities.UserInterface;
+import entities.VerbalReportEntity;
 import logic.ConnectedClients;
 import logic.FilesConverter;
 import logic.MessageToSend;
@@ -2222,14 +2223,21 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
+		if(operation.equals("verbalReport")) {
+			VerbalReportEntity verbalRep = (VerbalReportEntity)messageFromClient;
+			messageToSend.setMessage(this.uploadReprotToDB(verbalRep));
+			client.sendToClient(messageToSend);
+		}
+		
 		if(operation.equals("SurveyAnswers")) {
 			String result = this.updateSurveyAnswers((SurveyEntity)messageFromClient);
 			messageToSend.setMessage(result);
 			messageToSend.setOperation("surveyUpdateResult");
 			client.sendToClient(messageToSend);
 		}
+		
 		if(operation.equals("handleComplaint"))
-	{
+		{
 		String retmsg = "";
 		try
 		{
@@ -2244,6 +2252,7 @@ public class ProjectServer extends AbstractServer
 		messageToSend.setMessage(retmsg);
 		sendToAllClients(messageToSend);
 	}
+		
 	if(operation.equals("getComplaintOrders"))	//for getting all the orders with comlpaints
 	{
 		ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
@@ -2309,8 +2318,42 @@ public class ProjectServer extends AbstractServer
 		
 	}
 	
-  
   /**
+   * method for uploading new verbal report into the data base
+   * 
+   * @param verbalRep - the report to be uploaded to the data base
+   * @throws SQLException
+   */
+  private String uploadReprotToDB(VerbalReportEntity verbalRep) throws SQLException {
+	// TODO Auto-generated method stub
+	  Statement stmnt;
+	  InputStream instrm = FilesConverter.convertByteArrayToInputStream(verbalRep.getFile());
+	try {
+		con=connectToDB();
+		 System.out.println("Connection to Database succeeded");
+		  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+	}
+	catch(Exception e) {
+		System.out.println("Connection to database failed");
+		ServerMain.serverController.showMessageToUI("Connection to Database failed");
+	}
+	
+	try {
+	stmnt=con.createStatement();
+	stmnt.executeUpdate("INSERT INTO projectx.report (Report) VALUES ("+instrm+")");		//DATE!!!
+	System.out.println("Verbal report uploaded successfully");
+	ServerMain.serverController.showMessageToUI("Verbal report uploaded successfully");
+	return "uploaded";
+	}
+	catch(Exception e) {
+		System.out.println("Verbal report upload failed");
+		ServerMain.serverController.showMessageToUI("Verbal report upload failed");
+		return "failed";
+	}
+	
+}
+
+/**
    * method for editing user permission in the data base
    * 
    * @param object
@@ -2337,7 +2380,7 @@ public class ProjectServer extends AbstractServer
 		  return "noUser";
 	  else{
 		  if(userPermission[1].equals("C")) {
-			  stmnt.execute("DELETE FROM projectx.user WHERE Username='"+userPermission[0]+"'");
+			//  stmnt.execute("DELETE FROM projectx.user WHERE Username='"+userPermission[0]+"'");
 			  ret+="customer";
 		  	}
 		  else {
@@ -2589,6 +2632,7 @@ private CustomerEntity getCustomerDetails(String custName) throws SQLException {
 
 public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  
+	Statement stmnt;
 	  try {
 		  con=connectToDB();
 		  if (con != null)
@@ -2603,6 +2647,12 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 		  ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	  }
 	  
+	  stmnt=con.createStatement();
+	  ResultSet rs = stmnt.executeQuery("SELECT UserType FROM projectx.user WHERE Username='"+ce.getUserName()+"'");
+	  
+	  if(rs.next())
+		stmnt.execute("DELETE FROM projectx.user WHERE Username='"+ce.getUserName()+"'");  
+	  
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
@@ -2612,8 +2662,6 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  ps.setString(6, ce.getEmailAddress());
 	  ps.setString(7, ce.getPhoneNumber());
 	  
-//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-//      Date dateobj = new Date();
       Timestamp timestamp = new Timestamp(System.currentTimeMillis());
       
 	  ps.setTimestamp(8,timestamp);
