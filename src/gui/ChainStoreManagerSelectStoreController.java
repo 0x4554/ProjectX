@@ -381,7 +381,7 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 		c.showOrders(this.survey);
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-		primaryStage.setTitle("Satisfactory report");
+		primaryStage.setTitle("Satisfaction report");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 

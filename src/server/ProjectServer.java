@@ -1138,7 +1138,10 @@ public class ProjectServer extends AbstractServer
 		    ps.setString(2, product.getProductType());
 		    ps.setDouble(3, product.getProductPrice());
 		    ps.setString(4,product.getProductDescription());
-		    ps.setBlob(5,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));
+		    if(product.getProductImage() != null)
+		    	ps.setBlob(5,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));
+		    else
+		    	ps.setNull(5, java.sql.Types.NULL);
 		    ps.setString(6, product.getProductDominantColor());
 		    ps.executeUpdate();
 		    return "Success";

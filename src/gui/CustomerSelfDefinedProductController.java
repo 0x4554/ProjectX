@@ -339,6 +339,8 @@ public class CustomerSelfDefinedProductController implements Initializable {
 		this.dominantColors.add("Red");
 		this.dominantColors.add("White");
 		this.dominantColors.add("Yellow");
+		this.dominantColors.add("Purple");
+		this.dominantColors.add("Green");
 		
 		this.listDominantColors = FXCollections.observableArrayList(this.dominantColors);
 		this.dmnntClrCmb.setItems(this.listDominantColors);
