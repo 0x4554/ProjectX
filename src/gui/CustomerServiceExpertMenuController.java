@@ -76,6 +76,36 @@ public class CustomerServiceExpertMenuController implements Initializable {
 		
 	}
 	
+	
+	/**
+	 * This method loads the satisfaction report
+	 * @param event	pressed Analyze survey
+	 * @throws InterruptedException for sleep
+	 * @throws IOException loading a window
+	 */
+	public void showSatisfationReport(ActionEvent event) throws InterruptedException, IOException {
+		// **** get  survey from DB for the selected quarter ***//
+		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
+		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
+		Client.getClientConnection().accept();
+		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer(); //reset to false
+		messageToSend = Client.getClientConnection().getMessageFromServer();
+		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
+
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerSatisfactionReportBoundary.fxml").openStream());
+		ChainStoreManagerSatisfactionReportController c = new ChainStoreManagerSatisfactionReportController();
+		c = loader.getController();
+		c.showOrders(this.survey);
+		Stage primaryStage = new Stage();
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Satisfaction report");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

@@ -128,7 +128,7 @@ public class CreateNewAccountController implements Initializable {
 			else {
 				CustomerEntity cust=new CustomerEntity();
 				cust.setUserName(usrFld.getText());						//set Fields of the new customer
-				cust.setCustomerID(Long.parseLong(idFld.getText()));
+				cust.setID(Long.parseLong(idFld.getText()));
 				cust.setPassword(pswrdFld.getText());
 				cust.setSubscriptionDiscount((String)subscrptCmb.getValue());
 				cust.setEmailAddress(emlFld.getText());

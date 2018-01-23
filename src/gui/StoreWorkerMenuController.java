@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.StoreEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,12 +29,12 @@ import logic.MessageToSend;
 
 public class StoreWorkerMenuController implements Initializable{
 
-
     @FXML private Button ctlgBtn;
     @FXML private Button lgBtn;
     @FXML private Button srvBtn;
     
     private StoreWorkerMenuController swm;
+    private StoreEntity store;
     
     /**
      * Necessary constructor for the App
@@ -45,7 +46,6 @@ public class StoreWorkerMenuController implements Initializable{
 		this.swm=m;
 	}
 
-	
 	
 	public void showStoreWorkerMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
@@ -59,6 +59,33 @@ public class StoreWorkerMenuController implements Initializable{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
+	}
+	
+	/**
+	 * This method sets the store of the manager
+	 * @param store
+	 * @throws InterruptedException for the sleep 
+	 */
+	public void setStore() 
+	{
+		try {
+		MessageToSend messageToSend = new MessageToSend(Client.getClientConnection().getUsername(), "getSpecificStore");
+		Client.getClientConnection().setDataFromUI(messageToSend);							//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend message = Client.getClientConnection().getMessageFromServer();
+		
+		StoreEntity store = (StoreEntity) message.getMessage();
+
+		this.store= store;				//save the store
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+			LoginController.signalLogOut();
+		}
 	}
 	
 	
@@ -122,11 +149,27 @@ public class StoreWorkerMenuController implements Initializable{
 		primaryStage.show();
 	}
 	
+public void PromoteSale(ActionEvent event) throws IOException, InterruptedException {
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/StoreWorkerPromoteSale.fxml").openStream());
+		StoreWorkerPromoteSaleController sc=loader.getController();
+		//sc.setConnectionData(this);
+		sc.ShowAllProduct();
+		sc.setStore(this.store);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		primaryStage.setTitle("Promote Sale");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
 	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
+		setStore();
 	}
 }

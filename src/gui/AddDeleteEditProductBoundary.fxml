@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="691.0" prefWidth="1124.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddDeleteEditProductController">
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="691.0" prefWidth="1124.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddDeleteEditProductController">
    <children>
       <Label layoutX="486.0" layoutY="24.0" text="Edit Products ">
          <font>
@@ -32,18 +35,18 @@
       <ComboBox fx:id="typeCmb" layoutX="760.0" layoutY="200.0" prefHeight="31.0" prefWidth="186.0" />
       <TextField fx:id="DescriptionTxt" layoutX="760.0" layoutY="321.0" prefHeight="31.0" prefWidth="186.0" promptText="Enter Product Description" />
       <TextField fx:id="ImageTxt" layoutX="760.0" layoutY="375.0" prefHeight="31.0" prefWidth="186.0" promptText="Choose Image " />
-      <TextField fx:id="ColorTxt" layoutX="760.0" layoutY="437.0" prefHeight="31.0" prefWidth="186.0" promptText="Enter Product  Dominent Color" />
-      <Label fx:id="Colorlbl" layoutX="543.0" layoutY="442.0" text="Product Dominent Color *" />
-      <Button fx:id="UploudBtn" layoutX="983.0" layoutY="375.0" mnemonicParsing="false" onAction="#searchForPhoto" text="Upload Photo" textFill="#5aae79" />
-      <Button fx:id="addBtn" layoutX="545.0" layoutY="589.0" mnemonicParsing="false" onAction="#AddProduct" text="Add Product" textFill="#55bc6a" />
-      <Button fx:id="deleteBtn" layoutX="674.0" layoutY="589.0" mnemonicParsing="false" onAction="#DeleteProduct" prefHeight="31.0" prefWidth="124.0" text="Delete Product" textFill="#52b97d" />
-      <Button fx:id="UpdateBtn" layoutX="821.0" layoutY="589.0" mnemonicParsing="false" onAction="#UpdateProduct" text="Update Product" textFill="#57bc64" />
-      <Button fx:id="getDetailsBtn" layoutX="973.0" layoutY="589.0" mnemonicParsing="false" onAction="#SetProductDetails" text="Get Product" textFill="#59b26f" />
-      <Button fx:id="clearBtn" layoutX="543.0" layoutY="632.0" mnemonicParsing="false" onAction="#ClearFields" prefHeight="31.0" prefWidth="106.0" text="Clear Fields" textFill="#53bf82" />
-      <Button fx:id="clearSelectionBtn" layoutX="674.0" layoutY="632.0" mnemonicParsing="false" onAction="#ClearSelections" prefHeight="31.0" prefWidth="124.0" text="Clear Selection" textFill="#4db564" />
-      <Label layoutX="542.0" layoutY="484.0" text="Add-select from the list and press &quot;Add&quot; button." textFill="#5aae79" />
-      <Label layoutX="542.0" layoutY="505.0" text="Delete-select from the list and press &quot;Delet&quot; button." textFill="#5aae79" />
-      <Label layoutX="542.0" layoutY="526.0" text="Edit-select the wanted product the press &quot;Get Product&quot; button ," textFill="#5aae79" />
-      <Label layoutX="541.0" layoutY="547.0" text="edit and press &quot;Update Product&quot; button." textFill="#5aae79" />
+      <Label fx:id="Colorlbl" layoutX="543.0" layoutY="442.0" text="Product Dominant Color *" />
+      <Button fx:id="UploudBtn" layoutX="983.0" layoutY="375.0" mnemonicParsing="false" onAction="#searchForPhoto" text="Upload Photo" textFill="#191b1a" />
+      <Button fx:id="addBtn" layoutX="534.0" layoutY="623.0" mnemonicParsing="false" onAction="#AddProduct" prefHeight="31.0" prefWidth="124.0" text="Add Product" textFill="#272827" />
+      <Button fx:id="deleteBtn" layoutX="674.0" layoutY="623.0" mnemonicParsing="false" onAction="#DeleteProduct" prefHeight="31.0" prefWidth="124.0" text="Delete Product" textFill="#272827" />
+      <Button fx:id="UpdateBtn" layoutX="821.0" layoutY="623.0" mnemonicParsing="false" onAction="#UpdateProduct" text="Update Product" textFill="#272827" />
+      <Button fx:id="clearBtn" layoutX="674.0" layoutY="678.0" mnemonicParsing="false" onAction="#ClearFields" prefHeight="31.0" prefWidth="124.0" text="Clear Fields" textFill="#272827" />
+      <Button fx:id="clearSelectionBtn" layoutX="535.0" layoutY="678.0" mnemonicParsing="false" onAction="#ClearSelections" prefHeight="31.0" prefWidth="124.0" text="Clear Selection" textFill="#272827" />
+      <Label layoutX="532.0" layoutY="507.0" text="Add-select from the list and press &quot;Add&quot; button." textFill="#82277e" />
+      <Label layoutX="532.0" layoutY="536.0" text="Delete-select from the list and press &quot;Delet&quot; button." textFill="#82277e" />
+      <Label layoutX="534.0" layoutY="565.0" text="Edit-select the wanted product " textFill="#82277e" />
+      <Label layoutX="740.0" layoutY="565.0" text="edit and press &quot;Update Product&quot; button." textFill="#82277e" />
+      <Label layoutX="545.0" layoutY="406.0" text="(If you dont want an image enter &quot;non&quot;)" />
+      <ComboBox fx:id="dmntClrCmb" layoutX="760.0" layoutY="437.0" prefHeight="31.0" prefWidth="186.0" promptText="Dominant Color" />
    </children>
 </Pane>
