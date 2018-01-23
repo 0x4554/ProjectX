@@ -2629,7 +2629,7 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
-	  ps.setLong(3, ce.getCustomerID());
+	  ps.setLong(3, ce.getID());
 	  ps.setString(4,ce.getSubscriptionDiscount().toString());
 	  ps.setString(5, ce.getAddress());
 	  ps.setString(6, ce.getEmailAddress());
