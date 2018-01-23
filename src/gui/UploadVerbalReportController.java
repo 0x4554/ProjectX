@@ -3,7 +3,9 @@ package gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import client.Client;
 import entities.VerbalReportEntity;
@@ -85,6 +87,7 @@ public class UploadVerbalReportController implements Initializable {
 			
 		VerbalReportEntity verbalRep = new VerbalReportEntity();
 		verbalRep.setFile(pathTxtFld.getText());
+		verbalRep.setDate(new Timestamp(System.currentTimeMillis()));
 		
 		MessageToSend toServer = new MessageToSend(verbalRep,"verbalReport");
 		Client.getClientConnection().setDataFromUI(toServer);

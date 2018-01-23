@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.SurveyEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import logic.MessageToSend;
 
 public class CustomerServiceExpertMenuController implements Initializable {
 
@@ -22,6 +24,7 @@ public class CustomerServiceExpertMenuController implements Initializable {
 	  @FXML private Button logBtn;
 	  
 	  private Client clnt;
+	  private SurveyEntity survey;
 
 	/**
 	 * A necessary constructor for the App
@@ -88,9 +91,11 @@ public class CustomerServiceExpertMenuController implements Initializable {
 		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
 		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
 		Client.getClientConnection().accept();
+		
 		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer(); //reset to false
+		
 		messageToSend = Client.getClientConnection().getMessageFromServer();
 		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
 

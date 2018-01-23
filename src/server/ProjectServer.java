@@ -2001,7 +2001,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
 			messageToSend.setMessage(listOfProducts);		//set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 			
 		}
 		
@@ -2010,7 +2010,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<String> listOfUsers = new ArrayList<String>();			//an array list that holds all the users in the catalog
 			listOfUsers=getAllUsersFromDB();
 			messageToSend.setMessage(listOfUsers);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getUserDetails")) {
@@ -2039,7 +2039,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getSelfDefinedProducts((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfProducts);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getDiscounts"))/*get the discounts Hash Map for a specific store*/
@@ -2050,14 +2050,14 @@ public class ProjectServer extends AbstractServer
 			if(listOfDiscounts!=null)
 			{
 			messageToSend.setMessage(listOfDiscounts);		                                                     //set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 			}
 			else {
 				System.out.println("Operation failed");
 				 ServerMain.serverController.showMessageToUI( "Operation failed");
 
 				messageToSend.setMessage(null); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("AddDiscount"))/*get the discounts Hash Map for a specific store*/
@@ -2071,13 +2071,13 @@ public class ProjectServer extends AbstractServer
 			{
 		    ServerMain.serverController.showMessageToUI("Success");
 			messageToSend.setMessage("Success");		                                                     //set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 			}
 			else {
 				System.out.println("Operation failed");
 				 ServerMain.serverController.showMessageToUI( "Operation failed");
 				messageToSend.setMessage("Failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("updateAccount")) {
@@ -2092,20 +2092,20 @@ public class ProjectServer extends AbstractServer
 		{
 			String retMsg = cancelRequest((Integer)messageFromClient);
 			messageToSend.setMessage(retMsg);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		if(operation.equals("getCancelRequests"))		//get all the orders which have a cancel request
 		{
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 			listOfOrders = getCancelRequests((String)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		if(operation.equals("cancelOrder"))				//for store manger canceling an order
 		{
 			String retMsg = cancelOrder((Integer)messageFromClient);
 			messageToSend.setMessage(retMsg);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		if(operation.equals("addProductToCatalog"))
 		{
@@ -2115,13 +2115,13 @@ public class ProjectServer extends AbstractServer
 				System.out.println("product added sucessesfuly to the catalog DB");
 				 ServerMain.serverController.showMessageToUI( "product added sucessesfuly to the catalog DB");
 				messageToSend.setMessage("Added"); 		//set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else {
 				System.out.println("Inserting failed");
 				 ServerMain.serverController.showMessageToUI( "Inserting failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("deleteProductFromCatalog"))
@@ -2132,12 +2132,12 @@ public class ProjectServer extends AbstractServer
 			if(this.deleteProductFromCatalog(product).equals("Success")) {
 				 ServerMain.serverController.showMessageToUI( "product deleted sucessesfuly from the catalog DB");
 				messageToSend.setMessage("Deleted"); 		//set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else {
 				 ServerMain.serverController.showMessageToUI( "Deletion failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("createNewOrder"))
@@ -2153,7 +2153,7 @@ public class ProjectServer extends AbstractServer
 				 ServerMain.serverController.showMessageToUI( e.getMessage());
 			}
 			messageToSend.setMessage(retval);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getCustomerOrders"))		//for getting a specific customer's list of orders
@@ -2161,7 +2161,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 			listOfOrders = getCustomerOrders((String)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
@@ -2172,7 +2172,7 @@ public class ProjectServer extends AbstractServer
 			//listOfOrders = getAllOrders((String)messageFromClient);
 			listOfOrders = getAllOrders((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		if(operation.equals("createAccount")) {	
 			CustomerEntity custen=(CustomerEntity)messageFromClient;
@@ -2195,7 +2195,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllStores = getAllstoresFromDB();
 			messageToSend.setMessage(listOfAllStores);		//set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getSpecificStore"))
@@ -2203,7 +2203,7 @@ public class ProjectServer extends AbstractServer
 			StoreEntity store ;		//an arrayList that holds all the stores in the DB
 			store = getSpecificStore((String)messageFromClient);
 			messageToSend.setMessage(store);		//set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("exitApp"))					//for when a user exits the app
@@ -2224,7 +2224,7 @@ public class ProjectServer extends AbstractServer
 		{
 			retval = this.login(client,(String)messageFromClient);
 			messageToSend.setMessage(retval);	//set the message for sending back to the client
-			sendToAllClients(messageToSend);	//send arraylist back to client
+			client.sendToClient(messageToSend);	//send arraylist back to client
 		}
 		
 		if(operation.equals("getProduct"))	//check***********fix*******to***********lana*******object***********************//
@@ -2234,7 +2234,7 @@ public class ProjectServer extends AbstractServer
 			int productid = (int)messageToSend.getMessage();
 			produ= this.getProduct(client,productid);	//get the product
 			messageToSend.setMessage(produ);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		
 		if(operation.equals("getAllProducts"))	
@@ -2242,7 +2242,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfAllProducts = new ArrayList<ProductEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllProducts = this.getAllProductsFromDB();
 			messageToSend.setMessage(listOfAllProducts);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		
 		if(operation.equals("deleteProduct"))	
@@ -2252,7 +2252,7 @@ public class ProjectServer extends AbstractServer
 			ProductEntity prd = (ProductEntity)messageToSend.getMessage();
 			Reply = this.DeleteProductsFromDB(prd);
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		if(operation.equals("UpdateProduct"))	
 		{
@@ -2261,7 +2261,7 @@ public class ProjectServer extends AbstractServer
 		//	ProductEntity prd = (ProductEntity)messageToSend.getMessage();
 			Reply = this.UpdateProductInDB(p.get(0),p.get(1));
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		if(operation.equals("createProduct"))
 		{
@@ -2271,13 +2271,13 @@ public class ProjectServer extends AbstractServer
 			{
 				System.out.println("product added sucessesfuly to DB");
 				messageToSend.setMessage("Added");
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else
 			{
 				System.out.println("Failed to insert the product to DB");
 				messageToSend.setMessage("Failed");
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			
 		}
@@ -2331,7 +2331,7 @@ public class ProjectServer extends AbstractServer
 			 ServerMain.serverController.showMessageToUI( e.getMessage());
 		}
 		messageToSend.setMessage(retmsg);
-		sendToAllClients(messageToSend);
+		client.sendToClient(messageToSend);
 	}
 		
 	if(operation.equals("getComplaintOrders"))	//for getting all the orders with comlpaints
@@ -2339,14 +2339,14 @@ public class ProjectServer extends AbstractServer
 		ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 		listOfOrders = getAllComplaintOrders((ArrayList<ComplaintEntity>)messageFromClient);
 		messageToSend.setMessage(listOfOrders);
-		sendToAllClients(messageToSend);
+		client.sendToClient(messageToSend);
 	}
 	if(operation.equals("getComplaints"))		//for getting all complaints
 	{
 		ArrayList<ComplaintEntity> listOfComplaints = new ArrayList<ComplaintEntity>();		//an arrayList that holds all the stores in the DB
 		listOfComplaints = getComplaints((ArrayList<String>)messageFromClient);
 		messageToSend.setMessage(listOfComplaints);		//set the message for sending back to the client
-		sendToAllClients(messageToSend);
+		client.sendToClient(messageToSend);
 	}
 		if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
@@ -2358,21 +2358,21 @@ public class ProjectServer extends AbstractServer
 				 ServerMain.serverController.showMessageToUI("complaint added by customer");
 			//	generalMessage = (String)("Added");
 				messageToSend.setMessage("Success"); 		//set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else if(ret.equals("Complaint was already filed"))
 			{
 				System.out.println("complaint failed");
 				 ServerMain.serverController.showMessageToUI("complaint failed");
 				messageToSend.setMessage("Complaint was already filed");
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else if(ret.equals("Order does not exist")){
 				System.out.println("failed to add complaint");
 				ServerMain.serverController.showMessageToUI("failed to add complaint");
 			//	generalMessage = (String)("failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
 		
@@ -2421,7 +2421,7 @@ public class ProjectServer extends AbstractServer
 	
 	try {
 	stmnt=con.createStatement();
-	stmnt.executeUpdate("INSERT INTO projectx.report (Report) VALUES ("+instrm+")");		//DATE!!!
+	stmnt.executeUpdate("INSERT INTO projectx.verbalreports (Report,Date) VALUES ("+instrm+","+verbalRep.getDate()+")");		//DATE!!!
 	System.out.println("Verbal report uploaded successfully");
 	ServerMain.serverController.showMessageToUI("Verbal report uploaded successfully");
 	return "uploaded";

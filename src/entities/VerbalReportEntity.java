@@ -3,6 +3,7 @@ package entities;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import logic.FilesConverter;
 
@@ -20,6 +21,8 @@ import logic.FilesConverter;
 public class VerbalReportEntity implements Serializable{
 
 	private byte[] file;
+	private Timestamp date;
+	
 	
 	
 	/**
@@ -32,6 +35,30 @@ public class VerbalReportEntity implements Serializable{
 	}
 
 	
+	
+	
+	/**
+	 *Getter for the date
+	 * @return the date
+	 */
+	public Timestamp getDate() {
+		return date;
+	}
+
+
+
+
+	/**
+	 *Setter for the date
+	 * @param date the date to set
+	 */
+	public void setDate(Timestamp date) {
+		this.date = date;
+	}
+
+
+
+
 	/**
 	 * getter for the wanted file
 	 * 
