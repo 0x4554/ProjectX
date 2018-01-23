@@ -163,10 +163,6 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		
 		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
-		else
-			return;
-//		if(!(ColorTxt.getText().equals("")))
-//		    product.setProductDominantColor(ColorTxt.getText());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
