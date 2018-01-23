@@ -1,8 +1,5 @@
 package gui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,22 +22,30 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.FilesConverter;
 
+/**
+ * This class is the controller for the cart boundary
+ * 
+ * CartController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CartController implements Initializable {
 	private OrderEntity newOrder;
 	private List<String> listOfProductsNames;
 	ObservableList observableList = FXCollections.observableArrayList();
 
-//	@FXML
-//	private ListView<String> prdctDtlLst;
-//	@FXML
-//	private ListView<String> prdLst;
 	@FXML
 	private ImageView prdctImg;
 	@FXML
@@ -54,14 +59,17 @@ public class CartController implements Initializable {
 	@FXML
 	private Label totalPriceLable;
 
+	/**
+	 * This method loads and displays the products in the cart
+	 * @throws IOException 
+	 */
 	public void showCart() throws IOException {
 		String lbl = "";
 		this.listOfProductsNames = new ArrayList<String>();
-//		byte[] b = FilesConverter.convertFileToByteArray(new File("C:\\Users\\pic1.jpg"));
 		TreeItem<String> root;
 
-		root = new TreeItem<>(); //set the root for the prodcuts in cart tree
-		root.setExpanded(true); //set it to expanded by default  
+		root = new TreeItem<>();							 //set the root for the products in cart tree
+		root.setExpanded(true); 							//set it to expanded by default  
 
 		if (this.newOrder.getProductsInOrder() != null)
 		{
@@ -87,16 +95,14 @@ public class CartController implements Initializable {
 				}
 				root.getChildren().add(productName);
 			}
-//			observableList.setAll(stringSet);
-//			this.prdLst.setItems(observableList);
 			
 		} else
 			lbl = "Your Cart is empty";
 		this.prdctTrVw.setRoot(root);
-		this.prdctTrVw.setShowRoot(false); //make root expanded every time it starts
+		this.prdctTrVw.setShowRoot(false); 							//make root expanded every time it starts
 		this.crtEmptLbl.setText(lbl);
 		
-		calculatePrice(); 	//call method to calculate the order price
+		calculatePrice(); 										//call method to calculate the order price
 		this.totalPriceLable.setText(this.newOrder.getTotalPrice().toString());
 						///This EventHanlder is an mouse event handler which listens to a product select in the products treeview
 		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
@@ -116,6 +122,7 @@ public class CartController implements Initializable {
 		for(ProductEntity product : this.newOrder.getProductsInOrder())
 		{
 		if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
+			if(product.getProductImage() != null)
 				this.prdctImg.setImage(FilesConverter.convertByteArrayToImage(product.getProductImage()));
 		}
 	} 
@@ -143,14 +150,10 @@ public class CartController implements Initializable {
 		if(!this.newOrder.getProductsInOrder().isEmpty())		//if cart contains products
 		{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		
 		FXMLLoader loader = new FXMLLoader();
 		Pane root = loader.load(getClass().getResource("/gui/CustomerCheckOutBoundary.fxml").openStream());
-		
 		CustomerCheckOutController ccoc = loader.getController();	
-		ccoc.setOrder(this.newOrder);
-//		ccoc.showCart();
-		
+		ccoc.setOrder(this.newOrder);		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Your cart");
@@ -182,8 +185,6 @@ public class CartController implements Initializable {
 	 */
 	public void backToNewOrderMenu(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
-		//	selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem(); //get the selected store name from the comboBox
-
 			FXMLLoader loader = new FXMLLoader();
 			Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
 			CreateNewOrderController cnoc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
@@ -191,7 +192,6 @@ public class CartController implements Initializable {
 			Stage primaryStage = new Stage();
 			Scene scene = new Scene(root);
 			cnoc.setOrderDetails(newOrder);
-//			nom.setConnectionData(this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
 			primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
 			primaryStage.setScene(scene);
 			primaryStage.show();

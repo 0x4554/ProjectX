@@ -19,6 +19,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * This class is the controller for the Quarterly revenue report boundary
+ * 
+ * ChainStoreManagerQuarterlyRevenueReportController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ChainStoreManagerQuarterlyRevenueReportController implements Initializable {
 
 	@FXML
@@ -55,6 +68,10 @@ public class ChainStoreManagerQuarterlyRevenueReportController implements Initia
 
 	}
 
+	/**
+	 * This method handles the close operation
+	 * @param event	pressed close
+	 */
 	public void close(ActionEvent event) {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
 	}

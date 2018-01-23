@@ -21,6 +21,7 @@ import javafx.scene.layout.Region;
 
 /**
  * This class is used for the satisfaction report
+ * 
  * ChainStoreManagerSatisfactionReportController.java
  *
  * @author Eliran Toledano
@@ -41,6 +42,7 @@ public class ChainStoreManagerSatisfactionReportController implements Initializa
 	    private ListView<String> QLstVw;
 
 	   private ObservableList<String> list;
+	   
 	    /**
 	     * This method shows the chart of the survey result
 	     * @param orders

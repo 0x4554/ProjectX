@@ -19,8 +19,8 @@
             <Button fx:id="bckBtn" mnemonicParsing="false" onAction="#backToMainMenu" text="back" />
             <Region prefHeight="31.0" prefWidth="307.0" />
             <Button fx:id="cnclOrdrBtn" mnemonicParsing="false" onAction="#pressedCancelOrder" text="Cancel order" />
-            <Region prefHeight="31.0" prefWidth="297.0" />
-            <Button fx:id="cmplntBtn" mnemonicParsing="false" onAction="#PressedComplaint" text="Comliant" />
+            <Region prefHeight="31.0" prefWidth="279.0" />
+            <Button fx:id="cmplntBtn" mnemonicParsing="false" onAction="#PressedComplaint" text="Complaint" />
         </items>
       </ToolBar>
       <Label layoutX="100.0" layoutY="20.0" text="Orders" />

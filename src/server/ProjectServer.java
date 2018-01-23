@@ -105,6 +105,49 @@ public class ProjectServer extends AbstractServer
   }
 
   /**
+   * This method get the verbal reports from the DB
+   * @return arrayList of VerbalReportEntity
+ * @throws SQLException create statement
+ * @throws ClassNotFoundException  DB connection
+ * @throws IOException  for the conversion
+   */
+  private ArrayList<VerbalReportEntity> getVerbalReports() throws SQLException, ClassNotFoundException, IOException
+  {
+	  Statement stmt;
+	  ResultSet rs;
+	  VerbalReportEntity report;
+	  ArrayList<VerbalReportEntity> listOfReports = new ArrayList<VerbalReportEntity>();
+	  try
+		{
+			con = connectToDB(); //call method to connect to DB
+			if (con != null)
+			{
+				System.out.println("Connection to Data Base succeeded");
+				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+			}
+		} catch (SQLException e) //catch exception
+		{
+			System.out.println("SQLException: " + e.getMessage());
+			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+		}
+	  stmt = con.createStatement();
+	  
+	  rs = stmt.executeQuery("Select Report,Date FROM projectx.verbalreports");
+	  while(rs.next())
+	  {
+		  report = new VerbalReportEntity();
+			Blob b = con.createBlob(); 					//create blob
+			b=rs.getBlob(1);							////get blob from DB
+	  		InputStream is=b.getBinaryStream();	  		//get binary Stream for blob and than use FilesConverter.convertInputStreamToByteArray(InputStream)
+	  		byte[] file = FilesConverter.convertInputStreamToByteArray(is);
+		  report.setFile(file);
+		  
+		  
+	  }
+
+	  
+  }
+  /**
    * This method is for handling a complaint as a customer service worker
    * @param complaint the complaint
    * @return
@@ -568,11 +611,17 @@ public class ProjectServer extends AbstractServer
 		 product.setProductDescription(rs.getString(5));
 		 				//**get the blob for the image from the DB**//
 		 productImage =con.createBlob();
+		 if(rs.getBlob(6) != null)
+		 {
 		 productImage = rs.getBlob(6);
+		 
 		 InputStream is = productImage.getBinaryStream();
   		 
  		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
-  		 product.setProductDominantColor(rs.getString(7));
+		 }
+	//	 else 
+		//	 product.setProductImage(byte[]);
+ 		 product.setProductDominantColor(rs.getString(7));
   		 listOfProducts.add(product);									//add the product to the list
   	 }
   	 return listOfProducts;												//return the found products
@@ -2067,7 +2116,14 @@ public class ProjectServer extends AbstractServer
 				client.sendToClient(reply);
 			}
 		}
-		
+		if(operation.equals("getVerbalReports"))
+		{
+			ArrayList<VerbalReportEntity> listOfVerbalReports = new ArrayList<VerbalReportEntity>();	//an arrayList that holds all the products in the catalog
+			listOfVerbalReports = getVerbalReports();
+			messageToSend.setMessage(listOfVerbalReports);
+			client.sendToClient(messageToSend);
+		}
+			
 		if(operation.equals("updatePermission")) {
 			String value = this.updatePermissions((String[])messageFromClient);
 			messageToSend.setMessage(value);

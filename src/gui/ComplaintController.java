@@ -103,7 +103,7 @@ public class ComplaintController implements Initializable{
 						if(reply.equals("Success"))
 						{
 							cancelComplaint(event);
-							GeneralMessageController.showMessage("Your complaint has been received received.\nWe will contact you soon.");
+							GeneralMessageController.showMessage("Your complaint has been received.\nWe will contact you soon.");
 						}
 						else if (reply.equals("Complaint was already filed"))
 						{

@@ -15,6 +15,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * This class is the controller for he chain store manager boundary
+ * ChainStoreManagerMenuController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ChainStoreManagerMenuController implements Initializable {
 
 	@FXML
@@ -22,6 +34,7 @@ public class ChainStoreManagerMenuController implements Initializable {
 
     @FXML
     private Button vwRprtsBtn;
+    
 	/**
 	 * A necessary constructor for the App
 	 */

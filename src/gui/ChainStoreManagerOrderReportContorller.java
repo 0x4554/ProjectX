@@ -10,16 +10,24 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.VBox;
 
+/**
+ * This class is the controller for the order report boundary
+ * ChainStoreManagerOrderReportContorller.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ChainStoreManagerOrderReportContorller implements Initializable {
 
 	@FXML
@@ -31,23 +39,17 @@ public class ChainStoreManagerOrderReportContorller implements Initializable {
     private BarChart<String, String> chart;
 
    private ObservableList<String> list;
+   
     /**
-     * This method shows the table of orders
+     * This method shows the chart of orders oragnized by product type
      * @param orders
      */
     public void showOrders(ArrayList<OrderEntity> orders) {
     	
-//    	TableColumn flower = new TableColumn("Flower");
-//        TableColumn bridal = new TableColumn("Bridal");
-//        TableColumn birthDay = new TableColumn("BirthDay");
-//        
-//        typTblVw.getColumns().addAll(flower, bridal, birthDay);
     	int flower=0,bridal=0,birthDay=0;
         XYChart.Series dataSeries1 = new XYChart.Series();
         dataSeries1.setName("Products ordered");
-
-      
-        
+   
         for(OrderEntity order : orders)
         {
         	for(ProductEntity product : order.getProductsInOrder())
@@ -67,19 +69,6 @@ public class ChainStoreManagerOrderReportContorller implements Initializable {
         
         chart.getData().add(dataSeries1);
         
-//		this.listOfOrders = orders;
-//		this.ordrLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE); //unable multiple selection
-//		totalEarnings=0.0;
-//		this.listOfOrderString = FXCollections.observableArrayList(); //the observable list to enter to the list  view
-//
-//		for (OrderEntity order : this.listOfOrders)
-//		{
-//			this.listOfOrderString.add("Order Number : " +order.getOrderID()+" total : "+ order.getTotalPrice());
-//			this.totalEarnings += order.getTotalPrice();		//sum  the earnings
-//		}
-//
-//		this.ordrLstVw.setItems(this.listOfOrderString); //set items to the list of active complaints
-//		this.ttlLbl.setText(this.totalEarnings.toString());
 
 	}
     
