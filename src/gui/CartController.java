@@ -116,6 +116,7 @@ public class CartController implements Initializable {
 		for(ProductEntity product : this.newOrder.getProductsInOrder())
 		{
 		if(product.getProductName().equals(this.prdctTrVw.getSelectionModel().getSelectedItem().getValue()))
+			if(product.getProductImage() != null)
 				this.prdctImg.setImage(FilesConverter.convertByteArrayToImage(product.getProductImage()));
 		}
 	} 

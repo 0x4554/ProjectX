@@ -568,11 +568,17 @@ public class ProjectServer extends AbstractServer
 		 product.setProductDescription(rs.getString(5));
 		 				//**get the blob for the image from the DB**//
 		 productImage =con.createBlob();
+		 if(rs.getBlob(6) != null)
+		 {
 		 productImage = rs.getBlob(6);
+		 
 		 InputStream is = productImage.getBinaryStream();
   		 
  		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
-  		 product.setProductDominantColor(rs.getString(7));
+		 }
+	//	 else 
+		//	 product.setProductImage(byte[]);
+ 		 product.setProductDominantColor(rs.getString(7));
   		 listOfProducts.add(product);									//add the product to the list
   	 }
   	 return listOfProducts;												//return the found products
