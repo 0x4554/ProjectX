@@ -78,5 +78,14 @@ public class VerbalReportEntity implements Serializable{
 		File f = new File (filePath);
 		this.file = FilesConverter.convertFileToByteArray(f);
 	}
+	
+	/**
+	 * Setter for the file
+	 * @param file the file
+	 */
+	public void setFile(byte[] file)
+	{
+		this.file=file;
+	}
 		
 }

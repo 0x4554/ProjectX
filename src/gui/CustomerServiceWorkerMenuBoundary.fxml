@@ -17,6 +17,6 @@
          </font>
       </Label>
       <Button fx:id="updtSrvyBtn" layoutX="214.0" layoutY="180.0" mnemonicParsing="false" onAction="#updatePressed" text="Update Survey Questions" />
-      <Button fx:id="saveBtn" layoutX="212.0" layoutY="235.0" mnemonicParsing="false" text="Save service expert report" />
+      <Button fx:id="saveBtn" layoutX="212.0" layoutY="235.0" mnemonicParsing="false" onAction="#saveServiceExpertReport" text="Save service expert report" />
    </children>
 </AnchorPane>
