@@ -1040,8 +1040,8 @@ public class ProjectServer extends AbstractServer
 			}
 		} catch (SQLException e) //catch exception
 		{
-			System.out.println("SQLException: " + e.getMessage());
-			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+			System.out.println("Connection to Database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
 			e.printStackTrace();
 		}
 		stmt = con.createStatement();
@@ -1060,11 +1060,11 @@ public class ProjectServer extends AbstractServer
 					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 				returnMessage.add("failed"); 							//state failed to log in
 				returnMessage.add("user is already logged in"); 		//reason for failure
-				System.out.println("connected user tried to login again - blocked");
-				ServerMain.serverController.showMessageToUI( "connected user tried to login again - blocked");
+				System.out.println("connected user"+data[0]+" tried to login again - blocked");
+				ServerMain.serverController.showMessageToUI("connected user"+data[0]+" tried to login again - blocked");
 				return returnMessage;
 			} else if (data[1].equals(rs.getString(2))) 				//if password received matches the data base 
-			{
+				{
 				if (rs.getInt(4) == 3)	//if user is already blocked from too many login attempts
 				{ 
 						//failed - ArrayList<String> to return in form of ["failed",reason of failure]
@@ -1079,8 +1079,9 @@ public class ProjectServer extends AbstractServer
 					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
-
 					ConnectedClients.insertNewConnection(data[0]);	//insert the userName to the connected list of users
+					System.out.println(data[0]+" logged into the system");
+					ServerMain.serverController.showMessageToUI(data[0]+" logged into the system");
 					return returnMessage;
 				}
 			} else if (!(data[1].equals(rs.getString(2)))) //if password received does not match the data base 
@@ -1090,12 +1091,16 @@ public class ProjectServer extends AbstractServer
 					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 					returnMessage.add("failed"); //state failed to log in
 					returnMessage.add("user is blocked"); //reason for failure
+					System.out.println(data[0]+" is blocked");
+					ServerMain.serverController.showMessageToUI(data[0]+" is blocked");
 					return returnMessage;
 				} else
 				{
 						//failed - ArrayList<String> to return in form of ["failed",reason of failure,number of attempts made]
 					returnMessage.add("failed"); 							//state failed to log in
 					returnMessage.add("password does not match"); 			//reason for failure
+					System.out.println("wrong password "+data[0]);
+					ServerMain.serverController.showMessageToUI("wrong password "+data[0]);
 					attempts = rs.getInt(4) + 1; 							//increment number of attempts made
 					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
 					ps.setString(2, data[0]);
@@ -2392,18 +2397,19 @@ public class ProjectServer extends AbstractServer
 				client.sendToClient(messageToSend);
 			}
 		}
+	}
 		
-		if(operation.equals("downloadFile")) {
-			
-			System.out.println("Server downloading file sent from client");
-			ServerMain.serverController.showMessageToUI("Server downloading file sent from client");
-
-			String filePath=(String)messageToSend.getMessage();
-			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
-			
-		//	this.receiveFileFromClient("localhost", 5556);
-			}
-		}
+//		if(operation.equals("downloadFile")) {
+//			
+//			System.out.println("Server downloading file sent from client");
+//			ServerMain.serverController.showMessageToUI("Server downloading file sent from client");
+//
+//			String filePath=(String)messageToSend.getMessage();
+//			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
+//			
+//		//	this.receiveFileFromClient("localhost", 5556);
+//			}
+//		}
 		
 		catch(Exception ex) {
 			ex.printStackTrace();
