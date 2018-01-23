@@ -30,6 +30,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -107,11 +108,17 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 	    
 		if(!NameTxt.getText().equals(""))
 		product.setProductName(NameTxt.getText());
-		else return;
+		else {
+			GeneralMessageController.showMessage("Please Enter All Fields");
+			return;
+			}
 		
 		if(!(typeCmb.getSelectionModel().isEmpty()))
 			product.setProductType(typeCmb.getSelectionModel().getSelectedItem());
-		else return;
+		else {
+			GeneralMessageController.showMessage("Please Enter All Fields");	
+			return;
+		}
 		
 		if(!(PriceTxt.getText().equals("")))
 		    product.setProductPrice(Double.parseDouble(PriceTxt.getText()));
@@ -119,13 +126,25 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		
 		if(!(DescriptionTxt.getText().equals("")))
 		product.setProductDescription(DescriptionTxt.getText());
-		else return;
+		else {
+			product.setProductDescription("");
+		}
 		
 		if(!(ImageTxt.getText().equals("")))
-		    product.setProductImage(ImageTxt.getText());	
+		{
+			if(ImageTxt.getText().equals("non"))
+			{
+				product.setProductImage();//set with null
+			}
+			else product.setProductImage(ImageTxt.getText());	
+		}//else dont change the photo
 		
 		if(!(ColorTxt.getText().equals("")))
 		    product.setProductDominantColor(ColorTxt.getText());
+		else {
+			GeneralMessageController.showMessage("Please Enter All Fields");
+			return;
+		}
 	}else
 		{
 		flag=0;
@@ -167,7 +186,7 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 	}
 }
 	
-public void SetProductDetails(ActionEvent event) throws IOException
+public void SetProductDetails(MouseEvent event) throws IOException
 {
 	ProductEntity product=new ProductEntity();
 	if(list.getSelectionModel().getSelectedItem() != null)

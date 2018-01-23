@@ -131,16 +131,19 @@ public class CustomerSelfDefinedProductController implements Initializable {
 		if(discount!=null) //If there are discounts for this store
 		{
 			itr=discount.keySet().iterator();                                                             //get the key's from the hash map of discounts
+			
 		/*Update store prices*/
 	    while (itr.hasNext())
 	    {	
 	    	temp_key=(int) itr.next();
-	    		if(temp_key==ResultList.get(i).getProductID())                                 // If there is a discount for this product then update
+	    	for(int j=0;j<ResultList.size();j++)
+	    	{
+	    		if(temp_key==ResultList.get(j).getProductID())                                 // If there is a discount for this product then update
 	    		{
 	    			newPrice=discount.get(temp_key);
 	    			updatePrice(temp_key,newPrice);
 		        }
-	    		i++;
+	    	}
 		   }
 		}		
 		
@@ -195,7 +198,9 @@ public class CustomerSelfDefinedProductController implements Initializable {
                         	else {
                         		setGraphic(addToCart);
                         	}
-                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
+                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getSale()+product.getProductPrice()+"¤");
+
+                            //setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
                             setFont(Font.font(18));
                         }
                     }
@@ -213,6 +218,8 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	 */
 	public void AddProductToCart(ProductEntity product) throws IOException
 	{
+		if(product.getSalePrice()!=null)
+	    	product.setProductPrice(product.getSalePrice());
 		productsInOrder.add(product);
 		GeneralMessageController.showMessage("Product : "+product.getProductName()+"  ,ID:  "+product.getProductID()+"\nAdded to cart");
 	}
@@ -229,7 +236,10 @@ public class CustomerSelfDefinedProductController implements Initializable {
 			{
 			if(this.ResultList.get(i).getProductID()==key)//if there is a sale on the product update his price
 			{
-				this.ResultList.get(i).setProductPrice(price);
+				//this.ResultList.get(i).setProductPrice(price);
+				this.ResultList.get(i).setSalePrice(price);
+				this.ResultList.get(i).setSale("ON SALE-> New Price :  ");
+				this.ResultList.get(i).setSale(this.ResultList.get(i).getSalePrice()+"¤"+"\n              Old price:  ");
 			}
 			}
 		}

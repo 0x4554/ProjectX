@@ -20,7 +20,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="522.0" layoutY="509.0" text="Please enter message :" textFill="#a73687" />
+      <Label layoutX="522.0" layoutY="509.0" text="Please enter message* to send:" textFill="#a73687" />
       <TextArea fx:id="msgTxt" layoutX="522.0" layoutY="545.0" prefHeight="158.0" prefWidth="541.0" />
       <Button fx:id="sendMsgBtn" layoutX="947.0" layoutY="719.0" mnemonicParsing="false" text="Send Message " />
       <TextField fx:id="NameTxt" editable="false" layoutX="519.0" layoutY="170.0" />
@@ -35,9 +35,9 @@
       <Label layoutX="522.0" layoutY="335.0" text="Product Price*" />
       <Label layoutX="520.0" layoutY="418.0" text="Product Description" />
       <Label layoutX="757.0" layoutY="141.0" text="Product ID" />
-      <Label layoutX="519.0" layoutY="305.0" text="Please Choose a product to make a sale on ,enter the new Price" textFill="#a73687" />
-      <Label layoutX="938.0" layoutY="305.0" text=" and message." textFill="#a73687" />
-      <Button fx:id="UpdateBtn" layoutX="761.0" layoutY="450.0" mnemonicParsing="false" onAction="#UpdateProduct" text="Update " />
+      <Label layoutX="519.0" layoutY="305.0" text="Please Choose a product to make a sale on and enter the new price." textFill="#a73687" />
+      <Button fx:id="UpdateBtn" layoutX="761.0" layoutY="450.0" mnemonicParsing="false" onAction="#AddDiscount" text="Update " />
       <Button layoutX="848.0" layoutY="450.0" mnemonicParsing="false" onAction="#ClearFields" text="Clear Fields" />
+      <Button layoutX="960.0" layoutY="450.0" mnemonicParsing="false" text="Delete" />
    </children>
 </Pane>

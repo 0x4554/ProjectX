@@ -24,7 +24,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -1143,7 +1145,6 @@ public class ProjectServer extends AbstractServer
 	    }  
 	    else	//If such name already exists return failed String
 	    	return "Failed";
-	    
 	  }
 
   /**
@@ -1707,19 +1708,33 @@ public class ProjectServer extends AbstractServer
 	//  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//see if the product exists in the catalog
 	   // if((rs.next()))																						//if such ID exists in the DB, delete .
 	 //   {
-		    PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? WHERE ProductName=?");	//prepare a statement
-		    ps.setString(1, product.getProductName());
-		    ps.setString(2, product.getProductType());
-		    ps.setDouble(3, product.getProductPrice());
-		    ps.setString(4, product.getProductDescription());
 		    
-		   /* if(product.getProductImage()!=null)
+		    
+		    if(product.getProductImage()!=null)
 		    {
+		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? ProductImage=? WHERE ProductName=?");	//prepare a statement
+			    ps.setString(1, product.getProductName());
+			    ps.setString(2, product.getProductType());
+			    ps.setDouble(3, product.getProductPrice());
+			    ps.setString(4, product.getProductDescription());
 		    	ps.setBlob(5,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));
-		    }*/
-		    ps.setString(5, product.getProductDominantColor());
-		    ps.setString(6, OldProduct.getProductName()); 
-		    ps.executeUpdate();
+		    	ps.setString(6, product.getProductDominantColor());
+				ps.setString(7, OldProduct.getProductName()); 
+				ps.executeUpdate();
+		    }
+		    else {
+		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? WHERE ProductName=?");	//prepare a statement
+			    ps.setString(1, product.getProductName());
+			    ps.setString(2, product.getProductType());
+			    ps.setDouble(3, product.getProductPrice());
+			    ps.setString(4, product.getProductDescription());
+		    	  ps.setString(5, product.getProductDominantColor());
+				    ps.setString(6, OldProduct.getProductName()); 
+				    ps.executeUpdate();
+		    }
+		   /* ps.setString(6, product.getProductDominantColor());
+		    ps.setString(7, OldProduct.getProductName()); 
+		    ps.executeUpdate();*/
 		    return "Success";                                                                           
 	   // }
 }
@@ -1876,17 +1891,60 @@ public class ProjectServer extends AbstractServer
 	  stmt = con.createStatement();
 	  
 	  /*Query -get all the discounts for the storeID*/
-	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE BranchID ='" +storeID+"'");	
-	  if(rs.next())
+	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE BranchID ='"+storeID+"'");	
+	while(rs.next())
 	  {
 		  key_product_id=rs.getInt(2); //set value's
 		  price=rs.getDouble(3);
           product.put(key_product_id, price); //add values to hash map
-          return product;
 	  }
-	  else 
-	         return null; 
+    return product;
   }
+  
+  /**
+   * This method return's the discount's from the table in the data base 
+   * @param storeID, the store that the customer shop's in
+   * @return hash map of the discounts 
+   * @throws SQLException 
+   * @throws ClassNotFoundException 
+   */
+    public String AddDiscounts(int storeID,ProductEntity product) throws SQLException, ClassNotFoundException
+    {
+  	  Statement stmt;
+  	  try
+  	    {
+  	    con = connectToDB();	//call method to connect to DB
+  	    if (con != null)
+  		{
+  			System.out.println("Connection to Data Base succeeded");
+  			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+  		}
+  	    }
+  	    catch( SQLException e)	//catch exception
+  	    {
+  	      System.out.println("SQLException: " + e.getMessage() );
+  	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+  	    }
+  	  stmt = con.createStatement();
+  	  
+  	  /*Query -set discounts for the storeID and product*/
+  	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID ='" +product.getProductID()+"'");	
+  	  if(!(rs.next())) 
+  	  {
+  	//	PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.discount (ProductID,ProductPrice,BranchID,Date) VALUES (?,?,?,?)");
+  		//ps.setInt(3, storeID);
+  	    //ps.setString(4, date);
+  		/*if(rs.getString(4)>this date??) //if i wasnt the last update dont update else update discount**********************ask tal*/
+  		
+  		PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.discount (ProductID,ProductPrice) VALUES (?,?)");
+  		ps.setInt(1, product.getProductID());																			//insert parameters into the statement
+	    ps.setDouble(2, product.getProductPrice());
+	    ps.executeUpdate();
+  		return "Success";
+  	  }
+  	  else 
+  	         return "Failed"; 
+    }
     
   /**
    * This method overrides the one in the superclass.  Called
@@ -1989,6 +2047,26 @@ public class ProjectServer extends AbstractServer
 				 ServerMain.serverController.showMessageToUI( "Operation failed");
 
 				messageToSend.setMessage(null); //set the message for sending back to the client
+				sendToAllClients(messageToSend);
+			}
+		}
+		if(operation.equals("AddDiscount"))/*get the discounts Hash Map for a specific store*/
+		{
+			HashMap<ProductEntity,Integer> disc= (HashMap<ProductEntity,Integer>)messageToSend.getMessage();
+			Iterator<ProductEntity> it=disc.keySet().iterator();
+			ProductEntity p=it.next();
+		    String message=AddDiscounts(disc.get(p),(ProductEntity)p);
+		    
+			if(message.equals("Success"))
+			{
+		    ServerMain.serverController.showMessageToUI("Success");
+			messageToSend.setMessage("Success");		                                                     //set the message for sending back to the client
+			sendToAllClients(messageToSend);
+			}
+			else {
+				System.out.println("Operation failed");
+				 ServerMain.serverController.showMessageToUI( "Operation failed");
+				messageToSend.setMessage("Failed"); //set the message for sending back to the client
 				sendToAllClients(messageToSend);
 			}
 		}

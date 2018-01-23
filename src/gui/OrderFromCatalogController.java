@@ -65,9 +65,8 @@ public class OrderFromCatalogController implements Initializable{
     private ArrayList<ProductEntity> productsInOrder;/*The array will contain the products in the order*/
     Stage primaryStage=new Stage();
     private OrderEntity newOrder;
-    
 	CreateNewOrderController ordCon =new CreateNewOrderController();
-    
+    private int flag=0;
 	/**
 	 * Constructor 
 	 */
@@ -85,14 +84,13 @@ public class OrderFromCatalogController implements Initializable{
 	 */
 	public void showCatalog(OrderEntity order) throws InterruptedException
 	{
-		int storeid, i=0,temp_key=0;                 
+		int storeid, i=0,temp_key=0;               
 		double newPrice=0;
 	    Iterator<Integer> itr ;
 	    productsFromTable=new ArrayList<ProductEntity>();
 	    ObservableList<ProductEntity> prod=FXCollections.observableArrayList();
 	    productsFromTable=getCatalog();
 	    newOrder=order;
-	 
 	   
 	    /*Get Store discounts*/
 	    storeid=order.getStore().getBranchID();
@@ -108,16 +106,20 @@ public class OrderFromCatalogController implements Initializable{
 	    while (itr.hasNext())
 	    {	
 	    	temp_key=(int) itr.next();
-	    		if(temp_key==productsFromTable.get(i).getProductID())                                 // If there is a discount for this product then update
+	    	for(int j=0;j<productsFromTable.size();j++)
+	    	{
+	    		if(temp_key==productsFromTable.get(j).getProductID())                                 // If there is a discount for this product then update
 	    		{
 	    			newPrice=discount.get(temp_key);
 	    			updatePrice(temp_key,newPrice);
 		        }
-	    		i++;
+	    	}
+	    	//	i++;
 		   }
 		}		
 		
 	    /*******************************************************Build the catalog view**********************************************/
+	  
 	    
 	    /*Add all products to observable List*/
 		for(ProductEntity p: productsFromTable)
@@ -138,7 +140,6 @@ public class OrderFromCatalogController implements Initializable{
                         if (product != null) {
                                                 	
                         	Button addToCart =new Button("Add To Cart");
-                        	
                         	addToCart.setOnAction(new EventHandler<ActionEvent>() {//Set the back button with an action event
                            	 @Override
                            	  public void handle(ActionEvent event) {
@@ -165,8 +166,7 @@ public class OrderFromCatalogController implements Initializable{
                         	else {
                         		setGraphic(addToCart);
                         	}
-                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
-                            setFont(Font.font(18));
+                                setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getSale()+product.getProductPrice()+"¤");
                         }
                     }
                 };
@@ -206,6 +206,8 @@ public class OrderFromCatalogController implements Initializable{
 	 */
 	public void AddProductToCart(ProductEntity product) throws IOException
 	{
+		if(product.getSalePrice()!=null)
+	    	product.setProductPrice(product.getSalePrice());
 		productsInOrder.add(product);
 		GeneralMessageController.showMessage("Product : "+product.getProductName()+"  ,ID:  "+product.getProductID()+"\nAdded to cart");
 	}
@@ -223,7 +225,9 @@ public class OrderFromCatalogController implements Initializable{
 			{
 			if(this.productsFromTable.get(i).getProductID()==key)//if there is a sale on the product update his price
 			{
-				this.productsFromTable.get(i).setProductPrice(price);
+				this.productsFromTable.get(i).setSalePrice(price);
+				this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
+				this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"¤"+"\n              Old price:  ");
 			}
 			}
 		}

@@ -19,7 +19,7 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button fx:id="ctlgBtn" layoutX="270.0" layoutY="152.0" mnemonicParsing="false" text="Promote Sale" />
+            <Button fx:id="ctlgBtn" layoutX="270.0" layoutY="152.0" mnemonicParsing="false" onAction="#PromoteSale" text="Promote Sale" />
             <Button fx:id="lgBtn" layoutX="294.0" layoutY="255.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
             <Button fx:id="srvBtn" layoutX="299.0" layoutY="204.0" mnemonicParsing="false" onAction="#startNewSurvey" text="Survey" />
          </children>

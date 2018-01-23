@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 
 public class StoreWorkerMenuController implements Initializable{
 
-
     @FXML private Button ctlgBtn;
     @FXML private Button lgBtn;
     @FXML private Button srvBtn;
@@ -42,7 +41,6 @@ public class StoreWorkerMenuController implements Initializable{
 		this.swm=m;
 	}
 
-	
 	
 	public void showStoreWorkerMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
