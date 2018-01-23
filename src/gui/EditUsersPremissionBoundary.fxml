@@ -19,8 +19,13 @@
             </Label>
             <ComboBox fx:id="prmsCmb" layoutX="34.0" layoutY="432.0" prefHeight="31.0" prefWidth="186.0" promptText="Choose permission" />
             <Button fx:id="bckBtn" layoutX="413.0" layoutY="432.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
+<<<<<<< HEAD
             <Button fx:id="okBtn" layoutX="298.0" layoutY="432.0" mnemonicParsing="false" onAction="#editPermissions" prefHeight="31.0" prefWidth="51.0" text="OK" />
             <ListView fx:id="userLstVw" layoutX="61.0" layoutY="77.0" prefHeight="340.0" prefWidth="452.0" />
+=======
+            <Button fx:id="okBtn" layoutX="298.0" layoutY="432.0" mnemonicParsing="false" onAction="#editPremission" prefHeight="31.0" prefWidth="51.0" text="OK" />
+            <ListView fx:id="userLstVw" layoutX="34.0" layoutY="71.0" prefHeight="342.0" prefWidth="648.0" />
+>>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
          </children>
       </Pane>
    </children>

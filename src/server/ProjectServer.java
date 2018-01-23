@@ -2174,6 +2174,23 @@ public class ProjectServer extends AbstractServer
 			messageToSend.setMessage(listOfOrders);
 			client.sendToClient(messageToSend);
 		}
+		if(operation.equals("createUser"))
+		{
+			UserInterface user=(UserInterface)messageFromClient;
+			try {
+			this.insertNewUser(user);
+			MessageToSend toClient=new MessageToSend("added","retval");
+			client.sendToClient(toClient);
+			
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+				 ServerMain.serverController.showMessageToUI( e.getMessage());
+				MessageToSend toClient = new MessageToSend("failed","retval");
+				client.sendToClient(toClient);
+			}
+			
+		}
 		if(operation.equals("createAccount")) {	
 			CustomerEntity custen=(CustomerEntity)messageFromClient;
 			try {
