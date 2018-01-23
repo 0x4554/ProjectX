@@ -63,7 +63,8 @@ public class CreateNewAccountController implements Initializable {
 
 
     private ObservableList<String> list;
-    private StoreManagerMenuController mmc;
+    private StoreManagerMenuController mmc=null;
+    private EditUsersPremissionController eupc=null;
     
     
 	/**
@@ -76,6 +77,11 @@ public class CreateNewAccountController implements Initializable {
 
 	public void setConnectionData(StoreManagerMenuController m) {
 		this.mmc=m;
+	}
+	
+	
+	public void setConnectionData(EditUsersPremissionController edit) {
+		this.eupc=edit;
 	}
 		
 	
@@ -170,10 +176,14 @@ public class CreateNewAccountController implements Initializable {
 	 * when back button pressed
 	 * @param event pressed back button
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 */	
-	public void bckBtnHandler(ActionEvent event) throws IOException {
+	public void bckBtnHandler(ActionEvent event) throws IOException, InterruptedException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.mmc.showManagerMenu();										//open previous menu
+		if(this.mmc!=null)
+			this.mmc.showManagerMenu();										//open previous menu
+		else
+			this.eupc.showEdittingOptions(event);
 		return;
 	}
 
@@ -181,5 +191,11 @@ public class CreateNewAccountController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		subscriptionComboBox();
+	}
+
+
+	public void setField(String text) {
+		// TODO Auto-generated method stub
+		usrFld.setText(text);
 	}	
 }

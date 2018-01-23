@@ -9,13 +9,14 @@
 <AnchorPane prefHeight="349.0" prefWidth="595.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CustomerServiceWorkerMenuController">
    <children>
       <Pane layoutX="-163.0" layoutY="-224.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button fx:id="lgOutBtn" layoutX="266.0" layoutY="273.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+      <Button fx:id="lgOutBtn" layoutX="266.0" layoutY="297.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
       <Button id="cmplntBtn" fx:id="cmplntBtn" layoutX="252.0" layoutY="124.0" mnemonicParsing="false" onAction="#complaints" text="Complaints" />
       <Label layoutX="32.0" layoutY="41.0" text="Customer service worker main menu">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Label>
-      <Button fx:id="updtSrvyBtn" layoutX="214.0" layoutY="189.0" mnemonicParsing="false" onAction="#updatePressed" text="Update Survey Questions" />
+      <Button fx:id="updtSrvyBtn" layoutX="214.0" layoutY="180.0" mnemonicParsing="false" onAction="#updatePressed" text="Update Survey Questions" />
+      <Button fx:id="saveBtn" layoutX="212.0" layoutY="235.0" mnemonicParsing="false" text="Save service expert report" />
    </children>
 </AnchorPane>

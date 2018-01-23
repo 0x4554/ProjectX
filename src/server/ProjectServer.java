@@ -50,6 +50,7 @@ import entities.StoreWorkerEntity;
 import entities.SurveyEntity;
 import entities.UserEntity;
 import entities.UserInterface;
+import entities.VerbalReportEntity;
 import logic.ConnectedClients;
 import logic.FilesConverter;
 import logic.MessageToSend;
@@ -1039,8 +1040,8 @@ public class ProjectServer extends AbstractServer
 			}
 		} catch (SQLException e) //catch exception
 		{
-			System.out.println("SQLException: " + e.getMessage());
-			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+			System.out.println("Connection to Database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
 			e.printStackTrace();
 		}
 		stmt = con.createStatement();
@@ -1059,11 +1060,11 @@ public class ProjectServer extends AbstractServer
 					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 				returnMessage.add("failed"); 							//state failed to log in
 				returnMessage.add("user is already logged in"); 		//reason for failure
-				System.out.println("connected user tried to login again - blocked");
-				ServerMain.serverController.showMessageToUI( "connected user tried to login again - blocked");
+				System.out.println("connected user"+data[0]+" tried to login again - blocked");
+				ServerMain.serverController.showMessageToUI("connected user"+data[0]+" tried to login again - blocked");
 				return returnMessage;
 			} else if (data[1].equals(rs.getString(2))) 				//if password received matches the data base 
-			{
+				{
 				if (rs.getInt(4) == 3)	//if user is already blocked from too many login attempts
 				{ 
 						//failed - ArrayList<String> to return in form of ["failed",reason of failure]
@@ -1078,8 +1079,9 @@ public class ProjectServer extends AbstractServer
 					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = 0  WHERE Username = ?"); //prepare a statement
 					ps.setString(1, data[0]); //reset the user's login attempts to 0
 					ps.executeUpdate();
-
 					ConnectedClients.insertNewConnection(data[0]);	//insert the userName to the connected list of users
+					System.out.println(data[0]+" logged into the system");
+					ServerMain.serverController.showMessageToUI(data[0]+" logged into the system");
 					return returnMessage;
 				}
 			} else if (!(data[1].equals(rs.getString(2)))) //if password received does not match the data base 
@@ -1089,12 +1091,16 @@ public class ProjectServer extends AbstractServer
 					//failed - ArrayList<String> to return in form of ["failed",reason of failure]
 					returnMessage.add("failed"); //state failed to log in
 					returnMessage.add("user is blocked"); //reason for failure
+					System.out.println(data[0]+" is blocked");
+					ServerMain.serverController.showMessageToUI(data[0]+" is blocked");
 					return returnMessage;
 				} else
 				{
 						//failed - ArrayList<String> to return in form of ["failed",reason of failure,number of attempts made]
 					returnMessage.add("failed"); 							//state failed to log in
 					returnMessage.add("password does not match"); 			//reason for failure
+					System.out.println("wrong password "+data[0]);
+					ServerMain.serverController.showMessageToUI("wrong password "+data[0]);
 					attempts = rs.getInt(4) + 1; 							//increment number of attempts made
 					PreparedStatement ps = con.prepareStatement("UPDATE user SET LoginAttempts = ? WHERE Username = ?"); //prepare a statement
 					ps.setString(2, data[0]);
@@ -2035,7 +2041,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getCatalog();
 			messageToSend.setMessage(listOfProducts);		//set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 			
 		}
 		
@@ -2044,7 +2050,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<String> listOfUsers = new ArrayList<String>();			//an array list that holds all the users in the catalog
 			listOfUsers=getAllUsersFromDB();
 			messageToSend.setMessage(listOfUsers);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getUserDetails")) {
@@ -2062,12 +2068,18 @@ public class ProjectServer extends AbstractServer
 			}
 		}
 		
+		if(operation.equals("updatePermission")) {
+			String value = this.updatePermissions((String[])messageFromClient);
+			messageToSend.setMessage(value);
+			client.sendToClient(messageToSend);
+		}
+		
 		if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getSelfDefinedProducts((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfProducts);
-			  client.sendToClient(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getDiscounts"))/*get the discounts Hash Map for a specific store*/
@@ -2168,7 +2180,7 @@ public class ProjectServer extends AbstractServer
 				System.out.println("Inserting failed");
 				 ServerMain.serverController.showMessageToUI( "Inserting failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("deleteProductFromCatalog"))
@@ -2179,12 +2191,12 @@ public class ProjectServer extends AbstractServer
 			if(this.deleteProductFromCatalog(product).equals("Success")) {
 				 ServerMain.serverController.showMessageToUI( "product deleted sucessesfuly from the catalog DB");
 				messageToSend.setMessage("Deleted"); 		//set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else {
 				 ServerMain.serverController.showMessageToUI( "Deletion failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("createNewOrder"))
@@ -2200,7 +2212,7 @@ public class ProjectServer extends AbstractServer
 				 ServerMain.serverController.showMessageToUI( e.getMessage());
 			}
 			messageToSend.setMessage(retval);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getCustomerOrders"))		//for getting a specific customer's list of orders
@@ -2208,7 +2220,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 			listOfOrders = getCustomerOrders((String)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
@@ -2219,7 +2231,7 @@ public class ProjectServer extends AbstractServer
 			//listOfOrders = getAllOrders((String)messageFromClient);
 			listOfOrders = getAllOrders((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
 		if(operation.equals("createUser"))
 		{
@@ -2259,15 +2271,17 @@ public class ProjectServer extends AbstractServer
 			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllStores = getAllstoresFromDB();
 			messageToSend.setMessage(listOfAllStores);		//set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
+		
 		if(operation.equals("getSpecificStore"))
 		{
 			StoreEntity store ;		//an arrayList that holds all the stores in the DB
 			store = getSpecificStore((String)messageFromClient);
 			messageToSend.setMessage(store);		//set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			client.sendToClient(messageToSend);
 		}
+		
 		if(operation.equals("exitApp"))					//for when a user exits the app
 		{
 			if((String)messageFromClient!=null) {
@@ -2286,7 +2300,7 @@ public class ProjectServer extends AbstractServer
 		{
 			retval = this.login(client,(String)messageFromClient);
 			messageToSend.setMessage(retval);	//set the message for sending back to the client
-			sendToAllClients(messageToSend);	//send arraylist back to client
+			client.sendToClient(messageToSend);	//send arraylist back to client
 		}
 		
 		if(operation.equals("getProduct"))	//check***********fix*******to***********lana*******object***********************//
@@ -2296,7 +2310,7 @@ public class ProjectServer extends AbstractServer
 			int productid = (int)messageToSend.getMessage();
 			produ= this.getProduct(client,productid);	//get the product
 			messageToSend.setMessage(produ);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		
 		if(operation.equals("getAllProducts"))	
@@ -2304,8 +2318,9 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfAllProducts = new ArrayList<ProductEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllProducts = this.getAllProductsFromDB();
 			messageToSend.setMessage(listOfAllProducts);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
+		
 		if(operation.equals("deleteProduct"))	
 		{
 			//ArrayList<ProductEntity> listOfAllProducts = new ArrayList<ProductEntity>();		//an arrayList that holds all the stores in the DB
@@ -2313,7 +2328,7 @@ public class ProjectServer extends AbstractServer
 			ProductEntity prd = (ProductEntity)messageToSend.getMessage();
 			Reply = this.DeleteProductsFromDB(prd);
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		if(operation.equals("UpdateProduct"))	
 		{
@@ -2322,7 +2337,7 @@ public class ProjectServer extends AbstractServer
 		//	ProductEntity prd = (ProductEntity)messageToSend.getMessage();
 			Reply = this.UpdateProductInDB(p.get(0),p.get(1));
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			sendToAllClients(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		if(operation.equals("createProduct"))
 		{
@@ -2332,13 +2347,13 @@ public class ProjectServer extends AbstractServer
 			{
 				System.out.println("product added sucessesfuly to DB");
 				messageToSend.setMessage("Added");
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else
 			{
 				System.out.println("Failed to insert the product to DB");
 				messageToSend.setMessage("Failed");
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			
 		}
@@ -2365,14 +2380,21 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
+		if(operation.equals("verbalReport")) {
+			VerbalReportEntity verbalRep = (VerbalReportEntity)messageFromClient;
+			messageToSend.setMessage(this.uploadReprotToDB(verbalRep));
+			client.sendToClient(messageToSend);
+		}
+		
 		if(operation.equals("SurveyAnswers")) {
 			String result = this.updateSurveyAnswers((SurveyEntity)messageFromClient);
 			messageToSend.setMessage(result);
 			messageToSend.setOperation("surveyUpdateResult");
 			client.sendToClient(messageToSend);
 		}
+		
 		if(operation.equals("handleComplaint"))
-	{
+		{
 		String retmsg = "";
 		try
 		{
@@ -2385,21 +2407,22 @@ public class ProjectServer extends AbstractServer
 			 ServerMain.serverController.showMessageToUI( e.getMessage());
 		}
 		messageToSend.setMessage(retmsg);
-		sendToAllClients(messageToSend);
+		client.sendToClient(messageToSend);
 	}
+		
 	if(operation.equals("getComplaintOrders"))	//for getting all the orders with comlpaints
 	{
 		ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 		listOfOrders = getAllComplaintOrders((ArrayList<ComplaintEntity>)messageFromClient);
 		messageToSend.setMessage(listOfOrders);
-		sendToAllClients(messageToSend);
+		client.sendToClient(messageToSend);
 	}
 	if(operation.equals("getComplaints"))		//for getting all complaints
 	{
 		ArrayList<ComplaintEntity> listOfComplaints = new ArrayList<ComplaintEntity>();		//an arrayList that holds all the stores in the DB
 		listOfComplaints = getComplaints((ArrayList<String>)messageFromClient);
 		messageToSend.setMessage(listOfComplaints);		//set the message for sending back to the client
-		sendToAllClients(messageToSend);
+		client.sendToClient(messageToSend);
 	}
 		if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
@@ -2411,35 +2434,36 @@ public class ProjectServer extends AbstractServer
 				 ServerMain.serverController.showMessageToUI("complaint added by customer");
 			//	generalMessage = (String)("Added");
 				messageToSend.setMessage("Success"); 		//set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else if(ret.equals("Complaint was already filed"))
 			{
 				System.out.println("complaint failed");
 				 ServerMain.serverController.showMessageToUI("complaint failed");
 				messageToSend.setMessage("Complaint was already filed");
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 			else if(ret.equals("Order does not exist")){
 				System.out.println("failed to add complaint");
 				ServerMain.serverController.showMessageToUI("failed to add complaint");
 			//	generalMessage = (String)("failed");
 				messageToSend.setMessage("failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				client.sendToClient(messageToSend);
 			}
 		}
+	}
 		
-		if(operation.equals("downloadFile")) {
-			
-			System.out.println("Server downloading file sent from client");
-			ServerMain.serverController.showMessageToUI("Server downloading file sent from client");
-
-			String filePath=(String)messageToSend.getMessage();
-			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
-			
-		//	this.receiveFileFromClient("localhost", 5556);
-			}
-		}
+//		if(operation.equals("downloadFile")) {
+//			
+//			System.out.println("Server downloading file sent from client");
+//			ServerMain.serverController.showMessageToUI("Server downloading file sent from client");
+//
+//			String filePath=(String)messageToSend.getMessage();
+//			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
+//			
+//		//	this.receiveFileFromClient("localhost", 5556);
+//			}
+//		}
 		
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -2452,7 +2476,90 @@ public class ProjectServer extends AbstractServer
 		
 	}
 	
-  private String[] getSurveyQuestions() throws SQLException {
+  /**
+   * method for uploading new verbal report into the data base
+   * 
+   * @param verbalRep - the report to be uploaded to the data base
+   * @throws SQLException
+   */
+  private String uploadReprotToDB(VerbalReportEntity verbalRep) throws SQLException {
+	// TODO Auto-generated method stub
+	  Statement stmnt;
+	  InputStream instrm = FilesConverter.convertByteArrayToInputStream(verbalRep.getFile());
+	try {
+		con=connectToDB();
+		 System.out.println("Connection to Database succeeded");
+		  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+	}
+	catch(Exception e) {
+		System.out.println("Connection to database failed");
+		ServerMain.serverController.showMessageToUI("Connection to Database failed");
+	}
+	
+	try {
+	stmnt=con.createStatement();
+	stmnt.executeUpdate("INSERT INTO projectx.verbalreports (Report,Date) VALUES ("+instrm+","+verbalRep.getDate()+")");		//DATE!!!
+	System.out.println("Verbal report uploaded successfully");
+	ServerMain.serverController.showMessageToUI("Verbal report uploaded successfully");
+	return "uploaded";
+	}
+	catch(Exception e) {
+		System.out.println("Verbal report upload failed");
+		ServerMain.serverController.showMessageToUI("Verbal report upload failed");
+		return "failed";
+	}
+	
+}
+
+/**
+   * method for editing user permission in the data base
+   * 
+   * @param object
+   * @return
+   * @throws SQLException
+   */
+  private String updatePermissions(String[] userPermission) throws SQLException {
+	// TODO Auto-generated method stub
+	  Statement stmnt;
+	  String ret="";
+	  try {
+		  con=connectToDB();
+		  System.out.println("Connection to Database succeeded");
+		  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+	  }
+	  catch(Exception e) {
+		  System.out.println("Connection to Database failed");
+		  ServerMain.serverController.showMessageToUI("Connection to Database failed");
+	  }
+	  stmnt=con.createStatement();
+	  ResultSet rs = stmnt.executeQuery("SELECT UserType FROM projectx.user WHERE Username='"+userPermission[0]+"'");
+	  
+	  if(!rs.next())
+		  return "noUser";
+	  else{
+		  if(userPermission[1].equals("C")) {
+			//  stmnt.execute("DELETE FROM projectx.user WHERE Username='"+userPermission[0]+"'");
+			  ret+="customer";
+		  	}
+		  else {
+		  stmnt.executeUpdate("UPDATE projectx.user SET UserType='"+userPermission[1]+"' WHERE Username='"+userPermission[0]+"'");
+		  ret+="Updated";
+		  }
+		  return ret;
+//		  String s=rs.getString(1);
+//		  if(!s.equals("C")) && !userPermission[1].equals("Customer")) {		//insert also into customers
+//			  stmnt.executeUpdate("UPDATE projectx.user SET UserType='C' WHERE Usernname="+userPermission[0]);
+//			 // stmnt.executeUpdate("")							/*insert into customers*/
+//		  }
+//		  else {
+//			  stmnt.executeUpdate("UPDATE projectx.user SET UserType="+userPermission[1]+" WHERE Username="+userPermission[0]);
+//			  return "updated";
+//		  }
+//		return "error";
+	  }
+}
+
+private String[] getSurveyQuestions() throws SQLException {
 	// TODO Auto-generated method stub
 	  int i=0;
 	  String[] ques=new String[6];
@@ -2683,6 +2790,7 @@ private CustomerEntity getCustomerDetails(String custName) throws SQLException {
 
 public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  
+	Statement stmnt;
 	  try {
 		  con=connectToDB();
 		  if (con != null)
@@ -2697,6 +2805,12 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 		  ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 	  }
 	  
+	  stmnt=con.createStatement();
+	  ResultSet rs = stmnt.executeQuery("SELECT UserType FROM projectx.user WHERE Username='"+ce.getUserName()+"'");
+	  
+	  if(rs.next())
+		stmnt.execute("DELETE FROM projectx.user WHERE Username='"+ce.getUserName()+"'");  
+	  
 	  PreparedStatement ps=con.prepareStatement("INSERT INTO projectx.customers (Username,Password,UserID,Subscription,Address,Email,PhoneNumber,JoinTime,CreditCard) VALUES (?,?,?,?,?,?,?,?,?)");
 	  ps.setString(1, ce.getUserName());
 	  ps.setString(2, ce.getPassword());
@@ -2706,8 +2820,6 @@ public void insertNewCustomer(CustomerEntity ce) throws SQLException {
 	  ps.setString(6, ce.getEmailAddress());
 	  ps.setString(7, ce.getPhoneNumber());
 	  
-//	  DateFormat df = new SimpleDateFormat("dd/MM/yy");
-//      Date dateobj = new Date();
       Timestamp timestamp = new Timestamp(System.currentTimeMillis());
       
 	  ps.setTimestamp(8,timestamp);

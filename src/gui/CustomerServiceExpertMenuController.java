@@ -51,11 +51,34 @@ public class CustomerServiceExpertMenuController implements Initializable {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	
-	
 	private void setConnectionData(Client clnt2) {
 		this.clnt=clnt2;
 	}
+	
+	
+	/**
+	 * method to handle the upload verbal report button
+	 * 
+	 * @param event
+	 * @throws IOException 
+	 */
+	public void uploadReportPressed(ActionEvent event) throws IOException {
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/UploadVerbalReportBoundary.fxml").openStream());
+		UploadVerbalReportController uvrc=loader.getController();
+		uvrc.setConnectionData(this);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("Upload report");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+	}
+	
 	
 	/**
 	 * This method loads the satisfaction report
@@ -68,9 +91,11 @@ public class CustomerServiceExpertMenuController implements Initializable {
 		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
 		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
 		Client.getClientConnection().accept();
+		
 		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer(); //reset to false
+		
 		messageToSend = Client.getClientConnection().getMessageFromServer();
 		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
 

@@ -19,67 +19,6 @@ import logic.MessageToSend;
 public class SurveyController implements Initializable {
 	
 	@FXML
-	private RadioButton q1r1;
-	@FXML
-	private RadioButton q1r2;
-	@FXML
-	private RadioButton q1r3;
-	@FXML
-	private RadioButton q1r4;
-	@FXML
-	private RadioButton q1r5;
-	@FXML
-	private RadioButton q2r1;
-	@FXML
-	private RadioButton q2r2;
-	@FXML
-	private RadioButton q2r3;
-	@FXML
-	private RadioButton q2r4;
-	@FXML
-	private RadioButton q2r5;
-	@FXML
-	private RadioButton q3r1;
-	@FXML
-	private RadioButton q3r2;
-	@FXML
-	private RadioButton q3r3;
-	@FXML
-	private RadioButton q3r4;
-	@FXML
-	private RadioButton q3r5;
-	@FXML
-	private RadioButton q4r1;
-	@FXML
-	private RadioButton q4r2;
-	@FXML
-	private RadioButton q4r3;
-	@FXML
-	private RadioButton q4r4;
-	@FXML
-	private RadioButton q4r5;
-	@FXML
-	private RadioButton q5r1;
-	@FXML
-	private RadioButton q5r2;
-	@FXML
-	private RadioButton q5r3;
-	@FXML
-	private RadioButton q5r4;
-	@FXML
-	private RadioButton q5r5;
-	@FXML
-	private RadioButton q6r1;
-	@FXML
-	private RadioButton q6r2;
-	@FXML
-	private RadioButton q6r3;
-	@FXML
-	private RadioButton q6r4;
-	@FXML
-	private RadioButton q6r5;
-	
-	@FXML
 	private ToggleGroup q1;
 	@FXML
 	private ToggleGroup q2;
@@ -99,6 +38,24 @@ public class SurveyController implements Initializable {
 	
 	@FXML
 	private Label missingLbl;
+	
+    @FXML
+    private Label q1Lbl;
+	
+	@FXML
+    private Label q2Lbl;
+
+    @FXML
+    private Label q3Lbl;
+
+    @FXML
+    private Label q4Lbl;
+	
+    @FXML
+    private Label q5Lbl;
+
+    @FXML
+    private Label q6Lbl;
 	
 	private SurveyEntity srvy;
 	private StoreWorkerMenuController swmc;
@@ -162,6 +119,16 @@ public class SurveyController implements Initializable {
 		
 		
 		
+	}
+	
+	
+	public void setLabels(String[] se) {
+		q1Lbl.setText(se[0]);
+		q2Lbl.setText(se[1]);
+		q3Lbl.setText(se[2]);
+		q4Lbl.setText(se[3]);
+		q5Lbl.setText(se[4]);
+		q6Lbl.setText(se[5]);
 	}
 	
 	
