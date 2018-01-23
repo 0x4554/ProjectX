@@ -214,42 +214,6 @@ public class EditUsersPremissionController implements Initializable{
 		list = FXCollections.observableArrayList(al);
 		prmsCmb.setItems(list);
 	}
-<<<<<<< HEAD
-
-=======
-	/**
-	 * checks which user was chosen and changes his permission
-	 * @param event ok button pressed
-	 * @throws IOException
-	 * @throws InterruptedException 
-	 */
-	public void editPremission(ActionEvent event) throws IOException, InterruptedException
-	{
-		if(checkInsert())
-		{
-			if(prmsCmb.getSelectionModel().getSelectedItem().equals("Store Worker"))
-			{
-				
-			}
-			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Store Manager"))
-			{
-				
-			}
-			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer Service Expert"))
-			{
-				
-			}
-			else if(prmsCmb.getSelectionModel().getSelectedItem().equals("Customer Service Worker"))
-			{
-				
-			}
-		}
-		else
-			GeneralMessageController.showMessage("Choose user's premission");
-			
-	}
-	
->>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
 	
 	
 	/**
