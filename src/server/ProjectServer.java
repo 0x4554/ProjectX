@@ -2484,7 +2484,7 @@ public class ProjectServer extends AbstractServer
    */
   private String uploadReprotToDB(VerbalReportEntity verbalRep) throws SQLException {
 	// TODO Auto-generated method stub
-	  Statement stmnt;
+	  PreparedStatement ps;
 	  InputStream instrm = FilesConverter.convertByteArrayToInputStream(verbalRep.getFile());
 	try {
 		con=connectToDB();
@@ -2497,8 +2497,11 @@ public class ProjectServer extends AbstractServer
 	}
 	
 	try {
-	stmnt=con.createStatement();
-	stmnt.executeUpdate("INSERT INTO projectx.verbalreports (Report,Date) VALUES ("+instrm+","+verbalRep.getDate()+")");		//DATE!!!
+	ps=con.prepareStatement("INSERT INTO projectx.verbalreports (Report,Date) VALUES (?,?)");
+	//stmnt.executeUpdate("INSERT INTO projectx.verbalreports (Report,Date) VALUES ("+instrm+","+verbalRep.getDate()+")");		//DATE!!!
+	ps.setBlob(1, instrm);
+	ps.setTimestamp(2, verbalRep.getDate());
+	ps.executeUpdate();
 	System.out.println("Verbal report uploaded successfully");
 	ServerMain.serverController.showMessageToUI("Verbal report uploaded successfully");
 	return "uploaded";
