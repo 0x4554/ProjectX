@@ -16,7 +16,8 @@ public class ProductEntity implements Serializable{
 	private String productDescription;
 	private String productDominantColor;
     private byte[] productImage;
-	
+	private String Sale="";
+	private Double SalePrice;
 	
 	/**
 	 * Constructor for the ProductEntity.java class
@@ -49,7 +50,15 @@ public class ProductEntity implements Serializable{
 	 * Getter for the productID
 	 * @return the productID
 	 */
-	
+	public String getSale() {
+		return Sale;
+	}
+	public void setSale(String sale) {
+		Sale += sale;
+	}
+	public void setSale(int clear) {
+		Sale ="";
+	}
 	public byte[] getProductImage() {
 		return productImage;
 	}
@@ -62,7 +71,11 @@ public void setProductImage(String filePath) throws IOException {
 		
 		File file = new File (filePath);
 		this.productImage = FilesConverter.convertFileToByteArray(file);
-	}
+}
+public void setProductImage() throws IOException {
+	this.productImage =null;
+}
+
 	public Integer getProductID() {
 		return productID;
 	}
@@ -142,6 +155,12 @@ public void setProductImage(String filePath) throws IOException {
 	 */
 	public void setProductDominantColor(String productDominantColor) {
 		this.productDominantColor = productDominantColor;
+	}
+	public Double getSalePrice() {
+		return SalePrice;
+	}
+	public void setSalePrice(Double salePrice) {
+		SalePrice = salePrice;
 	}
 
 }

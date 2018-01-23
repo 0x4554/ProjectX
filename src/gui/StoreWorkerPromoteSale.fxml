@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="778.0" prefWidth="1097.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.StoreWorkerPromoteSaleController">
+   <children>
+      <ListView fx:id="list" layoutX="42.0" layoutY="85.0" onMouseClicked="#SetProductDetails" prefHeight="618.0" prefWidth="441.0" />
+      <Button fx:id="BackBtn" layoutX="42.0" layoutY="719.0" mnemonicParsing="false" onAction="#back" text="Back" />
+      <Label layoutX="455.0" layoutY="20.0" text="Promote Sale">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="42.0" layoutY="46.0" text="Product's List">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="522.0" layoutY="509.0" text="Please enter message* to send:" textFill="#a73687" />
+      <TextArea fx:id="msgTxt" layoutX="522.0" layoutY="545.0" prefHeight="158.0" prefWidth="541.0" />
+      <Button fx:id="sendMsgBtn" layoutX="947.0" layoutY="719.0" mnemonicParsing="false" text="Send Message " />
+      <TextField fx:id="NameTxt" editable="false" layoutX="519.0" layoutY="170.0" />
+      <TextField fx:id="TypeTxt" editable="false" layoutX="519.0" layoutY="251.0" />
+      <TextField fx:id="PriceTxt" layoutX="522.0" layoutY="363.0" />
+      <TextField fx:id="DescriptionTxt" editable="false" layoutX="522.0" layoutY="450.0" />
+      <TextField fx:id="IDTxt" editable="false" layoutX="755.0" layoutY="170.0" />
+      <TextField fx:id="ColorTxt" editable="false" layoutX="755.0" layoutY="251.0" />
+      <Label layoutX="520.0" layoutY="141.0" text="Product Name:" />
+      <Label layoutX="751.0" layoutY="228.0" text="Product  Dominant Color" />
+      <Label layoutX="519.0" layoutY="228.0" text="Product Type" />
+      <Label layoutX="522.0" layoutY="335.0" text="Product Price*" />
+      <Label layoutX="520.0" layoutY="418.0" text="Product Description" />
+      <Label layoutX="757.0" layoutY="141.0" text="Product ID" />
+      <Label layoutX="519.0" layoutY="305.0" text="Please Choose a product to make a sale on and enter the new price." textFill="#a73687" />
+      <Button fx:id="UpdateBtn" layoutX="761.0" layoutY="450.0" mnemonicParsing="false" onAction="#AddDiscount" text="Update " />
+      <Button layoutX="848.0" layoutY="450.0" mnemonicParsing="false" onAction="#ClearFields" text="Clear Fields" />
+      <Button layoutX="960.0" layoutY="450.0" mnemonicParsing="false" text="Delete" />
+   </children>
+</Pane>

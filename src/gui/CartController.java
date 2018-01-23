@@ -57,7 +57,7 @@ public class CartController implements Initializable {
 	public void showCart() throws IOException {
 		String lbl = "";
 		this.listOfProductsNames = new ArrayList<String>();
-		byte[] b = FilesConverter.convertFileToByteArray(new File("C:\\Users\\pic1.jpg"));
+//		byte[] b = FilesConverter.convertFileToByteArray(new File("C:\\Users\\pic1.jpg"));
 		TreeItem<String> root;
 
 		root = new TreeItem<>(); //set the root for the prodcuts in cart tree
