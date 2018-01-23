@@ -2484,12 +2484,27 @@ public class ProjectServer extends AbstractServer
 		  return "noUser";
 	  else{
 		  if(userPermission[1].equals("C")) {
-			//  stmnt.execute("DELETE FROM projectx.user WHERE Username='"+userPermission[0]+"'");
 			  ret+="customer";
 		  	}
+		  else if(userPermission[1].equals("SM") || userPermission[1].equals("SW")) {
+			  long userID;
+			  int branchNum = Integer.parseInt(userPermission[2]);
+			  ResultSet id = stmnt.executeQuery("SELECT UserId,UserType FROM projectx.user WHERE Username='"+userPermission[0]+"'");
+			  if(id.next()) {
+				  userID = id.getLong(1);
+				  if(id.getString(2).equals("SW") || id.getString(2).equals("SM"))
+					  stmnt.executeUpdate("UPDATE projectx.storeemployee SET BranchID="+branchNum+", WorkerID="+userID+" WHERE UserName='"+userPermission[0]+"'");
+				  else
+					  stmnt.executeUpdate("INSERT INTO projectx.storeemployee (UserName,WorkerID,BranchID) VALUES ("+userPermission[0]+","+userID+","+branchNum+")");
+			  	  stmnt.executeUpdate("UPDATE projectx.user SET UserType='"+userPermission[1]+"' WHERE Username='"+userPermission[0]+"'");
+			  	  ret+="Updated";
+			  }
+			  else
+				 return "noUser";
+		  }
 		  else {
-		  stmnt.executeUpdate("UPDATE projectx.user SET UserType='"+userPermission[1]+"' WHERE Username='"+userPermission[0]+"'");
-		  ret+="Updated";
+			  stmnt.executeUpdate("UPDATE projectx.user SET UserType='"+userPermission[1]+"' WHERE Username='"+userPermission[0]+"'");
+			  ret+="Updated";
 		  }
 		  return ret;
 //		  String s=rs.getString(1);

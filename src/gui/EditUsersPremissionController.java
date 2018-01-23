@@ -13,6 +13,7 @@ import entities.CustomerEntity;
 import entities.CustomerServiceWorkerEntity;
 import entities.OrderEntity;
 import entities.ServiceExpertEntity;
+import entities.StoreEntity;
 import entities.StoreManagerEntity;
 import entities.StoreWorkerEntity;
 import javafx.collections.FXCollections;
@@ -61,11 +62,20 @@ public class EditUsersPremissionController implements Initializable{
 	@FXML 
 	private ListView<String> userLstVw;
 	
+    @FXML
+    private Label strIDLbl;
+
+    @FXML
+    private ComboBox strCmbBox;
+	
 	private AdministratorMenuController amc;
 	private ObservableList<String> list;
 	private ObservableList<String> users;
+	private ObservableList<String> stores;
 	private ArrayList<String> listOfUsers;
 	private String username;
+	private ArrayList<String> storesList=new ArrayList<String>();
+	private ArrayList<StoreEntity> allstores;
 	
 	/**
 	 * Necessary constructor for the APP
@@ -88,6 +98,22 @@ public class EditUsersPremissionController implements Initializable{
 		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		listOfUsers = (ArrayList<String>)m.getMessage();
+		
+		message.setMessage("");
+		message.setOperation("getAllStores");
+		Client.getClientConnection().setDataFromUI(message);	//set operation to get all stores from DB
+		Client.getClientConnection().accept();
+		while(!(Client.getClientConnection().getConfirmationFromServer()))		//wait for server response
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer(); 				//reset to false
+		m = Client.getClientConnection().getMessageFromServer();
+		allstores=(ArrayList<StoreEntity>)m.getMessage();
+		
+		for(StoreEntity store:allstores)
+			storesList.add(store.getBranchName());
+		
+		stores = FXCollections.observableArrayList(storesList);
+		strCmbBox.setItems(stores);
 		
 		this.userLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);		//unable multiple selection
 		
@@ -121,9 +147,17 @@ public class EditUsersPremissionController implements Initializable{
 			String s=userLstVw.getSelectionModel().getSelectedItem();
 			s = s.substring(s.indexOf(":")+1, s.length());
 			username=s.substring(1,s.indexOf("U")-1);
-			String []userAndPermission=new String[2];
+			String []userAndPermission=new String[3];
 			userAndPermission[0]=username;
 			userAndPermission[1]=permissionsParser(prmsCmb.getValue());
+			
+			if(userAndPermission[1]=="SM" || userAndPermission[1]=="SW")
+				if(!strCmbBox.getSelectionModel().isEmpty())
+					userAndPermission[2]=Integer.toString(branchToIDParser((String)strCmbBox.getSelectionModel().getSelectedItem()));
+				else {
+					GeneralMessageController.showMessage("Please choose branch");
+					return;
+				}
 			
 			MessageToSend toServer=new MessageToSend(userAndPermission,"updatePermission");
 			Client.getClientConnection().setDataFromUI(toServer);
@@ -184,6 +218,7 @@ public class EditUsersPremissionController implements Initializable{
 	}
 	
 	
+	
 	private String permissionsParser(String str) {
 		if(str.equals("Customer"))
 			return "C";
@@ -197,6 +232,20 @@ public class EditUsersPremissionController implements Initializable{
 			return "CSW";
 		else
 			return null;
+	}
+	
+	
+	/**
+	 * method for getting the branchID from the branch name
+	 * 
+	 * @param branchName - the branch name we want the ID for
+	 * @return
+	 */
+	private int branchToIDParser(String branchName) {
+		for(StoreEntity se:allstores)
+			if(se.getBranchName().equals(branchName))
+				return se.getBranchID();
+		return -1;
 	}
 
 
@@ -241,6 +290,24 @@ public class EditUsersPremissionController implements Initializable{
 			primaryStage.setTitle("User's premission");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+	}
+	
+	
+	public void setLabels() {
+		strCmbBox.setVisible(false);
+		strIDLbl.setVisible(false);
+	}
+	
+	public void selectedWorkerOrManager(ActionEvent event) {
+		String s = prmsCmb.getSelectionModel().getSelectedItem();
+		if(s.equals("Store Worker") || s.equals("Store Manager"))
+		{
+			strCmbBox.setVisible(true);
+			strIDLbl.setVisible(true);
+		}
+		else {
+			setLabels();
+		}
 	}
 	
 	

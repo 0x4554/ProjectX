@@ -102,6 +102,7 @@ public class AdministratorMenuController implements Initializable {
 		 EditUsersPremissionController eup = loader.getController();
 		 eup.setConnectionData(this);
 		 eup.getUsers();
+		 eup.setLabels();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			

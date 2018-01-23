@@ -10,22 +10,21 @@
 
 <AnchorPane prefHeight="305.0" prefWidth="553.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.EditUsersPremissionController">
    <children>
-      <Pane layoutX="-11.0" layoutY="2.0" prefHeight="489.0" prefWidth="546.0">
+      <Pane layoutX="-11.0" layoutY="2.0" prefHeight="530.0" prefWidth="546.0">
          <children>
             <Label layoutX="176.0" layoutY="14.0" prefHeight="76.0" prefWidth="317.0" text="Edit Users Permission">
                <font>
                   <Font size="26.0" />
                </font>
             </Label>
-            <ComboBox fx:id="prmsCmb" layoutX="34.0" layoutY="432.0" prefHeight="31.0" prefWidth="186.0" promptText="Choose permission" />
-            <Button fx:id="bckBtn" layoutX="413.0" layoutY="432.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
-<<<<<<< HEAD
-            <Button fx:id="okBtn" layoutX="298.0" layoutY="432.0" mnemonicParsing="false" onAction="#editPermissions" prefHeight="31.0" prefWidth="51.0" text="OK" />
+            <ComboBox fx:id="prmsCmb" layoutX="34.0" layoutY="474.0" onAction="#selectedWorkerOrManager" prefHeight="31.0" prefWidth="186.0" promptText="Choose permission" />
+            <Button fx:id="bckBtn" layoutX="413.0" layoutY="474.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
+            <Button fx:id="okBtn" layoutX="298.0" layoutY="474.0" mnemonicParsing="false" onAction="#editPermissions" prefHeight="31.0" prefWidth="51.0" text="OK" />
             <ListView fx:id="userLstVw" layoutX="61.0" layoutY="77.0" prefHeight="340.0" prefWidth="452.0" />
-=======
-            <Button fx:id="okBtn" layoutX="298.0" layoutY="432.0" mnemonicParsing="false" onAction="#editPremission" prefHeight="31.0" prefWidth="51.0" text="OK" />
-            <ListView fx:id="userLstVw" layoutX="34.0" layoutY="71.0" prefHeight="342.0" prefWidth="648.0" />
->>>>>>> branch 'master' of https://github.com/1elirantoledano/ProjectX.git
+            <Label fx:id="strIDLbl" layoutX="91.0" layoutY="436.0" text="Store" />
+            <ComboBox fx:id="strCmbBox" layoutX="145.0" layoutY="431.0" prefHeight="26.0" prefWidth="180.0" />
+
+
          </children>
       </Pane>
    </children>
