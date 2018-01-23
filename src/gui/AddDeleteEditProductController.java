@@ -154,19 +154,15 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		
 		if(!(ImageTxt.getText().equals("")))
 		{
-			if(ImageTxt.getText().equals("non"))
+			product.setProductImage(ImageTxt.getText());	
+		}
+		else 
 			{
-				product.setProductImage();//set with null
+			GeneralMessageController.showMessage("Please notice , you didnt update the product Image, by not entering new photo");
 			}
-			else product.setProductImage(ImageTxt.getText());	
-		}//else dont change the photo
 		
 		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
-//		else
-//			return;
-//		if(!(ColorTxt.getText().equals("")))
-//		    product.setProductDominantColor(ColorTxt.getText());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
@@ -188,7 +184,6 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		PriceTxt.clear();
 		DescriptionTxt.clear();
 		ImageTxt.clear();
-//		ColorTxt.clear();
 		IDTxt.clear();
 		typeCmb.setValue("");
 		dmntClrCmb.setValue("");
@@ -200,7 +195,6 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		PriceTxt.clear();
 		DescriptionTxt.clear();
 		ImageTxt.clear();
-//		ColorTxt.clear();
 		IDTxt.clear();
 		typeCmb.setValue("");
 		dmntClrCmb.setValue("");
@@ -335,9 +329,13 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
 		}
-		if(!(ImageTxt.getText().equals("")))//picture was added/***********may be optionally***********/
+		if(!(ImageTxt.getText().equals("")))
 		{
 	    product.setProductImage(ImageTxt.getText());
+		}
+		else {
+			GeneralMessageController.showMessage("Please Enter All Fields");
+			return;
 		}
 		
 		//Insert to data base
@@ -354,7 +352,6 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 			DescriptionTxt.clear();
 			ImageTxt.clear();
 			dmntClrCmb.setValue("");
-//			ColorTxt.clear();
 			GeneralMessageController.showMessage("Product :"+product.getProductName()+"  ID:  "+product.getProductID()+"\nwas added successfully");
 			}
 }
