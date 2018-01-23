@@ -53,6 +53,7 @@ public class StoreWorkerMenuController implements Initializable{
 		Scene scene=new Scene(root);
 		StoreWorkerMenuController swm = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		swm.setConnectionData(this);
+		swm.setStore();
 		primaryStage.setTitle("Store worker main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -141,8 +142,8 @@ public void PromoteSale(ActionEvent event) throws IOException, InterruptedExcept
 		Parent root = loader.load(getClass().getResource("/gui/StoreWorkerPromoteSale.fxml").openStream());
 		StoreWorkerPromoteSaleController sc=loader.getController();
 		//sc.setConnectionData(this);
-		sc.ShowAllProduct();
 		sc.setStore(this.store);
+		sc.ShowAllProduct();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Promote Sale");

@@ -1931,24 +1931,59 @@ public class ProjectServer extends AbstractServer
   	  stmt = con.createStatement();
   	  
   	  /*Query -set discounts for the storeID and product*/
-  	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID ='" +product.getProductID()+"'");	
-  	  if(!(rs.next())) 
-  	  {
-  	//	PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.discount (ProductID,ProductPrice,BranchID,Date) VALUES (?,?,?,?)");
-  		//ps.setInt(3, storeID);
-  	    //ps.setString(4, date);
-  		/*if(rs.getString(4)>this date??) //if i wasnt the last update dont update else update discount**********************ask tal*/
-  		
-  		PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.discount (ProductID,ProductPrice) VALUES (?,?)");
+  	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID = " +product.getProductID()+" AND BranchID= "+storeID+"");	
+  	  if(!(rs.next()))   //if there isn't a sale on this product 
+  	  {  		
+  		PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.discount (ProductID,ProductPrice,BranchID) VALUES (?,?,?)");
   		ps.setInt(1, product.getProductID());																			//insert parameters into the statement
-	    ps.setDouble(2, product.getProductPrice());
+	    ps.setDouble(2, product.getSalePrice());
+	    ps.setInt(3, storeID);
 	    ps.executeUpdate();
   		return "Success";
   	  }
-  	  else 
-  	         return "Failed"; 
-    }
+  	  else //there product has allready a sale on it
+  	  {
+  		PreparedStatement ps = con.prepareStatement("UPDATE  projectx.discount SET ProductPrice=?  WHERE ProductID=? AND BranchID=?");							//insert parameters into the statement
+	    ps.setDouble(1, product.getSalePrice());
+	    ps.setInt(2, product.getProductID());
+	    ps.setInt(3, storeID);
+	    ps.executeUpdate();
+  		return "Success";
+  	  }
+  	        
+   }
     
+    
+    public String DeleteDiscount(int storeID,ProductEntity product) throws ClassNotFoundException, SQLException
+    {
+    	 Statement stmt;
+     	  try
+     	    {
+     	    con = connectToDB();	//call method to connect to DB
+     	    if (con != null)
+     		{
+     			System.out.println("Connection to Data Base succeeded");
+     			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+     		}
+     	    }
+     	    catch( SQLException e)	//catch exception
+     	    {
+     	      System.out.println("SQLException: " + e.getMessage() );
+     	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+     	    }
+			stmt = con.createStatement();
+	
+     	  /*Query -set discounts for the storeID and product*/
+     	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID = " +product.getProductID()+" AND BranchID= "+storeID+"");	
+     	  if(rs.next())   //if there is a sale on this product 
+     	  {  		
+     		PreparedStatement ps = con.prepareStatement("DELETE FROM projectx.discount  WHERE ProductID=? AND BranchID=?");
+     		ps.setInt(1, product.getProductID());																			//insert parameters into the statement
+   	        ps.setInt(2, storeID);
+   	        ps.executeUpdate();
+     		return "Success";
+     	  }else return "Failed";
+    }
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
@@ -2032,7 +2067,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getSelfDefinedProducts((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfProducts);
-			sendToAllClients(messageToSend);
+			  client.sendToClient(messageToSend);
 		}
 		
 		if(operation.equals("getDiscounts"))/*get the discounts Hash Map for a specific store*/
@@ -2043,14 +2078,14 @@ public class ProjectServer extends AbstractServer
 			if(listOfDiscounts!=null)
 			{
 			messageToSend.setMessage(listOfDiscounts);		                                                     //set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			  client.sendToClient(messageToSend);
 			}
 			else {
 				System.out.println("Operation failed");
 				 ServerMain.serverController.showMessageToUI( "Operation failed");
 
 				messageToSend.setMessage(null); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				  client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("AddDiscount"))/*get the discounts Hash Map for a specific store*/
@@ -2064,13 +2099,32 @@ public class ProjectServer extends AbstractServer
 			{
 		    ServerMain.serverController.showMessageToUI("Success");
 			messageToSend.setMessage("Success");		                                                     //set the message for sending back to the client
-			sendToAllClients(messageToSend);
+			  client.sendToClient(messageToSend);
 			}
 			else {
 				System.out.println("Operation failed");
 				 ServerMain.serverController.showMessageToUI( "Operation failed");
 				messageToSend.setMessage("Failed"); //set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				  client.sendToClient(messageToSend);
+			}
+		}
+		if(operation.equals("DeleteDiscount"))/*get the discounts Hash Map for a specific store*/
+		{
+			HashMap<ProductEntity,Integer> disc= (HashMap<ProductEntity,Integer>)messageToSend.getMessage();
+			Iterator<ProductEntity> it=disc.keySet().iterator();
+			ProductEntity p=it.next();
+		    String message=DeleteDiscount(disc.get(p),(ProductEntity)p);
+			if(message.equals("Success"))
+			{
+		    ServerMain.serverController.showMessageToUI("Success");
+			messageToSend.setMessage("Success");		                                                     //set the message for sending back to the client
+			  client.sendToClient(messageToSend);
+			}
+			else {
+				System.out.println("Operation failed");
+				 ServerMain.serverController.showMessageToUI( "Operation failed");
+				  messageToSend.setMessage("Failed"); //set the message for sending back to the client
+			     client.sendToClient(messageToSend);
 			}
 		}
 		if(operation.equals("updateAccount")) {
@@ -2085,20 +2139,20 @@ public class ProjectServer extends AbstractServer
 		{
 			String retMsg = cancelRequest((Integer)messageFromClient);
 			messageToSend.setMessage(retMsg);
-			sendToAllClients(messageToSend);
+			  client.sendToClient(messageToSend);
 		}
 		if(operation.equals("getCancelRequests"))		//get all the orders which have a cancel request
 		{
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 			listOfOrders = getCancelRequests((String)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
-			sendToAllClients(messageToSend);
+			  client.sendToClient(messageToSend);
 		}
 		if(operation.equals("cancelOrder"))				//for store manger canceling an order
 		{
 			String retMsg = cancelOrder((Integer)messageFromClient);
 			messageToSend.setMessage(retMsg);
-			sendToAllClients(messageToSend);
+			  client.sendToClient(messageToSend);
 		}
 		if(operation.equals("addProductToCatalog"))
 		{
@@ -2108,7 +2162,7 @@ public class ProjectServer extends AbstractServer
 				System.out.println("product added sucessesfuly to the catalog DB");
 				 ServerMain.serverController.showMessageToUI( "product added sucessesfuly to the catalog DB");
 				messageToSend.setMessage("Added"); 		//set the message for sending back to the client
-				sendToAllClients(messageToSend);
+				  client.sendToClient(messageToSend);
 			}
 			else {
 				System.out.println("Inserting failed");

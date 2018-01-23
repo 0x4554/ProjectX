@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import client.Client;
 import entities.ProductEntity;
@@ -43,6 +44,7 @@ public class StoreWorkerPromoteSaleController {
 	@FXML private Button clearBtn;
 	@FXML private Button clearSelectionBtn;
 	@FXML private Button sendMsgBtn;
+	@FXML private Button deleteBtn;
 	
 	@FXML private TextArea msgTxt;
 	@FXML private TextField NameTxt;
@@ -59,8 +61,7 @@ public class StoreWorkerPromoteSaleController {
 	public ObservableList<String> Type_list=FXCollections.observableArrayList();
     ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>();
 	private StoreEntity store;
-
-	int storeID=0;
+	
 	public StoreWorkerPromoteSaleController()
 	{
 		
@@ -92,6 +93,7 @@ public void ClearFields(ActionEvent event)
 		PriceTxt.clear();
 		DescriptionTxt.clear();
 		ColorTxt.clear();
+		msgTxt.clear();
 	}
 	
 public void SetProductDetails(MouseEvent event) throws IOException
@@ -119,20 +121,21 @@ public void ShowAllProduct() throws InterruptedException
 	    ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
 		list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);	
 		productsFromTable=getAllProducts();
+		int storeid=0;
 		
-		
-		
-		/*Get Store discounts
-	    storeid=order.getStore().getBranchID();
+		/*Get Store discounts*/
+	    storeid=store.getBranchID();
 		HashMap<Integer, Double> discount=new HashMap<Integer,Double>();//Integer->product id-key, Double->product price is the value
 		discount=getDiscounts(storeid);                                                                 //get the discount for the specific store
-	
-		i=0;
 		
 		if(discount!=null) //If there are discounts for this store
 		{
+			Iterator<Integer> itr=discount.keySet().iterator();
 			itr=discount.keySet().iterator();                                                                             //get the key's from the hash map of discounts
-		/*Update store prices
+			int temp_key=0;
+			double newPrice=0;
+			
+		   /*Update store prices*/
 	    while (itr.hasNext())
 	    {	
 	    	temp_key=(int) itr.next();
@@ -144,9 +147,8 @@ public void ShowAllProduct() throws InterruptedException
 	    			updatePrice(temp_key,newPrice);
 		        }
 	    	}
-	    	//	i++;
 		   }
-		}		*/
+		}		
 	    /*******************************************************Build the catalog view**********************************************/
 		
 	    /*Add all products to observable List*/
@@ -176,9 +178,7 @@ public void ShowAllProduct() throws InterruptedException
 	                        	vb.getChildren().addAll(v);
 	                            setGraphic(vb);
 	                    	}
-	                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");
-	                       // setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"¤");
-
+	                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"¤");
 	                        setFont(Font.font(18));
 	                    }
 	                }
@@ -216,19 +216,68 @@ public void updatePrice(int key,double price)
 		{
 			this.productsFromTable.get(i).setSalePrice(price);
 			this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
-			this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"¤"+"\n              Old price:  ");
+			this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"¤"+"\n         Old price:  ");
 		}
 		}
 	}
 }
 
+public void sendMessageToCustomers(ActionEvent event) throws IOException
+{
+	if(!(msgTxt.getText().equals("")))
+	{
+      GeneralMessageController.showMessage("Message : "+msgTxt.getText()+"  has been sent to all customers");
+	}
+   else 
+   {
+    GeneralMessageController.showMessage("Please enter message to send");
+    return;
+   }
+}
+
+public void deletDiscount() throws IOException, InterruptedException
+{
+	ProductEntity product=new ProductEntity();
+	if(list.getSelectionModel().getSelectedItem()!=null)
+	{
+		product=list.getSelectionModel().getSelectedItem();
+		
+	if(deleteDiscountInDB(product,store.getBranchID()).equals("Success"))
+	{
+		ShowAllProduct();
+		GeneralMessageController.showMessage("Product discount was deleted successfully");
+		NameTxt.clear();
+		PriceTxt.clear();
+		DescriptionTxt.clear();
+		ColorTxt.clear();
+		IDTxt.clear();
+		TypeTxt.clear();
+	}
+	else 
+	{
+		GeneralMessageController.showMessage("Discount deletion failed");
+		NameTxt.clear();
+		PriceTxt.clear();
+		DescriptionTxt.clear();
+		ColorTxt.clear();
+		IDTxt.clear();
+		TypeTxt.clear();
+		return;
+	}
+
+	}else 
+		{
+		GeneralMessageController.showMessage("Please choose product In order to delete the discount");
+	    return;
+	}
+}
 /**
  * The method update's the chosen product
  * @param event "Update Product" button clicked
  * @throws IOException
  * @throws InterruptedException
  */
-public 	void AddDiscount(ActionEvent event) throws IOException, InterruptedException
+public 	void AddUpdateDiscount(ActionEvent event) throws IOException, InterruptedException
 {
 ProductEntity product=new ProductEntity();
 double pr;
@@ -244,18 +293,16 @@ if(list.getSelectionModel().getSelectedItem()!=null)
 			GeneralMessageController.showMessage("The price is not vaild for the sale");
 			return;
 		}
-		else product.setProductPrice(Double.parseDouble(PriceTxt.getText()));
+		else product.setSalePrice(Double.parseDouble(PriceTxt.getText()));
 	}
 	else
 		{
 		GeneralMessageController.showMessage("Please enter product new price");
 		return;
 		}
-	
-if(AddDiscountToProductInDB(product,storeID).equals("Success"))
+if(AddDiscountToProductInDB(product,store.getBranchID()).equals("Success"))
 {
-	//ShowAllProduct();
-	//ShowStoreCatalog();
+	ShowAllProduct();
 	GeneralMessageController.showMessage("Product discount was Updated successfully");
 	NameTxt.clear();
 	PriceTxt.clear();
@@ -283,9 +330,28 @@ else
 }
 }
 
+public String deleteDiscountInDB(ProductEntity Product, int storeid)
+{
+	String msg;	
+	HashMap<ProductEntity,Integer> map=new HashMap<ProductEntity,Integer>();
+	map.put(Product, storeid);
+	MessageToSend mts=new MessageToSend(map,"DeleteDiscount");
+	Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+	Client.getClientConnection().accept();										//sends to server
+	while(!Client.getClientConnection().getConfirmationFromServer())
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+	MessageToSend m = Client.getClientConnection().getMessageFromServer();
+	 msg = (String)m.getMessage();
+	return msg;
+}
 
-
-private String AddDiscountToProductInDB( ProductEntity Product,int storeid) {
+public String AddDiscountToProductInDB( ProductEntity Product,int storeid) {
 	String msg;	
 	HashMap<ProductEntity,Integer> map=new HashMap<ProductEntity,Integer>();
 	map.put(Product, storeid);
@@ -305,7 +371,7 @@ private String AddDiscountToProductInDB( ProductEntity Product,int storeid) {
 	return msg;
 }
 
-	public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
+public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
 	{
 		MessageToSend mts=new MessageToSend(null,"getAllProducts");
 		ArrayList<ProductEntity> dataFromServer = null;
@@ -317,5 +383,24 @@ private String AddDiscountToProductInDB( ProductEntity Product,int storeid) {
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
 		return dataFromServer;
+	}
+	/**
+	 * This method return the relevant discounts for the specific store in order to attach the sale's to the catalog
+	 * @param storeID is the store we want to shop from
+	 * @return hash map of the product id and their new price
+	 * @throws InterruptedException
+	 */
+	public HashMap<Integer,Double> getDiscounts(int storeID) throws InterruptedException
+	{
+		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");
+		HashMap<Integer,Double> discounts=null;
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		discounts = (HashMap<Integer,Double>)m.getMessage();
+		return discounts;
 	}
 }
