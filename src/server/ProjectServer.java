@@ -135,16 +135,17 @@ public class ProjectServer extends AbstractServer
 	  rs = stmt.executeQuery("Select Report,Date FROM projectx.verbalreports");
 	  while(rs.next())
 	  {
-		  report = new VerbalReportEntity();
+		    report = new VerbalReportEntity();
 			Blob b = con.createBlob(); 					//create blob
 			b=rs.getBlob(1);							////get blob from DB
 	  		InputStream is=b.getBinaryStream();	  		//get binary Stream for blob and than use FilesConverter.convertInputStreamToByteArray(InputStream)
 	  		byte[] file = FilesConverter.convertInputStreamToByteArray(is);
-		  report.setFile(file);
-		  
-		  
+		    report.setFile(file);
+		    report.setDate(rs.getTimestamp(2));
+		    listOfReports.add(report);
 	  }
-
+	  
+	  return listOfReports;
 	  
   }
   /**

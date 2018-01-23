@@ -25,6 +25,8 @@ public class CustomerServiceWorkerMenuController implements Initializable {
 	private Button lgOutBtn;
 	@FXML
 	private Button updtSrvyBtn;
+	@FXML
+	private Button bckBtn;
 
 	/**
 	 * A necessary constructor for the App
@@ -130,17 +132,22 @@ public class CustomerServiceWorkerMenuController implements Initializable {
 		primaryStage.show();
 	}
 	
+	
 	/**
 	 * This method loads the save service expert report window
 	 * @param event pressed save service expert report
 	 * @throws IOException  for the loader
+	 * @throws InterruptedException 
 	 */
-	public void saveServiceExpertReport(ActionEvent event) throws IOException
+	public void saveServiceExpertReport(ActionEvent event) throws IOException, InterruptedException
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerSaveVerbalReportsBoundary.fxml").openStream());
+		CustomerServiceWorkerSaveVerbalReportsController cswsvrc = loader.getController();
+		cswsvrc.setConnectionData(this);
+		cswsvrc.showReports();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		

@@ -5,11 +5,11 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.Pane?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CustomerServiceWorkerSaveVerbalReportsController">
    <children>
-      <ListView fx:id="rprtsLstVw" layoutX="34.0" layoutY="54.0" prefHeight="354.0" prefWidth="194.0" />
-      <Label layoutX="58.0" layoutY="25.0" text="Existing verbal reports" />
-      <Button fx:id="svRprtBtn" layoutX="308.0" layoutY="377.0" mnemonicParsing="false" onAction="#saveVerbalReport" text="Save report" />
+      <ListView fx:id="rprtsLstVw" layoutX="34.0" layoutY="54.0" prefHeight="354.0" prefWidth="382.0" />
+      <Label layoutX="58.0" layoutY="25.0" text="Choose verbal report" />
+      <Button fx:id="svRprtBtn" layoutX="241.0" layoutY="424.0" mnemonicParsing="false" onAction="#saveVerbalReport" text="Save report" />
+      <Button fx:id="bckBtn" layoutX="127.0" layoutY="424.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
    </children>
 </Pane>

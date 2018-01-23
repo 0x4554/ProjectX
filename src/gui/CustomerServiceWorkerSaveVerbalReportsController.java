@@ -2,6 +2,7 @@ package gui;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -13,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -28,9 +30,21 @@ public class CustomerServiceWorkerSaveVerbalReportsController implements Initial
     @FXML
     private Button svRprtBtn;
     
-    ArrayList<VerbalReportEntity> listOfReports;
-    ObservableList<String> obsListOfReports;
+    private ArrayList<VerbalReportEntity> listOfReports;
+    private ObservableList<String> obsListOfReports;
+    private CustomerServiceWorkerMenuController cswmc;
 
+    
+    /**
+     * method for connecting the screens together
+     * 
+     * @param cswMenu
+     */
+	public void setConnectionData(CustomerServiceWorkerMenuController cswMenu) {
+		// TODO Auto-generated method stub
+		this.cswmc = cswMenu;
+	}
+    
     
     /**
      * This method loads and show the reports from the DB
@@ -41,22 +55,23 @@ public class CustomerServiceWorkerSaveVerbalReportsController implements Initial
 		MessageToSend message = new MessageToSend("", "getVerbalReports");
 		Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
+		
 		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
-		MessageToSend m = Client.getClientConnection().getMessageFromServer();
+		
+		message = Client.getClientConnection().getMessageFromServer();
 		
 		
-		listOfReports = (ArrayList<VerbalReportEntity>)m.getMessage();
+		listOfReports = (ArrayList<VerbalReportEntity>)message.getMessage();
 		
 		this.rprtsLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);		//unable multiple selection
 		
 		this.obsListOfReports = FXCollections.observableArrayList();		//the observable list to enter to the list  view
 		
 		for(VerbalReportEntity verbalReport : listOfReports)		//build list view to contain all orders
-		{
 			this.obsListOfReports.add("Report date : "+verbalReport.getDate().toString());
-		}
+		
 		
 		this.rprtsLstVw.setItems(this.obsListOfReports);		//set items to the list
 	}
@@ -65,78 +80,56 @@ public class CustomerServiceWorkerSaveVerbalReportsController implements Initial
 	/**
 	 * This method saves the verbal report to the file system
 	 * @param event presses the save report
+	 * @throws IOException 
 	 */
-	public void saveVerbalReport(ActionEvent event)
+	public void saveVerbalReport(ActionEvent event) throws IOException
 	{
-		for (VerbalReportEntity verbalReport : listOfReports)
-		{
-			if(this.rprtsLstVw.getSelectionModel().getSelectedItem().substring(14).equals(verbalReport.getDate().toString())) 		//check which order was selected
+		if(!rprtsLstVw.getSelectionModel().isEmpty()) {
+			for (VerbalReportEntity verbalReport : listOfReports)
 			{
-				Stage secondaryStage=new Stage();
-		//		InputStream is = FilesConverter.
-				 FileChooser fileChooser = new FileChooser();
-				   fileChooser.setTitle("Save file");
-				   File dest = fileChooser.showSaveDialog(secondaryStage);
-//				   if (dest != null) {
-//				       try {
-//				           Files.copy(file.toPath(), dest.toPath());
-//				       } catch (IOException ex) {
-//				           // handle exception...
-//				       }
-				try (FileOutputStream fos = new FileOutputStream(dest.toString())) {
+				if(this.rprtsLstVw.getSelectionModel().getSelectedItem().substring(14).equals(verbalReport.getDate().toString())) 		//check which order was selected
+				{
+					Stage secondaryStage=new Stage();
+		
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Save file");
+					File dest = fileChooser.showSaveDialog(secondaryStage);
+
+					try (FileOutputStream fos = new FileOutputStream(dest.toString())) {
 					   fos.write(verbalReport.getFile());
 					   fos.close();
-					}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-//				File file = new File("Report date : "+verbalReport.getDate().toString());
-				  
-				//   fileChooser.showSaveDialog(secondaryStage);
-				   
+						}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}  
 
+				}
 			}
 		}
-//		FileChooser fileChooser = new FileChooser();
-//		Stage secondaryStage=new Stage();
-//        //Set extension filter
-//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-//        fileChooser.getExtensionFilters().add(extFilter);
-//        
-//        //Show save file dialog
-//        File file = fileChooser.showSaveDialog(secondaryStage);
-//        
-//        if(file != null){
-//            SaveFile(Santa_Claus_Is_Coming_To_Town, file);
+		else {
+			GeneralMessageController.showMessage("Please choose report to save");
+		}
 	}
 
-//	private void SaveFile(String content, File file) {
-//		try
-//		{
-//			FileWriter fileWriter = null;
-//
-//			fileWriter = new FileWriter(file);
-//			fileWriter.write(content);
-//			fileWriter.close();
-//		} catch (IOException ex)
-//		{
-//			Logger.getLogger(JavaFX_Text.class.getName()).log(Level.SEVERE, null, ex);
-//		}
-//
-//	}
+
+	
+	/**
+	 * method for sending back to the previous screen
+	 * 
+	 * @param event
+	 * @throws IOException 
+	 */
+	public void bckBtnHandler(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		this.cswmc.showCostumerServiceWorkerMenu();
+	}
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		try
-		{
-			showReports();
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
+
 
 }
