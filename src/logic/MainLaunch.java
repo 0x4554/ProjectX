@@ -5,11 +5,14 @@ import java.io.IOException;
 
 import gui.LaunchScreenController;
 import gui.LoginController;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * 
@@ -49,11 +52,8 @@ public class MainLaunch extends Application {
 
 		this.primaryStage = primaryStage;	//get the primary Stage
 		FXMLLoader loader = new FXMLLoader();
-
-
-		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());	//load the login window(the login fxml file is in a different package /gui/)
-
-		this.login = loader.getController();
+		Parent root = loader.load(getClass().getResource("/gui/LaunchScreenBoundary.fxml").openStream());	//load the login window(the login fxml file is in a different package /gui/)
+	//	Stage firstStage = new Stage();	//get the primary Stage
 		
 		LaunchScreenController lsc = loader.getController();
 		lsc.setLogos();
@@ -80,8 +80,6 @@ public class MainLaunch extends Application {
 		     this.primaryStage.setScene(secondScene);
 		     });
 		pause.play();
-	}
-
 	}
 	
 

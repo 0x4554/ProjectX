@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import client.Client;
 import entities.CustomerEntity;
+import entities.StoreEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,9 +74,9 @@ public class CreateNewAccountController implements Initializable {
 	 * 
 	 * @param m
 	 */
-	public void setConnectionData(StoreManagerMenuController m) {
+	public void setConnectionData(StoreManagerMenuController m,StoreEntity store) {
 		this.mmc=m;
-		this.store=stor;
+		this.store=store;
 	}
 	
 	/**
