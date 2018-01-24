@@ -63,7 +63,7 @@ public class MainLaunch extends Application {
 		Scene scene = new Scene(root);
 		this.primaryStage.setScene(scene);
 		this.primaryStage.show();	
-		PauseTransition pause = new PauseTransition(Duration.seconds(3.5));
+		PauseTransition pause = new PauseTransition(Duration.seconds(4));
 		pause.setOnFinished(event -> {
 			Parent root2 = null;
 			try {

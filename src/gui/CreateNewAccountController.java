@@ -74,17 +74,32 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
-
+	/**
+	 * method for connecting the previous screen
+	 * in case of store manager access
+	 * 
+	 * @param m
+	 */
 	public void setConnectionData(StoreManagerMenuController m) {
 		this.mmc=m;
 	}
 	
 	
+	/**
+	 * method for connecting the previous screen
+	 * in case of change permission access
+	 * 
+	 * @param m
+	 */
 	public void setConnectionData(EditUsersPremissionController edit) {
 		this.eupc=edit;
 	}
 		
 	
+	/**
+	 * Defining the values showed on the combobox
+	 * 
+	 */
 	private void subscriptionComboBox()
 	{
 		ArrayList<String> al = new ArrayList<String>();	
@@ -126,6 +141,14 @@ public class CreateNewAccountController implements Initializable {
 				return;
 			}
 			else {
+				try {
+					Long.parseLong(idFld.getText());
+				}
+				catch(Exception e) {
+					GeneralMessageController.showMessage("Illegal ID\nPlease try again later");
+					return;
+				}
+				
 				CustomerEntity cust=new CustomerEntity();
 				cust.setUserName(usrFld.getText());						//set Fields of the new customer
 				cust.setID(Long.parseLong(idFld.getText()));
@@ -164,13 +187,6 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
-	
-	/*public boolean checkRequiredFields() {
-		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
-			return false;
-
-		return true;
-	}*/
 	
 	/**
 	 * when back button pressed
