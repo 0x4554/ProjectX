@@ -13,8 +13,8 @@
          </font>
       </Label>
       <Label layoutX="140.0" layoutY="81.0" text="Hello Manager! what would you like to do today?" />
-      <Button fx:id="newAcntBtn" layoutX="226.0" layoutY="148.0" mnemonicParsing="false" onAction="#newAccount" text="Open new account" />
-      <Button fx:id="gnrtRprtBtn" layoutX="220.0" layoutY="203.0" mnemonicParsing="false" onAction="#generateReport" text="Generate new report" />
+      <Button fx:id="newAcntBtn" layoutX="203.0" layoutY="148.0" mnemonicParsing="false" onAction="#newAccount" prefHeight="31.0" prefWidth="195.0" text="Open new account" />
+      <Button fx:id="gnrtRprtBtn" layoutX="202.0" layoutY="203.0" mnemonicParsing="false" onAction="#generateReport" prefHeight="31.0" prefWidth="195.0" text="Generate new report" />
       <Button fx:id="shwCnclBtn" layoutX="201.0" layoutY="256.0" mnemonicParsing="false" onAction="#showCancelations" text="Show cancelation requests" />
       <Button fx:id="logOutBtn" layoutX="254.0" layoutY="308.0" mnemonicParsing="false" onAction="#logOutManager" text="Log out" />
    </children>

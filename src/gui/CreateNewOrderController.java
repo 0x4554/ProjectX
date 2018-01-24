@@ -21,6 +21,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 
+/**
+ * This class is the controller for the customer's create new order boundary
+ * 
+ * CreateNewOrderController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CreateNewOrderController implements Initializable {
 
 	private StoreEntity store;

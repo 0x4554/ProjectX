@@ -44,6 +44,10 @@ public class ChooseUserToCreateController implements Initializable{
 	 public ChooseUserToCreateController() {
 	}
 	 
+	 /**
+	  * This method saves the connection to the previous menu
+	  * @param m the menu controller
+	  */
 	 public void setConnectionData(AdministratorMenuController m)
 		{
 			this.am=m;
@@ -73,11 +77,11 @@ public class ChooseUserToCreateController implements Initializable{
 		{
 			if(!(prmCmb.getSelectionModel().isEmpty()))					//check if permission choose
 			{
-				String antity = "";
+				String entity = "";
 				if(prmCmb.getSelectionModel().getSelectedItem().equals("Store Manager") || prmCmb.getSelectionModel().getSelectedItem().equals("Store Worker"))
 				{
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					antity=prmCmb.getSelectionModel().getSelectedItem();
+					entity=prmCmb.getSelectionModel().getSelectedItem();
 				
 					FXMLLoader loader = new FXMLLoader();
 					Parent root = loader.load(getClass().getResource("/gui/CreateNewStoreManagerOrWorkerBoundary.fxml").openStream());
@@ -86,7 +90,7 @@ public class ChooseUserToCreateController implements Initializable{
 					CreateNewStoreManagerOrWorkerController cns = loader.getController();
 					Stage primaryStage=new Stage();
 					Scene scene=new Scene(root);
-					cns.setAntity(antity);
+					cns.setEntity(entity);
 					cns.setConnectionData(this);
 				
 					primaryStage.setTitle("Create");
@@ -96,7 +100,7 @@ public class ChooseUserToCreateController implements Initializable{
 				else
 				{
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-					antity=prmCmb.getSelectionModel().getSelectedItem();
+					entity=prmCmb.getSelectionModel().getSelectedItem();
 				
 					FXMLLoader loader = new FXMLLoader();
 					Parent root = loader.load(getClass().getResource("/gui/CreateNewServiceExpertOrWorkerBoundary.fxml").openStream());
@@ -104,7 +108,7 @@ public class ChooseUserToCreateController implements Initializable{
 					CreateNewServiceExpertOrWorkerController cns = loader.getController();
 					Stage primaryStage=new Stage();
 					Scene scene=new Scene(root);
-					cns.setAntity(antity);
+					cns.setEntity(entity);
 					cns.setConnectionData(this);
 				
 					primaryStage.setTitle("Create");

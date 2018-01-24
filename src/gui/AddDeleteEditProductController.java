@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -14,7 +12,6 @@ import entities.ProductEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,14 +29,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import logic.FilesConverter;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the add/delete/edit product from DB
+ * 
+ * AddDeleteEditProductController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class AddDeleteEditProductController implements Initializable {
 
 	/*FXML*/
@@ -64,7 +72,6 @@ public class AddDeleteEditProductController implements Initializable {
 	@FXML private TextField PriceTxt;
 	@FXML private TextField DescriptionTxt;
 	@FXML private TextField ImageTxt;
-//	@FXML private TextField ColorTxt;
 	@FXML private TextField IDTxt;
 	
 	@FXML private Label warninglbl;
@@ -127,7 +134,6 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		if(!(PriceTxt.getText().equals("")))
 		{	try
 		{
-			//	 product.setProductPrice(Double.parseDouble(PriceTxt.getText()));	
 				 Double price=Double.parseDouble(PriceTxt.getText());
 					if(price>0 && price <500)
 					       product.setProductPrice(price);
@@ -142,7 +148,7 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		{
 			GeneralMessageController.showMessage("Incorrect price");
 		}
-		//    product.setProductPrice(Double.parseDouble(PriceTxt.getText()));
+
 		}
 		else return;
 		
@@ -219,7 +225,6 @@ public void SetProductDetails(MouseEvent event) throws IOException
 		typeCmb.setValue(product.getProductType());
 		PriceTxt.setText(product.getProductPrice().toString());
 		DescriptionTxt.setText(product.getProductDescription());
-//		ColorTxt.setText(product.getProductDominantColor());
 		dmntClrCmb.setValue(product.getProductDominantColor());
 	}
 	else
@@ -284,37 +289,29 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 			return;
 		}
 		if (!(PriceTxt.getText().equals("")))//price fiel is not empty
-				{
+		{
 			try
 			{
-				Double price=Double.parseDouble(PriceTxt.getText());
-				if(price>0 && price <500)
-				       product.setProductPrice(price);
+				Double price = Double.parseDouble(PriceTxt.getText());
+				if (price > 0 && price < 500)
+					product.setProductPrice(price);
 				else
-					{
+				{
 					GeneralMessageController.showMessage("Product price is out of limits");
-		            return;
-					}
-			}
-			catch(NumberFormatException e)
+					return;
+				}
+			} catch (NumberFormatException e)
 			{
 				GeneralMessageController.showMessage("Incorrect price");
 				return;
 			}
-//			Double price=Double.parseDouble(PriceTxt.getText());
-//			if(price>0 && price <500)
-//			       product.setProductPrice(price);
-//			else
-//				{
-//				GeneralMessageController.showMessage("Product price is out of limits");
-//	            return;
-//				}
-			}
+		}
 		else
 		{
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
 		}
+		
 		if(!(DescriptionTxt.getText().equals(""))) {// description may be an optional so i will think about it
 			product.setProductDescription(DescriptionTxt.getText());
 		}
@@ -324,15 +321,18 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 		{
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
 		}
+		
 		else 
 		{
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
 		}
+		
 		if(!(ImageTxt.getText().equals("")))
 		{
 	    product.setProductImage(ImageTxt.getText());
 		}
+		
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
@@ -343,6 +343,7 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 		{
 			GeneralMessageController.showMessage("Inserting product failed");
 		}
+		
 		else
 			{
 			ShowAllProduct();
@@ -356,6 +357,10 @@ public void AddProduct(ActionEvent event) throws IOException, InterruptedExcepti
 			}
 }
 
+/**
+ * This method clears all the fields 
+ * @param event pressed clear all fields
+ */
 public void ClearFields(ActionEvent event)
 {
 	IDTxt.clear();
@@ -364,9 +369,13 @@ public void ClearFields(ActionEvent event)
 	PriceTxt.clear();
 	DescriptionTxt.clear();
 	dmntClrCmb.setValue("");
-//	ColorTxt.clear();
 }
 
+/**
+ * This method is used for searching for a file to add 
+ * @param event	pressed add image
+ * @throws IOException	for the file chooser
+ */
 public void searchForPhoto(ActionEvent event) throws IOException{
 		
 		Stage secondaryStage=new Stage();
@@ -383,6 +392,10 @@ public void searchForPhoto(ActionEvent event) throws IOException{
 	    }
 	}
 
+/**
+ * This method loads and shows all the products in the DB
+ * @throws InterruptedException for the thread
+ */
 public void ShowAllProduct() throws InterruptedException
 {               
     ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
@@ -429,6 +442,11 @@ public void ShowAllProduct() throws InterruptedException
 list.setItems(Products);//set the items to the ListView
 }
 
+/**
+ * This method loads the previous window
+ * @param event pressed back
+ * @throws IOException	for the loader
+ */
 public void back(ActionEvent event) throws IOException
 {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
@@ -445,6 +463,13 @@ public void back(ActionEvent event) throws IOException
 
 /**************************Data Base Method's ***************************************************************/
 
+/**
+ * This method sends a message to the server for updating a product
+ * @param productToUpdate	The newly updated product
+ * @param oldProduct		The old product
+ * @return	the message from the server
+ * @throws InterruptedException for the Thread sleep
+ */
 public String UpdateProductInDB(ProductEntity productToUpdate,ProductEntity oldProduct) throws InterruptedException
 {
     String msg;	
@@ -462,6 +487,12 @@ public String UpdateProductInDB(ProductEntity productToUpdate,ProductEntity oldP
 	return msg;
 }
 
+/**
+ * This method sends a message to the server to delete a product from the Catalog table
+ * @param productToDelete	the product to delete
+ * @return	the message for the server
+ * @throws InterruptedException	for the Thread.sleep
+ */
 public String DeleteProductFromCatalogDB(ProductEntity productToDelete) throws InterruptedException
 {
 	   		String msg;
@@ -476,6 +507,13 @@ public String DeleteProductFromCatalogDB(ProductEntity productToDelete) throws I
 	   		return msg;   
 }
 
+/**
+ * This method sends a message to the server to add a new product
+ * @param product the new product to add
+ * @return	the message from the server
+ * @throws InterruptedException	for the Thread sleep
+ * @throws IOException	
+ */
 public String addProductsToDB(ProductEntity product) throws InterruptedException, IOException {
 	String msg;	
 	
@@ -490,6 +528,11 @@ public String addProductsToDB(ProductEntity product) throws InterruptedException
 	return msg;
 }	
 
+/**
+ * This method gets all the products from the DB
+ * @return	arrayList of Products
+ * @throws InterruptedException
+ */
 public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
 {
 	MessageToSend mts=new MessageToSend(null,"getAllProducts");
@@ -504,6 +547,12 @@ public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
 	return dataFromServer;
 }
 	
+/**
+ * This method sends a message to the server to delete a product from the Product table
+ * @param productToDelete	the product to delete
+ * @return	the message from the server
+ * @throws InterruptedException
+ */
 public String DeleteProductFromDB(ProductEntity productToDelete) throws InterruptedException
 {
 		String msg;
@@ -518,7 +567,9 @@ public String DeleteProductFromDB(ProductEntity productToDelete) throws Interrup
 		return msg;
 }
 
-
+/**
+ * For initializing the FXML window
+ */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

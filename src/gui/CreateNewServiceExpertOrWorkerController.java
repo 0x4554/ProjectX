@@ -7,8 +7,6 @@ import java.util.ResourceBundle;
 import client.Client;
 import entities.CustomerServiceWorkerEntity;
 import entities.ServiceExpertEntity;
-import entities.StoreManagerEntity;
-import entities.StoreWorkerEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,13 +42,18 @@ public class CreateNewServiceExpertOrWorkerController implements Initializable{
 	 @FXML private Button crtBtn;
 	
 	ChooseUserToCreateController cutc;
-	String antity;
+	String entity;
 	
-	public void setAntity(String s)
+	
+	public void setEntity(String s)
 	{
-		this.antity=s;
+		this.entity=s;
 	}
 	
+	/**
+	 * setter for the last boundary controller
+	 * @param m the controller 
+	 */
 	 public void setConnectionData(ChooseUserToCreateController m)
 	 {
 		 this.cutc=m;
@@ -72,7 +75,7 @@ public class CreateNewServiceExpertOrWorkerController implements Initializable{
 					return;
 				}
 				else {
-					if(this.antity=="Service Expert")						//check which user to create. create store manager
+					if(this.entity=="Service Expert")						//check which user to create. create store manager
 					{
 						ServiceExpertEntity se = new ServiceExpertEntity();
 						se.setEmailAddress(emlTxt.getText());
@@ -86,7 +89,7 @@ public class CreateNewServiceExpertOrWorkerController implements Initializable{
 						Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 						Client.getClientConnection().accept();								//sending data to server
 					}
-					else if(this.antity=="Customer Servise Worker")				//Create store worker
+					else if(this.entity=="Customer Servise Worker")				//Create store worker
 					{
 						CustomerServiceWorkerEntity csw = new CustomerServiceWorkerEntity();
 						csw.setID(Long.parseLong(idTxt.getText()));
@@ -139,7 +142,11 @@ public class CreateNewServiceExpertOrWorkerController implements Initializable{
 				return true;
 			}
 	
-			
+			/**
+			 * This method loads the previous window
+			 * @param event	pressed back
+			 * @throws IOException	for the loader
+			 */
 			public void bckBtnHandler(ActionEvent event) throws IOException {
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 				 FXMLLoader loader = new FXMLLoader();

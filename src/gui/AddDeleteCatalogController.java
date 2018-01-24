@@ -156,7 +156,7 @@ public class AddDeleteCatalogController implements Initializable{
     	            return cell;
     	        }
     	    });
-    	listCatalog.setItems(Products);//set the items to the ListView
+    	listCatalog.setItems(Products);													//set the items to the ListView
     }
 
     /**
@@ -170,16 +170,16 @@ public class AddDeleteCatalogController implements Initializable{
     	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
     	 ArrayList<ProductEntity> ProductsToDelete=new ArrayList<ProductEntity>();
     	 
-    	if(!(listCatalog.getSelectionModel().getSelectedItems().isEmpty()))//if there are items to delete
+    	if(!(listCatalog.getSelectionModel().getSelectedItems().isEmpty()))				//if there are items to delete
     	{
-    		Products=listCatalog.getSelectionModel().getSelectedItems();//get the selected products
+    		Products=listCatalog.getSelectionModel().getSelectedItems();				//get the selected products
     	}
     	else 
     	{
     		GeneralMessageController.showMessage("Please choose product to delete");
     		return;
     	}
-    	for (ProductEntity prd:Products)//add products to delete
+    	for (ProductEntity prd:Products)												//add products to delete
     	{
     		ProductsToDelete.add((ProductEntity)prd);
     	}
@@ -194,7 +194,7 @@ public class AddDeleteCatalogController implements Initializable{
     			GeneralMessageController.showMessage("Product : "+ProductsToDelete.get(i).getProductName()+",   ID:  "+ProductsToDelete.get(i).getProductID()+" \n  was not deleted");
     		}
     	}
-    	ShowCatalog(); //Show the catalog after the deletion operation
+    	ShowCatalog(); 												//Show the catalog after the deletion operation
     }
     
     /**
@@ -226,7 +226,7 @@ public class AddDeleteCatalogController implements Initializable{
                         super.updateItem(product, status);
                         if (product != null) {
            
-                        	if(product.getProductImage()!=null) //If there is an image to the product
+                        	if(product.getProductImage()!=null) 				//If there is an image to the product
                         	{
                         		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));//set the image
                         		ImageView v=new ImageView(j);
@@ -244,7 +244,7 @@ public class AddDeleteCatalogController implements Initializable{
                 return cell;
             }
         });
-    listProducts.setItems(Products);//set the items to the ListView
+    listProducts.setItems(Products);					//set the items to the ListView
     }
 
     /**
@@ -329,23 +329,26 @@ public class AddDeleteCatalogController implements Initializable{
     */
    public ArrayList<ProductEntity> getCatalog() throws InterruptedException
    {
-			MessageToSend mts=new MessageToSend(null,"getCatalog");   //set parameters for the server method
+			MessageToSend mts=new MessageToSend(null,"getCatalog");   				//set parameters for the server method
 			ArrayList<ProductEntity> dataFromServer = null;
 			Client.getClientConnection().setDataFromUI(mts);				       	//set the data and the operation to send from the client to the server
-			Client.getClientConnection().accept();									    	//sends to server
-			while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+			Client.getClientConnection().accept();									//sends to server
+			while(!Client.getClientConnection().getConfirmationFromServer())		//wait until server replies
 				Thread.sleep(100);
-			Client.getClientConnection().setConfirmationFromServer();		    //reset confirmation to false
+			Client.getClientConnection().setConfirmationFromServer();		   		//reset confirmation to false
 			MessageToSend m = Client.getClientConnection().getMessageFromServer();
 			dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
 			return dataFromServer;
    }
     
-   
-   /*************************************************Open other window*********************************************************/
+   /**
+    * This  method loads the previous window
+    * @param event pressed back
+    * @throws IOException for the loader
+    */
     public void back(ActionEvent event) throws IOException
     {
-    		((Node) event.getSource()).getScene().getWindow().hide(); //hide Current window
+    		((Node) event.getSource()).getScene().getWindow().hide(); 				//hide Current window
     		FXMLLoader loader = new FXMLLoader();
     		Parent root = loader.load(getClass().getResource("/gui/ChainWorkerMenuBoudary.fxml").openStream()); // load the fxml class
     		Stage primaryStage = new Stage();

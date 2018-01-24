@@ -36,9 +36,22 @@ import logic.FilesConverter;
 import logic.MessageToSend;
 import logic.TimeCalculation;
 
+/**
+ * This class is the conroller for the customer service worker complaint boundary
+ * 
+ * CustomerServiceWorkerComplaintController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerServiceWorkerComplaintController implements Initializable {
 
-	private final long Hours_To_Reply = 48;
+	private final long Hours_To_Reply = 24;
 	@FXML
 	private ListView<String> ActvCmplntLstVw;
 	
@@ -110,6 +123,7 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 		this.ActvCmplntLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);		//unable multiple selection
 		
 		this.listOfActiveComplaintString = FXCollections.observableArrayList();		//the observable list to enter to the list  view
+		
 		this.listOfInActiveComplaintSting = FXCollections.observableArrayList();
 		
 		for(ComplaintEntity complaint : this.listOfComplaints)
@@ -119,13 +133,7 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 			else
 				this.listOfInActiveComplaintSting.add("Complaint for order number "+complaint.getOrderID());
 		}
-//		for(OrderEntity order : listOfOrders)		//build list view to contain all orders
-//		{
-//			if()
-//			this.listOfActiveComplaintString.add("Complaint for order number "+order.getOrderID());
-//		}
-		
-//		this listOfActiveComplaintString.add("I)
+
 		this.ActvCmplntLstVw.setItems(this.listOfActiveComplaintString);		//set items to the list of active complaints
 
 		this.InActvCmplntLstVw.setItems(this.listOfInActiveComplaintSting); 	//set items to the list of Closed complaints
@@ -238,12 +246,6 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 					productName.getChildren().add(ProductType);
 					TreeItem<String> productDescription = new TreeItem<>("Product description : "+product.getProductDescription());
 					productName.getChildren().add(productDescription);
-//					if(product.getProductDominantColor() != null)
-//					{
-//						TreeItem<String> productDominantColor = new TreeItem<>("Dominent color : "+product.getProductDominantColor());
-//						productName.getChildren().add(productDominantColor);
-//			
-//					}
 					Double price;
 					TreeItem<String> productPrice;
 					if((price = order.getStore().getStoreDiscoutsSales().get(product.getProductID())) != null)	//check for disocunt
@@ -298,8 +300,8 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 				{
 					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
 					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
-						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
-					else if(timeDiff >48)																//check for valid time
+						this.cmplntTmToRplyLbl.setText("Over "+Hours_To_Reply+" hours has passed!!!");
+					else if(timeDiff >Hours_To_Reply)																//check for valid time
 						this.cmplntTmToRplyLbl.setText("Invalid time");
 					else
 						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
@@ -356,7 +358,6 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 	 */
 	public void showImage(ActionEvent event) throws IOException {
 		
-//		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerShowComplaintImageBoundary.fxml").openStream());
 		CustomerServiceWorkerShowComplaintImageController cswscic = new CustomerServiceWorkerShowComplaintImageController();
@@ -369,9 +370,11 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 		primaryStage.show();
 	}
 	
-	/**
-	 * This method loads the main menu
-	 */
+/**
+ * This method loads the main menu
+ * @param event pressed back
+ * @throws IOException for the loader
+ */
 	public void backToMainMenu(ActionEvent event) throws IOException {
 
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window

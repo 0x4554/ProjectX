@@ -7,13 +7,13 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CustomerOrderController">
    <children>
-      <Label layoutX="261.0" layoutY="41.0" prefHeight="35.0" prefWidth="96.0" text="Order">
+      <Label layoutX="261.0" layoutY="41.0" prefHeight="35.0" prefWidth="96.0" text="Orders">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
       <Button id="swOrdrDtlsBtn" fx:id="swOrdrDtlsBtn" layoutX="357.0" layoutY="120.0" mnemonicParsing="false" onAction="#showOrderDetails" text="Show Orders Details" />
       <Button fx:id="bckBtn" layoutX="261.0" layoutY="334.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
-      <Button id="crtNwOrdrBtn" fx:id="crtNwOrdrBtn" layoutX="82.0" layoutY="120.0" mnemonicParsing="false" onAction="#CreateNewOrder" text="Create a new order" />
+      <Button id="crtNwOrdrBtn" fx:id="crtNwOrdrBtn" layoutX="82.0" layoutY="120.0" mnemonicParsing="false" onAction="#CreateNewOrder" prefHeight="31.0" prefWidth="154.0" text="Create a new order" />
    </children>
 </Pane>

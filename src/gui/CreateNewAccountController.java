@@ -97,7 +97,8 @@ public class CreateNewAccountController implements Initializable {
 		
 	
 	/**
-	 * Defining the values showed on the combobox
+	 *This method initializes the combo box
+	 * and defines the values showed on the combobox
 	 * 
 	 */
 	private void subscriptionComboBox()
@@ -209,7 +210,10 @@ public class CreateNewAccountController implements Initializable {
 		subscriptionComboBox();
 	}
 
-
+	/**
+	 * Setter for the text field
+	 * @param text
+	 */
 	public void setField(String text) {
 		// TODO Auto-generated method stub
 		usrFld.setText(text);
