@@ -1768,7 +1768,7 @@ public class ProjectServer extends AbstractServer
 	   // if((rs.next()))																						//if such ID exists in the DB, delete .
 	 //   {
 		    
-		    
+		
 		    if(product.getProductImage()!=null)
 		    {
 		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? ,ProductImage=? WHERE ProductName=?");	//prepare a statement

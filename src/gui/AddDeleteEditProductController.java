@@ -124,7 +124,7 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 			return;
 			}
 		
-		if(!(typeCmb.getSelectionModel().isEmpty()))
+		if(!typeCmb.getSelectionModel().isEmpty())
 			product.setProductType(typeCmb.getSelectionModel().getSelectedItem());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");	
@@ -167,7 +167,7 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 			GeneralMessageController.showMessage("Please notice , you didnt update the product Image, by not entering new photo");
 			}
 		
-		if(!(this.dmntClrCmb.getSelectionModel().isEmpty()))
+		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
