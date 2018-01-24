@@ -44,13 +44,17 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 
     ChooseUserToCreateController cutc;
 	AdministratorMenuController am;
-	String antity;
+	String entity;
 	
-	public void setAntity(String s)
+	public void setEntity(String s)
 	{
-		this.antity=s;
+		this.entity=s;
 	}
 	
+	/**
+	 * setter for the previous controller
+	 * @param edit
+	 */
 	 public void setConnectionData(ChooseUserToCreateController m)
 	 {
 		 this.cutc=m;
@@ -72,7 +76,7 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 				return;
 			}
 			else {
-				if(this.antity=="Store Manager")						//check which user to create. create store manager
+				if(this.entity=="Store Manager")						//check which user to create. create store manager
 				{
 					StoreManagerEntity sm = new StoreManagerEntity();
 					sm.setBranch(Integer.parseInt(brnchTxt.getText()));
@@ -87,7 +91,7 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 					Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 					Client.getClientConnection().accept();								//sending data to server
 				}
-				else if(this.antity=="Store Worker")				//Create store worker
+				else if(this.entity=="Store Worker")				//Create store worker
 				{
 					StoreWorkerEntity sw = new StoreWorkerEntity(Integer.parseInt(idTxt.getText()),Integer.parseInt(brnchTxt.getText()));
 					sw.setBranch(Integer.parseInt(brnchTxt.getText()));

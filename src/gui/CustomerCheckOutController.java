@@ -1,17 +1,13 @@
 package gui;
 
 import java.io.IOException;
-
-
 import java.net.URL;
-//import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -38,8 +34,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-import logic.TimeCalculation;
 
+/**
+ * This class is the controller for the customer check out boundary
+ * 
+ * CustomerCheckOutController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerCheckOutController implements Initializable {
 
 	@FXML
@@ -152,8 +160,6 @@ public class CustomerCheckOutController implements Initializable {
 	public void backToOrder(ActionEvent event) throws IOException
 	{
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
-//		selectedStoreName = (String) this.strCmb.getSelectionModel().getSelectedItem(); //get the selected store name from the comboBox
-
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
 		CreateNewOrderController cnoc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
@@ -161,9 +167,7 @@ public class CustomerCheckOutController implements Initializable {
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
 		cnoc.setOrderDetails(newOrder);
-//		nom.setConnectionData(this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
 		primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
-
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -290,8 +294,6 @@ public class CustomerCheckOutController implements Initializable {
 	{
 		LocalDate date =this.datePicker.getValue();		//get the localDate from the date picker
 		Date receivingDate = java.sql.Date.valueOf(date);
-	//	Date receivingDate = Date.from(date);
-	//	Date receivingDate = Date.valueOf( date );		//convert the LocalDate type to a SQL Date type
 		Time receivingTime;
 		DateFormat formatter = new SimpleDateFormat("HH:mm");		//format the time
 		receivingTime = new Time(formatter.parse(this.hrsTxtFld.getText()+":"+this.mntsTxtFld.getText()).getTime());		//set the time to a SQL time type
@@ -301,16 +303,12 @@ public class CustomerCheckOutController implements Initializable {
 	    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
 	    
 	    this.newOrder.setReceivingTimestamp(timestamp);  	//set the time and date to the new order 
-//		this.newOrder.setReceivingDate(receivingDate);			//set the time and date to the new order 
-//		this.newOrder.setReceivingTime(receivingTime);
 	}
 	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-//		this.newOrder=newOrder;
-		
 		this.slfPckpCkBx.isSelected();
 		this.dlvrAddrs.setVisible(false);
 		this.dlvrPhoneNmbr.setVisible(false);
@@ -324,7 +322,10 @@ public class CustomerCheckOutController implements Initializable {
 		
 	}
 
-
+	/**
+	 * This method sets the order entity
+	 * @param newOrder the order entity
+	 */
 	public void setOrder(OrderEntity newOrder) {
 		// TODO Auto-generated method stub
 		this.newOrder=newOrder;

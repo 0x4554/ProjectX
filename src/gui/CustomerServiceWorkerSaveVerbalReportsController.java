@@ -93,6 +93,7 @@ public class CustomerServiceWorkerSaveVerbalReportsController implements Initial
 		
 					FileChooser fileChooser = new FileChooser();										//new file chooser
 					fileChooser.setTitle("Save file");
+					fileChooser.setInitialFileName(verbalReport.getDate().toString());					//default file name
 					File dest = fileChooser.showSaveDialog(secondaryStage);								//get the file path from the file chooser
 					
 					if(dest != null)																	//check if a path was chosen

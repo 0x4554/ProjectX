@@ -10,8 +10,8 @@
    <children>
       <Pane layoutX="-163.0" layoutY="-224.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="lgOutBtn" layoutX="266.0" layoutY="297.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
-      <Button id="cmplntBtn" fx:id="cmplntBtn" layoutX="252.0" layoutY="124.0" mnemonicParsing="false" onAction="#complaints" text="Complaints" />
-      <Label layoutX="32.0" layoutY="41.0" text="Customer service worker main menu">
+      <Button id="cmplntBtn" fx:id="cmplntBtn" layoutX="216.0" layoutY="124.0" mnemonicParsing="false" onAction="#complaints" prefHeight="31.0" prefWidth="188.0" text="Complaints" />
+      <Label layoutX="74.0" layoutY="37.0" text="Customer service worker main menu">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>

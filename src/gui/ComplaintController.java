@@ -1,19 +1,8 @@
 package gui;
-/**
- * 
- *@author Eliran Toledano
- *@author Lana Krikheli
- *@author Katya Yakovlev
- *@author Tal Gross
- *
- * This class was made by the ProjectX team
- * the class handles the creation of new complaints in the system
- */
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -29,11 +18,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the customer's new complaint boundary
+ * 
+ * ComplaintController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ComplaintController implements Initializable{
 	
 	@FXML
@@ -52,70 +53,65 @@ public class ComplaintController implements Initializable{
     private Button cnclBtn;
 
     @FXML
-    private TextField picPathTxtFld;
-	
-	
-//	private CustomerMenuController cstmc;
-	
+    private TextField picPathTxtFld;	
 
+    /**
+     * Necessary constructor
+     * Constructor for the ComplaintController.java class
+     */
 	public ComplaintController() {
 		// TODO Auto-generated constructor stub
 	}
-	
-//	public void setConnectionData(CustomerMenuController cmc) {
-//		this.cstmc=cmc;
-//	}
-	
+		
 	/**
 	 * This method collects the complaint data and sends it to the server
 	 * @param event	pressed send
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException	for the loader
+	 * @throws InterruptedException for the sleep
 	 */
 	public void getComplaintData(ActionEvent event) throws IOException, InterruptedException{					//////////////////////////
-		String complaintDetails="";
-		String pctr;
-		String details;
 		
-		
-		if(!ordNumTxtFld.getText().isEmpty())
-			if(!cmpDtsTxtArea.getText().isEmpty()) {					//if complaint inserted			
-				
-					ComplaintEntity cmplnt=new ComplaintEntity(Integer.parseInt(ordNumTxtFld.getText()), cmpDtsTxtArea.getText(), Status.processing);
-					if(!picPathTxtFld.getText().isEmpty()) {
+		if (!ordNumTxtFld.getText().isEmpty())
+			if (!cmpDtsTxtArea.getText().isEmpty())
+				if (cmpDtsTxtArea.getText().length() > 250)
+					GeneralMessageController.showMessage("Text is too long, maximum of 250 characters.");
+				else
+				{ //if complaint inserted			
+
+					ComplaintEntity cmplnt = new ComplaintEntity(Integer.parseInt(ordNumTxtFld.getText()), cmpDtsTxtArea.getText(), Status.processing);
+					if (!picPathTxtFld.getText().isEmpty())
+					{
 						cmplnt.setFile(picPathTxtFld.getText());
 					}
-					
-//					Client c=this.cstmc.getClient();
-					MessageToSend toServer = new MessageToSend(cmplnt,"complaint");
+
+					MessageToSend toServer = new MessageToSend(cmplnt, "complaint");
 					Client.getClientConnection().setConfirmationFromServer();
-					Client.getClientConnection().setDataFromUI(toServer);									//, "complaint!");
+					Client.getClientConnection().setDataFromUI(toServer); //, "complaint!");
 					Client.getClientConnection().accept();
-					
-					while(!Client.getClientConnection().getConfirmationFromServer())
+
+					while (!Client.getClientConnection().getConfirmationFromServer())
 						Thread.sleep(100);
 					Client.getClientConnection().setConfirmationFromServer();
-					MessageToSend fromServer=(MessageToSend)Client.getClientConnection().getMessageFromServer();
-					String reply=(String)fromServer.getMessage();
-					if(reply.equals("failed"))				
+					MessageToSend fromServer = (MessageToSend) Client.getClientConnection().getMessageFromServer();
+					String reply = (String) fromServer.getMessage();
+					if (reply.equals("failed"))
 						GeneralMessageController.showMessage("Order does not exist");
+					else if (reply.equals("Success"))
+					{
+						cancelComplaint(event);
+						GeneralMessageController.showMessage("Your complaint has been received.\nWe will contact you soon.");
+					} else if (reply.equals("Complaint was already filed"))
+					{
+						cancelComplaint(event);
+						GeneralMessageController.showMessage("Complaint was already filed for this order.");
+
+					}
+
+				}
 			else
-						if(reply.equals("Success"))
-						{
-							cancelComplaint(event);
-							GeneralMessageController.showMessage("Your complaint has been received.\nWe will contact you soon.");
-						}
-						else if (reply.equals("Complaint was already filed"))
-						{
-							cancelComplaint(event);
-							GeneralMessageController.showMessage("Complaint was already filed for this order.");
-							
-						}
-					
+			{
+				GeneralMessageController.showMessage("Please fill in your complaint"); //if nothing was inserted show general message
 			}
-		else {
-			GeneralMessageController.showMessage("Please fill in your complaint");		//if nothing was inserted show general message
-		}
 	}
 	
 	/**
@@ -148,13 +144,10 @@ public class ComplaintController implements Initializable{
 	 */
 	public void uploadPhoto(String path) throws IOException, InterruptedException {
 		
-//		Client c = this.cstmc.getClient();
 		MessageToSend m = new MessageToSend(path, "downloadFile");
 		Client.getClientConnection().setDataFromUI(m);
 		Client.getClientConnection().accept();
 		
-	//	c.uploadFileToServer(5556, path);
-	//	c.setConfirmationFromServer();
 	}
 	
 	

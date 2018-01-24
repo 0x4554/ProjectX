@@ -5,28 +5,19 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import com.sun.corba.se.impl.ior.GenericTaggedComponent;
-
 import client.Client;
 import entities.CustomerEntity;
-import entities.UserEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import logic.ConnectedClients;
 import logic.MessageToSend;
 
 /**
@@ -74,17 +65,26 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
-
+	/**
+	 * setter for the previous controller
+	 * @param edit
+	 */
 	public void setConnectionData(StoreManagerMenuController m) {
 		this.mmc=m;
 	}
 	
-	
+	/**
+	 * setter for the previous controller
+	 * @param edit
+	 */
 	public void setConnectionData(EditUsersPremissionController edit) {
 		this.eupc=edit;
 	}
 		
 	
+	/**
+	 * This method initialized the combo box
+	 */
 	private void subscriptionComboBox()
 	{
 		ArrayList<String> al = new ArrayList<String>();	
@@ -164,14 +164,7 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
-	
-	/*public boolean checkRequiredFields() {
-		if(usrFld.getText().isEmpty() ||emlFld.getText().isEmpty() || phnFld.getText().isEmpty() || idFld.getText().isEmpty() || pswrdFld.getText().isEmpty() || pswrd2Fld.getText().isEmpty() || subscrptCmb.getSelectionModel().isEmpty())
-			return false;
-
-		return true;
-	}*/
-	
+		
 	/**
 	 * when back button pressed
 	 * @param event pressed back button
@@ -193,7 +186,10 @@ public class CreateNewAccountController implements Initializable {
 		subscriptionComboBox();
 	}
 
-
+	/**
+	 * Setter for the text field
+	 * @param text
+	 */
 	public void setField(String text) {
 		// TODO Auto-generated method stub
 		usrFld.setText(text);

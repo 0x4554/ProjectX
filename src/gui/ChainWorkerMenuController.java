@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
-import entities.ChainWorkerEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +32,10 @@ public class ChainWorkerMenuController implements Initializable{
 	Stage primaryStage=new Stage();
 	private Object clnt;
 	
-	
+	/**
+	 * This method loads the chain store worker menu
+	 * @throws IOException for the loader
+	 */
 	public void showChainWorkerMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
@@ -66,6 +68,12 @@ public class ChainWorkerMenuController implements Initializable{
 
 	}
 	
+	/**
+	 * This method loads the add/delete/edit product boundary
+	 * @param event	pressed add delete edit product
+	 * @throws IOException	for the loader
+	 * @throws InterruptedException
+	 */
 	public void AddDeletEditProduct(ActionEvent event) throws IOException, InterruptedException
 	{
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
@@ -80,6 +88,12 @@ public class ChainWorkerMenuController implements Initializable{
 		primaryStage.show();
 	}
 	
+	/**
+	 * This method loads the edit catalog boundary
+	 * @param event	pressed edit catalog
+	 * @throws IOException	for the loader
+	 * @throws InterruptedException
+	 */
 	public void AddDeletCatalog(ActionEvent event) throws IOException, InterruptedException
 	{
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window

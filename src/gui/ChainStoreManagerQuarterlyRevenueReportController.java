@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import entities.OrderEntity;
-import entities.StoreEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -17,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.input.MouseEvent;
 
 /**
  * This class is the controller for the Quarterly revenue report boundary
