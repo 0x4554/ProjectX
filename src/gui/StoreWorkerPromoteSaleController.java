@@ -235,6 +235,37 @@ public class StoreWorkerPromoteSaleController {
 			}
 		});
 		list.setItems(Products);//set the items to the ListView
+		
+		/*Insert data to ListView cell*/
+		list.setCellFactory(new Callback<ListView<ProductEntity>, ListCell<ProductEntity>>(){
+	        @Override
+	        public ListCell<ProductEntity> call(ListView<ProductEntity> p) {
+	        	
+	            ListCell<ProductEntity> cell = new ListCell<ProductEntity>(){
+	                @Override
+	                protected void updateItem(ProductEntity product, boolean status) {
+	                    super.updateItem(product, status);
+	                    if (product != null) {
+	       
+	                    	if(product.getProductImage()!=null)
+	                    	{
+	                    		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
+	                    		ImageView v=new ImageView(j);
+	                    		v.setFitHeight(130);
+	                    		v.setFitWidth(130);
+	                    		VBox vb=new VBox(15);
+	                        	vb.getChildren().addAll(v);
+	                            setGraphic(vb);
+	                    	}
+	                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"ï¿½");
+	                        setFont(Font.font(18));
+	                    }
+	                }
+	            };
+	            return cell;
+	        }
+	    });
+	list.setItems(Products);//set the items to the ListView
 	}
 
 	/**
@@ -272,7 +303,7 @@ public class StoreWorkerPromoteSaleController {
 				{
 					this.productsFromTable.get(i).setSalePrice(price);
 					this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
-					this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice() + "¤" + "\n         Old price:  ");
+					this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"ï¿½"+"\n         Old price:  ");
 				}
 			}
 		}

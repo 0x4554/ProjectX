@@ -1669,13 +1669,13 @@ public class ProjectServer extends AbstractServer
 		    
 		    if(product.getProductImage()!=null)
 		    {
-		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? ProductImage=? WHERE ProductName=?");	//prepare a statement
+		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? ,ProductImage=? WHERE ProductName=?");	//prepare a statement
 			    ps.setString(1, product.getProductName());
 			    ps.setString(2, product.getProductType());
 			    ps.setDouble(3, product.getProductPrice());
 			    ps.setString(4, product.getProductDescription());
-		    	ps.setBlob(5,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));
-		    	ps.setString(6, product.getProductDominantColor());
+		    	ps.setString(5, product.getProductDominantColor());
+		    	ps.setBlob(6,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));/********************************/
 				ps.setString(7, OldProduct.getProductName()); 
 				ps.executeUpdate();
 		    }
@@ -1685,9 +1685,9 @@ public class ProjectServer extends AbstractServer
 			    ps.setString(2, product.getProductType());
 			    ps.setDouble(3, product.getProductPrice());
 			    ps.setString(4, product.getProductDescription());
-		    	  ps.setString(5, product.getProductDominantColor());
-				    ps.setString(6, OldProduct.getProductName()); 
-				    ps.executeUpdate();
+		    	ps.setString(5, product.getProductDominantColor());
+				ps.setString(6, OldProduct.getProductName()); 
+				ps.executeUpdate();
 		    }
 		    return "Success";                                                                           
 }
@@ -2479,7 +2479,7 @@ public class ProjectServer extends AbstractServer
 				  if(id.getString(2).equals("SW") || id.getString(2).equals("SM"))
 					  stmnt.executeUpdate("UPDATE projectx.storeemployee SET BranchID="+branchNum+", WorkerID="+userID+" WHERE UserName='"+userPermission[0]+"'");
 				  else
-					  stmnt.executeUpdate("INSERT INTO projectx.storeemployee (UserName,WorkerID,BranchID) VALUES ("+userPermission[0]+","+userID+","+branchNum+")");
+					  stmnt.executeUpdate("INSERT INTO projectx.storeemployee (UserName,WorkerID,BranchID) VALUES ('"+userPermission[0]+"',"+userID+","+branchNum+")");
 			  	  stmnt.executeUpdate("UPDATE projectx.user SET UserType='"+userPermission[1]+"' WHERE Username='"+userPermission[0]+"'");
 			  	  ret+="Updated";
 			  }
@@ -2547,10 +2547,25 @@ private String[] getSurveyQuestions() throws SQLException {
 			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
 		 }
 	  
-	  stmt= con.createStatement();
+	  
 	  try {
-	  for(int i=1;i<=6;i++)
-		  stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestionText(i)+"' WHERE Questionnum = "+i+"");
+	  for(int i=1;i<=6;i++) {
+		  PreparedStatement ps= con.prepareStatement("UPDATE projectx.survey SET QuestionText=?, One=?, Two=?, Three=?, Four=?, Five=?, Six=?, Seven=?, Eight=?, Nine=?, Ten=? WHERE Questionnum=?");
+		  ps.setString(1, survey.getQuestionText(i));
+		  ps.setInt(2, 0);
+		  ps.setInt(3, 0);
+		  ps.setInt(4, 0);
+		  ps.setInt(5, 0);
+		  ps.setInt(6, 0);
+		  ps.setInt(7, 0);
+		  ps.setInt(8, 0);
+		  ps.setInt(9, 0);
+		  ps.setInt(10, 0);
+		  ps.setInt(11, 0);
+		  ps.setInt(12, i);
+		  ps.executeUpdate();
+		  //stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestionText(i)+"' WHERE Questionnum = "+i);
+	  	}
 	  }
 	  catch(Exception e)
 	  {

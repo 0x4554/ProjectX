@@ -56,6 +56,7 @@ public class CreateNewAccountController implements Initializable {
     private ObservableList<String> list;
     private StoreManagerMenuController mmc=null;
     private EditUsersPremissionController eupc=null;
+    private StoreEntity store;
     
     
 	/**
@@ -66,11 +67,15 @@ public class CreateNewAccountController implements Initializable {
 	}
 	
 	/**
-	 * setter for the previous controller
-	 * @param m controller
+	 * 
+	 * method for connecting the previous screen
+	 * in case of store manager access
+	 * 
+	 * @param m
 	 */
 	public void setConnectionData(StoreManagerMenuController m) {
 		this.mmc=m;
+		this.store=stor;
 	}
 	
 	/**
@@ -83,7 +88,9 @@ public class CreateNewAccountController implements Initializable {
 		
 	
 	/**
-	 * This method initialized the combo box
+	 *This method initializes the combo box
+	 * and defines the values showed on the combobox
+	 * 
 	 */
 	private void subscriptionComboBox()
 	{
@@ -126,6 +133,14 @@ public class CreateNewAccountController implements Initializable {
 				return;
 			}
 			else {
+				try {
+					Long.parseLong(idFld.getText());
+				}
+				catch(Exception e) {
+					GeneralMessageController.showMessage("Illegal ID\nPlease try again later");
+					return;
+				}
+				
 				CustomerEntity cust=new CustomerEntity();
 				cust.setUserName(usrFld.getText());						//set Fields of the new customer
 				cust.setID(Long.parseLong(idFld.getText()));
@@ -151,6 +166,7 @@ public class CreateNewAccountController implements Initializable {
 				
 				if(Client.getClientConnection().getMessageFromServer().getMessage().equals("added")) {
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					this.mmc.setStore(this.store);
 					this.mmc.showManagerMenu();										//open previous menu
 					GeneralMessageController.showMessage("New customer "+cust.getUserName()+" was added succesfully");
 				}
@@ -164,7 +180,7 @@ public class CreateNewAccountController implements Initializable {
 		
 	}
 	
-		
+	
 	/**
 	 * when back button pressed
 	 * @param event pressed back button
@@ -173,8 +189,10 @@ public class CreateNewAccountController implements Initializable {
 	 */	
 	public void bckBtnHandler(ActionEvent event) throws IOException, InterruptedException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		if(this.mmc!=null)
+		if(this.mmc!=null) {
+			this.mmc.setStore(this.store);
 			this.mmc.showManagerMenu();										//open previous menu
+		}
 		else
 			this.eupc.showEdittingOptions(event);
 		return;
