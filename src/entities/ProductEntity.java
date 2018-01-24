@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import logic.FilesConverter;
 
 public class ProductEntity implements Serializable{
@@ -21,12 +19,7 @@ public class ProductEntity implements Serializable{
 	
 	/**
 	 * Constructor for the ProductEntity.java class
-	 * @param productID	the product's id
-	 * @param productName	the name
-	 * @param productType	the type
-	 * @param productPrice	the base price
-	 * @param productDescription	description
-	 * @param productDominantColor	dominant color
+	 * 
 	 */
 
 	public ProductEntity()

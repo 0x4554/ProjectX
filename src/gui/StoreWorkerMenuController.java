@@ -26,7 +26,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-
+/**
+ *  This class is the controller for the store worker menu controller
+ *  
+ * StoreWorkerMenuController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class StoreWorkerMenuController implements Initializable{
 
     @FXML private Button ctlgBtn;
@@ -46,7 +58,10 @@ public class StoreWorkerMenuController implements Initializable{
 		this.swm=m;
 	}
 
-	
+	/**
+	 * This method loads the store worker menu boundary
+	 * @throws IOException
+	 */
 	public void showStoreWorkerMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/StoreWorkerMenuBoundary.fxml").openStream());
@@ -64,7 +79,6 @@ public class StoreWorkerMenuController implements Initializable{
 	
 	/**
 	 * This method sets the store of the manager
-	 * @param store
 	 * @throws InterruptedException for the sleep 
 	 */
 	public void setStore() 
@@ -100,7 +114,6 @@ public class StoreWorkerMenuController implements Initializable{
 	public void logOut(ActionEvent event) throws IOException	
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-//		ConnectedClients.removeConnectedClient(Client.getClientConnection().getUsername());
 		LoginController.signalLogOut();
 		
 		FXMLLoader loader = new FXMLLoader();
@@ -150,7 +163,13 @@ public class StoreWorkerMenuController implements Initializable{
 		primaryStage.show();
 	}
 	
-public void PromoteSale(ActionEvent event) throws IOException, InterruptedException {
+	/**
+	 * This method loads the promote sale window
+	 * @param event pressed promote sale
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void PromoteSale(ActionEvent event) throws IOException, InterruptedException {
 		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		FXMLLoader loader = new FXMLLoader();

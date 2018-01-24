@@ -3,7 +3,6 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +36,7 @@ import logic.MessageToSend;
 import logic.TimeCalculation;
 
 /**
- * This class is the conroller for the customer service worker complaint boundary
+ * This class is the controller for the customer service worker complaint boundary
  * 
  * CustomerServiceWorkerComplaintController.java
  *

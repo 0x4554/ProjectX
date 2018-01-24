@@ -2,7 +2,6 @@ package entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,15 +28,12 @@ public class StoreEntity extends Object implements Serializable{
 	 * Constructor for the StoreEntity.java class
 	 * @param branchID	the branch id
 	 * @param storeManager	the store manager
-	 * @param workers	the list of store workers
 	 */
 	public StoreEntity(int branchID,String branchName,int storeManager)
 	{
 		this.branchID = branchID;
 		this.BranchName = branchName;
 		this.storeManagerWorkerID=storeManager;
-//		this.storeWorkers= new ArrayList<Integer>();
-//		this.storeDiscoutsSales = new HashMap<Integer,Double>();
 	}
 	/**
 	 * This method adds a worker to the store workers list

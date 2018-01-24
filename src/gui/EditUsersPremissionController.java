@@ -1,25 +1,15 @@
 package gui;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
-import client.Client;
-import entities.ComplaintEntity;
-import entities.CustomerEntity;
-import entities.CustomerServiceWorkerEntity;
-import entities.OrderEntity;
-import entities.ServiceExpertEntity;
 import entities.StoreEntity;
-import entities.StoreManagerEntity;
-import entities.StoreWorkerEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,8 +21,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
@@ -218,7 +206,11 @@ public class EditUsersPremissionController implements Initializable{
 	}
 	
 	
-	
+	/**
+	 * This method translates the user type to a short user type for saving in DB
+	 * @param str the full type
+	 * @return the short type
+	 */
 	private String permissionsParser(String str) {
 		if(str.equals("Customer"))
 			return "C";
@@ -277,6 +269,12 @@ public class EditUsersPremissionController implements Initializable{
 	}
 	
 	
+	/**
+	 * This method loads the edit permission boundary
+	 * @param event pressed edit permission
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void showEdittingOptions(ActionEvent event) throws IOException, InterruptedException {
 
 		 FXMLLoader loader = new FXMLLoader();
@@ -292,12 +290,18 @@ public class EditUsersPremissionController implements Initializable{
 			primaryStage.show();
 	}
 	
-	
+	/**
+	 * This method sets the labels visible
+	 */
 	public void setLabels() {
 		strCmbBox.setVisible(false);
 		strIDLbl.setVisible(false);
 	}
 	
+	/**
+	 * This method shows the comboxbox and label for a store worker or manager to choose a store
+	 * @param event
+	 */
 	public void selectedWorkerOrManager(ActionEvent event) {
 		String s = prmsCmb.getSelectionModel().getSelectedItem();
 		if(s.equals("Store Worker") || s.equals("Store Manager"))

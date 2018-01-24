@@ -16,7 +16,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-
+/**
+ * This method is the controller for the customer service expert menu
+ * 
+ * CustomerServiceExpertMenuController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerServiceExpertMenuController implements Initializable {
 
 	  @FXML private Button avrBtn;
@@ -28,7 +40,6 @@ public class CustomerServiceExpertMenuController implements Initializable {
 
 	/**
 	 * A necessary constructor for the App
-	 * @throws IOException 
 	 */
 	  public CustomerServiceExpertMenuController() {
 	  }

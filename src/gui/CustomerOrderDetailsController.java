@@ -2,9 +2,11 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import client.Client;
 import entities.ComplaintEntity;
@@ -33,7 +35,20 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-
+import logic.TimeCalculation;
+/**
+ * This class is the controller for the customer order details boundary
+ * 
+ * CustomerOrderDetailsController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerOrderDetailsController implements Initializable {
 
 	@FXML
@@ -186,12 +201,6 @@ public class CustomerOrderDetailsController implements Initializable {
 					productName.getChildren().add(ProductType);
 					TreeItem<String> productDescription = new TreeItem<>("Product description : "+product.getProductDescription());
 					productName.getChildren().add(productDescription);
-//					if(product.getProductDominantColor() != null)
-//					{
-//						TreeItem<String> productDominantColor = new TreeItem<>("Dominent color : "+product.getProductDominantColor());
-//						productName.getChildren().add(productDominantColor);
-//			
-//					}
 					Double price;
 					TreeItem<String> productPrice;
 					if((price = order.getStore().getStoreDiscoutsSales().get(product.getProductID())) != null)	//check for disocunt
@@ -233,30 +242,11 @@ public class CustomerOrderDetailsController implements Initializable {
 				this.repliedTxtAre.setVisible(true);
 				this.cmplntFldOnLable.setVisible(true);
 				this.cmplntDtlsTxtArea.setText(complaint.getDescription());		//set the complaint details to the text area
-//				if(complaint.getFile() != null)									//if there is an image 
-//				{
-//					this.shwImgBtn.setVisible(true);
-//					this.complaintImage = FilesConverter.convertByteArrayToImage(complaint.getFile());		//convert and save the image
-//				}
-//				else
-//					this.shwImgBtn.setVisible(false);
-//				this.complaint = complaint;
 				if(complaint.getStatus().toString().equals("handled"))			//if handled, show the reply
 					this.repliedTxtAre.setText(complaint.getStoreReply());
 				else
 					this.repliedTxtAre.setText("Processing");
 				this.cmplntFldOnLable.setText(complaint.getFiledOn().toString());		//set the time it was filed
-//				if(!complaint.getStatus().toString().equals("handled"))					//check if was handled
-//				{
-//					Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
-//					if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
-//						this.cmplntTmToRplyLbl.setText("Over 48 has passed!!!");
-//					else
-//						this.cmplntTmToRplyLbl.setText(timeDiff.toString());							//set the time left for reply
-//							
-//				}
-//				else
-//					this.cmplntTmToRplyLbl.setText("Handled");
 			}
 		}
 	}
@@ -298,6 +288,11 @@ public class CustomerOrderDetailsController implements Initializable {
 			{
 				if(order.getOrderID() == Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)))	//get the selected order
 					orderToCancel=order;
+			}
+			if(TimeCalculation.calculateTimeDifference(orderToCancel.getReceivingTimestamp(), new Timestamp(System.currentTimeMillis()) ) <0)
+			{
+				GeneralMessageController.showMessage("Order receiving time has passed,\nCan not cancel the order.");
+				return;
 			}
 			
 			if(!orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancel_requested) && !orderToCancel.getStatus().equals(OrderEntity.OrderStatus.cancelled))		//check if order cancelation was already asked
@@ -344,7 +339,6 @@ public class CustomerOrderDetailsController implements Initializable {
 		 Parent root = loader.load(getClass().getResource("/gui/ComplaintBoundary.fxml").openStream());
 		 ComplaintController cmpc= loader.getController();	//set the controller to the ComplaintBoundary to control the SearchProductGUI window
 		 cmpc.setOrderID(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)));
-		 //		 cmpc.setConnectionData(this);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		primaryStage.setTitle("Complaint");

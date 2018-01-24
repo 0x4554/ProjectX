@@ -53,7 +53,7 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 	
 	/**
 	 * setter for the previous controller
-	 * @param edit
+	 * @param m controller
 	 */
 	 public void setConnectionData(ChooseUserToCreateController m)
 	 {

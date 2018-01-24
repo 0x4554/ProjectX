@@ -1,6 +1,5 @@
 package logic;
 
-import client.Client;
 import gui.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

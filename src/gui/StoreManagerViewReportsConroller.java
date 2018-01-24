@@ -9,7 +9,6 @@ import client.Client;
 import entities.ComplaintEntity;
 import entities.OrderEntity;
 import entities.StoreEntity;
-import entities.SurveyEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,6 +26,19 @@ import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
+/**
+ *  This class is the controller for the store manager view report controller
+ *  
+ * StoreManagerViewReportsConroller.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class StoreManagerViewReportsConroller implements Initializable {
 
 	private StoreEntity store;
@@ -44,9 +56,6 @@ public class StoreManagerViewReportsConroller implements Initializable {
 	@FXML
 	private CheckBox qtrlyCmplntChckBx;
 
-//	@FXML
-//	private CheckBox cstStsfctnChckBx;
-
 	@FXML
 	private CheckBox OrdrRprtChckBx;
 
@@ -63,12 +72,10 @@ public class StoreManagerViewReportsConroller implements Initializable {
 	ArrayList<StoreEntity> listOfStoresFromDB;
 	ArrayList<OrderEntity> listOfOrdersFromDB;
 	ArrayList<ComplaintEntity> listOfComplaintsFromDB;
-//	SurveyEntity survey;
 	
 	/**
 	 * This method loads the store's details
 	 * 
-	 * @param event
 	 *            store selected from the list
 	 */
 	public void showStoreDetails() {
@@ -185,10 +192,6 @@ public class StoreManagerViewReportsConroller implements Initializable {
 		this.OrdrRprtChckBx.setSelected(false);
 		this.qtrlyCmplntChckBx.setSelected(false);
 											//The survey report//
-//		if (this.cstStsfctnChckBx.isSelected())
-//		{
-//			satisfactionReport(); 						//method for satisfaction report
-//		}
 	}
 	
 	/**
@@ -287,35 +290,6 @@ public class StoreManagerViewReportsConroller implements Initializable {
 		primaryStage.show();
 	}
 	
-//	/**
-//	 * This method loads the satisfaction report;
-//	 * @throws InterruptedException 
-//	 * @throws IOException 
-//	 */
-//	private void satisfactionReport() throws InterruptedException, IOException
-//	{
-//		// **** get  survey from DB for the selected quarter ***//
-////		MessageToSend messageToSend = new MessageToSend("", "getSurvey");
-////		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
-////		Client.getClientConnection().accept();
-////		while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
-////			Thread.sleep(100);
-////		Client.getClientConnection().setConfirmationFromServer(); //reset to false
-////		messageToSend = Client.getClientConnection().getMessageFromServer();
-////		this.survey = (SurveyEntity) messageToSend.getMessage(); //get the list of stores from the message class
-////
-//		FXMLLoader loader = new FXMLLoader();
-//		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerSatisfactionReportBoundary.fxml").openStream());
-//		//CustomerServiceWorkerHandleComplaintController cswscic = new CustomerServiceWorkerHandleComplaintController();
-//		//cswscic = loader.getController();
-//		//cswscic.setComplaint(this.complaint);
-//		Stage primaryStage = new Stage();
-//		Scene scene = new Scene(root);
-//		primaryStage.setTitle("Satisfactory report for " + this.store.getBranchName());
-//		primaryStage.setScene(scene);
-//		primaryStage.show();
-//
-//	}
 	
 	/**
 	 * This method loads the comboBox

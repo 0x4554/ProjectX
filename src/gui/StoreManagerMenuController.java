@@ -20,6 +20,19 @@ import javafx.stage.Stage;
 import logic.ConnectedClients;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the store manager menu boundary
+ * 
+ * StoreManagerMenuController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class StoreManagerMenuController implements Initializable {
 	private Client clnt;
 	
@@ -71,13 +84,17 @@ public class StoreManagerMenuController implements Initializable {
 		Scene scene=new Scene(root);
 		StoreManagerMenuController smmc = new StoreManagerMenuController();
 		smmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-	//	smmc.setStore();
 		primaryStage.setTitle("Store manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
 	}
 
+	/**
+	 * This method loads the create new account window
+	 * @param event pressed create new account
+	 * @throws IOException
+	 */
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
@@ -94,7 +111,6 @@ public class StoreManagerMenuController implements Initializable {
 	
 	/**
 	 * This method sets the store of the manager
-	 * @param store
 	 * @throws InterruptedException for the sleep 
 	 */
 	public void setStore() 
@@ -171,11 +187,15 @@ public class StoreManagerMenuController implements Initializable {
 	
 	
 	
-	
+	/**
+	 * This method logs out the manager and loads the log in window
+	 * @param event pressed log out
+	 * @throws IOException
+	 */
 	public void logOutManager(ActionEvent event) throws IOException	//when click "Back" return to main menu
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-//		
+	
 		LoginController.signalLogOut();									//log out user from system
 		
 		FXMLLoader loader = new FXMLLoader();

@@ -67,7 +67,7 @@ public class CreateNewAccountController implements Initializable {
 	
 	/**
 	 * setter for the previous controller
-	 * @param edit
+	 * @param m controller
 	 */
 	public void setConnectionData(StoreManagerMenuController m) {
 		this.mmc=m;

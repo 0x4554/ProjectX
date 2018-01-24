@@ -5,10 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javafx.scene.image.Image;
 
@@ -68,7 +66,7 @@ public class FilesConverter {
 	/**
 	 * converts File to an byte array
 	 * 
-	 * @param path - path to needed file
+	 * @param file - path to needed file
 	 * @throws IOException 
 	 */
 	public static byte[] convertFileToByteArray(File file) throws IOException {
