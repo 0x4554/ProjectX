@@ -14,7 +14,7 @@
       </Label>
       <ImageView fx:id="zerliLogo" fitHeight="150.0" fitWidth="200.0" layoutX="221.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="164.0" layoutY="328.0" text="Powered by the" />
-      <ImageView fx:id="projectXLogo" fitHeight="76.0" fitWidth="200.0" layoutX="272.0" layoutY="297.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="478.0" layoutY="326.0" text="team" />
+      <ImageView fx:id="projectXLogo" fitHeight="51.0" fitWidth="180.0" layoutX="268.0" layoutY="306.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="415.0" layoutY="329.0" text="team" />
    </children>
 </Pane>
