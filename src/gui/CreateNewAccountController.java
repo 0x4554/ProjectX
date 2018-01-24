@@ -9,6 +9,7 @@ import com.sun.corba.se.impl.ior.GenericTaggedComponent;
 
 import client.Client;
 import entities.CustomerEntity;
+import entities.StoreEntity;
 import entities.UserEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,6 +66,7 @@ public class CreateNewAccountController implements Initializable {
     private ObservableList<String> list;
     private StoreManagerMenuController mmc=null;
     private EditUsersPremissionController eupc=null;
+    private StoreEntity store;
     
     
 	/**
@@ -80,8 +82,9 @@ public class CreateNewAccountController implements Initializable {
 	 * 
 	 * @param m
 	 */
-	public void setConnectionData(StoreManagerMenuController m) {
+	public void setConnectionData(StoreManagerMenuController m,StoreEntity stor) {
 		this.mmc=m;
+		this.store=stor;
 	}
 	
 	
@@ -175,6 +178,7 @@ public class CreateNewAccountController implements Initializable {
 				
 				if(Client.getClientConnection().getMessageFromServer().getMessage().equals("added")) {
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+					this.mmc.setStore(this.store);
 					this.mmc.showManagerMenu();										//open previous menu
 					GeneralMessageController.showMessage("New customer "+cust.getUserName()+" was added succesfully");
 				}
@@ -197,8 +201,10 @@ public class CreateNewAccountController implements Initializable {
 	 */	
 	public void bckBtnHandler(ActionEvent event) throws IOException, InterruptedException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		if(this.mmc!=null)
+		if(this.mmc!=null) {
+			this.mmc.setStore(this.store);
 			this.mmc.showManagerMenu();										//open previous menu
+		}
 		else
 			this.eupc.showEdittingOptions(event);
 		return;

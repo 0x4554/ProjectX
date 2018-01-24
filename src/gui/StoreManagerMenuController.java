@@ -83,7 +83,7 @@ public class StoreManagerMenuController implements Initializable {
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("CreateNewAccountBoundary.fxml").openStream());				//new window to open
 		 CreateNewAccountController cna=loader.getController();
-		 cna.setConnectionData(this);
+		 cna.setConnectionData(this,this.store);
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
 			
@@ -188,6 +188,16 @@ public class StoreManagerMenuController implements Initializable {
 		primaryStage.show();
 		GeneralMessageController.showMessage("Store Manager "+Client.getClientConnection().getUsername()+" logged out");
 		Client.getClientConnection().setClientUserName(null);
+	}
+	
+	/**
+	 * method for saving the current store
+	 * that is active
+	 * 
+	 * @param s
+	 */
+	public void setStore(StoreEntity s) {
+		this.store=s;
 	}
 
 
