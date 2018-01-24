@@ -91,18 +91,22 @@ public class CustomerServiceWorkerSaveVerbalReportsController implements Initial
 				{
 					Stage secondaryStage=new Stage();
 		
-					FileChooser fileChooser = new FileChooser();
+					FileChooser fileChooser = new FileChooser();										//new file chooser
 					fileChooser.setTitle("Save file");
-					File dest = fileChooser.showSaveDialog(secondaryStage);
-
-					try (FileOutputStream fos = new FileOutputStream(dest.toString())) {
-					   fos.write(verbalReport.getFile());
-					   fos.close();
-						}
-					catch(Exception e)
+					File dest = fileChooser.showSaveDialog(secondaryStage);								//get the file path from the file chooser
+					
+					if(dest != null)																	//check if a path was chosen
 					{
-						e.printStackTrace();
-					}  
+						try (FileOutputStream fos = new FileOutputStream(dest.toString())) {			//create a new file using the path
+						   fos.write(verbalReport.getFile());											//write the content of the file
+						   fos.close();
+						   GeneralMessageController.showMessage("File saved.");
+							}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						} 
+					}
 
 				}
 			}
