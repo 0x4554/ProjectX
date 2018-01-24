@@ -178,7 +178,7 @@ public void ShowAllProduct() throws InterruptedException
 	                        	vb.getChildren().addAll(v);
 	                            setGraphic(vb);
 	                    	}
-	                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"¤");
+	                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"ï¿½");
 	                        setFont(Font.font(18));
 	                    }
 	                }
@@ -216,7 +216,7 @@ public void updatePrice(int key,double price)
 		{
 			this.productsFromTable.get(i).setSalePrice(price);
 			this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
-			this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"¤"+"\n         Old price:  ");
+			this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"ï¿½"+"\n         Old price:  ");
 		}
 		}
 	}
