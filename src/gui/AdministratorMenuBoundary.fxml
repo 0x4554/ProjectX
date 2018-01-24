@@ -15,10 +15,11 @@
                   <Font size="33.0" />
                </font>
             </Label>
-            <Button fx:id="prmtBtn" layoutX="481.0" layoutY="246.0" mnemonicParsing="false" onAction="#usersPermissions" text="Edit premission" />
-            <Button fx:id="usrBtn" layoutX="481.0" layoutY="302.0" mnemonicParsing="false" onAction="#enterCreateNewUser" prefHeight="31.0" prefWidth="121.0" text="New user" />
+            <Button fx:id="prmtBtn" layoutX="457.0" layoutY="246.0" mnemonicParsing="false" onAction="#usersPermissions" prefHeight="26.0" prefWidth="167.0" text="Edit premission" />
+            <Button fx:id="usrBtn" layoutX="460.0" layoutY="302.0" mnemonicParsing="false" onAction="#enterCreateNewUser" prefHeight="31.0" prefWidth="167.0" text="New user" />
+            <Button fx:id="rlsBtn" layoutX="461.0" layoutY="359.0" mnemonicParsing="false" onAction="#releaseUserBtn" prefHeight="26.0" prefWidth="167.0" text="Release blocked user" />
          </children>
       </Pane>
-      <Button fx:id="lgBtn" layoutX="222.0" layoutY="222.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button fx:id="lgBtn" layoutX="240.0" layoutY="245.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
    </children>
 </AnchorPane>

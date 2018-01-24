@@ -110,6 +110,31 @@ public class AdministratorMenuController implements Initializable {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 	}
+	
+	
+	/**
+	 * method for handling the press
+	 * of the Release user button
+	 * 
+	 * @param event - current screen to hide
+	 * @throws IOException 
+	 */
+	public void releaseUserBtn(ActionEvent event) throws IOException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/ReleaseUserBlockBoundary.fxml").openStream());				//new window to open
+		ReleaseUserBlockController rubc = loader.getController();
+		rubc.setConnectionData(this);
+		rubc.setLabels();
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		
+		primaryStage.setTitle("Unblock users");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
