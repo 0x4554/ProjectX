@@ -24,7 +24,7 @@
             <CheckBox fx:id="cshCkBx" layoutX="495.0" layoutY="682.0" mnemonicParsing="false" onAction="#selectedCash" text="Cash" />
             <CheckBox fx:id="crdCrdCkBx" layoutX="665.0" layoutY="682.0" mnemonicParsing="false" onAction="#selectedCreditCard" text="Credit Card" />
             <TextField fx:id="crdCrdNmbrTxtFld" layoutX="438.0" layoutY="737.0" prefHeight="31.0" prefWidth="227.0" promptText="Enter credit card number" />
-            <TextField fx:id="crdCrdCCVTxtFld" layoutX="438.0" layoutY="783.0" prefHeight="31.0" prefWidth="227.0" promptText="CCV" />
+            <TextField fx:id="crdCrdCCVTxtFld" layoutX="438.0" layoutY="783.0" prefHeight="31.0" prefWidth="227.0" promptText="CVV" />
             <DatePicker fx:id="datePicker" layoutX="446.0" layoutY="575.0" promptText="Choose date for receiving" />
             <TextField fx:id="hrsTxtFld" layoutX="459.0" layoutY="617.0" prefHeight="31.0" prefWidth="73.0" promptText="Hours" />
             <TextField fx:id="mntsTxtFld" layoutX="569.0" layoutY="617.0" prefHeight="31.0" prefWidth="82.0" promptText="Minutes" />

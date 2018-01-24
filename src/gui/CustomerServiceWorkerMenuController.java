@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
-import entities.SurveyEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +16,19 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the customer service worker menu boundary
+ * 
+ * CustomerServiceWorkerMenuController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerServiceWorkerMenuController implements Initializable {
 
 	@FXML
@@ -30,7 +42,6 @@ public class CustomerServiceWorkerMenuController implements Initializable {
 
 	/**
 	 * A necessary constructor for the App
-	 * @throws IOException 
 	 */
 	public CustomerServiceWorkerMenuController()  {
 		

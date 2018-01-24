@@ -1,16 +1,23 @@
 package server;
 
-import gui.GeneralMessageController;
-import gui.LoginController;
-import gui.StoreManagerMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import logic.MessageToSend;
 import server_gui.ServerController;
-
+/**
+ * This class is the main lauch class for the server
+ * ServerMain.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ServerMain extends Application {
 
 	  final public static int DEFAULT_PORT = 5555;
@@ -43,10 +50,6 @@ public class ServerMain extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-//		  int port = 0; //Port to listen on
-		    
-		   
-//		     this.sv = new ProjectServer(port);
 		    
 		    try {
 		    	this.primaryStage = primaryStage;	//get the primary Stage
@@ -59,7 +62,6 @@ public class ServerMain extends Application {
 				this.serverController.server=this;
 				
 				Scene scene = new Scene(root);
-	//			scene.getStylesheets().add("/gui/LoginStyle.css");
 
 				this.primaryStage.setTitle("Zer-Li Server");	/**set the title**/
 				this.primaryStage.setScene(scene);
@@ -84,8 +86,6 @@ public class ServerMain extends Application {
 	@Override
 	public void stop() throws Exception
 	{
-//		MessageToSend msg = new MessageToSend("server closed", "");			//when server closed , send messages to all clients connected to the system
-//		this.sv.sendToAllClients(msg);
 		sv.close();
 		
 	

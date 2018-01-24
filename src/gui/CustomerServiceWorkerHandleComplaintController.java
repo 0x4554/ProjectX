@@ -20,6 +20,19 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the customer service worker handle complaint boundary
+ * 
+ * CustomerServiceWorkerHandleComplaintController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerServiceWorkerHandleComplaintController implements Initializable {
 
 	@FXML
@@ -51,6 +64,10 @@ public class CustomerServiceWorkerHandleComplaintController implements Initializ
 
 	}
 	
+	/**
+	 * Setter for the complaint entity
+	 * @param complaint
+	 */
 	public void setComplaint(ComplaintEntity complaint)
 	{
 		this.complaint = complaint;
@@ -117,6 +134,9 @@ public class CustomerServiceWorkerHandleComplaintController implements Initializ
 		primaryStage.show();
 	}
 
+	/**
+	 * Initializer
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

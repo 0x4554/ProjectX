@@ -18,7 +18,19 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-
+/**
+ * This class is the controller for the upload verbal report controller
+ * 
+ * UploadVerbalReportController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class UploadVerbalReportController implements Initializable {
 
 	

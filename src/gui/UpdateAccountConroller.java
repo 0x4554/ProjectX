@@ -172,7 +172,12 @@ public class UpdateAccountConroller implements Initializable{
 		mailTxtFld.setText(customerEnt.getEmailAddress());
     }
     
-    
+    /**
+     * This method loads the previou window
+     * @param event
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void cancelUpdate(ActionEvent event) throws IOException, InterruptedException {
     	
     	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window

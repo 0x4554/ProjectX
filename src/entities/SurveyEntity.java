@@ -2,9 +2,6 @@ package entities;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class represents the survey entity
@@ -25,24 +22,11 @@ public class SurveyEntity implements Serializable{
 		
 	}
 
-	//private Map<String,ArrayList<Integer>> questionsAndAnswers;		//*The String (key) is the question and the ArrayList holds all of the answers to that question*//
-
-//	private String q1Txt;
-//	private String q2Txt;
-//	private String q3Txt;
-//	private String q4Txt;
-//	private String q5Txt;
-//	private String q6Txt;
 	
 	private String[] questions=new String[6];
 	private int[] singleRank = new int[6];
 	
 	private int[][] totalRanks = new int[6][10];
-//	private int[] q2TotalAnswers = new int[10];
-//	private int[] q3TotalAnswers = new int[10];
-//	private int[] q4TotalAnswers = new int[10];
-//	private int[] q5TotalAnswers = new int[10];
-//	private int[] q6TotalAnswers = new int[10];
 	
 	
 	
@@ -77,29 +61,6 @@ public class SurveyEntity implements Serializable{
 		
 		return questions[questionNum-1];
 	}
-//		switch(questionNum) {
-//			case 1:
-//				return q1Txt;
-//			
-//			case 2:
-//				return q2Txt;
-//			
-//			case 3:
-//				return q3Txt;
-//				
-//			case 4:
-//				return q4Txt;
-//				
-//			case 5:
-//				return q5Txt;
-//				
-//			case 6:
-//				return q6Txt;
-//				
-//			default:
-//				return null;
-//		}
-//	}
 	
 	
 	/**
@@ -113,29 +74,6 @@ public class SurveyEntity implements Serializable{
 		if(questionNum<=6)
 			questions[questionNum-1] = str;
 	}
-//		switch(questionNum) {
-//		case 1:
-//			q1Txt=str;
-//		
-//		case 2:
-//			q2Txt=str;
-//		
-//		case 3:
-//			q3Txt=str;
-//			
-//		case 4:
-//			q4Txt=str;
-//			
-//		case 5:
-//			q5Txt=str;
-//			
-//		case 6:
-//			q6Txt=str;
-//		
-//		default:
-//			return;
-//		}
-//	}
 	
 	
 	/**
@@ -150,30 +88,13 @@ public class SurveyEntity implements Serializable{
 			return singleRank[questionNum-1];
 		return -1;
 	}
-//	switch(questionNum) {
-//		case 1:
-//			return q1Rnk;
-//	
-//		case 2:
-//			return q2Rnk;
-//	
-//		case 3:
-//			return q3Rnk;
-//		
-//		case 4:
-//			return q4Rnk;
-//		
-//		case 5:
-//			return q5Rnk;
-//		
-//		case 6:
-//			return q6Rnk;
-//		
-//		default:
-//			return -1;
-//	}
-//}
-	
+
+	/**
+	 * Setter for the question rank
+	 * @param questionNum num of Q
+	 * @param rankColoumn	rank of the column
+	 * @param allRanks
+	 */
 	public void setTotalRanks(int questionNum,int rankColoumn,int allRanks) {
 		
 		if(questionNum<=6 && rankColoumn<=10)
@@ -181,7 +102,12 @@ public class SurveyEntity implements Serializable{
 			
 	}
 	
-	
+	/**
+	 * Getter for a question's total column rank
+	 * @param questionNum num of Q
+	 * @param rankColoumn rank to Col
+	 * @return
+	 */
 	public int getTotalRanks(int questionNum,int rankColoumn) {
 		
 		if(questionNum<=6 && rankColoumn<=10)

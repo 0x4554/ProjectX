@@ -14,13 +14,30 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
+/**
+ * This class is the controller for the General message boundary
+ * 
+ * GeneralMessageController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class GeneralMessageController implements Initializable {
 
 	///general message
 	@FXML private Label generaMsglLabel;
 	@FXML private Button generalMsgButton;
-		
+	
+	/**
+	 * This method loads the general message boundary
+	 * @param msg the text for the message
+	 * @throws IOException
+	 */
 	public void showGeneralMessage(String msg) throws IOException
 	{
 		Stage secondaryStage = new Stage();
@@ -47,14 +64,23 @@ public class GeneralMessageController implements Initializable {
 		msg.showGeneralMessage(message);
 	}
 	
+	/**
+	 * Setter for the label of the message text
+	 * @param msg
+	 */
 	public void setLabel(String msg)	//set the label for the specific message
 	{
 		this.generaMsglLabel.setText(msg);
 	}
+	/**
+	 * This  method hides the message window
+	 * @param event pressed ok
+	 */
 	public void hideGeneralMessage(ActionEvent event)	//for hiding a general message
 	{
 		 ((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub

@@ -1,10 +1,6 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import client.Client;
 
 /**
  * This class holds all of the logged in clients using a hashMap
@@ -29,7 +25,6 @@ public class ConnectedClients {
 	/**
 	 * This method inserts a new connected client to the hashMap using the userName as the key
 	 * @param username	the key
-	 * @param clnt	the connection 
 	 */
 	public static void insertNewConnection(String username){
 		clnts.add(username);
