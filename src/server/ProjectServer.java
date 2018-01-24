@@ -1771,13 +1771,13 @@ public class ProjectServer extends AbstractServer
 		    
 		    if(product.getProductImage()!=null)
 		    {
-		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? ProductImage=? WHERE ProductName=?");	//prepare a statement
+		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? ,ProductImage=? WHERE ProductName=?");	//prepare a statement
 			    ps.setString(1, product.getProductName());
 			    ps.setString(2, product.getProductType());
 			    ps.setDouble(3, product.getProductPrice());
 			    ps.setString(4, product.getProductDescription());
-		    	ps.setBlob(5,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));
-		    	ps.setString(6, product.getProductDominantColor());
+		    	ps.setString(5, product.getProductDominantColor());
+		    	ps.setBlob(6,FilesConverter.convertByteArrayToInputStream(product.getProductImage()));/********************************/
 				ps.setString(7, OldProduct.getProductName()); 
 				ps.executeUpdate();
 		    }
@@ -1787,9 +1787,9 @@ public class ProjectServer extends AbstractServer
 			    ps.setString(2, product.getProductType());
 			    ps.setDouble(3, product.getProductPrice());
 			    ps.setString(4, product.getProductDescription());
-		    	  ps.setString(5, product.getProductDominantColor());
-				    ps.setString(6, OldProduct.getProductName()); 
-				    ps.executeUpdate();
+		    	ps.setString(5, product.getProductDominantColor());
+				ps.setString(6, OldProduct.getProductName()); 
+				ps.executeUpdate();
 		    }
 		   /* ps.setString(6, product.getProductDominantColor());
 		    ps.setString(7, OldProduct.getProductName()); 
