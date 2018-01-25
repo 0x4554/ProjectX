@@ -136,7 +136,7 @@ public class LoginController implements Initializable {
 			{
 				if(dataFromServer.get(1).equals("user does not exists"))	//user does not exists
 				{
-					GeneralMessageController.showMessage("User does not exists in the system.\nPlease check the entered username or contact a store for creating a new user.");
+					GeneralMessageController.showMessage("User does not exists in the system.\nPlease check the entered username or contact a store for creating a new user");
 				}
 				else if (dataFromServer.get(1).equals("user is blocked"))	//user is blocked
 				{
@@ -144,12 +144,14 @@ public class LoginController implements Initializable {
 				}
 				else if (dataFromServer.get(1).equals("password does not match"))	//password does not match
 				{
-					String message = "";
 					//show message of how many login attempts are left before blocking the user
-					message = message +"Password entered does not match the username.\nPlease try again.\n" + (3-Integer.parseInt(dataFromServer.get(2))) + "/3 attempts left before blocking account!!!";
+					//
 					if(dataFromServer.get(2).equals("3"))	//check if the attempt was the third attempt
-						message += "\nThe user is now blocked.Please contact a store.";
-					GeneralMessageController.showMessage(message);
+						GeneralMessageController.showMessage("Too many attempts, user is blocked.\nPlease contact the store\nin order to retreive your data");
+					else {
+						String message = "Password entered does not match the username.\nPlease try again.\n" + (3-Integer.parseInt(dataFromServer.get(2))) + "/3 attempts left before blocking account!!!";
+						GeneralMessageController.showMessage(message);
+					}
 				} 
 				else if (dataFromServer.get(1).equals("user is already logged in"))	//user is already logged in
 				{
@@ -262,6 +264,7 @@ public class LoginController implements Initializable {
 		this.usrNmTxtFld.setText("lana");
 		this.psswrdTxtFld.setText("123");
 		this.ipTxtArea.setVisible(false);
+		this.ipTxtArea.setEditable(false);
 	}
 
 }
