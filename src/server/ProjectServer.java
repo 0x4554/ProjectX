@@ -620,8 +620,6 @@ public class ProjectServer extends AbstractServer
   		 
  		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
 		 }
-	//	 else 
-		//	 product.setProductImage(byte[]);
  		 product.setProductDominantColor(rs.getString(7));
   		 listOfProducts.add(product);									//add the product to the list
   	 }
