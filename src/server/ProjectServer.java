@@ -2376,7 +2376,8 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 	}
 		
 	else if(operation.equals("getBlockedUsers")) {
-		ArrayList<String> ret = this.getBlockedUsers();
+		ArrayList<String> ret = new ArrayList<String>();
+		ret = this.getBlockedUsers();
 		messageToSend.setMessage(ret);
 		client.sendToClient(messageToSend);
 	}

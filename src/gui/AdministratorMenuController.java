@@ -33,6 +33,7 @@ public class AdministratorMenuController extends MenuController implements Initi
     @FXML private Button usrBtn;
     @FXML private Button lgBtn;
     @FXML private Button vwCtlgBtn;
+    @FXML private Button rlsBlckBtn;
     
     private Client clnt;
 	
