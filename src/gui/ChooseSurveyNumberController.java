@@ -38,7 +38,8 @@ public class ChooseSurveyNumberController implements Initializable{
     private Label hidenLbl;
     
     private StoreWorkerMenuController swmc;
-    ObservableList<Integer> list;
+    private ObservableList<Integer> list;
+	private CustomerServiceWorkerMenuController cswmc;
     
     /**
      * method for connecting the screens
@@ -46,8 +47,13 @@ public class ChooseSurveyNumberController implements Initializable{
      * @param storeWorkerMenu
      */
 	public void setConnectionData(StoreWorkerMenuController storeWorkerMenu) {
-		swmc = storeWorkerMenu;
+		this.swmc = storeWorkerMenu;
 	}
+	
+	public void setConnectionData(CustomerServiceWorkerMenuController cswMenu) {
+		this.cswmc = cswMenu;
+	}
+	
 	
 	/**
 	 * handler method if the continue button was pressed
@@ -92,9 +98,66 @@ public class ChooseSurveyNumberController implements Initializable{
     
     
     
+	/**
+	 * This method loads the update survey window
+	 * @param event	pressed update survey
+	 * @throws IOException	for the loader
+	 * @throws InterruptedException	for the sleep
+	 */
+	public void updateQuestionsText(ActionEvent event) throws IOException, InterruptedException {
+		
+		int cnt=0;
+		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/UpdateSurveyBoundary.fxml").openStream());
+		UpdateSurveyController usc = loader.getController();
+		usc.setConnectionData(this);
+		
+		MessageToSend msg=new MessageToSend(srvCmbBox.getSelectionModel().getSelectedItem(),"getSurveyQs");
+		Client.getClientConnection().setDataFromUI(msg);
+		Client.getClientConnection().accept();
+		
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();
+		
+		String[] questions = (String[])Client.getClientConnection().getMessageFromServer().getMessage();
+		for(String s:questions)
+			if(s==null)
+				cnt++;
+		if(cnt==0)
+			usc.setTextFields(questions);
+		
+		SurveyEntity se = usc.getNewSurvey();
+		se.setSurveyNum(srvCmbBox.getSelectionModel().getSelectedItem());
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
+		primaryStage.setTitle("Update Survey");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
     
-    
-    
+	
+    /**
+     * method to decide which screen will be next
+     * 
+     * @param event
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void updateOrAnswer(ActionEvent event) throws IOException, InterruptedException {
+    	if(srvCmbBox.getSelectionModel().getSelectedItem()!=null) {
+    		if(this.swmc!=null)
+    			continueToSurvey(event);
+    		else
+    			updateQuestionsText(event);
+    		}
+    	else
+    		GeneralMessageController.showMessage("Please choose survey to update");
+    }
     
     
 	/**
@@ -104,7 +167,10 @@ public class ChooseSurveyNumberController implements Initializable{
 	 */
 	public void bckToPrevMnu(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.swmc.showMenu();
+		if(this.swmc!=null)
+			this.swmc.showMenu();
+		else
+			this.cswmc.showMenu();
 	}
 	
 	
@@ -138,8 +204,15 @@ public class ChooseSurveyNumberController implements Initializable{
 		primaryStage.show();
 		
 	}
+	
 
-
+	/**
+	 *Getter for the cswmc
+	 * @return the cswmc
+	 */
+	public CustomerServiceWorkerMenuController getCswmc() {
+		return cswmc;
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

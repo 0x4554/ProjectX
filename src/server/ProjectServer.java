@@ -2287,6 +2287,13 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
 			client.sendToClient(messageToSend);           //send arrayList back to client
 		}
+		
+		else if(operation.equals("getNumberOfQ's")) {
+			int num = this.getNumberOfQuestions();
+			messageToSend.setMessage(num);
+			client.sendToClient(messageToSend);
+		}
+		
 		else if(operation.equals("UpdateProduct"))	
 		{
 			String Reply;
@@ -2333,6 +2340,12 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 			String result = updateSurveyQuestions((SurveyEntity)messageFromClient);
 			messageToSend.setMessage(result);
 			messageToSend.setOperation("surveyUpdateResult");
+			client.sendToClient(messageToSend);
+		}
+		
+		else if(operation.equals("newSurvey")) {
+			String result = uploadNewSurvey((SurveyEntity)messageFromClient);
+			messageToSend.setMessage(result);
 			client.sendToClient(messageToSend);
 		}
 		
@@ -2437,7 +2450,94 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 				
 	}
 	
-  private ArrayList<Integer> getNumberOfSurveys() throws SQLException {
+  
+  /**
+   * method for uploading new survey into the database
+   * 
+   * @param survey to upload
+   * @return "uploaded" if succeeded or "failed" if failed
+ * @throws SQLException 
+   */
+  private String uploadNewSurvey(SurveyEntity survey) throws SQLException {
+	// TODO Auto-generated method stub
+	  
+	  try {
+		  con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		}
+		catch(Exception e) {
+			System.out.println("Connection to database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		}
+	  try {
+	  for(int i=1;i<=6;i++) {
+	  PreparedStatement ps= con.prepareStatement("INSERT INTO projectx.survey (Surveynum,Questionnum,QuestionText,One,Two,Three,Four,Five,Six,Seven,Eight,Nine,Ten) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+	  ps.setInt(1, survey.getSurveyNum());
+	  ps.setInt(2, i);
+	  ps.setString(3, survey.getQuestionText(i));
+	  ps.setInt(4, 0);
+	  ps.setInt(5, 0);
+	  ps.setInt(6, 0);
+	  ps.setInt(7, 0);
+	  ps.setInt(8, 0);
+	  ps.setInt(9, 0);
+	  ps.setInt(10, 0);
+	  ps.setInt(11, 0);
+	  ps.setInt(12, 0);
+	  ps.setInt(13, 0);
+	  ps.executeUpdate();
+	  }
+	  System.out.println("New survey uploaded");
+	  ServerMain.serverController.showMessageToUI("New survey uploaded");
+	  
+	  return "uploaded";
+	  }
+	  catch(Exception e) {
+		  e.printStackTrace();
+		  System.out.println("failed uploading new survey");
+		  ServerMain.serverController.showMessageToUI("failed uploading new survey");
+		  return "failed";
+	  }
+}
+
+/**
+   * method for getting max survey number
+   * 
+   * @return int of the current max survey number
+   * @throws SQLException
+   */
+  private int getNumberOfQuestions() throws SQLException {
+	// TODO Auto-generated method stub
+	  Statement st;
+	  ArrayList<Integer> total = new ArrayList<Integer>();
+
+	  try {
+		  con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		}
+		catch(Exception e) {
+			System.out.println("Connection to database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		}
+	  st = con.createStatement();
+	  ResultSet rs = st.executeQuery("SELECT DISTINCT Surveynum FROM projectx.survey");
+	  
+	  while(rs.next())
+		  total.add(rs.getInt(1));
+	  
+	return total.size();
+}
+
+  
+  /**
+   * method for receiving ArrayList of all the surveyNumbers in the database
+   * 
+   * @return ArrayList<Integer> of all question numbers
+   * @throws SQLException
+   */
+private ArrayList<Integer> getNumberOfSurveys() throws SQLException {
 	// TODO Auto-generated method stub
 	  ArrayList<Integer> total = new ArrayList<Integer>();
 	  Statement st;
@@ -2459,6 +2559,13 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 	return total;
 }
 
+/**
+ * method for releasing the blocked users in the database
+ * 
+ * @param user the username to unblock
+ * @return "released" if succeeded or "releaseFailed" if failed
+ * @throws SQLException
+ */
 private String releaseUserBlock(String user) throws SQLException {
 	// TODO Auto-generated method stub
 	  Statement stmnt;
@@ -2483,7 +2590,12 @@ private String releaseUserBlock(String user) throws SQLException {
 	  }
 	  return s;
 }
-
+/**
+ * method to find all the blocked users in the database
+ * 
+ * @return ArrayList of all the blocked users
+ * @throws SQLException
+ */
 private ArrayList<String> getBlockedUsers() throws SQLException {
 	// TODO Auto-generated method stub
 	  ArrayList<String> users= new ArrayList<String>();
@@ -2636,7 +2748,7 @@ private String[] getSurveyQuestions(int surveyNum) throws SQLException {
    * This method updates the questions in the DB
    * @param survey the new survey
    * @return success/faild
- * @throws SQLException for SQL
+   * @throws SQLException for SQL
    */
   private String updateSurveyQuestions(SurveyEntity survey) throws SQLException
   {
@@ -2652,24 +2764,13 @@ private String[] getSurveyQuestions(int surveyNum) throws SQLException {
 			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
 		 }
 	  
-	  
 	  try {
 	  for(int i=1;i<=6;i++) {
-		  PreparedStatement ps= con.prepareStatement("UPDATE projectx.survey SET QuestionText=?, One=?, Two=?, Three=?, Four=?, Five=?, Six=?, Seven=?, Eight=?, Nine=?, Ten=? WHERE Questionnum=?");
+		  PreparedStatement ps= con.prepareStatement("UPDATE projectx.survey SET QuestionText=? WHERE Questionnum=? AND Surveynum=?");
 		  ps.setString(1, survey.getQuestionText(i));
-		  ps.setInt(2, 0);
-		  ps.setInt(3, 0);
-		  ps.setInt(4, 0);
-		  ps.setInt(5, 0);
-		  ps.setInt(6, 0);
-		  ps.setInt(7, 0);
-		  ps.setInt(8, 0);
-		  ps.setInt(9, 0);
-		  ps.setInt(10, 0);
-		  ps.setInt(11, 0);
-		  ps.setInt(12, i);
+		  ps.setInt(2, i);
+		  ps.setInt(3, survey.getSurveyNum());
 		  ps.executeUpdate();
-		  //stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestionText(i)+"' WHERE Questionnum = "+i);
 	  	}
 	  }
 	  catch(Exception e)

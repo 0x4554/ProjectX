@@ -106,6 +106,7 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 
 	}
 	
+	
 	/**
 	 * This method sets the store of the manager
 	 * @throws InterruptedException for the sleep 

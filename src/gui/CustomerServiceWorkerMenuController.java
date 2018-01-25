@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -41,6 +42,8 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 	private Button bckBtn;
 	@FXML 
 	private Button vwCtlgBtn;
+	@FXML
+	private Button crtNewSrvBtn;
 
 	/**
 	 * A necessary constructor for the App
@@ -111,23 +114,62 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		GeneralMessageController.showMessage("Logged out");
 	}
 	
+	
+	
 	/**
 	 * This method loads the update survey window
 	 * @param event	pressed update survey
 	 * @throws IOException	for the loader
 	 * @throws InterruptedException	for the sleep
 	 */
-	public void updatePressed(ActionEvent event) throws IOException, InterruptedException {
+	public void updateQuestionsText(ActionEvent event) throws IOException, InterruptedException {
+
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		
-		int cnt=0;
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/ChooseSurveyNumberBoundary.fxml").openStream());
+		ChooseSurveyNumberController csnc=loader.getController();
+		csnc.setConnectionData(this);
 		
+		MessageToSend toServer = new MessageToSend(null, "getNumberOfSurveys");
+		Client.getClientConnection().setDataFromUI(toServer);
+		Client.getClientConnection().accept();
+		
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();
+		
+		ArrayList<Integer> allSurveys=(ArrayList<Integer>)Client.getClientConnection().getMessageFromServer().getMessage();
+
+		csnc.initComboBox(allSurveys);
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
+		primaryStage.setTitle("New Survey");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}								
+	
+	/**
+	 * This method loads the new surveys creating scene
+	 * 
+	 * @param event - current scene to hide
+	 * @throws IOException 
+	 * @throws InterruptedException 
+	 */
+	public void createNewSurvey(ActionEvent event) throws IOException, InterruptedException {
+		
+		int newSurveyNum;
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/UpdateSurveyBoundary.fxml").openStream());
 		UpdateSurveyController usc = loader.getController();
 		usc.setConnectionData(this);
 		
-		MessageToSend msg=new MessageToSend(null,"getSurveyQs");
+		
+		MessageToSend msg=new MessageToSend(null,"getNumberOfQ's");
 		Client.getClientConnection().setDataFromUI(msg);
 		Client.getClientConnection().accept();
 		
@@ -135,18 +177,15 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer();
 		
-		String[] questions = (String[])Client.getClientConnection().getMessageFromServer().getMessage();
-		for(String s:questions)
-			if(s==null)
-				cnt++;
-		if(cnt==0)
-			usc.setTextFields(questions);
+		newSurveyNum = (int)Client.getClientConnection().getMessageFromServer().getMessage();
+		newSurveyNum+=1;
+		usc.getNewSurvey().setSurveyNum(newSurveyNum);
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		scene.getStylesheets().add("/gui/LoginStyle.css");
 
-		primaryStage.setTitle("Login");
+		primaryStage.setTitle("Create New Survey");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

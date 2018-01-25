@@ -59,7 +59,9 @@ public class UpdateSurveyController implements Initializable{
 	    @FXML
 	    private Label hidenLbl;
 	    
-	    private CustomerServiceWorkerMenuController csemc;
+	    private CustomerServiceWorkerMenuController cswmc;
+	    private SurveyEntity newSurvey = new SurveyEntity();
+		private ChooseSurveyNumberController csnc;
 	    
 	    /**
 	     * 
@@ -74,7 +76,12 @@ public class UpdateSurveyController implements Initializable{
 	     * @param cs
 	     */
 	    public void setConnectionData(CustomerServiceWorkerMenuController cs) {
-	    	csemc=cs;
+	    	cswmc=cs;
+	    }
+	    
+	    
+	    public void setConnectionData(ChooseSurveyNumberController chsScr) {
+	    	this.csnc = chsScr;
 	    }
 	    
 	    
@@ -103,12 +110,12 @@ public class UpdateSurveyController implements Initializable{
 	    		
 	    		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("Updated")) {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showMenu();
+	    			this.csnc.getCswmc().showMenu();
 	    			GeneralMessageController.showMessage("Questions updated successfully");
 	    		}
 	    		else {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showMenu();
+	    			this.csnc.getCswmc().showMenu();
 	    			GeneralMessageController.showMessage("Update failed\nplease contact technical support and try again later");
 	    		}
 	    		
@@ -119,6 +126,65 @@ public class UpdateSurveyController implements Initializable{
 	      }
 	    	else
 	    		GeneralMessageController.showMessage("Please fill in all fields");
+	    	
+	    }
+	    
+	    
+	    /**
+	     * method for creating uploading new survey into the database
+	     * 
+	     * @param event - current scene to hide
+	     * @throws InterruptedException
+	     * @throws IOException
+	     */
+	    public void uploadNewSurvey(ActionEvent event) throws InterruptedException, IOException {
+	    
+	    	if (verifyFields()) { 
+	    		if(cnfrmChkBox.isSelected()){
+	    		SurveyEntity surveyEnt=loadSurveyQuestions();
+	    		
+	    		MessageToSend toServer = new MessageToSend(surveyEnt,"newSurvey");
+	    		Client.getClientConnection().setDataFromUI(toServer);
+	    		Client.getClientConnection().accept();
+	    		
+	    		while(!Client.getClientConnection().getConfirmationFromServer())
+	    			Thread.sleep(100);
+	    		
+	    		Client.getClientConnection().setConfirmationFromServer();
+	    		
+	    		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("uploaded")) {
+	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+	    			this.cswmc.showMenu();
+	    			GeneralMessageController.showMessage("Survey uploaded successfully");
+	    		}
+	    		else {
+	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+	    			this.cswmc.showMenu();
+	    			GeneralMessageController.showMessage("Upload failed\nplease contact technical support and try again later");
+	    		}
+	    		
+	    		
+	    	}
+	    		else
+	    			hidenLbl.setVisible(true);
+	      }
+	    	else
+	    		GeneralMessageController.showMessage("Please fill in all fields");
+	    }
+	    
+	    
+	    /**
+	     * method to decide if editing or uploading
+	     * 
+	     * @param event - scene to hide
+	     * @throws InterruptedException
+	     * @throws IOException
+	     */
+	    public void editOrCreate(ActionEvent event) throws InterruptedException, IOException {
+	    	if(this.csnc!=null)
+	    		this.sendUpdates(event);
+	    	else
+	    		this.uploadNewSurvey(event);
 	    	
 	    }
 	    
@@ -150,6 +216,7 @@ public class UpdateSurveyController implements Initializable{
     		survey.setQuestionText(4, q4TxtFld.getText());
     		survey.setQuestionText(5, q5TxtFld.getText());
     		survey.setQuestionText(6, q6TxtFld.getText());
+    		survey.setSurveyNum(this.newSurvey.getSurveyNum());
     		
     		return survey;
 	    }
@@ -163,11 +230,21 @@ public class UpdateSurveyController implements Initializable{
 	     */
 	    public void cancelUpdate(ActionEvent event) throws IOException {
 	    	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    	this.csemc.showMenu();	
+	    	this.cswmc.showMenu();	
 	    }
 	    
 	    
+	    
+	    
 	    /**
+		 *Getter for the newSurvey
+		 * @return the newSurvey
+		 */
+		public SurveyEntity getNewSurvey() {
+			return newSurvey;
+		}
+
+		/**
 	     * the method fills the text fields with the current questions
 	     * 
 	     * @param questions - the survey's current question that should be updated
