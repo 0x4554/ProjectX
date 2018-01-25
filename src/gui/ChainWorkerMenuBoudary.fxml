@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ChainWorkerMenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ChainWorkerMenuController">
    <children>
       <Label fx:id="ChainWorkMenulbl" layoutX="196.0" layoutY="39.0" text="Chain Worker Menu">
          <font>
@@ -16,8 +14,9 @@
       </Label>
       <Button fx:id="addToCatalogBtn" layoutX="65.0" layoutY="129.0" mnemonicParsing="false" onAction="#AddDeletCatalog" prefHeight="31.0" prefWidth="185.0" text="Add/Delete catalog" />
       <Button fx:id="addProductBtn" layoutX="353.0" layoutY="129.0" mnemonicParsing="false" onAction="#AddDeletEditProduct" prefHeight="31.0" prefWidth="185.0" text="Add/Delete/Edit Product" />
-      <Label fx:id="cataloglbl" layoutX="132.0" layoutY="87.0" text="Catalog" textFill="#4db579" />
-      <Label fx:id="productlbl" layoutX="422.0" layoutY="87.0" text="Product" textFill="#45ab6a" />
+      <Label fx:id="cataloglbl" layoutX="132.0" layoutY="87.0" text="Catalog" textFill="#541853" />
+      <Label fx:id="productlbl" layoutX="422.0" layoutY="87.0" text="Product" textFill="#511d4e" />
       <Button fx:id="backBtn" layoutX="263.0" layoutY="340.0" mnemonicParsing="false" onAction="#back" text="Log Out" />
+      <Button fx:id="vwCtlgBtn" layoutX="66.0" layoutY="185.0" mnemonicParsing="false" onAction="#enterCatalog" prefHeight="31.0" prefWidth="185.0" text="View catalog" />
    </children>
 </Pane>

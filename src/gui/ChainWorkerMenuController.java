@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class ChainWorkerMenuController implements Initializable{
+public class ChainWorkerMenuController extends MenuController implements Initializable{
 
 	@FXML private Button backBtn;
 	@FXML private Button addToCatalogBtn;
@@ -28,6 +28,7 @@ public class ChainWorkerMenuController implements Initializable{
 	@FXML private Label ChainWorkMenulbl;
 	@FXML private Label cataloglbl;
 	@FXML private Label productlbl;
+	@FXML private Button vwCtlgBtn;
 	
 	Stage primaryStage=new Stage();
 	private Object clnt;
@@ -36,7 +37,7 @@ public class ChainWorkerMenuController implements Initializable{
 	 * This method loads the chain store worker menu
 	 * @throws IOException for the loader
 	 */
-	public void showChainWorkerMenu() throws IOException
+	public void showMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/ChainWorkerMenuBoudary.fxml").openStream());
@@ -106,6 +107,29 @@ public class ChainWorkerMenuController implements Initializable{
 		primaryStage.setTitle("Edit Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+	
+	/**
+	 * The method open's the Catalog Window
+	 * 
+	 * @param event
+	 *            on clicking "View Catalog" Button
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void enterCatalog(ActionEvent event) throws IOException, InterruptedException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //Hide Current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
+		CatalogController catl = loader.getController();
+		catl.setPreviousController(this);
+		catl.showCatalog(); //Call the method show catalog
+		Stage primaryStage = new Stage(); //Set Stage->Show()
+		Scene scene = new Scene(pRoot);
+		primaryStage.setTitle("Zer-Li Catalog");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
 	}
 	
 	@Override

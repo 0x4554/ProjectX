@@ -29,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import logic.MessageToSend;
@@ -158,7 +159,12 @@ public class OrderFromCatalogController implements Initializable{
                         	else {
                         		setGraphic(addToCart);
                         	}
-                                setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getSale()+product.getProductPrice()+"¤");
+                        	if(product.getProductDominantColor().equals("none"))
+                        		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+                        	else 
+                        		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+                            setFont(Font.font(18));
+
                         }
                     }
                 };

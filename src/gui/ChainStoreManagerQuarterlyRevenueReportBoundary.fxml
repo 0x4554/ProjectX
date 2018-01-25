@@ -11,7 +11,10 @@
    <children>
       <Pane layoutX="-164.0" layoutY="-163.0" prefHeight="200.0" prefWidth="200.0" />
       <ListView fx:id="ordrLstVw" layoutX="36.0" layoutY="37.0" prefHeight="284.0" prefWidth="249.0" />
-      <Label layoutX="119.0" layoutY="14.0" text="Orders" />
+      <Label layoutX="119.0" layoutY="14.0" text="Orders">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <Label layoutX="312.0" layoutY="35.0" text="Total amount">
          <font>
             <Font size="18.0" />

@@ -111,12 +111,12 @@ public class UploadVerbalReportController implements Initializable {
 		
 		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("uploaded")) {
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.csemc.showCustomerServiceExpertMenu();
+			this.csemc.showMenu();
 			GeneralMessageController.showMessage("Verbal report uploaded successfully");
 		}
 		else {
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.csemc.showCustomerServiceExpertMenu();
+			this.csemc.showMenu();
 			GeneralMessageController.showMessage("There was a problem uploading the report\nPlease contact technical support and try again later");
 			}
 			
@@ -132,7 +132,7 @@ public class UploadVerbalReportController implements Initializable {
 	 */
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.csemc.showCustomerServiceExpertMenu();
+		this.csemc.showMenu();
 	}
 	
 	

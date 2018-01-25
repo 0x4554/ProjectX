@@ -33,7 +33,7 @@ import logic.MessageToSend;
  * Project Name gitProjectX
  *
  */
-public class StoreManagerMenuController implements Initializable {
+public class StoreManagerMenuController extends MenuController implements Initializable {
 	private Client clnt;
 	
 	
@@ -45,6 +45,8 @@ public class StoreManagerMenuController implements Initializable {
 	private Button shwCnclBtn;
 	@FXML
 	private Button logOutBtn;
+	@FXML 
+	private Button vwCtlgBtn;
 	private StoreEntity store;
 	
 	
@@ -76,7 +78,7 @@ public class StoreManagerMenuController implements Initializable {
 	 * This method will present the menu for manager user
 	 * @throws IOException
 	 */
-	public void showManagerMenu() throws IOException {
+	public void showMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/StoreManagerMenuBoundary.fxml").openStream());
 		 
@@ -220,7 +222,28 @@ public class StoreManagerMenuController implements Initializable {
 		this.store=s;
 	}
 
+	/**
+	 * The method open's the Catalog Window
+	 * 
+	 * @param event
+	 *            on clicking "View Catalog" Button
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void enterCatalog(ActionEvent event) throws IOException, InterruptedException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //Hide Current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
+		CatalogController catl = loader.getController();
+		catl.setPreviousController(this);
+		catl.showCatalog(); //Call the method show catalog
+		Stage primaryStage = new Stage(); //Set Stage->Show()
+		Scene scene = new Scene(pRoot);
+		primaryStage.setTitle("Zer-Li Catalog");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

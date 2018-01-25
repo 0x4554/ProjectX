@@ -141,21 +141,22 @@ public class StoreWorkerPromoteSaleController {
 	 * @throws IOException
 	 */
 	public void SetProductDetails(MouseEvent event) throws IOException {
-		ProductEntity product = new ProductEntity();
-		if (list.getSelectionModel().getSelectedItem() != null)
+		ProductEntity product=new ProductEntity();
+		if(list.getSelectionModel().getSelectedItem() != null)
 		{
-			product = list.getSelectionModel().getSelectedItem();
+			product=list.getSelectionModel().getSelectedItem();
 			IDTxt.setText(product.getProductID().toString());
 			NameTxt.setText(product.getProductName());
 			TypeTxt.setText(product.getProductType());
 			PriceTxt.setText(product.getProductPrice().toString());
 			DescriptionTxt.setText(product.getProductDescription());
 			ColorTxt.setText(product.getProductDominantColor());
-		} else
+		}
+		else
 		{
 			GeneralMessageController.showMessage("Please choose product from the list");
 			return;
-		}
+		}		
 	}
 
 	/**
@@ -164,108 +165,78 @@ public class StoreWorkerPromoteSaleController {
 	 * @throws InterruptedException
 	 */
 	public void ShowAllProduct() throws InterruptedException {
-		ObservableList<ProductEntity> Products = FXCollections.observableArrayList();
-		list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		productsFromTable = getAllProducts();
-		int storeid = 0;
-
-		/* Get Store discounts */
-		storeid = store.getBranchID();
-		HashMap<Integer, Double> discount = new HashMap<Integer, Double>();//Integer->product id-key, Double->product price is the value
-		discount = getDiscounts(storeid); //get the discount for the specific store
-
-		if (discount != null) //If there are discounts for this store
-		{
-			Iterator<Integer> itr = discount.keySet().iterator();
-			itr = discount.keySet().iterator(); //get the key's from the hash map of discounts
-			int temp_key = 0;
-			double newPrice = 0;
-
-			/* Update store prices */
-			while (itr.hasNext())
+		 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
+			list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);	
+			productsFromTable=getAllProducts();
+			int storeid=0;
+			
+			/*Get Store discounts*/
+		    storeid=store.getBranchID();
+			HashMap<Integer, Double> discount=new HashMap<Integer,Double>();//Integer->product id-key, Double->product price is the value
+			discount=getDiscounts(storeid);                                                                 //get the discount for the specific store
+			
+			if(discount!=null) //If there are discounts for this store
 			{
-				temp_key = (int) itr.next();
-				for (int j = 0; j < productsFromTable.size(); j++)
-				{
-					if (temp_key == productsFromTable.get(j).getProductID()) // If there is a discount for this product then update
-					{
-						newPrice = discount.get(temp_key);
-						updatePrice(temp_key, newPrice);
-					}
-				}
+				Iterator<Integer> itr=discount.keySet().iterator();
+				itr=discount.keySet().iterator();                                                                             //get the key's from the hash map of discounts
+				int temp_key=0;
+				double newPrice=0;
+				
+			   /*Update store prices*/
+		    while (itr.hasNext())
+		    {	
+		    	temp_key=(int) itr.next();
+		    	for(int j=0;j<productsFromTable.size();j++)
+		    	{
+		    		if(temp_key==productsFromTable.get(j).getProductID())                                 // If there is a discount for this product then update
+		    		{
+		    			newPrice=discount.get(temp_key);
+		    			updatePrice(temp_key,newPrice);
+			        }
+		    	}
+			   }
+			}		
+		    /*******************************************************Build the catalog view**********************************************/
+			
+		    /*Add all products to observable List*/
+			for(ProductEntity p: productsFromTable)
+			{
+				Products.add(p);
 			}
-		}
-		/******************************************************* Build the catalog view **********************************************/
-
-		/* Add all products to observable List */
-		for (ProductEntity p : productsFromTable)
-		{
-			Products.add(p);
-		}
-
-		/* Insert data to ListView cell */
-		list.setCellFactory(new Callback<ListView<ProductEntity>, ListCell<ProductEntity>>() {
-			@Override
-			public ListCell<ProductEntity> call(ListView<ProductEntity> p) {
-
-				ListCell<ProductEntity> cell = new ListCell<ProductEntity>() {
-					@Override
-					protected void updateItem(ProductEntity product, boolean status) {
-						super.updateItem(product, status);
-						if (product != null)
-						{
-
-							if (product.getProductImage() != null)
-							{
-								Image j = new Image(new ByteArrayInputStream(product.getProductImage()));
-								ImageView v = new ImageView(j);
-								v.setFitHeight(130);
-								v.setFitWidth(130);
-								VBox vb = new VBox(15);
-								vb.getChildren().addAll(v);
-								setGraphic(vb);
-							}
-							setText("        " + product.getProductName() + "  is a  " + product.getProductType() + ",  \n        " + product.getProductDescription() + " in  "
-									+ product.getProductDominantColor() + "  color's  " + "  " + "\n        " + product.getSale() + product.getProductPrice() + "¤");
-							setFont(Font.font(18));
-						}
-					}
-				};
-				return cell;
-			}
-		});
+			
+			/*Insert data to ListView cell*/
+			list.setCellFactory(new Callback<ListView<ProductEntity>, ListCell<ProductEntity>>(){
+		        @Override
+		        public ListCell<ProductEntity> call(ListView<ProductEntity> p) {
+		        	
+		            ListCell<ProductEntity> cell = new ListCell<ProductEntity>(){
+		                @Override
+		                protected void updateItem(ProductEntity product, boolean status) {
+		                    super.updateItem(product, status);
+		                    if (product != null) {
+		       
+		                    	if(product.getProductImage()!=null)
+		                    	{
+		                    		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
+		                    		ImageView v=new ImageView(j);
+		                    		v.setFitHeight(130);
+		                    		v.setFitWidth(130);
+		                    		VBox vb=new VBox(15);
+		                        	vb.getChildren().addAll(v);
+		                            setGraphic(vb);
+		                    	}
+		                    	if(product.getProductDominantColor().equals("none"))
+		                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        "+product.getSale()+product.getProductPrice()+"¤");
+		                    	else
+			                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" ,in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"¤");
+		                        setFont(Font.font(18));
+		                    }
+		                }
+		            };
+		            return cell;
+		        }
+		    });
 		list.setItems(Products);//set the items to the ListView
-		
-		/*Insert data to ListView cell*/
-		list.setCellFactory(new Callback<ListView<ProductEntity>, ListCell<ProductEntity>>(){
-	        @Override
-	        public ListCell<ProductEntity> call(ListView<ProductEntity> p) {
-	        	
-	            ListCell<ProductEntity> cell = new ListCell<ProductEntity>(){
-	                @Override
-	                protected void updateItem(ProductEntity product, boolean status) {
-	                    super.updateItem(product, status);
-	                    if (product != null) {
-	       
-	                    	if(product.getProductImage()!=null)
-	                    	{
-	                    		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
-	                    		ImageView v=new ImageView(j);
-	                    		v.setFitHeight(130);
-	                    		v.setFitWidth(130);
-	                    		VBox vb=new VBox(15);
-	                        	vb.getChildren().addAll(v);
-	                            setGraphic(vb);
-	                    	}
-	                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"ï¿½");
-	                        setFont(Font.font(18));
-	                    }
-	                }
-	            };
-	            return cell;
-	        }
-	    });
-	list.setItems(Products);//set the items to the ListView
 	}
 
 	/**
@@ -295,16 +266,16 @@ public class StoreWorkerPromoteSaleController {
 	 *            is the new price after sale on the product
 	 */
 	public void updatePrice(int key, double price) {
-		for (int i = 0; i < this.productsFromTable.size(); i++)
+		for(int i=0;i<this.productsFromTable.size();i++)
 		{
-			if (this.productsFromTable.get(i) != null)
+			if(this.productsFromTable.get(i)!=null)
 			{
-				if (this.productsFromTable.get(i).getProductID() == key)//if there is a sale on the product update his price
-				{
-					this.productsFromTable.get(i).setSalePrice(price);
-					this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
-					this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"ï¿½"+"\n         Old price:  ");
-				}
+			if(this.productsFromTable.get(i).getProductID()==key)//if there is a sale on the product update his price
+			{
+				this.productsFromTable.get(i).setSalePrice(price);
+				this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
+				this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"¤"+"\n         Old price:  ");
+			}
 			}
 		}
 	}
@@ -317,14 +288,15 @@ public class StoreWorkerPromoteSaleController {
 	 * @throws IOException
 	 */
 	public void sendMessageToCustomers(ActionEvent event) throws IOException {
-		if (!(msgTxt.getText().equals("")))
+		if(!(msgTxt.getText().equals("")))
 		{
-			GeneralMessageController.showMessage("Message : " + msgTxt.getText() + "  has been sent to all customers");
-		} else
-		{
-			GeneralMessageController.showMessage("Please enter message to send");
-			return;
+	      GeneralMessageController.showMessage("Message : "+msgTxt.getText()+"  has been sent to all customers");
 		}
+	   else 
+	   {
+	    GeneralMessageController.showMessage("Please enter message to send");
+	    return;
+	   }
 	}
 
 	/**
@@ -334,37 +306,38 @@ public class StoreWorkerPromoteSaleController {
 	 * @throws InterruptedException
 	 */
 	public void deletDiscount() throws IOException, InterruptedException {
-		ProductEntity product = new ProductEntity();
-		if (list.getSelectionModel().getSelectedItem() != null)
+		ProductEntity product=new ProductEntity();
+		if(list.getSelectionModel().getSelectedItem()!=null)
 		{
-			product = list.getSelectionModel().getSelectedItem();
-
-			if (deleteDiscountInDB(product, store.getBranchID()).equals("Success"))
-			{
-				ShowAllProduct();
-				GeneralMessageController.showMessage("Product discount was deleted successfully");
-				NameTxt.clear();
-				PriceTxt.clear();
-				DescriptionTxt.clear();
-				ColorTxt.clear();
-				IDTxt.clear();
-				TypeTxt.clear();
-			} else
-			{
-				GeneralMessageController.showMessage("Discount deletion failed");
-				NameTxt.clear();
-				PriceTxt.clear();
-				DescriptionTxt.clear();
-				ColorTxt.clear();
-				IDTxt.clear();
-				TypeTxt.clear();
-				return;
-			}
-
-		} else
+			product=list.getSelectionModel().getSelectedItem();
+			
+		if(deleteDiscountInDB(product,store.getBranchID()).equals("Success"))
 		{
-			GeneralMessageController.showMessage("Please choose product In order to delete the discount");
+			ShowAllProduct();
+			GeneralMessageController.showMessage("Product discount was deleted successfully");
+			NameTxt.clear();
+			PriceTxt.clear();
+			DescriptionTxt.clear();
+			ColorTxt.clear();
+			IDTxt.clear();
+			TypeTxt.clear();
+		}
+		else 
+		{
+			GeneralMessageController.showMessage("Discount deletion failed");
+			NameTxt.clear();
+			PriceTxt.clear();
+			DescriptionTxt.clear();
+			ColorTxt.clear();
+			IDTxt.clear();
+			TypeTxt.clear();
 			return;
+		}
+
+		}else 
+			{
+			GeneralMessageController.showMessage("Please choose product In order to delete the discount");
+		    return;
 		}
 	}
 
@@ -377,52 +350,54 @@ public class StoreWorkerPromoteSaleController {
 	 * @throws InterruptedException
 	 */
 	public void AddUpdateDiscount(ActionEvent event) throws IOException, InterruptedException {
-		ProductEntity product = new ProductEntity();
+		ProductEntity product=new ProductEntity();
 		double pr;
-		if (list.getSelectionModel().getSelectedItem() != null)
+		if(list.getSelectionModel().getSelectedItem()!=null)
 		{
-			product = list.getSelectionModel().getSelectedItem();
+			product=list.getSelectionModel().getSelectedItem();
 
-			if (!(PriceTxt.getText().equals("")))
+			if(!(PriceTxt.getText().equals(""))) 
 			{
-				pr = Double.parseDouble(PriceTxt.getText());
-				if (pr >= product.getProductPrice() || pr <= 0)//If the product price is not valid
+				pr=Double.parseDouble(PriceTxt.getText());
+				if(pr>=product.getProductPrice() || pr<=0)//If the product price is not valid
 				{
 					GeneralMessageController.showMessage("The price is not vaild for the sale");
 					return;
-				} else
-					product.setSalePrice(Double.parseDouble(PriceTxt.getText()));
-			} else
-			{
+				}
+				else product.setSalePrice(Double.parseDouble(PriceTxt.getText()));
+			}
+			else
+				{
 				GeneralMessageController.showMessage("Please enter product new price");
 				return;
-			}
-			if (AddDiscountToProductInDB(product, store.getBranchID()).equals("Success"))
-			{
-				ShowAllProduct();
-				GeneralMessageController.showMessage("Product discount was Updated successfully");
-				NameTxt.clear();
-				PriceTxt.clear();
-				DescriptionTxt.clear();
-				ColorTxt.clear();
-				IDTxt.clear();
-				TypeTxt.clear();
-			} else
-			{
-				GeneralMessageController.showMessage("Discount Update failed");
-				NameTxt.clear();
-				PriceTxt.clear();
-				DescriptionTxt.clear();
-				ColorTxt.clear();
-				IDTxt.clear();
-				TypeTxt.clear();
-				return;
-			}
-
-		} else
+				}
+		if(AddDiscountToProductInDB(product,store.getBranchID()).equals("Success"))
 		{
-			GeneralMessageController.showMessage("Please choose product In order to attach discount");
+			ShowAllProduct();
+			GeneralMessageController.showMessage("Product discount was Updated successfully");
+			NameTxt.clear();
+			PriceTxt.clear();
+			DescriptionTxt.clear();
+			ColorTxt.clear();
+			IDTxt.clear();
+			TypeTxt.clear();
+		}
+		else 
+		{
+			GeneralMessageController.showMessage("Discount Update failed");
+			NameTxt.clear();
+			PriceTxt.clear();
+			DescriptionTxt.clear();
+			ColorTxt.clear();
+			IDTxt.clear();
+			TypeTxt.clear();
 			return;
+		}
+
+		}else 
+			{
+			GeneralMessageController.showMessage("Please choose product In order to attach discount");
+		    return;
 		}
 	}
 
@@ -434,24 +409,22 @@ public class StoreWorkerPromoteSaleController {
 	 * @return
 	 */
 	public String deleteDiscountInDB(ProductEntity Product, int storeid) {
-		String msg;
-		HashMap<ProductEntity, Integer> map = new HashMap<ProductEntity, Integer>();
+		String msg;	
+		HashMap<ProductEntity,Integer> map=new HashMap<ProductEntity,Integer>();
 		map.put(Product, storeid);
-		MessageToSend mts = new MessageToSend(map, "DeleteDiscount");
-		Client.getClientConnection().setDataFromUI(mts); //set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept(); //sends to server
-		while (!Client.getClientConnection().getConfirmationFromServer())
-			try
-			{
+		MessageToSend mts=new MessageToSend(map,"DeleteDiscount");
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			try {
 				Thread.sleep(100);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		Client.getClientConnection().setConfirmationFromServer(); //reset confirmation to false
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		msg = (String) m.getMessage();
+		 msg = (String)m.getMessage();
 		return msg;
 	}
 
@@ -465,24 +438,22 @@ public class StoreWorkerPromoteSaleController {
 	 * @return
 	 */
 	public String AddDiscountToProductInDB(ProductEntity Product, int storeid) {
-		String msg;
-		HashMap<ProductEntity, Integer> map = new HashMap<ProductEntity, Integer>();
+		String msg;	
+		HashMap<ProductEntity,Integer> map=new HashMap<ProductEntity,Integer>();
 		map.put(Product, storeid);
-		MessageToSend mts = new MessageToSend(map, "AddDiscount");
-		Client.getClientConnection().setDataFromUI(mts); //set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept(); //sends to server
-		while (!Client.getClientConnection().getConfirmationFromServer())
-			try
-			{
+		MessageToSend mts=new MessageToSend(map,"AddDiscount");
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			try {
 				Thread.sleep(100);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		Client.getClientConnection().setConfirmationFromServer(); //reset confirmation to false
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		msg = (String) m.getMessage();
+		 msg = (String)m.getMessage();
 		return msg;
 	}
 
@@ -493,15 +464,15 @@ public class StoreWorkerPromoteSaleController {
 	 * @throws InterruptedException
 	 */
 	public ArrayList<ProductEntity> getAllProducts() throws InterruptedException {
-		MessageToSend mts = new MessageToSend(null, "getAllProducts");
+		MessageToSend mts=new MessageToSend(null,"getAllProducts");
 		ArrayList<ProductEntity> dataFromServer = null;
-		Client.getClientConnection().setDataFromUI(mts); //set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept(); //sends to server
-		while (!Client.getClientConnection().getConfirmationFromServer()) //wait until server replies
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer(); //reset confirmation to false
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		dataFromServer = (ArrayList<ProductEntity>) m.getMessage();
+		dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
 		return dataFromServer;
 	}
 
@@ -514,15 +485,15 @@ public class StoreWorkerPromoteSaleController {
 	 * @throws InterruptedException
 	 */
 	public HashMap<Integer, Double> getDiscounts(int storeID) throws InterruptedException {
-		MessageToSend mts = new MessageToSend(storeID, "getDiscounts");
-		HashMap<Integer, Double> discounts = null;
-		Client.getClientConnection().setDataFromUI(mts); //set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept(); //sends to server
-		while (!Client.getClientConnection().getConfirmationFromServer()) //wait until server replies
+		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");
+		HashMap<Integer,Double> discounts=null;
+		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();										//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
 			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer(); //reset confirmation to false
+		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
-		discounts = (HashMap<Integer, Double>) m.getMessage();
+		discounts = (HashMap<Integer,Double>)m.getMessage();
 		return discounts;
 	}
 }

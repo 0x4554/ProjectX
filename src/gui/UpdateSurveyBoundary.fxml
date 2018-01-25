@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.UpdateSurveyController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="464.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.UpdateSurveyController">
    <children>
       <Label layoutX="135.0" layoutY="29.0" text="Update Survey's Questions">
          <font>
@@ -27,7 +27,7 @@
       <TextField fx:id="q5TxtFld" layoutX="215.0" layoutY="294.0" prefHeight="26.0" prefWidth="325.0" />
       <TextField fx:id="q6TxtFld" layoutX="215.0" layoutY="340.0" prefHeight="26.0" prefWidth="325.0" />
       <Button fx:id="updtBtn" layoutX="379.0" layoutY="401.0" mnemonicParsing="false" onAction="#sendUpdates" text="Update" />
-      <Button fx:id="cnclBtn" layoutX="239.0" layoutY="401.0" mnemonicParsing="false" onAction="#cancelUpdate" text="Cancel" />
+      <Button fx:id="cnclBtn" layoutX="215.0" layoutY="401.0" mnemonicParsing="false" onAction="#cancelUpdate" text="Cancel" />
       <CheckBox fx:id="cnfrmChkBox" layoutX="216.0" layoutY="374.0" mnemonicParsing="false" text="Confirm all changes" />
       <Label fx:id="hidenLbl" layoutX="215.0" layoutY="66.0" text="*Please confirm all changes" textFill="#f51a1a" />
    </children>

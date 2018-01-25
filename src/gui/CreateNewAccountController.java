@@ -168,7 +168,7 @@ public class CreateNewAccountController implements Initializable {
 				if(Client.getClientConnection().getMessageFromServer().getMessage().equals("added")) {
 					((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 					this.mmc.setStore(this.store);
-					this.mmc.showManagerMenu();										//open previous menu
+					this.mmc.showMenu();										//open previous menu
 					GeneralMessageController.showMessage("New customer "+cust.getUserName()+" was added succesfully");
 				}
 				else {
@@ -192,7 +192,7 @@ public class CreateNewAccountController implements Initializable {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		if(this.mmc!=null) {
 			this.mmc.setStore(this.store);
-			this.mmc.showManagerMenu();										//open previous menu
+			this.mmc.showMenu();										//open previous menu
 		}
 		else
 			this.eupc.showEdittingOptions(event);

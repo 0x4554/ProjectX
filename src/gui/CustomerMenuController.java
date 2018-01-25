@@ -31,7 +31,7 @@ import logic.MessageToSend;
  * Project Name gitProjectX
  *
  */
-public class CustomerMenuController implements Initializable {
+public class CustomerMenuController extends MenuController implements Initializable {
 
 	final public static int DEFAULT_PORT = 5555;
 
@@ -86,7 +86,7 @@ public class CustomerMenuController implements Initializable {
 	 * @throws IOException
 	 *             for the loader
 	 */
-	public void showCustomerMenu() throws IOException {
+	public void showMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
 
@@ -130,6 +130,7 @@ public class CustomerMenuController implements Initializable {
 		FXMLLoader loader = new FXMLLoader();
 		Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
 		CatalogController catl = loader.getController();
+		catl.setPreviousController(this);
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
@@ -245,6 +246,7 @@ public class CustomerMenuController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
+	
 	}
 
 }

@@ -140,7 +140,7 @@ public class CustomerServiceWorkerSaveVerbalReportsController implements Initial
 	 */
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.cswmc.showCostumerServiceWorkerMenu();
+		this.cswmc.showMenu();
 	}
 	
 
