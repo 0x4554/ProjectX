@@ -71,14 +71,15 @@ public class SurveyController implements Initializable {
     private Label q6Lbl;
 	
 	private SurveyEntity srvy;
-	private StoreWorkerMenuController swmc;
+	private ChooseSurveyNumberController csnc;
+	private int surveyNum;
 	
 	/**
 	 * Setter for the previous controller
 	 * @param storeWorkerMenu
 	 */
-	public void setConnectionData(StoreWorkerMenuController storeWorkerMenu) {
-		swmc = storeWorkerMenu;
+	public void setConnectionData(ChooseSurveyNumberController choosesurv) {
+		csnc = choosesurv;
 		srvy=new SurveyEntity();
 	}
 	
@@ -111,6 +112,7 @@ public class SurveyController implements Initializable {
 			RadioButton r5=(RadioButton)q5.getSelectedToggle();
 			RadioButton r6=(RadioButton)q6.getSelectedToggle();
 			srvy.setAnswers(Integer.parseInt(r1.getText()), Integer.parseInt(r2.getText()), Integer.parseInt(r3.getText()), Integer.parseInt(r4.getText()), Integer.parseInt(r5.getText()), Integer.parseInt(r6.getText()));
+			srvy.setSurveyNum(this.surveyNum);
 			//this.srvy.setAnswers(1, 1, 2, 2, 3, 3);
 			this.submitSurveyAnswers(event,this.srvy);
 		}
@@ -138,7 +140,7 @@ public class SurveyController implements Initializable {
 			GeneralMessageController.showMessage("There was a problem\nPlease inform the technical support and try again later");
 		else{
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.swmc.showMenu();
+			this.csnc.showMenu();
 			GeneralMessageController.showMessage("Survey was sent successfully");
 		}
 		
@@ -166,9 +168,27 @@ public class SurveyController implements Initializable {
 	 */
 	public void bckToPrevMnu(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.swmc.showMenu();
+		this.csnc.showMenu();
+	}
+	
+	
+
+
+	/**
+	 *Getter for the surveyNum
+	 * @return the surveyNum
+	 */
+	public int getSurveyNum() {
+		return surveyNum;
 	}
 
+	/**
+	 *Setter for the surveyNum
+	 * @param surveyNum the surveyNum to set
+	 */
+	public void setSurveyNum(int surveyNum) {
+		this.surveyNum = surveyNum;
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

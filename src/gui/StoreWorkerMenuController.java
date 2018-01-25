@@ -12,6 +12,7 @@ import java.io.IOException;
  *
  */
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -103,6 +104,7 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 
 	}
 	
+	
 	/**
 	 * This method sets the store of the manager
 	 * @throws InterruptedException for the sleep 
@@ -167,11 +169,11 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/SurveyBoundary.fxml").openStream());
-		SurveyController sc=loader.getController();
-		sc.setConnectionData(this);
+		Parent root = loader.load(getClass().getResource("/gui/ChooseSurveyNumberBoundary.fxml").openStream());
+		ChooseSurveyNumberController csnc=loader.getController();
+		csnc.setConnectionData(this);
 		
-		MessageToSend toServer = new MessageToSend(null, "getSurveyQs");
+		MessageToSend toServer = new MessageToSend(null, "getNumberOfSurveys");
 		Client.getClientConnection().setDataFromUI(toServer);
 		Client.getClientConnection().accept();
 		
@@ -179,9 +181,9 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 			Thread.sleep(100);
 		Client.getClientConnection().setConfirmationFromServer();
 		
-		String []qs=(String [])Client.getClientConnection().getMessageFromServer().getMessage();
-		
-		sc.setLabels(qs);
+		ArrayList<Integer> allSurveys=(ArrayList<Integer>)Client.getClientConnection().getMessageFromServer().getMessage();
+
+		csnc.initComboBox(allSurveys);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 

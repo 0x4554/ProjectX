@@ -8,18 +8,14 @@ import java.util.ResourceBundle;
 import client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import logic.ConnectedClients;
 import logic.MessageToSend;
 
 /**
@@ -50,6 +46,8 @@ public class LoginController implements Initializable {
 	private Hyperlink whatLnk;
 	@FXML
     private TextArea ipTxtArea;
+	@FXML
+	private Label ipLbl;
 	
 	public static String hostIP;
 	private CustomerMenuController cmc;
@@ -103,15 +101,26 @@ public class LoginController implements Initializable {
 		} 
 		else 
 		{
+
+			setHost(this.srvrIPTxtFld.getText());
 			String username_password = "";
 			username_password = username_password + this.usrNmTxtFld.getText()+'~'+this.psswrdTxtFld.getText();				//set the new data as string
 			MessageToSend mts=new MessageToSend(username_password, "login");
 			ArrayList<String> dataFromServer = null;
-			try
+			if(Client.getClientConnection() == null)																		//if initial connection wasn't made
 			{
-			Client.setClientConnection(new Client(LoginController.getHost(), DEFAULT_PORT,this.usrNmTxtFld.getText()));		//attempt to create a connection from client to server
-			}catch(IOException e){																							//if there were a connection exception
-				GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
+				try
+				{
+					Client.setClientConnection(new Client(LoginController.getHost(), DEFAULT_PORT, this.usrNmTxtFld.getText())); //attempt to create a connection from client to server
+				} catch (IOException e)
+				{ //if there were a connection exception
+					GeneralMessageController.showMessage("Failed connecting to the server.\nCheck entered IP");
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				Client.getClientConnection().setClientUserName(this.usrNmTxtFld.getText());									//set the userName
 			}
 			Client.getClientConnection().setDataFromUI(mts);							//set the data and the operation to send from the client to the server
 			Client.getClientConnection().accept();										//sends to server
@@ -265,6 +274,13 @@ public class LoginController implements Initializable {
 		this.psswrdTxtFld.setText("123");
 		this.ipTxtArea.setVisible(false);
 		this.ipTxtArea.setEditable(false);
+		
+		if(Client.getClientConnection() != null)						//if initialize connection was already made
+		{
+			this.srvrIPTxtFld.setVisible(false);
+			this.ipLbl.setVisible(false);
+			this.whatLnk.setVisible(false);
+		}
 	}
 
 }
