@@ -2367,6 +2367,18 @@ public class ProjectServer extends AbstractServer
 		client.sendToClient(messageToSend);
 	}
 		
+	else if(operation.equals("getBlockedUsers")) {
+		ArrayList<String> ret = this.getBlockedUsers();
+		messageToSend.setMessage(ret);
+		client.sendToClient(messageToSend);
+	}
+		
+	else if(operation.equals("releaseBlock")) {
+		String toClient = this.releaseUserBlock((String)messageFromClient);
+		messageToSend.setMessage(toClient);
+		client.sendToClient(messageToSend);
+	}
+		
 	else if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
 			this.incomingFileName=complaint.getOrderID();
@@ -2404,7 +2416,57 @@ public class ProjectServer extends AbstractServer
 				
 	}
 	
-  /**
+  private String releaseUserBlock(String user) throws SQLException {
+	// TODO Auto-generated method stub
+	  Statement stmnt;
+	  String s=null;
+	  try {
+		  con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		}
+		catch(Exception e) {
+			System.out.println("Connection to database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		}
+	  try {
+	  stmnt = con.createStatement();
+	  stmnt.executeUpdate("UPDATE projectx.user SET LoginAttempts=0 WHERE Username='"+user+"'");
+	  s = "released";
+	  }
+	  catch(Exception e){
+		  e.printStackTrace();
+		  s = "releaseFailed";
+	  }
+	  return s;
+}
+
+private ArrayList<String> getBlockedUsers() throws SQLException {
+	// TODO Auto-generated method stub
+	  ArrayList<String> users= new ArrayList<String>();
+	  Statement stmnt;
+	  try {
+		  con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		}
+		catch(Exception e) {
+			System.out.println("Connection to database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		}
+	  stmnt = con.createStatement();
+	  ResultSet rs = stmnt.executeQuery("SELECT Username FROM projectx.user WHERE LoginAttempts=3");
+	  if(!rs.next())
+		  return null;
+	  else {
+		  users.add(rs.getString(1));
+		  while(rs.next())
+			  users.add(rs.getString(1));
+		  return users;
+	  }
+}
+
+/**
    * method for uploading new verbal report into the data base
    * 
    * @param verbalRep - the report to be uploaded to the data base

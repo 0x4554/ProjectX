@@ -264,6 +264,7 @@ public class LoginController implements Initializable {
 		this.usrNmTxtFld.setText("lana");
 		this.psswrdTxtFld.setText("123");
 		this.ipTxtArea.setVisible(false);
+		this.ipTxtArea.setEditable(false);
 	}
 
 }

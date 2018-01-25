@@ -21,7 +21,7 @@ import logic.MessageToSend;
 public class ReleaseUserBlockController implements Initializable{
 	
 	 @FXML
-	 private ListView<?> usrsLstVw;
+	 private ListView<String> usrsLstVw;
 
      @FXML
      private Button unblckBtn;
@@ -53,11 +53,35 @@ public class ReleaseUserBlockController implements Initializable{
 	
 	/**
 	 * method for unblocking user
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 * 
 	 */
-	public void releaseBlockedUser() {
+	public void releaseBlockedUser() throws InterruptedException, IOException {
+		String username = null;
+		if(usrsLstVw.getSelectionModel().getSelectedItem()!=null) {
+			username = (String)usrsLstVw.getSelectionModel().getSelectedItem();
+			username = username.substring(username.indexOf(":")+2, username.length());
+			MessageToSend toServer = new MessageToSend(username, "releaseBlock");
+			
+			Client.getClientConnection().setDataFromUI(toServer);
+			Client.getClientConnection().accept();
+			
+			while(!Client.getClientConnection().getConfirmationFromServer())
+				Thread.sleep(100);
+			Client.getClientConnection().setConfirmationFromServer();
+			MessageToSend msg = Client.getClientConnection().getMessageFromServer();
+			String retval = (String)msg.getMessage();
+			if(retval.equals("released")) {
+				GeneralMessageController.showMessage("User block released");
+				this.usrsLstVw.getItems().remove(usrsLstVw.getSelectionModel().getSelectedIndex());			
+			}
+			else
+				GeneralMessageController.showMessage("Operation failed\nPlease contact your technical suppport and try again later");
+		}
+		else
+			noUsrLbl.setVisible(true);
 		
-		MessageToSend msg = new MessageToSend(username,"releaseBlock");
 		
 	}
 	
@@ -81,12 +105,10 @@ public class ReleaseUserBlockController implements Initializable{
 		this.users = FXCollections.observableArrayList();		//the observable list to enter to the list  view
 		
 		for(String user : listOfUsers)		//build list view to contain all orders
-		{
-			this.users.add("User name: "+user.split("~")[0] + " User type: "+user.split("~")[1]);
-		}
+			this.users.add("User name: "+user);
 		
-		this.usrsLstVw.setItems(this.users);		//set items to the list
-
+		
+		this.usrsLstVw.setItems(this.users);
 	}
 	
 	

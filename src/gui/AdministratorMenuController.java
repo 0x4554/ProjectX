@@ -118,8 +118,9 @@ public class AdministratorMenuController implements Initializable {
 	 * 
 	 * @param event - current screen to hide
 	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
-	public void releaseUserBtn(ActionEvent event) throws IOException {
+	public void releaseUserBtn(ActionEvent event) throws IOException, InterruptedException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		
 		FXMLLoader loader = new FXMLLoader();
@@ -127,6 +128,7 @@ public class AdministratorMenuController implements Initializable {
 		ReleaseUserBlockController rubc = loader.getController();
 		rubc.setConnectionData(this);
 		rubc.setLabels();
+		rubc.getBlockedUsers();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		
