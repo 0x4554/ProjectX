@@ -36,7 +36,7 @@ import javafx.util.Callback;
 import logic.MessageToSend;
 
 /**
- * This class is the controller for the add/delete/edit operation of a product from DB
+ * This class is the controller for the add/delete/edit product from DB
  * 
  * AddDeleteEditProductController.java
  *
@@ -109,8 +109,8 @@ public class AddDeleteEditProductController implements Initializable {
 	 */
 public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedException
 {
-	ProductEntity product=new ProductEntity();    //the new product after update
-	ProductEntity OldProduct=new ProductEntity(); //the old product before update
+	ProductEntity product=new ProductEntity();
+	ProductEntity OldProduct=new ProductEntity();
 	int flag=1;
 	if(list.getSelectionModel().getSelectedItem()!=null) //if product was selected from the list view
 	{
@@ -219,7 +219,7 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 public void SetProductDetails(MouseEvent event) throws IOException
 {
 	ProductEntity product=new ProductEntity();
-	if(list.getSelectionModel().getSelectedItem() != null) //if product was selected
+	if(list.getSelectionModel().getSelectedItem() != null)
 	{
 		/*set details in the text fields*/
 		product=list.getSelectionModel().getSelectedItem();
