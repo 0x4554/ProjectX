@@ -15,7 +15,18 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import logic.MessageToSend;
-
+/**
+ * This method is a controller for the update survey controller
+ * UpdateSurveyController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class UpdateSurveyController implements Initializable{
 
 	  @FXML
@@ -50,11 +61,18 @@ public class UpdateSurveyController implements Initializable{
 	    
 	    private CustomerServiceWorkerMenuController csemc;
 	    
+	    /**
+	     * 
+	     * Constructor for the UpdateSurveyController.java class
+	     */
 	    public UpdateSurveyController() {
 	    	
 	    }
 	    
-	    
+	    /**
+	     * Setter for the connection to previous window
+	     * @param cs
+	     */
 	    public void setConnectionData(CustomerServiceWorkerMenuController cs) {
 	    	csemc=cs;
 	    }
@@ -85,12 +103,12 @@ public class UpdateSurveyController implements Initializable{
 	    		
 	    		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("Updated")) {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showCostumerServiceWorkerMenu();
+	    			this.csemc.showMenu();
 	    			GeneralMessageController.showMessage("Questions updated successfully");
 	    		}
 	    		else {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showCostumerServiceWorkerMenu();
+	    			this.csemc.showMenu();
 	    			GeneralMessageController.showMessage("Update failed\nplease contact technical support and try again later");
 	    		}
 	    		
@@ -145,14 +163,14 @@ public class UpdateSurveyController implements Initializable{
 	     */
 	    public void cancelUpdate(ActionEvent event) throws IOException {
 	    	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    	this.csemc.showCostumerServiceWorkerMenu();	
+	    	this.csemc.showMenu();	
 	    }
 	    
 	    
 	    /**
 	     * the method fills the text fields with the current questions
 	     * 
-	     * @param survey - the survey's current question that should be updated
+	     * @param questions - the survey's current question that should be updated
 	     */
 	    public void setTextFields(String[] questions) {
 	    

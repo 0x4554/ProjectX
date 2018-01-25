@@ -23,6 +23,18 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the select store boundary
+ * SelectStoreController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class SelectStoreController implements Initializable{
 	private Integer branchID;
 	public ObservableList<String> list;
@@ -37,7 +49,6 @@ public class SelectStoreController implements Initializable{
 	private Button bckBtn;
 	/**
 	 * This method inserts all the store names into the combobox
-	 * @throws InterruptedException
 	 */
 	public void loadStoresIntoComboBox()
 	{

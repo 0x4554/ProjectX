@@ -16,6 +16,19 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the survey boundary
+ * 
+ * SurveyController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class SurveyController implements Initializable {
 	
 	@FXML
@@ -60,12 +73,19 @@ public class SurveyController implements Initializable {
 	private SurveyEntity srvy;
 	private StoreWorkerMenuController swmc;
 	
+	/**
+	 * Setter for the previous controller
+	 * @param storeWorkerMenu
+	 */
 	public void setConnectionData(StoreWorkerMenuController storeWorkerMenu) {
 		swmc = storeWorkerMenu;
 		srvy=new SurveyEntity();
 	}
 	
-	
+	/**
+	 * This method validates the fields
+	 * @return true if all fields are valid
+	 */
 	public boolean validateAnswers() {
 		if(q1.getSelectedToggle()==null || q2.getSelectedToggle()==null || q3.getSelectedToggle()==null || q4.getSelectedToggle()==null || q5.getSelectedToggle()==null || q6.getSelectedToggle()==null)
 			return false;
@@ -73,7 +93,12 @@ public class SurveyController implements Initializable {
 		return true;
 	}
 
-
+	/**
+	 * This method gets the survey answers
+	 * @param event pressed on a answer button
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public void getSurveyAnswers(ActionEvent event) throws IOException, InterruptedException {
 		if(!validateAnswers())
 			missingLbl.setVisible(true);
@@ -113,7 +138,7 @@ public class SurveyController implements Initializable {
 			GeneralMessageController.showMessage("There was a problem\nPlease inform the technical support and try again later");
 		else{
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.swmc.showStoreWorkerMenu();
+			this.swmc.showMenu();
 			GeneralMessageController.showMessage("Survey was sent successfully");
 		}
 		
@@ -121,7 +146,10 @@ public class SurveyController implements Initializable {
 		
 	}
 	
-	
+	/**
+	 * This  method sets the labels
+	 * @param se
+	 */
 	public void setLabels(String[] se) {
 		q1Lbl.setText(se[0]);
 		q2Lbl.setText(se[1]);
@@ -131,10 +159,14 @@ public class SurveyController implements Initializable {
 		q6Lbl.setText(se[5]);
 	}
 	
-	
+	/**
+	 * loads the previous window
+	 * @param event
+	 * @throws IOException
+	 */
 	public void bckToPrevMnu(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.swmc.showStoreWorkerMenu();
+		this.swmc.showMenu();
 	}
 
 

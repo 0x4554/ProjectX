@@ -1,9 +1,7 @@
 package gui;
 
 import java.io.IOException;
-
 import java.net.URL;
-import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -24,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -31,12 +30,24 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 import logic.TimeCalculation;
 
+/**
+ * This class is the controller for the store manager cancellation requests controller
+ * 
+ * StoreManagerCancellationRequestsController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class StoreManagerCancellationRequestsController implements Initializable {
 
 	@FXML
@@ -130,10 +141,8 @@ public class StoreManagerCancellationRequestsController implements Initializable
 				TreeItem<String> totalprice = new TreeItem<>("Total price : "+order.getTotalPrice().toString()); 		//create a new leaf
 				OrderID.getChildren().add(totalprice); 									//set as a child 
 				
-//**NEED TO FIX 				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
-//		IMAGE STUFF		OrderID.getChildren().add(orderTime); 									//set as a child 
-//				TreeItem<String> orderDate = new TreeItem<>("Order Date : "+order.getOrderDate().toString());
-//				OrderID.getChildren().add(orderDate);
+				TreeItem<String> orderTime = new TreeItem<>("Order Time : "+order.getOrderTime().toString()); 		//create a new leaf
+				OrderID.getChildren().add(orderTime); 									//set as a child 
 				TreeItem<String> store = new TreeItem<>("From Store named : "+order.getStore().getBranchName());
 				OrderID.getChildren().add(store);
 				
@@ -181,12 +190,6 @@ public class StoreManagerCancellationRequestsController implements Initializable
 					productName.getChildren().add(ProductType);
 					TreeItem<String> productDescription = new TreeItem<>("Product description : "+product.getProductDescription());
 					productName.getChildren().add(productDescription);
-//					if(product.getProductDominantColor() != null)
-//					{
-//						TreeItem<String> productDominantColor = new TreeItem<>("Dominent color : "+product.getProductDominantColor());
-//						productName.getChildren().add(productDominantColor);
-//			
-//					}
 					TreeItem<String> productPrice = new TreeItem<>("Product price : "+product.getProductPrice().toString());
 					productName.getChildren().add(productPrice);
 					
@@ -227,6 +230,11 @@ public class StoreManagerCancellationRequestsController implements Initializable
 		
 	}
 	
+	/**
+	 * This method loads the previous window
+	 * @param event pressed back 
+	 * @throws IOException
+	 */
    public void backToMainMenu(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 
@@ -287,22 +295,10 @@ public class StoreManagerCancellationRequestsController implements Initializable
 			
     }
    
-   public void cancelDeclined(ActionEvent event)
-   {
-	   
-   }
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-//		try
-//		{
-//			showOrders();
-//		} catch (InterruptedException e)
-//		{
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 
 	}
 

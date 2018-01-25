@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -302,11 +303,6 @@ public class ProjectServer extends AbstractServer
 
 		listOfOrders.add(order); //add the product from the data base to the list
 		
-//		stmt.close();				//close all statements for reuse
-//		stmt2.close();
-//		stmt3.close();
-//		stmt4.close();
-//		stmt5.close();
 		  }
 	 }
 	 return listOfOrders;
@@ -569,25 +565,25 @@ public class ProjectServer extends AbstractServer
    */
   private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
   {
-	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
-	 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
-	 ProductEntity product;
-	 Blob productImage;
-	 Statement stmt;
-	 ResultSet rs;
-	 try
-		{
-			con = connectToDB(); //call method to connect to DB
-			if (con != null)
+		//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
+		 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
+		 ProductEntity product;
+		 Blob productImage;
+		 Statement stmt;
+		 ResultSet rs;
+		 try
 			{
-				System.out.println("Connection to Data Base succeeded");
-				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+				con = connectToDB(); //call method to connect to DB
+				if (con != null)
+				{
+					System.out.println("Connection to Data Base succeeded");
+					ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+				}
+			} catch (SQLException e) //catch exception
+			{
+				System.out.println("SQLException: " + e.getMessage());
+				ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 			}
-		} catch (SQLException e) //catch exception
-		{
-			System.out.println("SQLException: " + e.getMessage());
-			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
-		}
 	 Double minPrice,maxPrice;
 	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
 	 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
@@ -702,18 +698,10 @@ public class ProjectServer extends AbstractServer
 	  try {
 	  stmt = con.createStatement();
 	  Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-//	   Date date = new Date(System.currentTimeMillis());
-//	    Time time = new Time(System.currentTimeMillis());
-//	    time.setTime(System.currentTimeMillis());
-//		DateFormat formatter = new SimpleDateFormat("HH:mm");		//format the time
-//		DateFormat formatter2 = new SimpleDateFormat("dd/MM/yy");
-	//  stmt.executeUpdate("UPDATE projectx.order SET OrderStatus = 'cancel_requested' ,CancelRequestDate = '"+ formatter.format(date.toString()) + "',CancelRequestTime = '"+ formatter2.format(date.toString())+"' WHERE Ordernum = " + OrderID + "");
 		PreparedStatement ps = con.prepareStatement("UPDATE projectx.order SET OrderStatus = ? , CancelRequestTime = ? WHERE Ordernum = ?"); //prepare a statement
 		ps.setString(1, OrderEntity.OrderStatus.cancel_requested.toString());
 		ps.setTimestamp(2, timestamp);
 		ps.setInt(3, OrderID);
-		//ps.setDate(2, new Date(System.currentTimeMillis()));
-		//ps.setTime(3, time);
 		ps.executeUpdate();
 	  }
 	  catch(Exception e)
@@ -931,7 +919,6 @@ public class ProjectServer extends AbstractServer
 			
 			order.setTotalPrice(rs.getDouble(8));
 			order.setReceivingTimestamp(rs.getTimestamp(9));
-			//order.setReceivingTime(rs.getTime(11));
 						//** get the store **//
 			Map<Integer,Double> storeDiscoutsSales;
 			rs5 = stmt5.executeQuery("SELECT * FROM projectx.store WHERE BranchID = "+rs.getInt(10)+"");
@@ -960,17 +947,18 @@ public class ProjectServer extends AbstractServer
 	  
   }
 
- /**
-   * This method add an order to the data base
-   * @param newOrder	the new order
-   * @return	messages
-   * @throws SQLException
-   * @throws ClassNotFoundException
-   */
+	/**
+	 * This method add an order to the data base
+	 * 
+	 * @param newOrder
+	 *            the new order
+	 * @return messages
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 */
 	private ArrayList<String> createNewOrder(OrderEntity newOrder) throws SQLException, ClassNotFoundException {
 		ArrayList<String> returnMessage = new ArrayList<String>();
 		Statement stmt;
-//		int orderCounter = 0;
 		try
 		{
 			con = connectToDB(); //call method to connect to DB
@@ -990,84 +978,69 @@ public class ProjectServer extends AbstractServer
 		}
 
 		stmt = con.createStatement();
-		//ResultSet rs= stmt.executeQuery("SELECT OrdersID FROM projectx.counters");			//get the current latest order id
-		
-	//	while(rs.next())
-		//	orderCounter = rs.getInt(1);
-		
-			PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.order (UserID,OrderTime,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID,PaymentMethod) VALUES (?,?,?,?,?,?,?,?,?,?)"); //prepare a statement
-			//ps.setInt(1, orderCounter+1);  				//insert new order id into the statement
-			ps.setString(1, newOrder.getUserName());
-			
-			Timestamp time = new Timestamp(System.currentTimeMillis()); 	//get the time and date the order was placed on
-			ps.setTimestamp(2, time);
-			
-			if(newOrder.getCard()!=null)						//if there is a card
-				ps.setString(3,newOrder.getCard().getText());
-			else
-				ps.setString(3, null);
-			ps.setString(4,newOrder.getOrderPickup().toString());
-			ps.setString(5,newOrder.getStatus().toString());
-			
-			if(newOrder.getPaid())			//if paid
-				ps.setInt(6, 1);
-			else
-				ps.setInt(6, 0);
-			
-			ps.setDouble(7, newOrder.getTotalPrice());
-			ps.setTimestamp(8, newOrder.getReceivingTimestamp());
-		//	ps.setTime(11, newOrder.getReceivingTime());
-		//ps.setInt(12, newOrder.getStore().getBranchID());
-	    	ps.setInt(9, newOrder.getStore().getBranchID());
-	    	if(newOrder.getPaymendMethod().toString().equals(OrderEntity.CashOrCredit.cash.toString()))
-	    		ps.setString(10, OrderEntity.CashOrCredit.cash.toString());
-	    	else
-	    		ps.setString(10, OrderEntity.CashOrCredit.credit.toString());
-			ps.executeUpdate();
+		PreparedStatement ps = con.prepareStatement(
+				"INSERT INTO projectx.order (UserID,OrderTime,OrderCard,PickupMethod,OrderStatus,OrderPaid,TotalPrice,ReceiveTimestamp,BranchID,PaymentMethod) VALUES (?,?,?,?,?,?,?,?,?,?)"); //prepare a statement
+		ps.setString(1, newOrder.getUserName());
 
-		//	ps =con.prepareStatement("UPDATE projectx.counters SET OrdersID= ? + 1");	//increment the orders ID counter
-		//	ps.setInt(1, orderCounter);
-		//	ps.executeUpdate();
-			
-					//*** A query for getting the next  Auto_Icrement key (the inserted order ID  + 1 )	****///
-			ResultSet rs = stmt.executeQuery("SELECT `AUTO_INCREMENT`\r\n" + 
-					"FROM  INFORMATION_SCHEMA.TABLES\r\n" + 
-					"WHERE TABLE_SCHEMA = 'projectx'\r\n" + 
-					"AND   TABLE_NAME   = 'order';");
-			if(rs.next());
-			
-					//** now insert all the products in order to the productsInOrder table **//
-			PreparedStatement ps3;
-			for(ProductEntity product : newOrder.getProductsInOrder())
-			{
-				ps3 = con.prepareStatement("INSERT INTO projectx.productsinorder (OrderNum,ProductID) VALUES (?,?)"); //prepare a statement
-				ps3.setInt(1, rs.getInt(1)-1);
-				ps3.setInt(2, product.getProductID());
-				ps3.executeUpdate();
-			}
-			
-			if(newOrder.getOrderPickup().equals(OrderEntity.SelfOrDelivery.delivery))		//if the order has a delivery
-			{
-						//** insert all the order's delivery details in to the delivery table **//
-				newOrder.getDeliveryDetails().setOrderID(rs.getInt(1)-1);	//set the orderID for the delivery
-				PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryTimestamp) VALUES (?,?,?,?,?)"); //prepare a statement
-				ps2.setInt(1, newOrder.getDeliveryDetails().getOrderID());
-				ps2.setString(2, newOrder.getDeliveryDetails().getDeliveryAddress());
-				ps2.setString(3, newOrder.getDeliveryDetails().getRecipientName());
-				ps2.setString(4,	 newOrder.getDeliveryDetails().getPhoneNumber());
-				ps2.setTimestamp(5, newOrder.getReceivingTimestamp());/**changed it lanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
-			//	ps2.setTime(6, newOrder.getDeliveryDetails().getDeliveryTime());
-				ps2.executeUpdate();
-			}
-	  
-	  
-	  returnMessage.add("Your order was placed successfully.\nWe hope to see you again.");
-	  return returnMessage;
-  }
+		Timestamp time = new Timestamp(System.currentTimeMillis()); //get the time and date the order was placed on
+		ps.setTimestamp(2, time);
+
+		if (newOrder.getCard() != null) //if there is a card
+			ps.setString(3, newOrder.getCard().getText());
+		else
+			ps.setString(3, null);
+		ps.setString(4, newOrder.getOrderPickup().toString());
+		ps.setString(5, newOrder.getStatus().toString());
+
+		if (newOrder.getPaid()) //if paid
+			ps.setInt(6, 1);
+		else
+			ps.setInt(6, 0);
+
+		ps.setDouble(7, newOrder.getTotalPrice());
+		ps.setTimestamp(8, newOrder.getReceivingTimestamp());
+		ps.setInt(9, newOrder.getStore().getBranchID());
+		if (newOrder.getPaymendMethod().toString().equals(OrderEntity.CashOrCredit.cash.toString()))
+			ps.setString(10, OrderEntity.CashOrCredit.cash.toString());
+		else
+			ps.setString(10, OrderEntity.CashOrCredit.credit.toString());
+		ps.executeUpdate();
+
+		//*** A query for getting the next  Auto_Icrement key (the inserted order ID  + 1 )	****///
+		ResultSet rs = stmt.executeQuery("SELECT `AUTO_INCREMENT`\r\n" + "FROM  INFORMATION_SCHEMA.TABLES\r\n" + "WHERE TABLE_SCHEMA = 'projectx'\r\n" + "AND   TABLE_NAME   = 'order';");
+		if (rs.next())
+			;
+
+		//** now insert all the products in order to the productsInOrder table **//
+		PreparedStatement ps3;
+		for (ProductEntity product : newOrder.getProductsInOrder())
+		{
+			ps3 = con.prepareStatement("INSERT INTO projectx.productsinorder (OrderNum,ProductID) VALUES (?,?)"); //prepare a statement
+			ps3.setInt(1, rs.getInt(1) - 1);
+			ps3.setInt(2, product.getProductID());
+			ps3.executeUpdate();
+		}
+
+		if (newOrder.getOrderPickup().equals(OrderEntity.SelfOrDelivery.delivery)) //if the order has a delivery
+		{
+			//** insert all the order's delivery details in to the delivery table **//
+			newOrder.getDeliveryDetails().setOrderID(rs.getInt(1) - 1); //set the orderID for the delivery
+			PreparedStatement ps2 = con.prepareStatement("INSERT INTO projectx.delivery (OrderID,DeliveryAddress,RecipientName,PhoneNumber,DeliveryTimestamp) VALUES (?,?,?,?,?)"); //prepare a statement
+			ps2.setInt(1, newOrder.getDeliveryDetails().getOrderID());
+			ps2.setString(2, newOrder.getDeliveryDetails().getDeliveryAddress());
+			ps2.setString(3, newOrder.getDeliveryDetails().getRecipientName());
+			ps2.setString(4, newOrder.getDeliveryDetails().getPhoneNumber());
+			ps2.setTimestamp(5, newOrder.getReceivingTimestamp());
+			ps2.executeUpdate();
+		}
+
+		returnMessage.add("Your order was placed successfully.\nWe hope to see you again.");
+		return returnMessage;
+	}
   
   /** This method handles any login attempt messages received from the client.
   *
-  * @param msg The message received from the client (the userName and the password)
+  * @param loginInfo The message received from the client (the userName and the password)
   * @param client The connection from which the message originated.
  * @throws ClassNotFoundException 
  * @throws SQLException 
@@ -1329,6 +1302,7 @@ public class ProjectServer extends AbstractServer
   		
   		return is;							//returned value
   	}
+  	  		
   	
   	/**
   	 * this method converts InputStream to a File
@@ -1670,8 +1644,6 @@ public class ProjectServer extends AbstractServer
 	  while(rs.next())
 	  {
 		  AllUsers.add(rs.getString(1)+"~"+rs.getString(2));
-		  /*AllUsers.add(rs.getString(1));
-		  AllUsers.add(rs.getString(2));*/
 	  }
 	  return AllUsers;
   }
@@ -1684,7 +1656,7 @@ public class ProjectServer extends AbstractServer
    */
   public String addToCatalog(ProductEntity prd) throws SQLException, ClassNotFoundException
   {
-  Statement stmt;
+	  Statement stmt;
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -1717,7 +1689,7 @@ public class ProjectServer extends AbstractServer
  public String deleteProductFromCatalog(ProductEntity prd) throws SQLException, ClassNotFoundException/**lanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
 
   {
-  Statement stmt;
+	 Statement stmt;
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -1737,7 +1709,7 @@ public class ProjectServer extends AbstractServer
 		    ps.executeUpdate();
 		    return "Success";                                                                            //deleted successesfuly
 	    }
-	  return "Product was not found";   
+	  return "Product was not found";    
   }
 
  /**
@@ -1793,7 +1765,7 @@ public class ProjectServer extends AbstractServer
 		    ps.setString(7, OldProduct.getProductName()); 
 		    ps.executeUpdate();*/
 		    return "Success";                                                                           
-	   // }
+	   // }                                                                       
 }
  /**
   * this method handles the creation of new customers complaint
@@ -1862,7 +1834,7 @@ public class ProjectServer extends AbstractServer
  
   /** This method handles product search messages received from the client.
   *    Search is with ID
-  * @param msg The message received from the client.
+  * @param asked The message received from the client.
   * @param client The connection from which the message originated.
  * @throws IOException 
   */
@@ -1927,6 +1899,7 @@ public class ProjectServer extends AbstractServer
  */
   public HashMap<Integer,Double> getDiscounts(int storeID) throws SQLException, ClassNotFoundException
   {
+
 	  HashMap<Integer,Double> product = new HashMap<Integer,Double>();
 	 int key_product_id=0;
 	 double price=0;
@@ -2072,11 +2045,6 @@ public class ProjectServer extends AbstractServer
 	  
 	  
 	  operation=messageToSend.getOperation();					//the operation required
-	//  messageFromClient=m.getMessage();
-	  
-	//  messageFromClient=messageFromClient.substring(messageFromClient.indexOf("!")+1,messageFromClient.length());	/**set apart the operation from the message from the client**/
-	  
-/////	  	operation=operation.substring(0,operation.indexOf("!"));
 	  	
 		ArrayList<String>retval=new ArrayList<String>();
 		
@@ -2093,7 +2061,7 @@ public class ProjectServer extends AbstractServer
 			
 		}
 		
-		if(operation.equals("getAllUsers"))
+		else if(operation.equals("getAllUsers"))
 		{
 			ArrayList<String> listOfUsers = new ArrayList<String>();			//an array list that holds all the users in the catalog
 			listOfUsers=getAllUsersFromDB();
@@ -2101,7 +2069,7 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("getUserDetails")) {
+		else if(operation.equals("getUserDetails")) {
 			
 			MessageToSend reply;
 
@@ -2115,7 +2083,7 @@ public class ProjectServer extends AbstractServer
 				client.sendToClient(reply);
 			}
 		}
-		if(operation.equals("getVerbalReports"))
+		else if(operation.equals("getVerbalReports"))
 		{
 			ArrayList<VerbalReportEntity> listOfVerbalReports = new ArrayList<VerbalReportEntity>();	//an arrayList that holds all the products in the catalog
 			listOfVerbalReports = getVerbalReports();
@@ -2123,13 +2091,13 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 			
-		if(operation.equals("updatePermission")) {
+		else if(operation.equals("updatePermission")) {
 			String value = this.updatePermissions((String[])messageFromClient);
 			messageToSend.setMessage(value);
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
+		else if(operation.equals("getSelfDefinedProduct"))		//get an arratList of products who fit the customer's paramaters
 		{
 			ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();	//an arrayList that holds all the products in the catalog
 			listOfProducts = getSelfDefinedProducts((ArrayList<String>)messageFromClient);
@@ -2137,7 +2105,7 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("getDiscounts"))/*get the discounts Hash Map for a specific store*/
+		else if(operation.equals("getDiscounts"))/*get the discounts Hash Map for a specific store*/
 		{
 			int store= (int)messageToSend.getMessage();
 			HashMap<Integer,Double> listOfDiscounts = new HashMap<Integer,Double>();	//an arrayList that holds all the products in the catalog
@@ -2155,7 +2123,7 @@ public class ProjectServer extends AbstractServer
 				  client.sendToClient(messageToSend);
 			}
 		}
-		if(operation.equals("AddDiscount"))/*get the discounts Hash Map for a specific store*/
+		else if(operation.equals("AddDiscount"))/*get the discounts Hash Map for a specific store*/
 		{
 			HashMap<ProductEntity,Integer> disc= (HashMap<ProductEntity,Integer>)messageToSend.getMessage();
 			Iterator<ProductEntity> it=disc.keySet().iterator();
@@ -2175,7 +2143,7 @@ public class ProjectServer extends AbstractServer
 				  client.sendToClient(messageToSend);
 			}
 		}
-		if(operation.equals("DeleteDiscount"))/*get the discounts Hash Map for a specific store*/
+		else if(operation.equals("DeleteDiscount"))/*get the discounts Hash Map for a specific store*/
 		{
 			HashMap<ProductEntity,Integer> disc= (HashMap<ProductEntity,Integer>)messageToSend.getMessage();
 			Iterator<ProductEntity> it=disc.keySet().iterator();
@@ -2194,7 +2162,7 @@ public class ProjectServer extends AbstractServer
 			     client.sendToClient(messageToSend);
 			}
 		}
-		if(operation.equals("updateAccount")) {
+		else if(operation.equals("updateAccount")) {
 			String toClient = updateAccout((CustomerEntity)messageFromClient);
 			
 			messageToSend.setMessage(toClient);
@@ -2202,26 +2170,26 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("cancelRequest"))
+		else if(operation.equals("cancelRequest"))
 		{
 			String retMsg = cancelRequest((Integer)messageFromClient);
 			messageToSend.setMessage(retMsg);
 			  client.sendToClient(messageToSend);
 		}
-		if(operation.equals("getCancelRequests"))		//get all the orders which have a cancel request
+		else if(operation.equals("getCancelRequests"))		//get all the orders which have a cancel request
 		{
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 			listOfOrders = getCancelRequests((String)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
 			  client.sendToClient(messageToSend);
 		}
-		if(operation.equals("cancelOrder"))				//for store manger canceling an order
+		else if(operation.equals("cancelOrder"))				//for store manger canceling an order
 		{
 			String retMsg = cancelOrder((Integer)messageFromClient);
 			messageToSend.setMessage(retMsg);
 			  client.sendToClient(messageToSend);
 		}
-		if(operation.equals("addProductToCatalog"))
+		else if(operation.equals("addProductToCatalog"))
 		{
 			ProductEntity product = (ProductEntity)messageToSend.getMessage();
 			
@@ -2238,7 +2206,7 @@ public class ProjectServer extends AbstractServer
 				client.sendToClient(messageToSend);
 			}
 		}
-		if(operation.equals("deleteProductFromCatalog"))
+		else if(operation.equals("deleteProductFromCatalog"))
 		{
 			ProductEntity product;
 			product =  (ProductEntity)messageToSend.getMessage();
@@ -2254,7 +2222,7 @@ public class ProjectServer extends AbstractServer
 				client.sendToClient(messageToSend);
 			}
 		}
-		if(operation.equals("createNewOrder"))
+		else if(operation.equals("createNewOrder"))
 		{
 			try
 			{
@@ -2270,7 +2238,7 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("getCustomerOrders"))		//for getting a specific customer's list of orders
+		else if(operation.equals("getCustomerOrders"))		//for getting a specific customer's list of orders
 		{
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 			listOfOrders = getCustomerOrders((String)messageFromClient);
@@ -2278,17 +2246,16 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
+		else if(operation.equals("getAllOrders"))			//for getting ALL of the orders in the DB
 		{
 			
 							///Arraylist recieved in the form of ("all" if the all store OR "<the store name>" for a specific store,<int> for the wanted quarter or "all" ////
 			ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
-			//listOfOrders = getAllOrders((String)messageFromClient);
 			listOfOrders = getAllOrders((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(listOfOrders);
 			client.sendToClient(messageToSend);
 		}
-		if(operation.equals("createUser"))
+		else if(operation.equals("createUser"))
 		{
 			UserInterface user=(UserInterface)messageFromClient;
 			try {
@@ -2305,7 +2272,7 @@ public class ProjectServer extends AbstractServer
 			}
 			
 		}
-		if(operation.equals("createAccount")) {	
+		else if(operation.equals("createAccount")) {	
 			CustomerEntity custen=(CustomerEntity)messageFromClient;
 			try {
 			this.insertNewCustomer(custen);
@@ -2321,7 +2288,7 @@ public class ProjectServer extends AbstractServer
 			}
 			
 		}
-		if(operation.equals("getAllStores"))				//gets all the stores in the DB
+		else if(operation.equals("getAllStores"))				//gets all the stores in the DB
 		{
 			ArrayList<StoreEntity> listOfAllStores = new ArrayList<StoreEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllStores = getAllstoresFromDB();
@@ -2329,7 +2296,7 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("getSpecificStore"))
+		else if(operation.equals("getSpecificStore"))
 		{
 			StoreEntity store ;		//an arrayList that holds all the stores in the DB
 			store = getSpecificStore((String)messageFromClient);
@@ -2337,7 +2304,7 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("exitApp"))					//for when a user exits the app
+		else if(operation.equals("exitApp"))					//for when a user exits the app
 		{
 			if((String)messageFromClient!=null) {
 				this.terminateConnection((String)messageFromClient);	//calls a method to remove the user from the connected list
@@ -2347,28 +2314,28 @@ public class ProjectServer extends AbstractServer
 			}
 		}
 		
-		if(operation.equals("logOut")) {
+		else if(operation.equals("logOut")) {
 			this.terminateConnection((String)messageFromClient);
 		}
 		
-		if(operation.equals("login"))					//for when a user tries to log in
+		else if(operation.equals("login"))					//for when a user tries to log in
 		{
 			retval = this.login(client,(String)messageFromClient);
 			messageToSend.setMessage(retval);	//set the message for sending back to the client
 			client.sendToClient(messageToSend);	//send arraylist back to client
 		}
 		
-		if(operation.equals("getProduct"))	//check***********fix*******to***********lana*******object***********************//
+		else if(operation.equals("getProduct"))	
 		{
 
 			ProductEntity produ;
 			int productid = (int)messageToSend.getMessage();
 			produ= this.getProduct(client,productid);	//get the product
 			messageToSend.setMessage(produ);	        //set the message for sending back to the client
-			client.sendToClient(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);            //send arrayList back to client
 		}
 		
-		if(operation.equals("getAllProducts"))	
+		else if(operation.equals("getAllProducts"))	
 		{
 			ArrayList<ProductEntity> listOfAllProducts = new ArrayList<ProductEntity>();		//an arrayList that holds all the stores in the DB
 			listOfAllProducts = this.getAllProductsFromDB();
@@ -2376,25 +2343,24 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);	            //send arrayList back to client
 		}
 		
-		if(operation.equals("deleteProduct"))	
+		else if(operation.equals("deleteProduct"))	
 		{
-			//ArrayList<ProductEntity> listOfAllProducts = new ArrayList<ProductEntity>();		//an arrayList that holds all the stores in the DB
 			String Reply;
 			ProductEntity prd = (ProductEntity)messageToSend.getMessage();
 			Reply = this.DeleteProductsFromDB(prd);
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			client.sendToClient(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);           //send arrayList back to client
 		}
-		if(operation.equals("UpdateProduct"))	
+		else if(operation.equals("UpdateProduct"))	
 		{
 			String Reply;
 			ArrayList<ProductEntity> p=(ArrayList<ProductEntity>)messageToSend.getMessage();
 		//	ProductEntity prd = (ProductEntity)messageToSend.getMessage();
 			Reply = this.UpdateProductInDB(p.get(0),p.get(1));
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			client.sendToClient(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	           //send arrayList back to client
 		}
-		if(operation.equals("createProduct"))
+		else if(operation.equals("createProduct"))
 		{
 			
 			ProductEntity product = (ProductEntity)messageToSend.getMessage();
@@ -2412,7 +2378,7 @@ public class ProjectServer extends AbstractServer
 			}
 			
 		}
-			if(operation.equals("getSurvey"))
+		else if(operation.equals("getSurvey"))
 		{
 			SurveyEntity survey = getSurvey();
 			messageToSend.setMessage(survey);
@@ -2420,14 +2386,14 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("getSurveyQs")) {
+		else if(operation.equals("getSurveyQs")) {
 			
 			String [] qsText = getSurveyQuestions();
 			messageToSend.setMessage(qsText);
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("updateSurveyQs"))
+		else if(operation.equals("updateSurveyQs"))
 		{
 			String result = updateSurveyQuestions((SurveyEntity)messageFromClient);
 			messageToSend.setMessage(result);
@@ -2435,20 +2401,20 @@ public class ProjectServer extends AbstractServer
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("verbalReport")) {
+		else if(operation.equals("verbalReport")) {
 			VerbalReportEntity verbalRep = (VerbalReportEntity)messageFromClient;
 			messageToSend.setMessage(this.uploadReprotToDB(verbalRep));
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("SurveyAnswers")) {
+		else if(operation.equals("SurveyAnswers")) {
 			String result = this.updateSurveyAnswers((SurveyEntity)messageFromClient);
 			messageToSend.setMessage(result);
 			messageToSend.setOperation("surveyUpdateResult");
 			client.sendToClient(messageToSend);
 		}
 		
-		if(operation.equals("handleComplaint"))
+		else if(operation.equals("handleComplaint"))
 		{
 		String retmsg = "";
 		try
@@ -2465,21 +2431,35 @@ public class ProjectServer extends AbstractServer
 		client.sendToClient(messageToSend);
 	}
 		
-	if(operation.equals("getComplaintOrders"))	//for getting all the orders with comlpaints
+	else if(operation.equals("getComplaintOrders"))	//for getting all the orders with comlpaints
 	{
 		ArrayList<OrderEntity> listOfOrders = new ArrayList<OrderEntity>();
 		listOfOrders = getAllComplaintOrders((ArrayList<ComplaintEntity>)messageFromClient);
 		messageToSend.setMessage(listOfOrders);
 		client.sendToClient(messageToSend);
 	}
-	if(operation.equals("getComplaints"))		//for getting all complaints
+	else if(operation.equals("getComplaints"))		//for getting all complaints
 	{
 		ArrayList<ComplaintEntity> listOfComplaints = new ArrayList<ComplaintEntity>();		//an arrayList that holds all the stores in the DB
 		listOfComplaints = getComplaints((ArrayList<String>)messageFromClient);
 		messageToSend.setMessage(listOfComplaints);		//set the message for sending back to the client
 		client.sendToClient(messageToSend);
 	}
-		if(operation.equals("complaint")) {
+		
+	else if(operation.equals("getBlockedUsers")) {
+		ArrayList<String> ret = new ArrayList<String>();
+		ret = this.getBlockedUsers();
+		messageToSend.setMessage(ret);
+		client.sendToClient(messageToSend);
+	}
+		
+	else if(operation.equals("releaseBlock")) {
+		String toClient = this.releaseUserBlock((String)messageFromClient);
+		messageToSend.setMessage(toClient);
+		client.sendToClient(messageToSend);
+	}
+		
+	else if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
 			this.incomingFileName=complaint.getOrderID();
 			String ret="";
@@ -2508,30 +2488,65 @@ public class ProjectServer extends AbstractServer
 		}
 	}
 		
-//		if(operation.equals("downloadFile")) {
-//			
-//			System.out.println("Server downloading file sent from client");
-//			ServerMain.serverController.showMessageToUI("Server downloading file sent from client");
-//
-//			String filePath=(String)messageToSend.getMessage();
-//			filePath=filePath.substring(filePath.indexOf("!")+1,filePath.length());
-//			
-//		//	this.receiveFileFromClient("localhost", 5556);
-//			}
-//		}
-		
 		catch(Exception ex) {
 			ex.printStackTrace();
 			ServerMain.serverController.showMessageToUI(ex.getMessage());
 
 			}
-		
-	
-//		sendToAllClients(messageToSend);
-		
+				
 	}
 	
-  /**
+  private String releaseUserBlock(String user) throws SQLException {
+	// TODO Auto-generated method stub
+	  Statement stmnt;
+	  String s=null;
+	  try {
+		  con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		}
+		catch(Exception e) {
+			System.out.println("Connection to database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		}
+	  try {
+	  stmnt = con.createStatement();
+	  stmnt.executeUpdate("UPDATE projectx.user SET LoginAttempts=0 WHERE Username='"+user+"'");
+	  s = "released";
+	  }
+	  catch(Exception e){
+		  e.printStackTrace();
+		  s = "releaseFailed";
+	  }
+	  return s;
+}
+
+private ArrayList<String> getBlockedUsers() throws SQLException {
+	// TODO Auto-generated method stub
+	  ArrayList<String> users= new ArrayList<String>();
+	  Statement stmnt;
+	  try {
+		  con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		}
+		catch(Exception e) {
+			System.out.println("Connection to database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		}
+	  stmnt = con.createStatement();
+	  ResultSet rs = stmnt.executeQuery("SELECT Username FROM projectx.user WHERE LoginAttempts=3");
+	  if(!rs.next())
+		  return null;
+	  else {
+		  users.add(rs.getString(1));
+		  while(rs.next())
+			  users.add(rs.getString(1));
+		  return users;
+	  }
+}
+
+/**
    * method for uploading new verbal report into the data base
    * 
    * @param verbalRep - the report to be uploaded to the data base
@@ -2553,7 +2568,6 @@ public class ProjectServer extends AbstractServer
 	
 	try {
 	ps=con.prepareStatement("INSERT INTO projectx.verbalreports (Report,Date) VALUES (?,?)");
-	//stmnt.executeUpdate("INSERT INTO projectx.verbalreports (Report,Date) VALUES ("+instrm+","+verbalRep.getDate()+")");		//DATE!!!
 	ps.setBlob(1, instrm);
 	ps.setTimestamp(2, verbalRep.getDate());
 	ps.executeUpdate();
@@ -2607,7 +2621,7 @@ public class ProjectServer extends AbstractServer
 				  if(id.getString(2).equals("SW") || id.getString(2).equals("SM"))
 					  stmnt.executeUpdate("UPDATE projectx.storeemployee SET BranchID="+branchNum+", WorkerID="+userID+" WHERE UserName='"+userPermission[0]+"'");
 				  else
-					  stmnt.executeUpdate("INSERT INTO projectx.storeemployee (UserName,WorkerID,BranchID) VALUES ("+userPermission[0]+","+userID+","+branchNum+")");
+					  stmnt.executeUpdate("INSERT INTO projectx.storeemployee (UserName,WorkerID,BranchID) VALUES ('"+userPermission[0]+"',"+userID+","+branchNum+")");
 			  	  stmnt.executeUpdate("UPDATE projectx.user SET UserType='"+userPermission[1]+"' WHERE Username='"+userPermission[0]+"'");
 			  	  ret+="Updated";
 			  }
@@ -2619,16 +2633,6 @@ public class ProjectServer extends AbstractServer
 			  ret+="Updated";
 		  }
 		  return ret;
-//		  String s=rs.getString(1);
-//		  if(!s.equals("C")) && !userPermission[1].equals("Customer")) {		//insert also into customers
-//			  stmnt.executeUpdate("UPDATE projectx.user SET UserType='C' WHERE Usernname="+userPermission[0]);
-//			 // stmnt.executeUpdate("")							/*insert into customers*/
-//		  }
-//		  else {
-//			  stmnt.executeUpdate("UPDATE projectx.user SET UserType="+userPermission[1]+" WHERE Username="+userPermission[0]);
-//			  return "updated";
-//		  }
-//		return "error";
 	  }
 }
 
@@ -2685,10 +2689,25 @@ private String[] getSurveyQuestions() throws SQLException {
 			 ServerMain.serverController.showMessageToUI("Connection to Database failed");
 		 }
 	  
-	  stmt= con.createStatement();
+	  
 	  try {
-	  for(int i=1;i<=6;i++)
-		  stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestionText(i)+"' WHERE Questionnum = "+i+"");
+	  for(int i=1;i<=6;i++) {
+		  PreparedStatement ps= con.prepareStatement("UPDATE projectx.survey SET QuestionText=?, One=?, Two=?, Three=?, Four=?, Five=?, Six=?, Seven=?, Eight=?, Nine=?, Ten=? WHERE Questionnum=?");
+		  ps.setString(1, survey.getQuestionText(i));
+		  ps.setInt(2, 0);
+		  ps.setInt(3, 0);
+		  ps.setInt(4, 0);
+		  ps.setInt(5, 0);
+		  ps.setInt(6, 0);
+		  ps.setInt(7, 0);
+		  ps.setInt(8, 0);
+		  ps.setInt(9, 0);
+		  ps.setInt(10, 0);
+		  ps.setInt(11, 0);
+		  ps.setInt(12, i);
+		  ps.executeUpdate();
+		  //stmt.executeUpdate("UPDATE projectx.survey SET QuestionText = '"+survey.getQuestionText(i)+"' WHERE Questionnum = "+i);
+	  	}
 	  }
 	  catch(Exception e)
 	  {
@@ -2973,39 +2992,6 @@ public void insertNewUser(UserInterface ue) throws SQLException {
 
 }
 
-  //Class methods ***************************************************
-  
-//  /**
-//   * This method is responsible for the creation of 
-//   * the server instance (there is no UI in this phase).
-//   *
-//   * @param args[0] The port number to listen on.  Defaults to 5555 
-//   *          if no argument is entered.
-//   */
-//	 public static void main(String[] args) 
-//  {
-//    int port = 0; //Port to listen on
-//    
-//    try
-//    {
-//      port = Integer.parseInt(args[0]); //Get port from command line
-//    }
-//    catch(Throwable t)
-//    {
-//      port = DEFAULT_PORT; //Set port to 5555
-//    }
-//	
-//    ProjectServer sv = new ProjectServer(port);
-//    
-//    try 
-//    {
-//      sv.listen(); //Start listening for connections
-//    } 
-//    catch (Exception ex) 
-//    {
-//      System.out.println("ERROR - Could not listen for clients!");
-//    }
-//  }			
 
 
 }

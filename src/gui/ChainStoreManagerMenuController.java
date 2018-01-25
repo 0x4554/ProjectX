@@ -27,13 +27,16 @@ import javafx.stage.Stage;
  * Project Name gitProjectX
  *
  */
-public class ChainStoreManagerMenuController implements Initializable {
+public class ChainStoreManagerMenuController extends MenuController implements Initializable {
 
 	@FXML
     private Button lgOutBtn;
 
     @FXML
     private Button vwRprtsBtn;
+    
+    @FXML 
+    private Button vwCtlgBtn;
     
 	/**
 	 * A necessary constructor for the App
@@ -45,12 +48,14 @@ public class ChainStoreManagerMenuController implements Initializable {
 	 * This method loads the main menu window
 	 * @throws IOException 
 	 */
-	public void showChainStoreManagerMenu() throws IOException
+	public void showMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerMenuBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);		
+		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Chain store manager main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -72,7 +77,8 @@ public class ChainStoreManagerMenuController implements Initializable {
 		csmscc.showStores();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Store reports");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -93,7 +99,8 @@ public class ChainStoreManagerMenuController implements Initializable {
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -101,6 +108,32 @@ public class ChainStoreManagerMenuController implements Initializable {
 		GeneralMessageController.showMessage("Logged out");
 
 	}
+	
+	/**
+	 * The method open's the Catalog Window
+	 * 
+	 * @param event
+	 *            on clicking "View Catalog" Button
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void enterCatalog(ActionEvent event) throws IOException, InterruptedException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //Hide Current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
+		CatalogController catl = loader.getController();
+		catl.setPreviousController(this);
+		catl.showCatalog(); //Call the method show catalog
+		Stage primaryStage = new Stage(); //Set Stage->Show()
+		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
+		primaryStage.setTitle("Zer-Li Catalog");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

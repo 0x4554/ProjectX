@@ -179,31 +179,69 @@ public class CustomerCheckOutController implements Initializable {
 	 * @throws ParseException
 	 * @throws InterruptedException 
 	 */
-	public void pressedPlaceOrder(ActionEvent event) throws IOException, ParseException, InterruptedException
-	{
-		if(this.dlvrCkBx.isSelected() && (this.dlvrAddrs.getText().isEmpty() || this.dlvrPhoneNmbr.getText().isEmpty() || this.dlvrRcptNm.getText().isEmpty()))
-		{			//if the delivery check box is selected and not all fields are filled 
+	public void pressedPlaceOrder(ActionEvent event) throws IOException, ParseException, InterruptedException {
+		if (this.dlvrCkBx.isSelected())
+		{
+			try
+			{
+				Integer.parseInt(this.dlvrPhoneNmbr.getText());
+			} catch (Exception e)
+			{
+				GeneralMessageController.showMessage("Invalid phone number");
+				return;
+			}
+		}
+		if (this.dlvrCkBx.isSelected() && (this.dlvrAddrs.getText().isEmpty() || this.dlvrPhoneNmbr.getText().isEmpty() || this.dlvrRcptNm.getText().isEmpty()))
+		{ //if the delivery check box is selected and not all fields are filled 
 			GeneralMessageController.showMessage("Please fill all delivery fields");
 			return;
 		}
-		
-		if(this.crdCrdCkBx.isSelected() && (this.crdCrdNmbrTxtFld.getText().isEmpty() || this.crdCrdCCVTxtFld.getText().isEmpty())) 
-		{		//if the credit card check box is selected and not all fields are filled
+
+		if (this.crdCrdCkBx.isSelected())
+		{
+			try
+			{
+				Integer.parseInt(this.crdCrdNmbrTxtFld.getText());
+			} catch (Exception e)
+			{
+				GeneralMessageController.showMessage("Invalid credit card number");
+				return;
+			}
+		}
+		if (this.crdCrdCkBx.isSelected() && (this.crdCrdNmbrTxtFld.getText().isEmpty() || this.crdCrdCCVTxtFld.getText().isEmpty()))
+		{ //if the credit card check box is selected and not all fields are filled
 			GeneralMessageController.showMessage("Please fill all credit card fields");
 			return;
 		}
-		
-		if(this.hrsTxtFld.getText().isEmpty() || Integer.parseInt(this.hrsTxtFld.getText())>23 || Integer.parseInt(this.hrsTxtFld.getText())<00 )
-		{		//if invalid hour entered
+
+		try
+		{
+			Integer.parseInt(this.hrsTxtFld.getText());
+		} catch (Exception e)
+		{
 			GeneralMessageController.showMessage("Invalid hours field");
 			return;
 		}
-		
-		if( this.mntsTxtFld.getText().isEmpty() || Integer.parseInt(this.mntsTxtFld.getText())>59 || Integer.parseInt(this.mntsTxtFld.getText())<00 )
-		{		//if invalid minutes entered
+		if (this.hrsTxtFld.getText().isEmpty() || Integer.parseInt(this.hrsTxtFld.getText()) > 23 || Integer.parseInt(this.hrsTxtFld.getText()) < 00)
+		{ //if invalid hour entered
+			GeneralMessageController.showMessage("Invalid hours field");
+			return;
+		}
+
+		try
+		{
+			Integer.parseInt(this.mntsTxtFld.getText());
+		} catch (Exception e)
+		{
 			GeneralMessageController.showMessage("Invalid minutes field");
 			return;
 		}
+		if (this.mntsTxtFld.getText().isEmpty() || Integer.parseInt(this.mntsTxtFld.getText()) > 59 || Integer.parseInt(this.mntsTxtFld.getText()) < 00)
+		{ //if invalid minutes entered
+			GeneralMessageController.showMessage("Invalid minutes field");
+			return;
+		}
+		
 		
 		setTimeAndDateOfOrder();		//call method to set time and date	
 	    if(this.newOrder.getReceivingTimestamp().getTime()  - System.currentTimeMillis()  < 0)		//check if picked a date earlier than Now

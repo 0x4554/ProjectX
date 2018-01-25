@@ -20,7 +20,20 @@ import javafx.stage.Stage;
 import logic.ConnectedClients;
 import logic.MessageToSend;
 
-public class StoreManagerMenuController implements Initializable {
+/**
+ * This class is the controller for the store manager menu boundary
+ * 
+ * StoreManagerMenuController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
+public class StoreManagerMenuController extends MenuController implements Initializable {
 	private Client clnt;
 	
 	
@@ -32,6 +45,8 @@ public class StoreManagerMenuController implements Initializable {
 	private Button shwCnclBtn;
 	@FXML
 	private Button logOutBtn;
+	@FXML 
+	private Button vwCtlgBtn;
 	private StoreEntity store;
 	
 	
@@ -63,30 +78,37 @@ public class StoreManagerMenuController implements Initializable {
 	 * This method will present the menu for manager user
 	 * @throws IOException
 	 */
-	public void showManagerMenu() throws IOException {
+	public void showMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/StoreManagerMenuBoundary.fxml").openStream());
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		StoreManagerMenuController smmc = new StoreManagerMenuController();
 		smmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
-	//	smmc.setStore();
 		primaryStage.setTitle("Store manager's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
 	}
 
+	/**
+	 * This method loads the create new account window
+	 * @param event pressed create new account
+	 * @throws IOException
+	 */
 	public void newAccount(ActionEvent event) throws IOException {		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		 FXMLLoader loader = new FXMLLoader();
 		 Parent root = loader.load(getClass().getResource("CreateNewAccountBoundary.fxml").openStream());				//new window to open
 		 CreateNewAccountController cna=loader.getController();
-		 cna.setConnectionData(this);
+		 cna.setConnectionData(this,this.store);
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
-			
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("New Accout");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -94,7 +116,6 @@ public class StoreManagerMenuController implements Initializable {
 	
 	/**
 	 * This method sets the store of the manager
-	 * @param store
 	 * @throws InterruptedException for the sleep 
 	 */
 	public void setStore() 
@@ -137,7 +158,8 @@ public class StoreManagerMenuController implements Initializable {
 		 s.showStoreDetails();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
-			
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("Generate Report");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -163,7 +185,8 @@ public class StoreManagerMenuController implements Initializable {
 		 s.showOrders();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
-			
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("Cancelation Requests");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -171,26 +194,64 @@ public class StoreManagerMenuController implements Initializable {
 	
 	
 	
-	
+	/**
+	 * This method logs out the manager and loads the log in window
+	 * @param event pressed log out
+	 * @throws IOException
+	 */
 	public void logOutManager(ActionEvent event) throws IOException	//when click "Back" return to main menu
 	{
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-//		
+	
 		LoginController.signalLogOut();									//log out user from system
 		
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		GeneralMessageController.showMessage("Store Manager "+Client.getClientConnection().getUsername()+" logged out");
 		Client.getClientConnection().setClientUserName(null);
 	}
+	
+	/**
+	 * method for saving the current store
+	 * that is active
+	 * 
+	 * @param s
+	 */
+	public void setStore(StoreEntity s) {
+		this.store=s;
+	}
 
+	/**
+	 * The method open's the Catalog Window
+	 * 
+	 * @param event
+	 *            on clicking "View Catalog" Button
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void enterCatalog(ActionEvent event) throws IOException, InterruptedException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //Hide Current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
+		CatalogController catl = loader.getController();
+		catl.setPreviousController(this);
+		catl.showCatalog(); //Call the method show catalog
+		Stage primaryStage = new Stage(); //Set Stage->Show()
+		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
 
+		primaryStage.setTitle("Zer-Li Catalog");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

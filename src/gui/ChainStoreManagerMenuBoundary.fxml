@@ -8,15 +8,16 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ChainStoreManagerMenuController">
    <children>
-      <Pane layoutY="-6.0" prefHeight="476.0" prefWidth="487.0">
+      <Pane layoutY="21.0" prefHeight="361.0" prefWidth="487.0">
          <children>
-            <Label layoutX="181.0" layoutY="83.0" text="Main menu">
+            <Label layoutX="181.0" layoutY="65.0" text="Main menu">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button fx:id="lgOutBtn" layoutX="211.0" layoutY="379.0" mnemonicParsing="false" onAction="#logOut" text="LogOut" />
-            <Button fx:id="vwRprtsBtn" layoutX="192.0" layoutY="207.0" mnemonicParsing="false" onAction="#viewReports" text="View reports" />
+            <Button fx:id="lgOutBtn" layoutX="208.0" layoutY="308.0" mnemonicParsing="false" onAction="#logOut" text="LogOut" />
+            <Button fx:id="vwRprtsBtn" layoutX="192.0" layoutY="163.0" mnemonicParsing="false" onAction="#viewReports" text="View reports" />
+            <Button fx:id="vwCtlgBtn" layoutX="191.0" layoutY="215.0" mnemonicParsing="false" onAction="#enterCatalog" text="View catalog" />
          </children>
       </Pane>
    </children>

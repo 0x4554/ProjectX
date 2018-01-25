@@ -1,22 +1,16 @@
 package gui;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
-import javax.imageio.ImageIO;
-
 import client.Client;
 import entities.OrderEntity;
 import entities.ProductEntity;
-import entities.StoreEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,7 +18,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -39,9 +32,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import logic.FilesConverter;
 import logic.MessageToSend;
 /**
+ * This class is the controller for the order from catalog boundary
  * 
  *OrderFromCatalogController.java
  * @author Eliran Toledano
@@ -79,7 +72,7 @@ public class OrderFromCatalogController implements Initializable{
 	/*************************************************************Method's****************************************/
 	/**
 	 * The method show's the catalog customized to the store that the customer choose to shop from
-	 * @param store is the instance of the store that the customer choose
+	 * @param order is the instance of the order that the customer created
 	 * @throws InterruptedException
 	 */
 	public void showCatalog(OrderEntity order) throws InterruptedException
@@ -166,7 +159,12 @@ public class OrderFromCatalogController implements Initializable{
                         	else {
                         		setGraphic(addToCart);
                         	}
-                                setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getSale()+product.getProductPrice()+"¤");
+                        	if(product.getProductDominantColor().equals("none"))
+                        		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+                        	else 
+                        		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+                            setFont(Font.font(18));
+
                         }
                     }
                 };
@@ -235,6 +233,11 @@ public class OrderFromCatalogController implements Initializable{
 	
 	/************************************************Data Base***********************************************************/
 	
+	/**
+	 * This method gets the list of products in the catalog from the server
+	 * @return arrayList of product entity
+	 * @throws InterruptedException
+	 */
 	 public ArrayList<ProductEntity> getCatalog() throws InterruptedException
 	   {
 				MessageToSend mts=new MessageToSend(null,"getCatalog");

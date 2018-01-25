@@ -22,6 +22,19 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
+/**
+ * This class is the controller for the service worker for saving the verbal report from the service expert
+ * 
+ * CustomerServiceWorkerSaveVerbalReportsController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerServiceWorkerSaveVerbalReportsController implements Initializable {
 
 	@FXML
@@ -127,7 +140,7 @@ public class CustomerServiceWorkerSaveVerbalReportsController implements Initial
 	 */
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.cswmc.showCostumerServiceWorkerMenu();
+		this.cswmc.showMenu();
 	}
 	
 

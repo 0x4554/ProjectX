@@ -10,7 +10,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import server.ServerMain;
-
+/**
+ * This method is the controller for the server boundary
+ * ServerController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class ServerController implements Initializable {
 
 	@FXML
@@ -27,7 +38,6 @@ public class ServerController implements Initializable {
    public void closeServer(ActionEvent event) {
 	   try
 	{
-//		server.stop();
 		 Stage stage = (Stage) this.tnOffBtn.getScene().getWindow();
 		    // do what you have to do
 		    stage.close();

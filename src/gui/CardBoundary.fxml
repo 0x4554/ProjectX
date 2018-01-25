@@ -4,12 +4,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="439.0" prefWidth="472.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddCardController">
    <children>
       <AnchorPane layoutX="-232.0" layoutY="-243.0" prefHeight="200.0" prefWidth="200.0" />
       <TextArea id="crdTxtArea" fx:id="crdTxtArea" layoutX="43.0" layoutY="120.0" prefHeight="242.0" prefWidth="388.0" />
-      <Label layoutX="141.0" layoutY="49.0" text="Please enter a text for the card" />
+      <Label layoutX="115.0" layoutY="54.0" text="Please enter a text for the card">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <Button id="crdCnfrmBtn" fx:id="crdCnfrmBtn" layoutX="199.0" layoutY="386.0" mnemonicParsing="false" onAction="#cardConfirm" text="Confirm" />
    </children>
 </AnchorPane>

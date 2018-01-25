@@ -108,8 +108,7 @@ public class Client extends AbstractClient {
 	  /**
 	   * This method sets the requested data and the wanted operation
 	   * 
-	   * @param data	requested data
-	   * @param op	wanted operation ends with ! : "<operation>!"
+	   * @param msg	the message to send
 	   */
 	  public void setDataFromUI(MessageToSend msg)
 	  {

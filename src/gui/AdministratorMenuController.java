@@ -27,12 +27,13 @@ import javafx.stage.Stage;
  *
  */
 
-public class AdministratorMenuController implements Initializable {
+public class AdministratorMenuController extends MenuController implements Initializable {
 
 	@FXML private Button prmtBtn;
     @FXML private Button usrBtn;
     @FXML private Button lgBtn;
-    
+    @FXML private Button vwCtlgBtn;
+    @FXML private Button rlsBlckBtn;
     
     private Client clnt;
 	
@@ -49,13 +50,15 @@ public class AdministratorMenuController implements Initializable {
 	 * method that shows Administrator menu
 	 * @throws IOException
 	 */
-	public void showAdministratorMenu() throws IOException
+	public void showMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/AdministratorMenuBoundary.fxml").openStream());
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		AdministratorMenuController am = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		am.setConnectionData(this.clnt);
 		primaryStage.setTitle("Administrator's main menu");
@@ -82,7 +85,8 @@ public class AdministratorMenuController implements Initializable {
 		cnu.setConnectionData(this);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Choose premission");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -105,12 +109,64 @@ public class AdministratorMenuController implements Initializable {
 		 eup.setLabels();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
-			
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("User's premission");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 	}
+	
+	/**
+	 * The method open's the Catalog Window
+	 * 
+	 * @param event
+	 *            on clicking "View Catalog" Button
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void enterCatalog(ActionEvent event) throws IOException, InterruptedException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //Hide Current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
+		CatalogController catl = loader.getController();
+		catl.setPreviousController(this);
+		catl.showCatalog(); //Call the method show catalog
+		Stage primaryStage = new Stage(); //Set Stage->Show()
+		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
 
+		primaryStage.setTitle("Zer-Li Catalog");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}
+
+	/**
+	 * method for handling the press
+	 * of the Release user button
+	 * 
+	 * @param event - current screen to hide
+	 * @throws IOException 
+	 * @throws InterruptedException 
+	 */
+	public void releaseUserBtn(ActionEvent event) throws IOException, InterruptedException {
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
+		
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/ReleaseUserBlockBoundary.fxml").openStream());				//new window to open
+		ReleaseUserBlockController rubc = loader.getController();
+		rubc.setConnectionData(this);
+		rubc.setLabels();
+		rubc.getBlockedUsers();
+		Stage primaryStage=new Stage();
+		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
+		primaryStage.setTitle("Unblock users");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
@@ -131,7 +187,8 @@ public class AdministratorMenuController implements Initializable {
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();

@@ -20,12 +20,12 @@
             <TextField fx:id="dlvrPhoneNmbr" layoutX="442.0" layoutY="530.0" prefHeight="31.0" prefWidth="227.0" promptText="Enter recipient phone number" />
             <Button fx:id="plcOrdrBtn" layoutX="735.0" layoutY="837.0" mnemonicParsing="false" onAction="#pressedPlaceOrder" text="Place order" />
             <Button fx:id="bckToOrdr" layoutX="189.0" layoutY="837.0" mnemonicParsing="false" onAction="#backToOrder" text="Back to order" />
-            <Label layoutX="231.0" layoutY="682.0" text="Choose payment method" />
+            <Label layoutX="224.0" layoutY="682.0" text="Choose payment method" />
             <CheckBox fx:id="cshCkBx" layoutX="495.0" layoutY="682.0" mnemonicParsing="false" onAction="#selectedCash" text="Cash" />
             <CheckBox fx:id="crdCrdCkBx" layoutX="665.0" layoutY="682.0" mnemonicParsing="false" onAction="#selectedCreditCard" text="Credit Card" />
             <TextField fx:id="crdCrdNmbrTxtFld" layoutX="438.0" layoutY="737.0" prefHeight="31.0" prefWidth="227.0" promptText="Enter credit card number" />
-            <TextField fx:id="crdCrdCCVTxtFld" layoutX="438.0" layoutY="783.0" prefHeight="31.0" prefWidth="227.0" promptText="CCV" />
-            <DatePicker fx:id="datePicker" layoutX="446.0" layoutY="575.0" promptText="Choose date for receiving" />
+            <TextField fx:id="crdCrdCCVTxtFld" layoutX="438.0" layoutY="783.0" prefHeight="31.0" prefWidth="227.0" promptText="CVV" />
+            <DatePicker fx:id="datePicker" layoutX="443.0" layoutY="575.0" prefHeight="31.0" prefWidth="227.0" promptText="Choose date for receiving" />
             <TextField fx:id="hrsTxtFld" layoutX="459.0" layoutY="617.0" prefHeight="31.0" prefWidth="73.0" promptText="Hours" />
             <TextField fx:id="mntsTxtFld" layoutX="569.0" layoutY="617.0" prefHeight="31.0" prefWidth="82.0" promptText="Minutes" />
             <Label layoutX="546.0" layoutY="606.0" prefHeight="13.0" prefWidth="6.0" text=":">
@@ -33,9 +33,14 @@
                   <Font size="36.0" />
                </font>
             </Label>
-            <Label layoutX="231.0" layoutY="561.0" prefHeight="90.0" prefWidth="185.0" text="Choose time and date for recieving the order" wrapText="true" />
+            <Label layoutX="223.0" layoutY="552.0" prefHeight="90.0" prefWidth="185.0" text="Choose time and date for recieving the order" wrapText="true" />
             <Label layoutX="374.0" layoutY="842.0" text="Total price :" />
             <Label fx:id="totalPriceLabel" layoutX="482.0" layoutY="842.0" prefHeight="21.0" prefWidth="60.0" textFill="#ae2424" />
+            <Label layoutX="434.0" layoutY="308.0" text="CheckOut">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

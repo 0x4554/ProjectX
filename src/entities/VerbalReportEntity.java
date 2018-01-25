@@ -71,7 +71,7 @@ public class VerbalReportEntity implements Serializable{
 	/**
 	 * setter for the the wanted file
 	 * 
-	 * @param file
+	 * @param filePath the file path
 	 * @throws IOException 
 	 */
 	public void setFile(String filePath) throws IOException {

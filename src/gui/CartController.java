@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import client.Client;
+import entities.CustomerEntity;
 import entities.OrderEntity;
 import entities.ProductEntity;
+import entities.UserInterface.Subscription;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,6 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.FilesConverter;
+import logic.MessageToSend;
 
 /**
  * This class is the controller for the cart boundary
@@ -45,6 +49,7 @@ public class CartController implements Initializable {
 	private OrderEntity newOrder;
 	private List<String> listOfProductsNames;
 	ObservableList observableList = FXCollections.observableArrayList();
+	private CustomerEntity customer;
 
 	@FXML
 	private ImageView prdctImg;
@@ -59,6 +64,15 @@ public class CartController implements Initializable {
 	@FXML
 	private Label totalPriceLable;
 
+	/**
+	 * Setter for the customer
+	 * @param customer
+	 */
+	public void setCustomer(CustomerEntity customer)
+	{
+		this.customer=customer;
+	}
+	
 	/**
 	 * This method loads and displays the products in the cart
 	 * @throws IOException 
@@ -80,17 +94,17 @@ public class CartController implements Initializable {
 				this.listOfProductsNames.add(product.getProductName());
 				TreeItem<String> productName = new TreeItem<>(product.getProductName()); //set the branch as the product's name to be the parent of it's details
 							/* Set all the product's details to be leaves on the branch */
-				TreeItem<String> productID = new TreeItem<>(product.getProductID().toString()); 		//create a new leaf
+				TreeItem<String> productID = new TreeItem<>("Product ID : "+product.getProductID().toString()); 		//create a new leaf
 				productName.getChildren().add(productID); 									//set as a child 
-				TreeItem<String> productType = new TreeItem<>(product.getProductType());
+				TreeItem<String> productType = new TreeItem<>("Type : "+product.getProductType());
 				productName.getChildren().add(productType);
-				TreeItem<String> productPrice = new TreeItem<>(product.getProductPrice().toString());
+				TreeItem<String> productPrice = new TreeItem<>("Price : "+product.getProductPrice().toString());
 				productName.getChildren().add(productPrice);
-				TreeItem<String> productDescription = new TreeItem<>(product.getProductDescription());
+				TreeItem<String> productDescription = new TreeItem<>("Description : "+product.getProductDescription());
 				productName.getChildren().add(productDescription);
 				if (product.getProductDominantColor() != null)					//if domenant color exists
 				{
-					TreeItem<String> productDominantColor = new TreeItem<>(product.getProductDominantColor());
+					TreeItem<String> productDominantColor = new TreeItem<>("Dominant color : "+product.getProductDominantColor());
 					productName.getChildren().add(productDominantColor);
 				}
 				root.getChildren().add(productName);
@@ -102,8 +116,12 @@ public class CartController implements Initializable {
 		this.prdctTrVw.setShowRoot(false); 							//make root expanded every time it starts
 		this.crtEmptLbl.setText(lbl);
 		
+		
 		calculatePrice(); 										//call method to calculate the order price
 		this.totalPriceLable.setText(this.newOrder.getTotalPrice().toString());
+		
+		if(!this.customer.getSubscriptionDiscount().equals(Subscription.None.toString()))		//if has a subscription
+			this.totalPriceLable.setText(this.totalPriceLable.getText() + " after discount");
 						///This EventHanlder is an mouse event handler which listens to a product select in the products treeview
 		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
 			showProductImage(event);
@@ -130,13 +148,22 @@ public class CartController implements Initializable {
 	/**
 	 * This method calculates the order's price based on products prices
 	 */
-	private void calculatePrice()
-	{
+	private void calculatePrice() {
 		this.newOrder.setTotalPrice(0.0);
-		for(ProductEntity product: this.newOrder.getProductsInOrder())
+		for (ProductEntity product : this.newOrder.getProductsInOrder())
 		{
-			
-			this.newOrder.setTotalPrice(this.newOrder.getTotalPrice()+product.getProductPrice()); 		//sum all of the product prices
+
+			this.newOrder.setTotalPrice(this.newOrder.getTotalPrice() + product.getProductPrice()); //sum all of the product prices
+		}
+		
+		if (this.customer.getSubscriptionDiscount().equals(Subscription.Monthly.toString()))		//check for monthly subscription
+		{
+			this.newOrder.setTotalPrice(this.newOrder.getTotalPrice() - (this.newOrder.getTotalPrice() * CustomerEntity.getMonthlyDiscount()));
+		}
+		
+		else if (this.customer.getSubscriptionDiscount().equals(Subscription.Yearly.toString()))		//check for yearly subscription
+		{
+			this.newOrder.setTotalPrice(this.newOrder.getTotalPrice() - (this.newOrder.getTotalPrice() * CustomerEntity.getYearlyDiscount()));
 		}
 	}
 	
@@ -220,12 +247,49 @@ public class CartController implements Initializable {
 			GeneralMessageController.showMessage("No product selected to remove.");
 		}
 	}
+	
+	/**
+	 * This method gets the customer details from the server
+	 * 
+	 * @param customerName
+	 *            Username
+	 * @return the customer entity
+	 * @throws InterruptedException
+	 */
+	public CustomerEntity getCustomerData(String customerName) throws InterruptedException {
+
+		MessageToSend msg = new MessageToSend(customerName, "getUserDetails");
+		Client.getClientConnection().setDataFromUI(msg);
+		Client.getClientConnection().accept();
+
+		while (!Client.getClientConnection().getConfirmationFromServer())
+			Thread.sleep(100);
+
+		Client.getClientConnection().setConfirmationFromServer();
+
+		msg = Client.getClientConnection().getMessageFromServer();
+
+		if (msg.getOperation().equals("customerExist"))
+			return (CustomerEntity) msg.getMessage();
+
+		else
+			return null;
+
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		//this.prdctTrVw = new TreeView<String>();
 		//	showCart();
+		try
+		{
+			setCustomer(getCustomerData(Client.getClientConnection().getUsername()));
+		} catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

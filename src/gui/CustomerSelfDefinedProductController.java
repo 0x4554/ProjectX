@@ -33,7 +33,19 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import logic.MessageToSend;
-
+/**
+ * This class is the controller for the self defined product window
+ * 
+ * CustomerSelfDefinedProductController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerSelfDefinedProductController implements Initializable {
 
 	@FXML private ComboBox<String> dmnntClrCmb;//new ComboBox<String>();
@@ -63,6 +75,10 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	private ArrayList<ProductEntity> ResultList;
     private ArrayList<ProductEntity> productsInOrder;
 
+    /**
+     * 
+     * Constructor for the CustomerSelfDefinedProductController.java class
+     */
     public CustomerSelfDefinedProductController(){
     	list=new ListView<ProductEntity>();
 		productsInOrder=new ArrayList<ProductEntity>();
@@ -114,7 +130,11 @@ public class CustomerSelfDefinedProductController implements Initializable {
 		UpdateResultList(matchingProducts);
 	}
 
-	
+	/**
+	 * This method builds and displays the list
+	 * @param ResultList
+	 * @throws InterruptedException
+	 */
 	public void UpdateResultList(ArrayList<ProductEntity> ResultList) throws InterruptedException
 	{
 		int storeid, i=0,temp_key=0;                 
@@ -198,10 +218,14 @@ public class CustomerSelfDefinedProductController implements Initializable {
                         	else {
                         		setGraphic(addToCart);
                         	}
-                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getSale()+product.getProductPrice()+"¤");
+                        	if(!product.getProductDominantColor().equals("none"))
+                        		setText("              "+product.getProductName()+"  is a  "+product.getProductType()+",  \n          "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  colors  "+"\n              price  "+product.getSale()+product.getProductPrice()+"¤");
+                        	else
+                                setText("              "+product.getProductName()+"  is a  "+product.getProductType()+",  \n          "+product.getProductDescription()+"  \n              price:  "+product.getSale()+product.getProductPrice()+"¤");
 
-                            //setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
                             setFont(Font.font(18));
+                            
+                           
                         }
                     }
                 };
@@ -246,7 +270,7 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	}
 	
 	/**
-	 * This emthod hanldes the back to order menu
+	 * This method handles the back to order menu
 	 * 
 	 * @param event
 	 *            pressed back

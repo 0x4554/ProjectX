@@ -136,7 +136,7 @@ public class LoginController implements Initializable {
 			{
 				if(dataFromServer.get(1).equals("user does not exists"))	//user does not exists
 				{
-					GeneralMessageController.showMessage("User does not exists in the system.\nPlease check the entered username or contact a store for creating a new user.");
+					GeneralMessageController.showMessage("User does not exists in the system.\nPlease check the entered username or contact a store for creating a new user");
 				}
 				else if (dataFromServer.get(1).equals("user is blocked"))	//user is blocked
 				{
@@ -144,12 +144,14 @@ public class LoginController implements Initializable {
 				}
 				else if (dataFromServer.get(1).equals("password does not match"))	//password does not match
 				{
-					String message = "";
 					//show message of how many login attempts are left before blocking the user
-					message = message +"Password entered does not match the username.\nPlease try again.\n" + (3-Integer.parseInt(dataFromServer.get(2))) + "/3 attempts left before blocking account!!!";
+					//
 					if(dataFromServer.get(2).equals("3"))	//check if the attempt was the third attempt
-						message += "\nThe user is now blocked.Please contact a store.";
-					GeneralMessageController.showMessage(message);
+						GeneralMessageController.showMessage("Too many attempts, user is blocked.\nPlease contact the store\nin order to retreive your data");
+					else {
+						String message = "Password entered does not match the username.\nPlease try again.\n" + (3-Integer.parseInt(dataFromServer.get(2))) + "/3 attempts left before blocking account!!!";
+						GeneralMessageController.showMessage(message);
+					}
 				} 
 				else if (dataFromServer.get(1).equals("user is already logged in"))	//user is already logged in
 				{
@@ -174,43 +176,43 @@ public class LoginController implements Initializable {
 		{
 		case "AD":	//system administrator (system manager)
 			amc = new AdministratorMenuController();
-			amc.showAdministratorMenu();
+			amc.showMenu();
 			GeneralMessageController.showMessage("Logged in as an administrator");
 			break;
 		case "C":	//customer
 			cmc = new CustomerMenuController(this);
-			cmc.showCustomerMenu();
+			cmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a customer");
 			break;
 		case "SW":	//store worker
 			swmc = new StoreWorkerMenuController();
-			swmc.showStoreWorkerMenu();
+			swmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
 		case "SM":	//store manager
 			mmc=new StoreManagerMenuController();
-			mmc.showManagerMenu();
+			mmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a store manager");
 			break;
 		case "CSW":	//customer service worker
 			cswmc = new CustomerServiceWorkerMenuController();
-			cswmc.showCostumerServiceWorkerMenu();
+			cswmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service worker");
 			break;
 		case "CSM":	//chain store manager
 			csmmc = new ChainStoreManagerMenuController();
-			csmmc.showChainStoreManagerMenu();
+			csmmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a chain store manager");
 			break;
 		case "CSE":	//customer service expert
 			csemc = new CustomerServiceExpertMenuController();
-			csemc.showCustomerServiceExpertMenu();
+			csemc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service expert");
 			break;
 			
 		case "CW":	//chain worker
 			cwmn = new ChainWorkerMenuController();
-			cwmn.showChainWorkerMenu();
+			cwmn.showMenu();
 			GeneralMessageController.showMessage("Logged in as a chain worker");
 			break;
 		}
@@ -262,6 +264,7 @@ public class LoginController implements Initializable {
 		this.usrNmTxtFld.setText("lana");
 		this.psswrdTxtFld.setText("123");
 		this.ipTxtArea.setVisible(false);
+		this.ipTxtArea.setEditable(false);
 	}
 
 }

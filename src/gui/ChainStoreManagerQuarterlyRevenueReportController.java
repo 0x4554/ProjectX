@@ -61,7 +61,7 @@ public class ChainStoreManagerQuarterlyRevenueReportController implements Initia
 		}
 
 		this.ordrLstVw.setItems(this.listOfOrderString); //set items to the list of active complaints
-		this.ttlLbl.setText(this.totalEarnings.toString());
+		this.ttlLbl.setText(this.totalEarnings.toString()+" NIS");
 
 	}
 

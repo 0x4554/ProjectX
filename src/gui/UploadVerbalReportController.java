@@ -18,7 +18,19 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.MessageToSend;
-
+/**
+ * This class is the controller for the upload verbal report controller
+ * 
+ * UploadVerbalReportController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class UploadVerbalReportController implements Initializable {
 
 	
@@ -99,12 +111,12 @@ public class UploadVerbalReportController implements Initializable {
 		
 		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("uploaded")) {
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.csemc.showCustomerServiceExpertMenu();
+			this.csemc.showMenu();
 			GeneralMessageController.showMessage("Verbal report uploaded successfully");
 		}
 		else {
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.csemc.showCustomerServiceExpertMenu();
+			this.csemc.showMenu();
 			GeneralMessageController.showMessage("There was a problem uploading the report\nPlease contact technical support and try again later");
 			}
 			
@@ -120,7 +132,7 @@ public class UploadVerbalReportController implements Initializable {
 	 */
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.csemc.showCustomerServiceExpertMenu();
+		this.csemc.showMenu();
 	}
 	
 	

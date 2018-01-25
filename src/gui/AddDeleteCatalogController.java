@@ -31,7 +31,7 @@ import javafx.util.Callback;
 import logic.MessageToSend;
 
 /**
- * This class handles with add and delete from the catalog requests
+ * This class handles with the operations add and delete from the catalog 
  *AddDeleteCatalogController.java
  * @author Eliran Toledano
  * @author Lana Krikheli
@@ -53,10 +53,10 @@ public class AddDeleteCatalogController implements Initializable{
 	@FXML private Button deleteBtn;
 	@FXML private Button searchBtn;
 	
-	@FXML private ListView<ProductEntity> listProducts;
-	@FXML private ListView<ProductEntity> listCatalog;
+	@FXML private ListView<ProductEntity> listProducts; //list view of the products
+	@FXML private ListView<ProductEntity> listCatalog;  //list view of the products in the catalog
 	
-    ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>(); //Contain's the product entities returned from the data base
+    ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>(); //contains the product entities returned from the data base
 
     /**
      * The method clear's the selections in the list view
@@ -69,17 +69,17 @@ public class AddDeleteCatalogController implements Initializable{
    }
     
    /**
-    * The method add's product to the catalog
+    * The method adds product to the catalog
     * @param event when "Add" button is clicked
-    * @throws IOException
-    * @throws InterruptedException
+    * @throws IOException for the loader
+    * @throws InterruptedException for the thread sleep
     */
   public void AddToCatalog(ActionEvent event) throws IOException, InterruptedException {
     	
-    	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
-    	 ArrayList<ProductEntity> ProductsToAdd=new ArrayList<ProductEntity>();
+    	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList(); //observable list to get products from list view
+    	 ArrayList<ProductEntity> ProductsToAdd=new ArrayList<ProductEntity>(); //the products we want to add to the catalog
 
-    	if(!(listProducts.getSelectionModel().getSelectedItems().isEmpty())) //If the user choose product's
+    	if(!(listProducts.getSelectionModel().getSelectedItems().isEmpty())) //if the user choose products
              {
     		Products=listProducts.getSelectionModel().getSelectedItems();
              }
@@ -88,14 +88,14 @@ public class AddDeleteCatalogController implements Initializable{
     		GeneralMessageController.showMessage("Please choose product to delete");
     		return;
         	}
-    	for (ProductEntity prd:Products)//add products 
+    	for (ProductEntity prd:Products)//add products to add to array list
     	{
     		ProductsToAdd.add((ProductEntity)prd);
     	}
     	
-    	for(int i=0;i<ProductsToAdd.size();i++) //add product's in data base
+    	for(int i=0;i<ProductsToAdd.size();i++) //add products to data base
     	{
-    		if(AddProductsToCatalogDB(ProductsToAdd.get(i)).equals("Added"))
+    		if(AddProductsToCatalogDB(ProductsToAdd.get(i)).equals("Added"))//if inserting successeded
     		{
     			GeneralMessageController.showMessage("Product : "+ProductsToAdd.get(i).getProductName()+",  ID:  "+ProductsToAdd.get(i).getProductID()+" \n was added succsessfuly");
     		}
@@ -104,20 +104,20 @@ public class AddDeleteCatalogController implements Initializable{
     			GeneralMessageController.showMessage("Product : "+ProductsToAdd.get(i).getProductName()+",   ID:  "+ProductsToAdd.get(i).getProductID()+" \n  was not added");
     		}
     	}
-    	ShowCatalog(); //show the catalog after the insert
+    	ShowCatalog(); //show the catalog after the insertion
     }
     
   /**
-   * The method show's the catalog, insert's the product's to listView
+   * The method shows the catalog, inserts the products to listView
    * @throws InterruptedException
    */
     public void ShowCatalog() throws InterruptedException {
     	
-    	   ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
+    	    ObservableList<ProductEntity> Products=FXCollections.observableArrayList(); //list to present the products in list view
     		listCatalog.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);	//set the selection mode to multiple
-    	    ArrayList<ProductEntity> productsFromCatalog = new ArrayList<ProductEntity>(); //contains the product entity's in the catalog
+    	    ArrayList<ProductEntity> productsFromCatalog = new ArrayList<ProductEntity>(); //contains the product entitys in the catalog
 
-    	    productsFromCatalog=getCatalog(); 
+    	    productsFromCatalog=getCatalog(); //get the products in the catalog from the data base
     		
     	    /*******************************************************Build the catalog view**********************************************/
     		
@@ -138,7 +138,7 @@ public class AddDeleteCatalogController implements Initializable{
     	                    super.updateItem(product, status);
     	                    if (product != null) {
     	       
-    	                    	if(product.getProductImage()!=null) //If there is an image to the product entity
+    	                    	if(product.getProductImage()!=null) //If there is an image to the product entity, set image
     	                    	{
     	                    		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));//set the image 
     	                    		ImageView v=new ImageView(j);
@@ -148,6 +148,7 @@ public class AddDeleteCatalogController implements Initializable{
     	                        	vb.getChildren().addAll(v);
     	                            setGraphic(vb);
     	                    	}
+    	                    	/*Set text and font in cell*/
     	                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set the text in the list cell
     	                        setFont(Font.font(18));
     	                    }
@@ -162,13 +163,13 @@ public class AddDeleteCatalogController implements Initializable{
     /**
      * The method delet's product from the catalog
      * @param event when "Delete" button is clicked
-     * @throws InterruptedException
-     * @throws IOException
+     * @throws InterruptedException for thread sleep
+     * @throws IOException for general message 
      */
     public void DeleteProductFromCatalog(ActionEvent event) throws InterruptedException, IOException 
     {
-    	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
-    	 ArrayList<ProductEntity> ProductsToDelete=new ArrayList<ProductEntity>();
+    	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();//products to delete from the list view
+    	 ArrayList<ProductEntity> ProductsToDelete=new ArrayList<ProductEntity>();  //product to delete from data base
     	 
     	if(!(listCatalog.getSelectionModel().getSelectedItems().isEmpty()))				//if there are items to delete
     	{
@@ -179,7 +180,7 @@ public class AddDeleteCatalogController implements Initializable{
     		GeneralMessageController.showMessage("Please choose product to delete");
     		return;
     	}
-    	for (ProductEntity prd:Products)												//add products to delete
+    	for (ProductEntity prd:Products)												//add products to delete 
     	{
     		ProductsToDelete.add((ProductEntity)prd);
     	}
@@ -203,7 +204,7 @@ public class AddDeleteCatalogController implements Initializable{
      */
     public void ShowAllProduct() throws InterruptedException
     {               
-        ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
+        ObservableList<ProductEntity> Products=FXCollections.observableArrayList(); //list of products in the list view
     	listProducts.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);//Set the selection mode to multiple	
     	productsFromTable=getAllProducts();
     	
@@ -236,8 +237,12 @@ public class AddDeleteCatalogController implements Initializable{
                             	vb.getChildren().addAll(v);
                                 setGraphic(vb);
                         	}
-                            setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
-                            setFont(Font.font(18));
+                        	if(product.getProductDominantColor().equals("none"))
+                        		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+                        	else 
+                        		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+
+                            setFont(Font.font(18));//set font to text
                         }
                     }
                 };
@@ -288,13 +293,13 @@ public class AddDeleteCatalogController implements Initializable{
      */
     public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
     {
-    	MessageToSend mts=new MessageToSend(null,"getAllProducts"); //set parameters for the server's method
+    	MessageToSend mts=new MessageToSend(null,"getAllProducts");         //set parameters for the server's method
     	ArrayList<ProductEntity> dataFromServer = null;
     	Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-    	Client.getClientConnection().accept();										//sends to server
-    	while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+    	Client.getClientConnection().accept();								//sends to server
+    	while(!Client.getClientConnection().getConfirmationFromServer())	//wait until server replies
     		Thread.sleep(100);
-    	Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+    	Client.getClientConnection().setConfirmationFromServer();		    //reset confirmation to false
     	MessageToSend m = Client.getClientConnection().getMessageFromServer();
     	dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
     	return dataFromServer;
@@ -311,11 +316,11 @@ public class AddDeleteCatalogController implements Initializable{
    {
 	   		String msg;
 	   		MessageToSend mts=new MessageToSend(productToDelete,"deleteProductFromCatalog");//set parameters for the server method
-	   		Client.getClientConnection().setDataFromUI(mts);				                                                   	//set the data and the operation to send from the client to the server
-	   		Client.getClientConnection().accept();										                                                //sends to server
-	   		while(!Client.getClientConnection().getConfirmationFromServer())		                                 	//wait until server replies
+	   		Client.getClientConnection().setDataFromUI(mts);				                //set the data and the operation to send from the client to the server
+	   		Client.getClientConnection().accept();										    //sends to server
+	   		while(!Client.getClientConnection().getConfirmationFromServer())		        //wait until server replies
 	   			Thread.sleep(100);
-	   		Client.getClientConnection().setConfirmationFromServer();		                                                //reset confirmation to false
+	   		Client.getClientConnection().setConfirmationFromServer();		                //reset confirmation to false
 	   		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 	   		 msg = (String)m.getMessage();
 	   		return msg;   
@@ -352,8 +357,8 @@ public class AddDeleteCatalogController implements Initializable{
     		FXMLLoader loader = new FXMLLoader();
     		Parent root = loader.load(getClass().getResource("/gui/ChainWorkerMenuBoudary.fxml").openStream()); // load the fxml class
     		Stage primaryStage = new Stage();
-    		Scene scene = new Scene(root);//set scene
-    		primaryStage.setTitle("Chain worker's main menu");
+    		Scene scene = new Scene(root);                                          //set scene
+    		primaryStage.setTitle("Chain worker's main menu");                      //set title
     		primaryStage.setScene(scene);
     		primaryStage.show();
     }

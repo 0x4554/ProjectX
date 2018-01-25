@@ -14,6 +14,8 @@ package entities;
  */
 public class CustomerEntity extends UserEntity {
 
+	private static final Double monthlyDiscount = 0.10;
+	private static final Double yearlyDiscount = 0.35;
 	private long creditCardNumber;
 	private String address;
 	private long customerID;
@@ -24,7 +26,7 @@ public class CustomerEntity extends UserEntity {
 	 * 
 	 * Constructor for the CustomerEntity.java class
 	 * invokes the UserEntity constructor for the CustomerEntity
-	 * @param userType
+	 * 
 	 */
 	public CustomerEntity() {
 		super("C");
@@ -60,10 +62,10 @@ public class CustomerEntity extends UserEntity {
 
 	/**
 	 * Getter for the subscriptionDiscount
-	 * @return the subscriptionDiscount
+	 * @return the subscriptionDiscount as a string
 	 */
 	public String getSubscriptionDiscount() {
-		return this.subscriptionDiscount.name();
+		return this.subscriptionDiscount.toString();
 	}
 	
 	/**
@@ -102,6 +104,28 @@ public class CustomerEntity extends UserEntity {
 		// TODO Auto-generated method stub
 		return this.customerID;
 	}
+	/**
+	 * Getter for the monthlyDiscount
+	 * @return the monthlyDiscount
+	 */
+	public static Double getMonthlyDiscount() {
+		return monthlyDiscount;
+	}
+	/**
+	 * Getter for the yearlyDiscount
+	 * @return the yearlyDiscount
+	 */
+	public static Double getYearlyDiscount() {
+		return yearlyDiscount;
+	}
+	/**
+	 * Setter for the subscriptionDiscount
+	 * @param subscriptionDiscount the subscriptionDiscount to set
+	 */
+	public void setSubscriptionDiscount(Subscription subscriptionDiscount) {
+		this.subscriptionDiscount = subscriptionDiscount;
+	}
+	
 	
 	
 	

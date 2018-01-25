@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import client.Client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +27,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * This method is the controller for the customer order boundary
+ * 
+ * CustomerOrderController.java
+ *
+ * @author Eliran Toledano
+ * @author Lana Krikheli
+ * @author Katya Yakovlev
+ * @author Tal Gross
+ *
+ * Project Name gitProjectX
+ *
+ */
 public class CustomerOrderController implements Initializable {
 
 	@FXML private Button swOrdrDtlsBtn;
@@ -42,6 +54,10 @@ public class CustomerOrderController implements Initializable {
 	public CustomerOrderController() {
 	}
 	
+	/**
+	 * setter for the previous controller 
+	 * @param m the controller
+	 */
 	public void setConnectionData(CustomerMenuController m) {
 		this.cm=m;
 	}
@@ -68,6 +84,11 @@ public class CustomerOrderController implements Initializable {
 		primaryStage.show();
 	}
 
+	/**
+	 * This method loads the order details window
+	 * @param event pressed view orders details
+	 * @throws IOException for the loader
+	 */
 	public void showOrderDetails(ActionEvent event) throws IOException {
 
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
@@ -75,8 +96,6 @@ public class CustomerOrderController implements Initializable {
 		FXMLLoader loader = new FXMLLoader();
 		Parent pRoot = loader.load(getClass().getResource("/gui/CustomerOrderDetailsBoundary.fxml").openStream());
 		CustomerOrderDetailsController cocdc = loader.getController();
-//		cocdc.setOrder(this.newOrder);
-//		cocdc.showCart();
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(pRoot);
@@ -99,7 +118,7 @@ public class CustomerOrderController implements Initializable {
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		CustomerMenuController cmc = new CustomerMenuController();
-		cmc.showCustomerMenu();										//open previous menu
+		cmc.showMenu();										//open previous menu
 		return;
 	}
 	
