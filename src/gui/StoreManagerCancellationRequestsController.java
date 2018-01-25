@@ -70,6 +70,7 @@ public class StoreManagerCancellationRequestsController implements Initializable
 	ObservableList<String> listOfOrders;
 	ArrayList<OrderEntity> arraylistOfOrders;
 	private StoreEntity store;
+	private Double refund = 0.0 ;
 
     
 	/**
@@ -201,11 +202,12 @@ public class StoreManagerCancellationRequestsController implements Initializable
 				String amountForRefund = "";
 											//** calculate the time between the cancellation request and the receiving time
 				Long timeDifference = TimeCalculation.calculateTimeDifference(order.getReceivingTimestamp(), order.getCancelRequestTime());		//calculate difference
-				Double refund;
+				
 				timeDifference = TimeUnit.MILLISECONDS.toHours(timeDifference);			//convert miliseconds to hours
 				if(timeDifference >= 3)													//if more than 3 hours
 				{
-					amountForRefund = "Amount for refund : " +order.getTotalPrice().toString();		//set full refund
+					refund = order.getTotalPrice();
+					amountForRefund = "Amount for refund : " +refund.toString();		//set full refund
 				}
 				
 				else if (timeDifference < 3 && timeDifference >= 1)									//if between 3 and 1 hours
@@ -216,6 +218,7 @@ public class StoreManagerCancellationRequestsController implements Initializable
 				
 				else if(timeDifference < 1 && timeDifference > 0)									//if less than 1 hour
 				{
+					refund=0.0;
 					amountForRefund = "Amount for refund : 0";
 				}
 				
@@ -258,7 +261,8 @@ public class StoreManagerCancellationRequestsController implements Initializable
    public void cancelApproved(ActionEvent event) throws IOException, InterruptedException {
 	   
 	   OrderEntity orderToCancel = null;
-		
+	   ArrayList<String> messageToServer = new ArrayList<String>();
+	   
 		if(this.ordrLstVw.getSelectionModel().isEmpty())	//if nothing was selected
 			GeneralMessageController.showMessage("No order was selected.");
 		else
@@ -276,7 +280,9 @@ public class StoreManagerCancellationRequestsController implements Initializable
 
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK){						//if pressed OK
-				MessageToSend message = new MessageToSend(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)), "cancelOrder");	//get the order ID
+				messageToServer.add(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13));		//get the order id
+				messageToServer.add(refund.toString());															//get the amount of refund
+				MessageToSend message = new MessageToSend(messageToServer, "cancelOrder");	//get the order ID
 
 				Client.getClientConnection().setDataFromUI(message);							//set the data and the operation to send from the client to the server
 				Client.getClientConnection().accept();										//sends to server

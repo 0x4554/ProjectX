@@ -2,10 +2,13 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import client.Client;
 import entities.ComplaintEntity;
+import entities.OrderEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +18,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.MessageToSend;
+import logic.TimeCalculation;
 
 /**
  * This class is the controller for the customer service worker handle complaint boundary
@@ -35,6 +40,7 @@ import logic.MessageToSend;
  */
 public class CustomerServiceWorkerHandleComplaintController implements Initializable {
 
+	private final long Hours_To_Reply = 24;
 	@FXML
 	private TextArea rplyTxtArea;
 
@@ -49,7 +55,11 @@ public class CustomerServiceWorkerHandleComplaintController implements Initializ
 
 	@FXML
 	private Button rplyTCsmrBtn;
+	
+	@FXML 
+	private Label cmplntTmToRplyLbl;
 	private ComplaintEntity complaint;
+	private OrderEntity order;
 
 	
 	/**
@@ -68,9 +78,26 @@ public class CustomerServiceWorkerHandleComplaintController implements Initializ
 	 * Setter for the complaint entity
 	 * @param complaint
 	 */
-	public void setComplaint(ComplaintEntity complaint)
+	public void setComplaint(ComplaintEntity complaint,OrderEntity order)
 	{
 		this.complaint = complaint;
+		this.order=order;
+	}
+	
+	/**
+	 * This method checks if the complaint was not handled within 24 hours
+	 * If not, forces a full refund as compensation
+	 */
+	public void checkIfLaterResponse()
+	{
+		Long timeDiff = TimeCalculation.calculateTimeDifference(new Timestamp(System.currentTimeMillis()), complaint.getFiledOn());
+		if((timeDiff = Hours_To_Reply - TimeUnit.MILLISECONDS.toHours(timeDiff)) < 0)		//check if over 48 hours
+		{
+			this.cmplntTmToRplyLbl.setText("Over "+Hours_To_Reply+" hours has passed, automatic full refund.");
+			this.rfndChkBx.setSelected(true);
+			this.rfndChkBx.setDisable(true);
+		}
+		
 	}
 	
 	/**
@@ -87,7 +114,7 @@ public class CustomerServiceWorkerHandleComplaintController implements Initializ
 			return;
 		}
 		
-		if(this.rfndChkBx.isSelected() && (this.amntRfdTxtBx.getText().isEmpty() || Double.parseDouble(this.amntRfdTxtBx.getText()) <= 0))	//check if filled compensation
+		if(this.rfndChkBx.isSelected() && !this.rfndChkBx.isDisabled() && (this.amntRfdTxtBx.getText().isEmpty() || Double.parseDouble(this.amntRfdTxtBx.getText()) <= 0))	//check if filled compensation
 		{
 			GeneralMessageController.showMessage("Enter valid amount for compensation, or uncheck the check box");
 			return;
@@ -95,7 +122,10 @@ public class CustomerServiceWorkerHandleComplaintController implements Initializ
 		
 		else if(this.rfndChkBx.isSelected())			//if selected a compensation
 		{
-			complaint.setCompensation(Double.parseDouble(this.amntRfdTxtBx.getText()));
+			if(this.rfndChkBx.isDisabled())								//if response is late and requires a full refund
+				complaint.setCompensation(order.getTotalPrice());
+			else															//else set compensation amount
+				complaint.setCompensation(Double.parseDouble(this.amntRfdTxtBx.getText()));
 		}
 		complaint.setStoreReply(this.rplyTxtArea.getText());
 		complaint.setOrderID(this.complaint.getOrderID()); 			//set the order id for the complaint

@@ -87,6 +87,7 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 	private ArrayList<OrderEntity> listOfOrders;
 	private Image complaintImage;
 	private ComplaintEntity complaint;
+	private OrderEntity orderToComplaint;
 
 	private ObservableList<String> listOfActiveComplaintString;
 	private ObservableList<String> listOfInActiveComplaintSting;
@@ -191,6 +192,7 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 			{
 				if(this.listToDisplayDetails.getSelectionModel().getSelectedItem().substring(27).equals(order.getOrderID().toString())) 		//check which order was selected
 				{
+					this.orderToComplaint=order;	//set the order 
 				TreeItem<String> OrderID = new TreeItem<>("Order number : "+order.getOrderID().toString()); //set the branch as the product's name to be the parent of it's details
 							/* Set all the order's details to be leaves on the branch */
 				TreeItem<String> totalprice = new TreeItem<>("Total price : "+order.getTotalPrice().toString()); 		//create a new leaf
@@ -335,7 +337,8 @@ public class CustomerServiceWorkerComplaintController implements Initializable {
 				Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerHandleComplaintBoundary.fxml").openStream());
 				CustomerServiceWorkerHandleComplaintController cswscic = new CustomerServiceWorkerHandleComplaintController();
 				cswscic = loader.getController();
-				cswscic.setComplaint(this.complaint);
+				cswscic.setComplaint(this.complaint,this.orderToComplaint);
+				cswscic.checkIfLaterResponse();
 				Stage primaryStage = new Stage();
 				Scene scene = new Scene(root);
 				primaryStage.setTitle("Customer Service worker main menu");

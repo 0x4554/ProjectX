@@ -22,6 +22,7 @@
             <TextField fx:id="amntRfdTxtBx" layoutX="398.0" layoutY="476.0" prefHeight="31.0" prefWidth="197.0" promptText="Amount for compensation" />
             <Button fx:id="bckBtn" layoutX="228.0" layoutY="530.0" mnemonicParsing="false" onAction="#backToComplaints" text="Back" />
             <Button fx:id="rplyTCsmrBtn" layoutX="454.0" layoutY="530.0" mnemonicParsing="false" onAction="#replyToCustomer" text="Reply to customer" />
+            <Label fx:id="cmplntTmToRplyLbl" layoutX="193.0" layoutY="449.0" textFill="#e81010" />
          </children>
       </Pane>
    </children>
