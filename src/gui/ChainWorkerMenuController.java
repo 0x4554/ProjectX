@@ -43,6 +43,8 @@ public class ChainWorkerMenuController extends MenuController implements Initial
 		Parent root = loader.load(getClass().getResource("/gui/ChainWorkerMenuBoudary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		ChainWorkerMenuController cmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		primaryStage.setTitle("Chain worker's main menu");
 		primaryStage.setScene(scene);
@@ -62,6 +64,8 @@ public class ChainWorkerMenuController extends MenuController implements Initial
 			Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 			Stage primaryStage = new Stage();
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("Login");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -84,6 +88,8 @@ public class ChainWorkerMenuController extends MenuController implements Initial
 		edit.ShowAllProduct();
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Edit Product's");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -104,6 +110,8 @@ public class ChainWorkerMenuController extends MenuController implements Initial
 		edit.Show();
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Edit Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -126,6 +134,8 @@ public class ChainWorkerMenuController extends MenuController implements Initial
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();

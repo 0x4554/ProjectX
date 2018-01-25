@@ -57,7 +57,9 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerMenuBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);		
+		Scene scene=new Scene(root);	
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Customer Service worker main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -75,6 +77,8 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerComplaintsBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		CustomerServiceWorkerComplaintController cswmcc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		cswmcc.showComplaints();
 		
@@ -98,7 +102,8 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -139,7 +144,8 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -163,7 +169,8 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		cswsvrc.showReports();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Customer service expert verbal reports");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -187,6 +194,8 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();

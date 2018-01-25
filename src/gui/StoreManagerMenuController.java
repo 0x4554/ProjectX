@@ -84,6 +84,8 @@ public class StoreManagerMenuController extends MenuController implements Initia
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		StoreManagerMenuController smmc = new StoreManagerMenuController();
 		smmc = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		primaryStage.setTitle("Store manager's main menu");
@@ -105,7 +107,8 @@ public class StoreManagerMenuController extends MenuController implements Initia
 		 cna.setConnectionData(this,this.store);
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
-			
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("New Accout");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -155,7 +158,8 @@ public class StoreManagerMenuController extends MenuController implements Initia
 		 s.showStoreDetails();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
-			
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("Generate Report");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -181,7 +185,8 @@ public class StoreManagerMenuController extends MenuController implements Initia
 		 s.showOrders();
 		 Stage primaryStage=new Stage();
 			Scene scene=new Scene(root);
-			
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			primaryStage.setTitle("Cancelation Requests");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -204,7 +209,8 @@ public class StoreManagerMenuController extends MenuController implements Initia
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -239,6 +245,8 @@ public class StoreManagerMenuController extends MenuController implements Initia
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();

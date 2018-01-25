@@ -70,6 +70,8 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 		 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		StoreWorkerMenuController swm = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		swm.setConnectionData(this);
 		swm.setStore();
@@ -96,6 +98,8 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -145,7 +149,8 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -182,7 +187,8 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 		csnc.initComboBox(allSurveys);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("New Survey");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -205,6 +211,8 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 		sc.ShowAllProduct();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Promote Sale");
 		primaryStage.setScene(scene);
 		primaryStage.show();

@@ -334,9 +334,11 @@ public class ChainStoreManagerSelectStoreController implements Initializable {
 	 */
 	private void OrderReport() throws InterruptedException, IOException
 	{
-	
+		///ArrayList to send in the form of ("all" if the all store OR "<the store name>" for a specific store,<"number"> for the wanted quarter of "all" ////
+
 		ArrayList<String> message = new ArrayList<String>();
-		message.add("all");
+		message.add(this.selectedStore.getBranchName());
+//		message.add("all");
 		message.add("all");
 		MessageToSend messageToSend = new MessageToSend(message, "getAllOrders");
 		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB

@@ -92,6 +92,8 @@ public class CustomerMenuController extends MenuController implements Initializa
 
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		CustomerMenuController cmc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
@@ -112,6 +114,7 @@ public class CustomerMenuController extends MenuController implements Initializa
 		ord.setConnectionData(this);
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
 		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -134,6 +137,8 @@ public class CustomerMenuController extends MenuController implements Initializa
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -164,6 +169,7 @@ public class CustomerMenuController extends MenuController implements Initializa
 			adc.setConnectionData(this, custent);
 			Stage primaryStage = new Stage();
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add("/gui/LoginStyle.css");
 
 			primaryStage.setTitle("Account details");
 			primaryStage.setScene(scene);
@@ -215,6 +221,8 @@ public class CustomerMenuController extends MenuController implements Initializa
 		Parent root = loader.load(getClass().getResource("/gui/UpdateAccountBoundary.fxml").openStream());
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Details");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -236,6 +244,8 @@ public class CustomerMenuController extends MenuController implements Initializa
 		Parent root = loader.load(getClass().getResource("/gui/LoginBoundary.fxml").openStream());
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Login");
 		primaryStage.setScene(scene);
 		primaryStage.show();

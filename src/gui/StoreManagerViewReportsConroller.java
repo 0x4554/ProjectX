@@ -266,7 +266,7 @@ public class StoreManagerViewReportsConroller implements Initializable {
 	{
 	
 		ArrayList<String> message = new ArrayList<String>();
-		message.add("all");
+		message.add(store.getBranchName());
 		message.add("all");
 		MessageToSend messageToSend = new MessageToSend(message, "getAllOrders");
 		Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB

@@ -226,9 +226,9 @@ public class StoreWorkerPromoteSaleController {
 		                            setGraphic(vb);
 		                    	}
 		                    	if(product.getProductDominantColor().equals("none"))
-		                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        "+product.getSale()+product.getProductPrice()+"¤");
+		                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getSale()+product.getProductPrice()+"¤");
 		                    	else
-			                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" ,in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        "+product.getSale()+product.getProductPrice()+"¤");
+			                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" ,in  "+product.getProductDominantColor()+"  color's  "+"\n        price:  "+product.getSale()+product.getProductPrice()+"¤");
 		                        setFont(Font.font(18));
 		                    }
 		                }
@@ -358,13 +358,20 @@ public class StoreWorkerPromoteSaleController {
 
 			if(!(PriceTxt.getText().equals(""))) 
 			{
-				pr=Double.parseDouble(PriceTxt.getText());
-				if(pr>=product.getProductPrice() || pr<=0)//If the product price is not valid
+				try {
+					pr=Double.parseDouble(PriceTxt.getText());
+					if(pr>=product.getProductPrice() || pr<=0)//If the product price is not valid
+					{
+						GeneralMessageController.showMessage("The price is not vaild for the sale");
+						return;
+					}
+					else product.setSalePrice(pr);
+			}catch(NumberFormatException e)
 				{
-					GeneralMessageController.showMessage("The price is not vaild for the sale");
-					return;
+				GeneralMessageController.showMessage("Incorrect price");
+				return;
 				}
-				else product.setSalePrice(Double.parseDouble(PriceTxt.getText()));
+				
 			}
 			else
 				{
