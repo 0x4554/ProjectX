@@ -229,8 +229,12 @@ public class UpdateSurveyController implements Initializable{
 	     * @throws IOException 
 	     */
 	    public void cancelUpdate(ActionEvent event) throws IOException {
+	    	
 	    	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    	this.cswmc.showMenu();	
+	    	if(this.cswmc!=null)
+	    		this.cswmc.showMenu();
+	    	else
+	    		this.csnc.showMenu();
 	    }
 	    
 	    

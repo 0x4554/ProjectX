@@ -65,6 +65,7 @@ public class ChooseSurveyNumberController implements Initializable{
 	 */
 	public void continueToSurvey(ActionEvent event) throws IOException, InterruptedException {
 		
+		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		if(srvCmbBox.getSelectionModel().getSelectedItem()!=null) {
 		
 			FXMLLoader loader = new FXMLLoader();
@@ -199,6 +200,7 @@ public class ChooseSurveyNumberController implements Initializable{
 		Scene scene=new Scene(root);
 		ChooseSurveyNumberController chs = loader.getController();					//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		chs.setConnectionData(this.swmc);
+		chs.setConnectionData(this.cswmc);
 		primaryStage.setTitle("Store worker main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -213,12 +215,37 @@ public class ChooseSurveyNumberController implements Initializable{
 	public CustomerServiceWorkerMenuController getCswmc() {
 		return cswmc;
 	}
+	
+	
+	/**
+	 * method for loading the combobox data
+	 * 
+	 * @throws InterruptedException
+	 */
+	public void loadComboBox() throws InterruptedException {
+		MessageToSend toServer = new MessageToSend(null, "getNumberOfSurveys");
+		Client.getClientConnection().setDataFromUI(toServer);
+		Client.getClientConnection().accept();
+		
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();
+		
+		ArrayList<Integer> allSurveys=(ArrayList<Integer>)Client.getClientConnection().getMessageFromServer().getMessage();
+
+		this.initComboBox(allSurveys);
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		hidenLbl.setVisible(false);
-
+		try {
+			this.loadComboBox();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

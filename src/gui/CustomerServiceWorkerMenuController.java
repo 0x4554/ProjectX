@@ -59,6 +59,7 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 	public void showMenu() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CustomerServiceWorkerMenuBoundary.fxml").openStream());
+		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);	
 		scene.getStylesheets().add("/gui/LoginStyle.css");
@@ -131,17 +132,6 @@ public class CustomerServiceWorkerMenuController extends MenuController implemen
 		ChooseSurveyNumberController csnc=loader.getController();
 		csnc.setConnectionData(this);
 		
-		MessageToSend toServer = new MessageToSend(null, "getNumberOfSurveys");
-		Client.getClientConnection().setDataFromUI(toServer);
-		Client.getClientConnection().accept();
-		
-		while(!Client.getClientConnection().getConfirmationFromServer())
-			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer();
-		
-		ArrayList<Integer> allSurveys=(ArrayList<Integer>)Client.getClientConnection().getMessageFromServer().getMessage();
-
-		csnc.initComboBox(allSurveys);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		scene.getStylesheets().add("/gui/LoginStyle.css");
