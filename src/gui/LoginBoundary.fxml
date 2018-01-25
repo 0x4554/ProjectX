@@ -8,17 +8,17 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="454.0" prefWidth="374.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
+<AnchorPane prefHeight="396.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
    <children>
       <AnchorPane layoutX="-134.0" layoutY="-180.0" prefHeight="200.0" prefWidth="200.0" />
       <Label layoutX="14.0" layoutY="42.0" prefHeight="21.0" prefWidth="78.0" text="UserName" />
       <Label layoutX="17.0" layoutY="102.0" prefHeight="21.0" prefWidth="72.0" text="Password" />
-      <Label layoutX="24.0" layoutY="210.0" text="Server IP" />
+      <Label fx:id="ipLbl" layoutX="25.0" layoutY="166.0" text="Server IP" />
       <TextField id="usrNmTxtFld" fx:id="usrNmTxtFld" layoutX="100.0" layoutY="37.0" />
       <PasswordField id="psswrdTxtFld" fx:id="psswrdTxtFld" layoutX="100.0" layoutY="97.0" />
-      <TextField id="srvrIPTxtFld" fx:id="srvrIPTxtFld" layoutX="100.0" layoutY="205.0" />
-      <Button id="lgnBtn" fx:id="lgnBtn" layoutX="157.0" layoutY="405.0" mnemonicParsing="false" onAction="#pressedLogin" text="Login" />
-      <Hyperlink fx:id="whatLnk" layoutX="100.0" layoutY="238.0" onAction="#linkListener" text="What is that?" />
-      <TextArea fx:id="ipTxtArea" layoutX="46.0" layoutY="268.0" prefHeight="124.0" prefWidth="275.0" text="An IP (stands for Internet Protocol)&#10;is the address of the server&#10;computer which provides&#10;services to you.&#10;if you don't know your server's&#10;IP address, contact our technical &#10;support for help." />
+      <TextField id="srvrIPTxtFld" fx:id="srvrIPTxtFld" layoutX="101.0" layoutY="161.0" />
+      <Button id="lgnBtn" fx:id="lgnBtn" layoutX="150.0" layoutY="320.0" mnemonicParsing="false" onAction="#pressedLogin" text="Login" />
+      <Hyperlink fx:id="whatLnk" layoutX="101.0" layoutY="194.0" onAction="#linkListener" text="What is that?" />
+      <TextArea fx:id="ipTxtArea" layoutX="47.0" layoutY="224.0" prefHeight="85.0" prefWidth="262.0" text="An IP (stands for Internet Protocol)&#10;is the address of the server&#10;computer which provides&#10;services to you.&#10;if you don't know your server's&#10;IP address, contact our technical &#10;support for help." />
    </children>
 </AnchorPane>
