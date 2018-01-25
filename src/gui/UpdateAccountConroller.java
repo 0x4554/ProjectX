@@ -88,11 +88,29 @@ public class UpdateAccountConroller implements Initializable{
      * method to verify all needed fields are updated
      * 
      * @return true if all fields are OK and false if one or more is empty
+     * @throws IOException 
      */
-    public boolean checkValidFields() {
+    public int checkValidFields() throws IOException {
     	if(phnNumTxtFld.getText().isEmpty() || mailTxtFld.getText().isEmpty() || crdtCrdTxtFld.getText().isEmpty() || adrsTxtFld.getText().isEmpty())
-    		return false;
-    	return true;
+    		return -1;
+    	else {
+    		try {
+        		Long.parseLong(phnNumTxtFld.getText());
+        	}
+        	catch(Exception e) {
+        		GeneralMessageController.showMessage("Ilegal phone number");
+        		return 0;
+        	}
+        	
+        	try {
+        		Long.parseLong(crdtCrdTxtFld.getText());
+        	}
+        	catch(Exception e) {
+        		GeneralMessageController.showMessage("Ilegal credit card number");
+        		return 0;
+        	}
+        	return 1;
+    	}
     }
     
     
@@ -104,7 +122,8 @@ public class UpdateAccountConroller implements Initializable{
      * @throws InterruptedException 
      */
     public void updateAccountDetailsPressed(ActionEvent event) throws IOException, InterruptedException {
-    	if(checkValidFields()) {													//checks all fields are filled
+    	int chkflds=checkValidFields();
+    	if(chkflds==1) {													//checks all fields are filled
     		if(aprvChkBox.isSelected()) {											//checks verification checkbox
     			updateFieldsData();													//reads data from fields for customers details update
     			if(sendUpdates()) {													//handles send to server
@@ -121,10 +140,12 @@ public class UpdateAccountConroller implements Initializable{
     			aprvChngsLbl.setVisible(true);										//reveals hidden label
     	}
     	
-    	else {
+    	else if(chkflds==-1){
     		GeneralMessageController.showMessage("Please fill in all the fields");
     	}
+
     }
+    
     
     /**
      * method to send updates to the server in order to insert them into the Database
@@ -151,9 +172,11 @@ public class UpdateAccountConroller implements Initializable{
     
     /**
      * method for updating the current customer details
+     * @throws IOException 
      * 
      */
-    public void updateFieldsData() {										
+    public void updateFieldsData(){		
+    	
     	this.customerEnt.setPhoneNumber(phnNumTxtFld.getText());			//all changes are saved to the current customer
     	this.customerEnt.setEmailAddress(mailTxtFld.getText());
     	this.customerEnt.setCreditCardNumber(Long.parseLong(crdtCrdTxtFld.getText()));

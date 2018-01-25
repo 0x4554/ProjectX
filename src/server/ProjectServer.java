@@ -2738,7 +2738,7 @@ private String[] getSurveyQuestions() throws SQLException {
 	 stmnt.executeUpdate("UPDATE projectx.customers SET PhoneNumber='"+customer.getPhoneNumber()+
 	 		"',Address='"+customer.getAddress()+
 	 		"',CreditCard='"+customer.getCreditCardNumber()+
-	 		"',Email='"+customer.getEmailAddress()+"'");
+	 		"',Email='"+customer.getEmailAddress()+"' WHERE Username='"+customer.getUserName()+"'");
 	 }
 	 catch(Exception e) {
 		 
