@@ -23,11 +23,31 @@ public class SurveyEntity implements Serializable{
 	}
 
 	
+	private int surveyNum;
 	private String[] questions=new String[6];
 	private int[] singleRank = new int[6];
 	
 	private int[][] totalRanks = new int[6][10];
 	
+	
+	
+	/**
+	 *Getter for the surveyNum
+	 * @return the surveyNum
+	 */
+	public int getSurveyNum() {
+		return surveyNum;
+	}
+
+
+	/**
+	 *Setter for the surveyNum
+	 * @param surveyNum the surveyNum to set
+	 */
+	public void setSurveyNum(int surveyNum) {
+		this.surveyNum = surveyNum;
+	}
+
 	
 	
 	/**

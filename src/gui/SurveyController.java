@@ -71,14 +71,14 @@ public class SurveyController implements Initializable {
     private Label q6Lbl;
 	
 	private SurveyEntity srvy;
-	private StoreWorkerMenuController swmc;
+	private ChooseSurveyNumberController csnc;
 	
 	/**
 	 * Setter for the previous controller
 	 * @param storeWorkerMenu
 	 */
-	public void setConnectionData(StoreWorkerMenuController storeWorkerMenu) {
-		swmc = storeWorkerMenu;
+	public void setConnectionData(ChooseSurveyNumberController choosesurv) {
+		csnc = choosesurv;
 		srvy=new SurveyEntity();
 	}
 	
@@ -138,7 +138,7 @@ public class SurveyController implements Initializable {
 			GeneralMessageController.showMessage("There was a problem\nPlease inform the technical support and try again later");
 		else{
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.swmc.showMenu();
+			this.csnc.showMenu();
 			GeneralMessageController.showMessage("Survey was sent successfully");
 		}
 		
@@ -166,7 +166,7 @@ public class SurveyController implements Initializable {
 	 */
 	public void bckToPrevMnu(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.swmc.showMenu();
+		this.csnc.showMenu();
 	}
 
 
