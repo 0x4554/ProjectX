@@ -183,6 +183,8 @@ public class CartController implements Initializable {
 		ccoc.setOrder(this.newOrder);		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Your cart");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -218,6 +220,8 @@ public class CartController implements Initializable {
 
 			Stage primaryStage = new Stage();
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			cnoc.setOrderDetails(newOrder);
 			primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
 			primaryStage.setScene(scene);

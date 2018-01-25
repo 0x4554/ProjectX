@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.ChainStoreManagerEntity;
+import entities.ChainWorkerEntity;
 import entities.CustomerServiceWorkerEntity;
 import entities.ServiceExpertEntity;
 import javafx.event.ActionEvent;
@@ -79,22 +81,107 @@ public class CreateNewServiceExpertOrWorkerController implements Initializable{
 					{
 						ServiceExpertEntity se = new ServiceExpertEntity();
 						se.setEmailAddress(emlTxt.getText());
+						try {
+						    double number=Double.parseDouble(pnumTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild phone number");
+							return;
+						}
 						se.setPhoneNumber(pnumTxt.getText());
 						se.setPassword(pswrd1Txt.getText());
 						se.setUserName(nmTxt.getText());
+						try {
+							long id=Long.parseLong(idTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild ID");
+							return;
+						}
 						se.setID(Long.parseLong(idTxt.getText()));
-						se.setUserType("SE");
+						se.setUserType("CSE");
+						
+						MessageToSend msg=new MessageToSend(se, "createUser");			//defining the job for the server
+						Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
+						Client.getClientConnection().accept();								//sending data to server
+					}else if (this.entity=="Chain Worker")						//check which user to create. create store manager
+					{
+						ChainWorkerEntity se = new ChainWorkerEntity();
+						se.setEmailAddress(emlTxt.getText());
+						try {
+						    double number=Double.parseDouble(pnumTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild phone number");
+							return;
+						}
+						se.setPhoneNumber(pnumTxt.getText());
+						se.setPassword(pswrd1Txt.getText());
+						se.setUserName(nmTxt.getText());
+						try {
+							long id=Long.parseLong(idTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild ID");
+							return;
+						}
+						se.setID(Long.parseLong(idTxt.getText()));
+						se.setUserType("CW");
 						
 						MessageToSend msg=new MessageToSend(se, "createUser");			//defining the job for the server
 						Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
 						Client.getClientConnection().accept();								//sending data to server
 					}
-					else if(this.entity=="Customer Servise Worker")				//Create store worker
+					else if (this.entity=="Chain Manager")						//check which user to create. create store manager
+					{
+						ChainStoreManagerEntity se = new ChainStoreManagerEntity();
+						se.setEmailAddress(emlTxt.getText());
+						try {
+						    double number=Double.parseDouble(pnumTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild phone number");
+							return;
+						}
+						se.setPhoneNumber(pnumTxt.getText());
+						se.setPassword(pswrd1Txt.getText());
+						se.setUserName(nmTxt.getText());
+						try {
+							long id=Long.parseLong(idTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild ID");
+							return;
+						}
+						se.setID(Long.parseLong(idTxt.getText()));
+						se.setUserType("CSM");
+						
+						MessageToSend msg=new MessageToSend(se, "createUser");			//defining the job for the server
+						Client.getClientConnection().setDataFromUI(msg);					//arranging the sending of the wanted message
+						Client.getClientConnection().accept();								//sending data to server
+					}
+					else if(this.entity=="Customer Service Worker")				//Create store worker
 					{
 						CustomerServiceWorkerEntity csw = new CustomerServiceWorkerEntity();
+						
+						try {
+							long id=Long.parseLong(idTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild ID");
+							return;
+						}
 						csw.setID(Long.parseLong(idTxt.getText()));
 						csw.setEmailAddress(emlTxt.getText());
 						csw.setPassword(pswrd1Txt.getText());
+						
+						try {
+						    double number=Double.parseDouble(pnumTxt.getText());
+						}catch(NumberFormatException e)
+						{
+							GeneralMessageController.showMessage("Invaild phone number");
+							return;
+						}
 						csw.setPhoneNumber(pnumTxt.getText());
 						csw.setUserName(nmTxt.getText());
 						csw.setUserType("CSW");

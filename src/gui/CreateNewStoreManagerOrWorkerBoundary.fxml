@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -7,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewStoreManagerOrWorkerController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewStoreManagerOrWorkerController">
    <children>
       <Label layoutX="236.0" layoutY="27.0" text="Create">
          <font>
@@ -27,9 +31,9 @@
       <Button fx:id="bckBtn" layoutX="176.0" layoutY="436.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
       <Button fx:id="crtBtn" layoutX="319.0" layoutY="436.0" mnemonicParsing="false" onAction="#createNewUser" text="Create" />
       <Label layoutX="90.0" layoutY="392.0" text="Branch:" />
-      <TextField fx:id="brnchTxt" layoutX="257.0" layoutY="387.0" />
       <Label layoutX="209.0" layoutY="486.0" text="All fields are required" textFill="#d71111" />
       <PasswordField fx:id="pswrdTxt" layoutX="257.0" layoutY="297.0" />
       <PasswordField fx:id="pswrd2Txt" layoutX="257.0" layoutY="343.0" />
+      <ComboBox fx:id="strCmbBx" layoutX="257.0" layoutY="387.0" prefHeight="31.0" prefWidth="186.0" promptText="Branch ID" />
    </children>
 </Pane>

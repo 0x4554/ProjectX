@@ -54,7 +54,6 @@ public class ChainStoreManagerMenuController extends MenuController implements I
 		Parent root = loader.load(getClass().getResource("/gui/ChainStoreManagerMenuBoundary.fxml").openStream());
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		primaryStage.setTitle("Chain store manager main menu");
 		primaryStage.setScene(scene);
@@ -77,7 +76,6 @@ public class ChainStoreManagerMenuController extends MenuController implements I
 		csmscc.showStores();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		primaryStage.setTitle("Store reports");
 		primaryStage.setScene(scene);
@@ -126,7 +124,6 @@ public class ChainStoreManagerMenuController extends MenuController implements I
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
-		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);

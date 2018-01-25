@@ -166,6 +166,8 @@ public class CustomerCheckOutController implements Initializable {
 
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		cnoc.setOrderDetails(newOrder);
 		primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
 		primaryStage.setScene(scene);
@@ -317,6 +319,8 @@ public class CustomerCheckOutController implements Initializable {
 
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Customer's main menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();

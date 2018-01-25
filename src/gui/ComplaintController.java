@@ -129,6 +129,8 @@ public class ComplaintController implements Initializable{
 		CustomerOrderDetailsController cocdc = loader.getController();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Your Orders");
 		primaryStage.setScene(scene);
 		primaryStage.show();

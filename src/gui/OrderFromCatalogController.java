@@ -185,6 +185,8 @@ public class OrderFromCatalogController implements Initializable{
 		CreateNewOrderController cnoc = loader.getController();
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
        for(int i=0;i<this.productsInOrder.size();i++)//transfer the products to products list in the order 
        {
     	   newOrder.setProductsInOrder(productsInOrder.get(i));

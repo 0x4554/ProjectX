@@ -79,6 +79,8 @@ public class CustomerOrderController implements Initializable {
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Select store");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -99,6 +101,8 @@ public class CustomerOrderController implements Initializable {
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Your Orders");
 		primaryStage.setScene(scene);
 		primaryStage.show();

@@ -19,6 +19,6 @@ public class ServiceExpertEntity extends UserEntity {
 	 */
 	public ServiceExpertEntity()
 	{
-		super("serviceExpert");
+		super("CSE");
 	}
 }

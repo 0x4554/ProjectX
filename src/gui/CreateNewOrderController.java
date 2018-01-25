@@ -111,6 +111,8 @@ public class CreateNewOrderController implements Initializable {
 
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		csdpc.setOrder(newOrder);
 		primaryStage.setTitle("Search for self defined product");
 
@@ -134,6 +136,8 @@ public class CreateNewOrderController implements Initializable {
 		acc.setOrder(this.newOrder);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Add a card");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -153,6 +157,8 @@ public class CreateNewOrderController implements Initializable {
 		cc.showCart();
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Your cart");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -172,6 +178,8 @@ public void addItemFromCatalog(ActionEvent event) throws IOException, Interrupte
 		ord.showCatalog(this.newOrder);                                              //Call the method show catalog
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(pRoot);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -189,6 +197,8 @@ public void addItemFromCatalog(ActionEvent event) throws IOException, Interrupte
 		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -200,7 +210,6 @@ public void addItemFromCatalog(ActionEvent event) throws IOException, Interrupte
 		// TODO Auto-generated method stub
 		this.newOrder = new OrderEntity();
 		this.newOrder.setUserName(Client.getClientConnection().getUsername()); 	//set the customer user name to the order
-		//this.newOrder.setStore(store);
 		this.PrdctsTrVw = new TreeView<>();
 	}
 }

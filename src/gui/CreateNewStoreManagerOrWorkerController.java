@@ -2,11 +2,15 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
+import entities.StoreEntity;
 import entities.StoreManagerEntity;
 import entities.StoreWorkerEntity;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -41,10 +46,13 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
     @FXML private TextField brnchTxt;
     @FXML private Button bckBtn;
     @FXML private Button crtBtn;
+    @FXML private ComboBox<String> strCmbBx;
 
-    ChooseUserToCreateController cutc;
-	AdministratorMenuController am;
-	String entity;
+   private ChooseUserToCreateController cutc;
+	private AdministratorMenuController am;
+	private String entity;
+	private ObservableList<String> ObsListOfStores;
+	private ArrayList<StoreEntity> listOfStores;
 	
 	public void setEntity(String s)
 	{
@@ -58,6 +66,33 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 	 public void setConnectionData(ChooseUserToCreateController m)
 	 {
 		 this.cutc=m;
+	 }
+	 
+	 /**
+	  * This method loads the store in the DB
+	  * 
+	  * @throws InterruptedException Thread sleep
+	  */
+	 public void loadStores() throws InterruptedException
+	 {
+		 MessageToSend messageToSend = new MessageToSend("", "getAllStores");
+			Client.getClientConnection().setDataFromUI(messageToSend); //set operation to get all stores from DB
+			Client.getClientConnection().accept();
+			while (!(Client.getClientConnection().getConfirmationFromServer())) //wait for server response
+				Thread.sleep(100);
+			Client.getClientConnection().setConfirmationFromServer(); //reset to false
+			//		ArrayList<StoreEntity> listOfStoresFromDB = new ArrayList<StoreEntity>();
+			messageToSend = Client.getClientConnection().getMessageFromServer();
+			listOfStores = (ArrayList<StoreEntity>) messageToSend.getMessage(); //get the list of stores from the message class
+			
+			ObsListOfStores = FXCollections.observableArrayList();
+			
+			for(StoreEntity store : listOfStores)
+			{
+				ObsListOfStores.add("Branch ID : "+Integer.toString(store.getBranchID()) +", "+ store.getBranchName());
+			}
+			
+			this.strCmbBx.setItems(ObsListOfStores);
 	 }
 	
 	 
@@ -79,11 +114,31 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 				if(this.entity=="Store Manager")						//check which user to create. create store manager
 				{
 					StoreManagerEntity sm = new StoreManagerEntity();
-					sm.setBranch(Integer.parseInt(brnchTxt.getText()));
+					if(this.strCmbBx.getSelectionModel().isEmpty())
+					{
+						GeneralMessageController.showMessage("Please select branch");
+						return;
+					}
+					
+					sm.setBranch(Integer.parseInt(this.strCmbBx.getSelectionModel().getSelectedItem().substring(12,13)));
 					sm.setEmailAddress(emlTxt.getText());
+					try {
+					    double number=Double.parseDouble(pnumTxt.getText());
+					}catch(NumberFormatException e)
+					{
+						GeneralMessageController.showMessage("Invaild phone number");
+						return;
+					}
 					sm.setPhoneNumber(pnumTxt.getText());
 					sm.setPassword(pswrdTxt.getText());
 					sm.setUserName(nmTxt.getText());
+					try {
+						long id=Long.parseLong(idTxt.getText());
+					}catch(NumberFormatException e)
+					{
+						GeneralMessageController.showMessage("Invaild ID");
+						return;
+					}
 					sm.setID(Long.parseLong(idTxt.getText()));
 					sm.setUserType("SM");
 					
@@ -93,11 +148,39 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 				}
 				else if(this.entity=="Store Worker")				//Create store worker
 				{
-					StoreWorkerEntity sw = new StoreWorkerEntity(Integer.parseInt(idTxt.getText()),Integer.parseInt(brnchTxt.getText()));
-					sw.setBranch(Integer.parseInt(brnchTxt.getText()));
+					try {
+						int idW=Integer.parseInt(idTxt.getText());
+					}catch(NumberFormatException e)
+					{
+						GeneralMessageController.showMessage("Invaild ID");
+						return;
+					}
+					
+					StoreWorkerEntity sw = new StoreWorkerEntity();
+					if(this.strCmbBx.getSelectionModel().isEmpty())
+					{
+						GeneralMessageController.showMessage("Please select branch");
+						return;
+					}
+					
+					sw.setBranch(Integer.parseInt(this.strCmbBx.getSelectionModel().getSelectedItem().substring(12,13)));
+					try {
+						long id=Long.parseLong(idTxt.getText());
+					}catch(NumberFormatException e)
+					{
+						GeneralMessageController.showMessage("Invaild ID");
+						return;
+					}
 					sw.setID(Long.parseLong(idTxt.getText()));
 					sw.setEmailAddress(emlTxt.getText());
 					sw.setPassword(pswrdTxt.getText());
+					try {
+					    double number=Double.parseDouble(pnumTxt.getText());
+					}catch(NumberFormatException e)
+					{
+						GeneralMessageController.showMessage("Invaild phone number");
+						return;
+					}
 					sw.setPhoneNumber(pnumTxt.getText());
 					sw.setUserName(nmTxt.getText());
 					sw.setUserType("SW");
@@ -143,7 +226,7 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 	 * @return false if there is empty required field
 	 */
 	public boolean checkRequiredFields() {
-		if(nmTxt.getText().isEmpty() || brnchTxt.getText().isEmpty() ||idTxt.getText().isEmpty() || pnumTxt.getText().isEmpty() || emlTxt.getText().isEmpty() || pswrdTxt.getText().isEmpty() || pswrd2Txt.getText().isEmpty())
+		if(nmTxt.getText().isEmpty() || idTxt.getText().isEmpty() || pnumTxt.getText().isEmpty() || emlTxt.getText().isEmpty() || pswrdTxt.getText().isEmpty() || pswrd2Txt.getText().isEmpty())
 			return false;
 
 		return true;
@@ -170,6 +253,12 @@ public class CreateNewStoreManagerOrWorkerController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
+		try {
+			loadStores();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

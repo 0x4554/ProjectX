@@ -57,7 +57,6 @@ public class CustomerServiceExpertMenuController extends MenuController implemen
 		
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		CustomerServiceExpertMenuController csem = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		csem.setConnectionData(this.clnt);
@@ -86,7 +85,6 @@ public class CustomerServiceExpertMenuController extends MenuController implemen
 		uvrc.setConnectionData(this);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
-		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		primaryStage.setTitle("Upload report");
 		primaryStage.setScene(scene);
@@ -121,7 +119,6 @@ public class CustomerServiceExpertMenuController extends MenuController implemen
 		c.showOrders(this.survey);
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		primaryStage.setTitle("Satisfaction report");
 		primaryStage.setScene(scene);
@@ -145,7 +142,6 @@ public class CustomerServiceExpertMenuController extends MenuController implemen
 		catl.showCatalog(); //Call the method show catalog
 		Stage primaryStage = new Stage(); //Set Stage->Show()
 		Scene scene = new Scene(pRoot);
-		scene.getStylesheets().add("/gui/LoginStyle.css");
 
 		primaryStage.setTitle("Zer-Li Catalog");
 		primaryStage.setScene(scene);

@@ -265,6 +265,8 @@ public class CustomerOrderDetailsController implements Initializable {
 		CustomerOrderController ord = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -341,6 +343,8 @@ public class CustomerOrderDetailsController implements Initializable {
 		 cmpc.setOrderID(Integer.parseInt(this.ordrLstVw.getSelectionModel().getSelectedItem().substring(13)));
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Complaint");
 		primaryStage.setScene(scene);
 		primaryStage.show();

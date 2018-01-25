@@ -14,6 +14,11 @@ package entities;
 public class StoreWorkerEntity extends UserEntity {
 	private int branchID;
 	private int workerID;
+	
+	public StoreWorkerEntity()
+	{
+		super("SW");
+	}
 	/**
 	 * Constructor for the StoreWorkerEntity.java class
 	 * invokes the UserEntity constructor for the store worker
@@ -21,7 +26,7 @@ public class StoreWorkerEntity extends UserEntity {
 	 * @param workerID the worker ID
 	 */
 	public StoreWorkerEntity(int workerID,int branchID) {
-		super("storeWorker");
+		super("SW");
 		this.branchID=branchID;
 		this.workerID=workerID;
 	}

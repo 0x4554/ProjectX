@@ -19,6 +19,6 @@ public class ChainStoreManagerEntity extends UserEntity {
 	 */
 	public ChainStoreManagerEntity()
 	{
-		super("chainStoreManager");
+		super("CSM");
 	}
 }

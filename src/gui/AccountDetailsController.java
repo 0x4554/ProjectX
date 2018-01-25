@@ -80,6 +80,8 @@ public class AccountDetailsController implements Initializable{
 		 uac.setFields();
 		 Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Update Details");
 		primaryStage.setScene(scene);
 		primaryStage.show();

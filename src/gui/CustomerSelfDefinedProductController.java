@@ -276,6 +276,8 @@ public class CustomerSelfDefinedProductController implements Initializable {
 
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		for(int i=0;i<this.productsInOrder.size();i++) //add products to the array list of the products in the order
 	       {
 	    	   newOrder.setProductsInOrder(productsInOrder.get(i));

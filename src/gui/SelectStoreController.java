@@ -103,6 +103,8 @@ public class SelectStoreController implements Initializable{
 
 			Stage primaryStage = new Stage();
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add("/gui/LoginStyle.css");
+
 			nom.setConnectionData(this.listOfStoresEntities.get(selectedStoreName)); //send the connection and the StoreEntity selected by the user
 			primaryStage.setTitle("New order from " + selectedStoreName);
 			primaryStage.setScene(scene);
@@ -127,6 +129,8 @@ public class SelectStoreController implements Initializable{
 		 CustomerOrderController ord = loader.getController();	//set the controller to the FindProductBoundary to control the SearchProductGUI window
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
+		scene.getStylesheets().add("/gui/LoginStyle.css");
+
 		primaryStage.setTitle("Order");
 		primaryStage.setScene(scene);
 		primaryStage.show();

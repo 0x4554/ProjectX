@@ -60,9 +60,11 @@ public class ChooseUserToCreateController implements Initializable{
 		{
 			ArrayList<String> al = new ArrayList<String>();	
 			al.add("Service Expert");
-			al.add("Customer Servise Worker");
+			al.add("Customer Service Worker");
 			al.add("Store Worker");
 			al.add("Store Manager");
+			al.add("Chain Manager");
+			al.add("Chain Worker");
 			
 			list = FXCollections.observableArrayList(al);
 			prmCmb.setItems(list);
@@ -85,7 +87,6 @@ public class ChooseUserToCreateController implements Initializable{
 				
 					FXMLLoader loader = new FXMLLoader();
 					Parent root = loader.load(getClass().getResource("/gui/CreateNewStoreManagerOrWorkerBoundary.fxml").openStream());
-				
 				
 					CreateNewStoreManagerOrWorkerController cns = loader.getController();
 					Stage primaryStage=new Stage();
@@ -115,6 +116,7 @@ public class ChooseUserToCreateController implements Initializable{
 					primaryStage.setScene(scene);
 					primaryStage.show();
 				}
+				
 			}
 			else			
 			{
