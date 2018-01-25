@@ -36,7 +36,7 @@ import javafx.util.Callback;
 import logic.MessageToSend;
 
 /**
- * This class is the controller for the add/delete/edit product from DB
+ * This class is the controller for the add/delete/edit operation of a product from DB
  * 
  * AddDeleteEditProductController.java
  *
@@ -74,7 +74,6 @@ public class AddDeleteEditProductController implements Initializable {
 	@FXML private TextField ImageTxt;
 	@FXML private TextField IDTxt;
 	
-	@FXML private Label warninglbl;
 	@FXML private ListView<ProductEntity> list;
 	@FXML private ComboBox<String> typeCmb=new ComboBox<String>();
 	 
@@ -82,9 +81,9 @@ public class AddDeleteEditProductController implements Initializable {
 	
 	
 	public ObservableList<String> Type_list=FXCollections.observableArrayList();
-    ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>();
+    ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>(); //array list of products from the data base
     public ObservableList<String> color_list=FXCollections.observableArrayList();
-	private ArrayList<String> dominantColors;
+	private ArrayList<String> dominantColors; //array list of colors
 	
 	
 	/*Constructor*/
@@ -93,7 +92,7 @@ public class AddDeleteEditProductController implements Initializable {
 		
 	}
 	/**
-	 * The method clear's the selection's made in the list view
+	 * The method clears the selections made in the list view
 	 * @param event
 	 */
 	public void ClearSelections(ActionEvent event)
@@ -105,35 +104,36 @@ public class AddDeleteEditProductController implements Initializable {
 	/**
 	 * The method update's the chosen product
 	 * @param event "Update Product" button clicked
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException for the loader
+	 * @throws InterruptedException for thread sleep
 	 */
 public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedException
 {
-	ProductEntity product=new ProductEntity();
-	ProductEntity OldProduct=new ProductEntity();
+	ProductEntity product=new ProductEntity();    //the new product after update
+	ProductEntity OldProduct=new ProductEntity(); //the old product before update
 	int flag=1;
-	if(list.getSelectionModel().getSelectedItem()!=null)
+	if(list.getSelectionModel().getSelectedItem()!=null) //if product was selected from the list view
 	{
 	    OldProduct=list.getSelectionModel().getSelectedItem();
 	    
-		if(!NameTxt.getText().equals(""))
+	    /*check the validation of the text fields that the user updated*/
+		if(!NameTxt.getText().equals(""))//check name
 		product.setProductName(NameTxt.getText());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
 			return;
 			}
 		
-		if(!typeCmb.getSelectionModel().isEmpty())
+		if(!typeCmb.getSelectionModel().isEmpty())//check type
 			product.setProductType(typeCmb.getSelectionModel().getSelectedItem());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");	
 			return;
 		}
 		
-		if(!(PriceTxt.getText().equals("")))
-		{	try
-		{
+		if(!(PriceTxt.getText().equals("")))//check price
+		{	try//check if characters were not entered
+			{
 				 Double price=Double.parseDouble(PriceTxt.getText());
 					if(price>0 && price <500)
 					       product.setProductPrice(price);
@@ -152,18 +152,18 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		}
 		else return;
 		
-		if(!(DescriptionTxt.getText().equals("")))
+		if(!(DescriptionTxt.getText().equals("")))//check description
 		product.setProductDescription(DescriptionTxt.getText());
 		else {
 			product.setProductDescription("");
 		}
 		
-		if(!(ImageTxt.getText().equals("")))
+		if(!(ImageTxt.getText().equals("")))//check image(if the user did not enter new image on update , keep the old image)
 		{
 			product.setProductImage(ImageTxt.getText());	
 		}
 		
-		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
+		if(!this.dmntClrCmb.getSelectionModel().isEmpty())//check the color
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
@@ -176,12 +176,13 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		return;
 		}
 	
-	if(flag==1)
+	if(flag==1)//product to update was chosen
 	{
-	if(UpdateProductInDB(product,OldProduct).equals("Success"))
+	if(UpdateProductInDB(product,OldProduct).equals("Success"))//update product in data base
 	{
-		ShowAllProduct();
+		ShowAllProduct();//show all products
 		GeneralMessageController.showMessage("Product was Updated successfully");
+		/*clear fields*/
 		NameTxt.clear();
 		PriceTxt.clear();
 		DescriptionTxt.clear();
@@ -193,6 +194,7 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 	else 
 	{
 		GeneralMessageController.showMessage("Update failed");
+		/*clear fields*/
 		NameTxt.clear();
 		PriceTxt.clear();
 		DescriptionTxt.clear();
@@ -209,12 +211,17 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 	    return;
 	}
 }
-	
+	/**
+	 * The method sets the details of chosen product from the list view
+	 * @param event click on a cell in the list view
+	 * @throws IOException
+	 */
 public void SetProductDetails(MouseEvent event) throws IOException
 {
 	ProductEntity product=new ProductEntity();
-	if(list.getSelectionModel().getSelectedItem() != null)
+	if(list.getSelectionModel().getSelectedItem() != null) //if product was selected
 	{
+		/*set details in the text fields*/
 		product=list.getSelectionModel().getSelectedItem();
 		IDTxt.setText(product.getProductID().toString());
 		NameTxt.setText(product.getProductName());
@@ -229,12 +236,18 @@ public void SetProductDetails(MouseEvent event) throws IOException
 		return;
 	}
 }
-	
+	/**
+	 * The method deletes a product from the products list 
+	 * @param event click on "Delete" button
+	 * @throws InterruptedException for thread sleep
+	 * @throws IOException for the loader
+	 */
 public void DeleteProduct(ActionEvent event) throws InterruptedException, IOException 
 {
 	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
-	 ArrayList<ProductEntity> ProductsToDelete=new ArrayList<ProductEntity>();
-	if(!(list.getSelectionModel().getSelectedItems().isEmpty()))//get the items to delete
+	 ArrayList<ProductEntity> ProductsToDelete=new ArrayList<ProductEntity>(); //array list of products to delete
+	 
+	if(!(list.getSelectionModel().getSelectedItems().isEmpty()))//if user choose products to delete from the list view ,get the products
 	{
 		Products=list.getSelectionModel().getSelectedItems();
 	}

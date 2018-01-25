@@ -168,8 +168,8 @@ public class AddDeleteCatalogController implements Initializable{
      */
     public void DeleteProductFromCatalog(ActionEvent event) throws InterruptedException, IOException 
     {
-    	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();//list that holds the products to delete from the list view
-    	 ArrayList<ProductEntity> ProductsToDelete=new ArrayList<ProductEntity>();  //
+    	 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();//products to delete from the list view
+    	 ArrayList<ProductEntity> ProductsToDelete=new ArrayList<ProductEntity>();  //product to delete from data base
     	 
     	if(!(listCatalog.getSelectionModel().getSelectedItems().isEmpty()))				//if there are items to delete
     	{
@@ -180,7 +180,7 @@ public class AddDeleteCatalogController implements Initializable{
     		GeneralMessageController.showMessage("Please choose product to delete");
     		return;
     	}
-    	for (ProductEntity prd:Products)												//add products to delete
+    	for (ProductEntity prd:Products)												//add products to delete 
     	{
     		ProductsToDelete.add((ProductEntity)prd);
     	}
@@ -204,7 +204,7 @@ public class AddDeleteCatalogController implements Initializable{
      */
     public void ShowAllProduct() throws InterruptedException
     {               
-        ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
+        ObservableList<ProductEntity> Products=FXCollections.observableArrayList(); //list of products in the list view
     	listProducts.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);//Set the selection mode to multiple	
     	productsFromTable=getAllProducts();
     	
@@ -242,7 +242,7 @@ public class AddDeleteCatalogController implements Initializable{
                         	else 
                         		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
 
-                            setFont(Font.font(18));
+                            setFont(Font.font(18));//set font to text
                         }
                     }
                 };
@@ -293,13 +293,13 @@ public class AddDeleteCatalogController implements Initializable{
      */
     public ArrayList<ProductEntity> getAllProducts() throws InterruptedException
     {
-    	MessageToSend mts=new MessageToSend(null,"getAllProducts"); //set parameters for the server's method
+    	MessageToSend mts=new MessageToSend(null,"getAllProducts");         //set parameters for the server's method
     	ArrayList<ProductEntity> dataFromServer = null;
     	Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-    	Client.getClientConnection().accept();										//sends to server
-    	while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+    	Client.getClientConnection().accept();								//sends to server
+    	while(!Client.getClientConnection().getConfirmationFromServer())	//wait until server replies
     		Thread.sleep(100);
-    	Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+    	Client.getClientConnection().setConfirmationFromServer();		    //reset confirmation to false
     	MessageToSend m = Client.getClientConnection().getMessageFromServer();
     	dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
     	return dataFromServer;
@@ -316,11 +316,11 @@ public class AddDeleteCatalogController implements Initializable{
    {
 	   		String msg;
 	   		MessageToSend mts=new MessageToSend(productToDelete,"deleteProductFromCatalog");//set parameters for the server method
-	   		Client.getClientConnection().setDataFromUI(mts);				                                                   	//set the data and the operation to send from the client to the server
-	   		Client.getClientConnection().accept();										                                                //sends to server
-	   		while(!Client.getClientConnection().getConfirmationFromServer())		                                 	//wait until server replies
+	   		Client.getClientConnection().setDataFromUI(mts);				                //set the data and the operation to send from the client to the server
+	   		Client.getClientConnection().accept();										    //sends to server
+	   		while(!Client.getClientConnection().getConfirmationFromServer())		        //wait until server replies
 	   			Thread.sleep(100);
-	   		Client.getClientConnection().setConfirmationFromServer();		                                                //reset confirmation to false
+	   		Client.getClientConnection().setConfirmationFromServer();		                //reset confirmation to false
 	   		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 	   		 msg = (String)m.getMessage();
 	   		return msg;   
@@ -357,8 +357,8 @@ public class AddDeleteCatalogController implements Initializable{
     		FXMLLoader loader = new FXMLLoader();
     		Parent root = loader.load(getClass().getResource("/gui/ChainWorkerMenuBoudary.fxml").openStream()); // load the fxml class
     		Stage primaryStage = new Stage();
-    		Scene scene = new Scene(root);//set scene
-    		primaryStage.setTitle("Chain worker's main menu");
+    		Scene scene = new Scene(root);                                          //set scene
+    		primaryStage.setTitle("Chain worker's main menu");                      //set title
     		primaryStage.setScene(scene);
     		primaryStage.show();
     }
