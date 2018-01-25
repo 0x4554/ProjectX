@@ -2317,7 +2317,7 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 		
 		else if(operation.equals("getSurveyQs")) {
 			
-			String [] qsText = getSurveyQuestions();
+			String [] qsText = getSurveyQuestions((int)messageToSend.getMessage());
 			messageToSend.setMessage(qsText);
 			client.sendToClient(messageToSend);
 		}
@@ -2388,6 +2388,12 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 		client.sendToClient(messageToSend);
 	}
 		
+	else if(operation.equals("getNumberOfSurveys")) {
+		ArrayList<Integer> totalSurveys = this.getNumberOfSurveys();
+		messageToSend.setMessage(totalSurveys);
+		client.sendToClient(messageToSend);
+	}
+		
 	else if(operation.equals("complaint")) {
 			ComplaintEntity complaint = (ComplaintEntity)messageToSend.getMessage();
 			this.incomingFileName=complaint.getOrderID();
@@ -2425,7 +2431,29 @@ ProductEntity product = (ProductEntity)messageToSend.getMessage();
 				
 	}
 	
-  private String releaseUserBlock(String user) throws SQLException {
+  private ArrayList<Integer> getNumberOfSurveys() throws SQLException {
+	// TODO Auto-generated method stub
+	  ArrayList<Integer> total = new ArrayList<Integer>();
+	  Statement st;
+	  try {
+		  con=connectToDB();
+			 System.out.println("Connection to Database succeeded");
+			  ServerMain.serverController.showMessageToUI("Connection to Database succeeded");
+		}
+		catch(Exception e) {
+			System.out.println("Connection to database failed");
+			ServerMain.serverController.showMessageToUI("Connection to Database failed");
+		}
+	  st = con.createStatement();
+	  ResultSet rs = st.executeQuery("SELECT DISTINCT Surveynum FROM projectx.survey");
+	  
+	  while(rs.next())
+		  total.add(rs.getInt(1));
+	  
+	return total;
+}
+
+private String releaseUserBlock(String user) throws SQLException {
 	// TODO Auto-generated method stub
 	  Statement stmnt;
 	  String s=null;
@@ -2565,7 +2593,7 @@ private ArrayList<String> getBlockedUsers() throws SQLException {
 	  }
 }
 
-private String[] getSurveyQuestions() throws SQLException {
+private String[] getSurveyQuestions(int surveyNum) throws SQLException {
 	// TODO Auto-generated method stub
 	  int i=0;
 	  String[] ques=new String[6];
@@ -2580,7 +2608,7 @@ private String[] getSurveyQuestions() throws SQLException {
 		  ServerMain.serverController.showMessageToUI("Connection to Database failed");
 	  }
 	  stmnt=con.createStatement();
-	  ResultSet rs = stmnt.executeQuery("SELECT QuestionText FROM projectx.survey");
+	  ResultSet rs = stmnt.executeQuery("SELECT QuestionText FROM projectx.survey WHERE Surveynum="+surveyNum);
 	  
 	  if(!rs.next())
 		  return null;
@@ -2705,11 +2733,11 @@ private String[] getSurveyQuestions() throws SQLException {
 			 r=surveyAns.getQuestionRank(i);
 			 stmnt=con.createStatement();
 			 try {
-		 		 ResultSet rs = stmnt.executeQuery("SELECT "+numToWord[r]+" From projectx.survey WHERE Questionnum="+i);
+		 		 ResultSet rs = stmnt.executeQuery("SELECT "+numToWord[r]+" From projectx.survey WHERE Questionnum="+i+" AND Surveynum="+surveyAns.getSurveyNum());
 		 		 if(rs.next()) {
 		 			 counter = rs.getInt(1);
 			 		 counter++;
-			 		 stmnt.executeUpdate("UPDATE projectx.survey SET "+numToWord[r]+" = "+counter+" WHERE Questionnum="+i);
+			 		 stmnt.executeUpdate("UPDATE projectx.survey SET "+numToWord[r]+" = "+counter+" WHERE Questionnum="+i+" AND Surveynum="+surveyAns.getSurveyNum());
 				 }
 			 		 
 			 	 }

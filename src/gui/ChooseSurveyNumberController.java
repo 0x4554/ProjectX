@@ -2,10 +2,14 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
 import entities.SurveyEntity;
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +38,7 @@ public class ChooseSurveyNumberController implements Initializable{
     private Label hidenLbl;
     
     private StoreWorkerMenuController swmc;
+    ObservableList<Integer> list;
     
     /**
      * method for connecting the screens
@@ -53,28 +58,36 @@ public class ChooseSurveyNumberController implements Initializable{
 	 * @throws InterruptedException
 	 */
 	public void continueToSurvey(ActionEvent event) throws IOException, InterruptedException {
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/SurveyBoundary.fxml").openStream());
-		SurveyController sc=loader.getController();
-		sc.setConnectionData(this);
 		
-		MessageToSend toServer = new MessageToSend(null, "getSurveyQs");
-		Client.getClientConnection().setDataFromUI(toServer);
-		Client.getClientConnection().accept();
+		if(srvCmbBox.getSelectionModel().getSelectedItem()!=null) {
 		
-		while(!Client.getClientConnection().getConfirmationFromServer())
-			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer();
+			FXMLLoader loader = new FXMLLoader();
+			Parent root = loader.load(getClass().getResource("/gui/SurveyBoundary.fxml").openStream());
+			SurveyController sc=loader.getController();
+			sc.setConnectionData(this);
 		
-		String []qs=(String [])Client.getClientConnection().getMessageFromServer().getMessage();
+			MessageToSend toServer = new MessageToSend(srvCmbBox.getSelectionModel().getSelectedItem(), "getSurveyQs");
+			Client.getClientConnection().setDataFromUI(toServer);
+			Client.getClientConnection().accept();
 		
-		sc.setLabels(qs);
-		Stage primaryStage=new Stage();
-		Scene scene=new Scene(root);
+			while(!Client.getClientConnection().getConfirmationFromServer())
+				Thread.sleep(100);
+			Client.getClientConnection().setConfirmationFromServer();
 		
-		primaryStage.setTitle("New Survey");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+			String []qs=(String [])Client.getClientConnection().getMessageFromServer().getMessage();
+			
+			sc.setSurveyNum(srvCmbBox.getSelectionModel().getSelectedItem());
+			sc.setLabels(qs);
+			Stage primaryStage=new Stage();
+			Scene scene=new Scene(root);
+		
+			primaryStage.setTitle("New Survey");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+			}
+		else {
+			GeneralMessageController.showMessage("Pleae choose survey");
+		}
 	}
     
     
@@ -92,6 +105,18 @@ public class ChooseSurveyNumberController implements Initializable{
 	public void bckToPrevMnu(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
 		this.swmc.showMenu();
+	}
+	
+	
+	/**
+	 * method to initialize screens comboBox
+	 * 
+	 * @param surveys
+	 */
+	public void initComboBox(ArrayList<Integer> surveys) {
+		this.list=FXCollections.observableArrayList(surveys);
+		this.srvCmbBox.setItems(this.list);
+		
 	}
 	
 	
@@ -120,6 +145,7 @@ public class ChooseSurveyNumberController implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		hidenLbl.setVisible(false);
+
 	}
 
 }

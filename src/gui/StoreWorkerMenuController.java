@@ -12,6 +12,7 @@ import java.io.IOException;
  *
  */
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import client.Client;
@@ -168,17 +169,17 @@ public class StoreWorkerMenuController extends MenuController implements Initial
 		ChooseSurveyNumberController csnc=loader.getController();
 		csnc.setConnectionData(this);
 		
-//		MessageToSend toServer = new MessageToSend(null, "getSurveyQs");
-//		Client.getClientConnection().setDataFromUI(toServer);
-//		Client.getClientConnection().accept();
-//		
-//		while(!Client.getClientConnection().getConfirmationFromServer())
-//			Thread.sleep(100);
-//		Client.getClientConnection().setConfirmationFromServer();
-//		
-//		String []qs=(String [])Client.getClientConnection().getMessageFromServer().getMessage();
-//		
-//		sc.setLabels(qs);
+		MessageToSend toServer = new MessageToSend(null, "getNumberOfSurveys");
+		Client.getClientConnection().setDataFromUI(toServer);
+		Client.getClientConnection().accept();
+		
+		while(!Client.getClientConnection().getConfirmationFromServer())
+			Thread.sleep(100);
+		Client.getClientConnection().setConfirmationFromServer();
+		
+		ArrayList<Integer> allSurveys=(ArrayList<Integer>)Client.getClientConnection().getMessageFromServer().getMessage();
+
+		csnc.initComboBox(allSurveys);
 		Stage primaryStage=new Stage();
 		Scene scene=new Scene(root);
 		
