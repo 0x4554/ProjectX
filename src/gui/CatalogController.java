@@ -29,7 +29,7 @@ import javafx.util.Callback;
 import logic.MessageToSend;
 
 /**
- * This program presents the catalog to the costumer and preform's Add, Delete, Edit products from the Data Base
+ * This catalog controller presents the chain catalog to the costumer 
  *   
  *CatalogController.java
  * @author Eliran Toledano
@@ -174,20 +174,12 @@ public class CatalogController implements Initializable{
 	/**
 	 * The method return's to the customer's main menu
 	 * @param event-button "Back" was clicked
-	 * @throws IOException
+	 * @throws IOException for loader
 	 */
 	public void bckToMainMenu(ActionEvent event) throws IOException{//Back to the customer main menu
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 		
 		this.previousController.showMenu();;
-		
-//		FXMLLoader loader = new FXMLLoader();
-//		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-//		Stage primaryStage = new Stage();
-//		Scene scene = new Scene(root);
-//		primaryStage.setTitle("Customer Main Menu");
-//		primaryStage.setScene(scene);
-//		primaryStage.show();
 	}
 	
 
@@ -199,7 +191,7 @@ public class CatalogController implements Initializable{
 	 */
 	 public ArrayList<ProductEntity> getCatalog() throws InterruptedException
 	   {
-				MessageToSend mts=new MessageToSend(null,"getCatalog");
+				MessageToSend mts=new MessageToSend(null,"getCatalog");//send message to server
 				ArrayList<ProductEntity> dataFromServer = null;
 				Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 				Client.getClientConnection().accept();										//sends to server
