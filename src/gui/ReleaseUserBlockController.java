@@ -104,11 +104,14 @@ public class ReleaseUserBlockController implements Initializable{
 		this.usrsLstVw.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);		//unable multiple selection
 		this.users = FXCollections.observableArrayList();		//the observable list to enter to the list  view
 		
+		if(this.listOfUsers != null)
+		{
 		for(String user : listOfUsers)		//build list view to contain all orders
 			this.users.add("User name: "+user);
 		
 		
 		this.usrsLstVw.setItems(this.users);
+		}
 	}
 	
 	
@@ -122,7 +125,7 @@ public class ReleaseUserBlockController implements Initializable{
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.amc.showAdministratorMenu();
+		this.amc.showMenu();
 	}
 	
 	

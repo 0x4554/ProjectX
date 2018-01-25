@@ -157,7 +157,7 @@ public class EditUsersPremissionController implements Initializable{
 			
 			if(Client.getClientConnection().getMessageFromServer().getMessage().equals("Updated")) {
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-				this.amc.showAdministratorMenu();
+				this.amc.showMenu();
 				GeneralMessageController.showMessage("User permission updated successfully");
 			}
 			else if(Client.getClientConnection().getMessageFromServer().getMessage().equals("noUser")) {
@@ -169,7 +169,7 @@ public class EditUsersPremissionController implements Initializable{
 			}
 			else {
 				((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-				this.amc.showAdministratorMenu();
+				this.amc.showMenu();
 				GeneralMessageController.showMessage("Update failed\nPlease contact technical support and try again later");
 			}
 		}
@@ -264,7 +264,7 @@ public class EditUsersPremissionController implements Initializable{
 	 */	
 	public void bckBtnHandler(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.amc.showAdministratorMenu();										//open previous menu
+		this.amc.showMenu();										//open previous menu
 		return;
 	}
 	

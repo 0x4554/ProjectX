@@ -218,10 +218,14 @@ public class CustomerSelfDefinedProductController implements Initializable {
                         	else {
                         		setGraphic(addToCart);
                         	}
-                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getSale()+product.getProductPrice()+"¤");
+                        	if(!product.getProductDominantColor().equals("none"))
+                        		setText("              "+product.getProductName()+"  is a  "+product.getProductType()+",  \n          "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  colors  "+"\n              price  "+product.getSale()+product.getProductPrice()+"¤");
+                        	else
+                                setText("              "+product.getProductName()+"  is a  "+product.getProductType()+",  \n          "+product.getProductDescription()+"  \n              price:  "+product.getSale()+product.getProductPrice()+"¤");
 
-                            //setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
                             setFont(Font.font(18));
+                            
+                           
                         }
                     }
                 };

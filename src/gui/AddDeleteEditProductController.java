@@ -124,7 +124,7 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 			return;
 			}
 		
-		if(!(typeCmb.getSelectionModel().isEmpty()))
+		if(!typeCmb.getSelectionModel().isEmpty())
 			product.setProductType(typeCmb.getSelectionModel().getSelectedItem());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");	
@@ -162,12 +162,8 @@ public 	void UpdateProduct(ActionEvent event) throws IOException, InterruptedExc
 		{
 			product.setProductImage(ImageTxt.getText());	
 		}
-		else 
-			{
-			GeneralMessageController.showMessage("Please notice , you didnt update the product Image, by not entering new photo");
-			}
 		
-		if(!(this.dmntClrCmb.getSelectionModel().isEmpty()))
+		if(!this.dmntClrCmb.getSelectionModel().isEmpty())
 			product.setProductDominantColor(dmntClrCmb.getSelectionModel().getSelectedItem());
 		else {
 			GeneralMessageController.showMessage("Please Enter All Fields");
@@ -431,7 +427,12 @@ public void ShowAllProduct() throws InterruptedException
                         	vb.getChildren().addAll(v);
                             setGraphic(vb);
                     	}
-                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");
+                    	if(product.getProductDominantColor().equals("none"))
+                    	{
+                            setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getProductPrice()+"¤");
+                    	}
+                    	else
+                    		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");
                         setFont(Font.font(18));
                     }
                 }
@@ -586,6 +587,9 @@ public String DeleteProductFromDB(ProductEntity productToDelete) throws Interrup
 		this.dominantColors.add("Yellow");
 		this.dominantColors.add("Purple");
 		this.dominantColors.add("Green");
+		this.dominantColors.add("Orange");
+		this.dominantColors.add("Pink");
+		this.dominantColors.add("Gold");
 		
 		this.color_list.setAll(this.dominantColors);
 		this.dmntClrCmb.setItems(color_list);

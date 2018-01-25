@@ -49,6 +49,7 @@ public class CatalogController implements Initializable{
 	@FXML private Button backC;
 
 	 private CustomerMenuController cstmc;
+	 private MenuController previousController;
 	 
 	 /*Constructor*/
 	 public CatalogController()
@@ -56,6 +57,14 @@ public class CatalogController implements Initializable{
 		 listV=new ListView<ProductEntity>();
 	 }
 	 
+	 /**
+	  * Setter for the previous controoler
+	  * @param prev
+	  */
+	public void setPreviousController(MenuController prev)
+	{
+		this.previousController = prev;
+	}
 	 /**
 	  * getter for the client
 	  * @return
@@ -149,8 +158,11 @@ public class CatalogController implements Initializable{
                         	}
                         	else {
                          	}
-                            setText("              "+product.getProductName()+"   "+product.getProductDescription()+"  " + "\n              "+product.getProductPrice()+"¤");
-                            setFont(Font.font(18));
+                       	if(product.getProductDominantColor().equals("none"))
+                    		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+                    	else 
+                    		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
+                          setFont(Font.font(18));
                         }
                     }
                 };
@@ -166,13 +178,16 @@ public class CatalogController implements Initializable{
 	 */
 	public void bckToMainMenu(ActionEvent event) throws IOException{//Back to the customer main menu
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
-		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
-		Stage primaryStage = new Stage();
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Customer Main Menu");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		
+		this.previousController.showMenu();;
+		
+//		FXMLLoader loader = new FXMLLoader();
+//		Parent root = loader.load(getClass().getResource("/gui/CustomerMenuBoundary.fxml").openStream());
+//		Stage primaryStage = new Stage();
+//		Scene scene = new Scene(root);
+//		primaryStage.setTitle("Customer Main Menu");
+//		primaryStage.setScene(scene);
+//		primaryStage.show();
 	}
 	
 

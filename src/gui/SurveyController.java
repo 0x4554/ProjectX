@@ -138,7 +138,7 @@ public class SurveyController implements Initializable {
 			GeneralMessageController.showMessage("There was a problem\nPlease inform the technical support and try again later");
 		else{
 			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-			this.swmc.showStoreWorkerMenu();
+			this.swmc.showMenu();
 			GeneralMessageController.showMessage("Survey was sent successfully");
 		}
 		
@@ -166,7 +166,7 @@ public class SurveyController implements Initializable {
 	 */
 	public void bckToPrevMnu(ActionEvent event) throws IOException {
 		((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-		this.swmc.showStoreWorkerMenu();
+		this.swmc.showMenu();
 	}
 
 

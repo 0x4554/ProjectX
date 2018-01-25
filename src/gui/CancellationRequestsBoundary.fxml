@@ -20,8 +20,14 @@
             <Button fx:id="apprvBtn" mnemonicParsing="false" onAction="#cancelApproved" text="Approve cancel request" />
          </items>
       </ToolBar>
-      <Label layoutX="151.0" layoutY="53.0" text="Orders" />
-      <Label layoutX="503.0" layoutY="53.0" text="Order details" />
+      <Label layoutX="151.0" layoutY="53.0" text="Orders">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="456.0" layoutY="53.0" text="Order details">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <TreeView fx:id="dtlsTrVw" layoutX="315.0" layoutY="85.0" prefHeight="321.0" prefWidth="384.0" />
       <Label id="refund amount" fx:id="rfndLbl" layoutX="338.0" layoutY="416.0" textFill="#fc0606">
          <font>

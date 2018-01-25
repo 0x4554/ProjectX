@@ -6,20 +6,21 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="298.0" prefWidth="467.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AdministratorMenuController">
+<AnchorPane prefHeight="356.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AdministratorMenuController">
    <children>
       <Pane layoutX="-274.0" layoutY="-162.0" prefHeight="386.0" prefWidth="807.0">
          <children>
-            <Label layoutX="470.0" layoutY="188.0" prefHeight="49.0" prefWidth="192.0" text="Main Menu">
+            <Label layoutX="446.0" layoutY="179.0" prefHeight="49.0" prefWidth="192.0" text="Main Menu">
                <font>
                   <Font size="33.0" />
                </font>
             </Label>
-            <Button fx:id="prmtBtn" layoutX="457.0" layoutY="246.0" mnemonicParsing="false" onAction="#usersPermissions" prefHeight="26.0" prefWidth="167.0" text="Edit premission" />
-            <Button fx:id="usrBtn" layoutX="460.0" layoutY="302.0" mnemonicParsing="false" onAction="#enterCreateNewUser" prefHeight="31.0" prefWidth="167.0" text="New user" />
-            <Button fx:id="rlsBtn" layoutX="461.0" layoutY="359.0" mnemonicParsing="false" onAction="#releaseUserBtn" prefHeight="26.0" prefWidth="167.0" text="Release blocked user" />
+            <Button fx:id="prmtBtn" layoutX="481.0" layoutY="246.0" mnemonicParsing="false" onAction="#usersPermissions" text="Edit premission" />
+            <Button fx:id="usrBtn" layoutX="481.0" layoutY="294.0" mnemonicParsing="false" onAction="#enterCreateNewUser" prefHeight="31.0" prefWidth="121.0" text="New user" />
+            <Button fx:id="vwCtlgBtn" layoutX="481.0" layoutY="341.0" mnemonicParsing="false" onAction="#enterCatalog" prefHeight="31.0" prefWidth="121.0" text="View Catalog" />
          </children>
       </Pane>
-      <Button fx:id="lgBtn" layoutX="240.0" layoutY="245.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button fx:id="lgBtn" layoutX="231.0" layoutY="300.0" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+      <Button fx:id="rlsBlckBtn" layoutX="176.0" layoutY="224.0" mnemonicParsing="false" onAction="#releaseUserBtn" text="Release blocked account" />
    </children>
 </AnchorPane>

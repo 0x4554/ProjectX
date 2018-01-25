@@ -9,7 +9,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewStoreManagerOrWorkerController">
    <children>
-      <Label layoutX="270.0" layoutY="34.0" text="Create">
+      <Label layoutX="236.0" layoutY="27.0" text="Create">
          <font>
             <Font size="42.0" />
          </font>

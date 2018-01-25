@@ -15,7 +15,7 @@
       </Label>
       <TextField fx:id="pathTxtFld" layoutX="141.0" layoutY="122.0" prefHeight="26.0" prefWidth="222.0" />
       <Button fx:id="brwsBtn" layoutX="56.0" layoutY="122.0" mnemonicParsing="false" onAction="#searchForFile" text="Browse" />
-      <Button fx:id="upldBtn" layoutX="221.0" layoutY="176.0" mnemonicParsing="false" onAction="#sendReport" text="Upload" />
-      <Button fx:id="bckBtn" layoutX="122.0" layoutY="176.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
+      <Button fx:id="upldBtn" layoutX="292.0" layoutY="176.0" mnemonicParsing="false" onAction="#sendReport" text="Upload" />
+      <Button fx:id="bckBtn" layoutX="141.0" layoutY="176.0" mnemonicParsing="false" onAction="#bckBtnHandler" text="Back" />
    </children>
 </Pane>

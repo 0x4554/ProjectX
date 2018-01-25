@@ -27,12 +27,13 @@ import javafx.stage.Stage;
  *
  */
 
-public class AdministratorMenuController implements Initializable {
+public class AdministratorMenuController extends MenuController implements Initializable {
 
 	@FXML private Button prmtBtn;
     @FXML private Button usrBtn;
     @FXML private Button lgBtn;
-    
+    @FXML private Button vwCtlgBtn;
+    @FXML private Button rlsBlckBtn;
     
     private Client clnt;
 	
@@ -49,7 +50,7 @@ public class AdministratorMenuController implements Initializable {
 	 * method that shows Administrator menu
 	 * @throws IOException
 	 */
-	public void showAdministratorMenu() throws IOException
+	public void showMenu() throws IOException
 	{
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/AdministratorMenuBoundary.fxml").openStream());
@@ -111,7 +112,29 @@ public class AdministratorMenuController implements Initializable {
 			primaryStage.show();
 	}
 	
-	
+	/**
+	 * The method open's the Catalog Window
+	 * 
+	 * @param event
+	 *            on clicking "View Catalog" Button
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void enterCatalog(ActionEvent event) throws IOException, InterruptedException {
+		((Node) event.getSource()).getScene().getWindow().hide(); //Hide Current window
+		FXMLLoader loader = new FXMLLoader();
+		Parent pRoot = loader.load(getClass().getResource("/gui/ViewCatalogBoundary.fxml").openStream()); //Load the fxml class
+		CatalogController catl = loader.getController();
+		catl.setPreviousController(this);
+		catl.showCatalog(); //Call the method show catalog
+		Stage primaryStage = new Stage(); //Set Stage->Show()
+		Scene scene = new Scene(pRoot);
+		primaryStage.setTitle("Zer-Li Catalog");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}
+
 	/**
 	 * method for handling the press
 	 * of the Release user button
@@ -137,7 +160,6 @@ public class AdministratorMenuController implements Initializable {
 		primaryStage.show();
 		
 	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

@@ -543,62 +543,61 @@ public class ProjectServer extends AbstractServer
    */
   private ArrayList<ProductEntity> getSelfDefinedProducts(ArrayList<String> requests) throws ClassNotFoundException, SQLException, IOException
   {
-	  			//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
-	 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
-	 ProductEntity product;
-	 Blob productImage;
-	 Statement stmt;
-	 ResultSet rs;
-	 try
-		{
-			con = connectToDB(); //call method to connect to DB
-			if (con != null)
+		//the arrayList of String in form of {minPrice,maxPrice,type,dominantColor(if chosen)}
+		 ArrayList<ProductEntity> listOfProducts = new ArrayList<ProductEntity>();
+		 ProductEntity product;
+		 Blob productImage;
+		 Statement stmt;
+		 ResultSet rs;
+		 try
 			{
-				System.out.println("Connection to Data Base succeeded");
-				ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+				con = connectToDB(); //call method to connect to DB
+				if (con != null)
+				{
+					System.out.println("Connection to Data Base succeeded");
+					ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+				}
+			} catch (SQLException e) //catch exception
+			{
+				System.out.println("SQLException: " + e.getMessage());
+				ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
 			}
-		} catch (SQLException e) //catch exception
-		{
-			System.out.println("SQLException: " + e.getMessage());
-			ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
-		}
-	 Double minPrice,maxPrice;
-	 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
-	 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
-	 
-	 String type = "";
-	 type=requests.get(2); 											//get the product type
-	 
-	 String dominantColor ="";
-	 if(!(requests.size()<4)) 								//if dominant color was chosen
-	 {
-		dominantColor = "AND ProductDominantColor = '"+ requests.get(3)+"'";
-	 }
-	 stmt=con.createStatement();
-	 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+" AND "+maxPrice+" AND ProductType = '"+type+"'"+dominantColor+"");
-	 while(rs.next())
-	 {
-		 product = new ProductEntity();									//create new product
-		 product.setProductID(rs.getInt(1));
-		 product.setProductName(rs.getString(2));
-		 product.setProductType(rs.getString(3));
-		 product.setProductPrice(rs.getDouble(4));
-		 product.setProductDescription(rs.getString(5));
-		 				//**get the blob for the image from the DB**//
-		 productImage =con.createBlob();
-		 if(rs.getBlob(6) != null)
-		 {
-		 productImage = rs.getBlob(6);
+		 Double minPrice,maxPrice;
+		 minPrice= Double.parseDouble(requests.get(0)); 				//parse the minimum price
+		 maxPrice= Double.parseDouble(requests.get(1)); 				//parse the maximum price
 		 
-		 InputStream is = productImage.getBinaryStream();
-  		 
- 		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
+		 String type = "";
+		 type=requests.get(2); 											//get the product type
+		 
+		 String dominantColor ="";
+		 if(!(requests.size()<4)) 								//if dominant color was chosen
+		 {
+			dominantColor = "AND ProductDominantColor = '"+ requests.get(3)+"'";
 		 }
- 		 product.setProductDominantColor(rs.getString(7));
-  		 listOfProducts.add(product);									//add the product to the list
-  	 }
-  	 return listOfProducts;												//return the found products
-  	 
+		 stmt=con.createStatement();
+		 rs = stmt.executeQuery("Select * FROM projectx.product WHERE ProductPrice BETWEEN "+minPrice+" AND "+maxPrice+" AND ProductType = '"+type+"'"+dominantColor+"");
+		 while(rs.next())
+		 {
+			 product = new ProductEntity();									//create new product
+			 product.setProductID(rs.getInt(1));
+			 product.setProductName(rs.getString(2));
+			 product.setProductType(rs.getString(3));
+			 product.setProductPrice(rs.getDouble(4));
+			 product.setProductDescription(rs.getString(5));
+			 				//**get the blob for the image from the DB**//
+			 productImage =con.createBlob();
+			 if(rs.getBlob(6) != null)
+			 {
+			 productImage = rs.getBlob(6);
+			 
+			 InputStream is = productImage.getBinaryStream();
+	  		 
+	 		 product.setProductImage(FilesConverter.convertInputStreamToByteArray(is)); 		//set the input stream to a byte array
+			 }
+	 		 product.setProductDominantColor(rs.getString(7));
+	  		 listOfProducts.add(product);									//add the product to the list
+	  	 }
+	  	 return listOfProducts;	
     }
  /**
    * This method cancel an order and sets its status to canceled in the DB
@@ -1587,7 +1586,7 @@ public class ProjectServer extends AbstractServer
    */
   public String addToCatalog(ProductEntity prd) throws SQLException, ClassNotFoundException
   {
-  Statement stmt;
+	  Statement stmt;
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -1620,7 +1619,7 @@ public class ProjectServer extends AbstractServer
  public String deleteProductFromCatalog(ProductEntity prd) throws SQLException, ClassNotFoundException/**lanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
 
   {
-  Statement stmt;
+	 Statement stmt;
 	  try
 	    {
 	    con = connectToDB();	//call method to connect to DB
@@ -1640,7 +1639,7 @@ public class ProjectServer extends AbstractServer
 		    ps.executeUpdate();
 		    return "Success";                                                                            //deleted successesfuly
 	    }
-	  return "Product was not found";   
+	  return "Product was not found";    
   }
 
  /**
@@ -1665,8 +1664,11 @@ public class ProjectServer extends AbstractServer
 	      System.out.println("SQLException: " + e.getMessage() );
 	    }
 	  stmt = con.createStatement();
+	//  ResultSet rs = stmt.executeQuery("SELECT * FROM catalog WHERE ProductID = '" +prd.getProductID()+"'");	//see if the product exists in the catalog
+	   // if((rs.next()))																						//if such ID exists in the DB, delete .
+	 //   {
 		    
-		    
+		
 		    if(product.getProductImage()!=null)
 		    {
 		    	PreparedStatement ps = con.prepareStatement("UPDATE  projectx.product SET ProductName = ?,ProductType=?,ProductPrice=?,ProductDescription=?,ProductDominantColor=? ,ProductImage=? WHERE ProductName=?");	//prepare a statement
@@ -1689,7 +1691,11 @@ public class ProjectServer extends AbstractServer
 				ps.setString(6, OldProduct.getProductName()); 
 				ps.executeUpdate();
 		    }
+		   /* ps.setString(6, product.getProductDominantColor());
+		    ps.setString(7, OldProduct.getProductName()); 
+		    ps.executeUpdate();*/
 		    return "Success";                                                                           
+	   // }                                                                       
 }
  /**
   * this method handles the creation of new customers complaint
@@ -1765,6 +1771,7 @@ public class ProjectServer extends AbstractServer
   public ProductEntity getProduct(ConnectionToClient clnt,int asked) throws SQLException, InterruptedException, ClassNotFoundException, IOException
   {
 	  ProductEntity prd=new ProductEntity();
+	  //ArrayList<ProductEntity> product = new ArrayList<ProductEntity>();
 	  Statement stmt;
 	  int productID=asked;     /*The id of the product we want to get from the data base*/
 	  Blob b = con.createBlob();							//Object to contain the data from the data base
@@ -1822,6 +1829,7 @@ public class ProjectServer extends AbstractServer
  */
   public HashMap<Integer,Double> getDiscounts(int storeID) throws SQLException, ClassNotFoundException
   {
+
 	  HashMap<Integer,Double> product = new HashMap<Integer,Double>();
 	 int key_product_id=0;
 	 double price=0;
@@ -1862,76 +1870,76 @@ public class ProjectServer extends AbstractServer
    */
     public String AddDiscounts(int storeID,ProductEntity product) throws SQLException, ClassNotFoundException
     {
-  	  Statement stmt;
-  	  try
-  	    {
-  	    con = connectToDB();	//call method to connect to DB
-  	    if (con != null)
-  		{
-  			System.out.println("Connection to Data Base succeeded");
-  			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
-  		}
-  	    }
-  	    catch( SQLException e)	//catch exception
-  	    {
-  	      System.out.println("SQLException: " + e.getMessage() );
-  	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
-  	    }
-  	  stmt = con.createStatement();
-  	  
-  	  /*Query -set discounts for the storeID and product*/
-  	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID = " +product.getProductID()+" AND BranchID= "+storeID+"");	
-  	  if(!(rs.next()))   //if there isn't a sale on this product 
-  	  {  		
-  		PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.discount (ProductID,ProductPrice,BranchID) VALUES (?,?,?)");
-  		ps.setInt(1, product.getProductID());																			//insert parameters into the statement
-	    ps.setDouble(2, product.getSalePrice());
-	    ps.setInt(3, storeID);
-	    ps.executeUpdate();
-  		return "Success";
-  	  }
-  	  else //there product has allready a sale on it
-  	  {
-  		PreparedStatement ps = con.prepareStatement("UPDATE  projectx.discount SET ProductPrice=?  WHERE ProductID=? AND BranchID=?");							//insert parameters into the statement
-	    ps.setDouble(1, product.getSalePrice());
-	    ps.setInt(2, product.getProductID());
-	    ps.setInt(3, storeID);
-	    ps.executeUpdate();
-  		return "Success";
-  	  }
+    	Statement stmt;
+    	  try
+    	    {
+    	    con = connectToDB();	//call method to connect to DB
+    	    if (con != null)
+    		{
+    			System.out.println("Connection to Data Base succeeded");
+    			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+    		}
+    	    }
+    	    catch( SQLException e)	//catch exception
+    	    {
+    	      System.out.println("SQLException: " + e.getMessage() );
+    	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+    	    }
+    	  stmt = con.createStatement();
+    	  
+    	  /*Query -set discounts for the storeID and product*/
+    	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID = " +product.getProductID()+" AND BranchID= "+storeID+"");	
+    	  if(!(rs.next()))   //if there isn't a sale on this product 
+    	  {  		
+    		PreparedStatement ps = con.prepareStatement("INSERT INTO projectx.discount (ProductID,ProductPrice,BranchID) VALUES (?,?,?)");
+    		ps.setInt(1, product.getProductID());																			//insert parameters into the statement
+  	    ps.setDouble(2, product.getSalePrice());
+  	    ps.setInt(3, storeID);
+  	    ps.executeUpdate();
+    		return "Success";
+    	  }
+    	  else //there product has allready a sale on it
+    	  {
+    		PreparedStatement ps = con.prepareStatement("UPDATE  projectx.discount SET ProductPrice=?  WHERE ProductID=? AND BranchID=?");							//insert parameters into the statement
+  	    ps.setDouble(1, product.getSalePrice());
+  	    ps.setInt(2, product.getProductID());
+  	    ps.setInt(3, storeID);
+  	    ps.executeUpdate();
+    		return "Success";
+    	  }
   	        
    }
     
     
     public String DeleteDiscount(int storeID,ProductEntity product) throws ClassNotFoundException, SQLException
     {
-    	 Statement stmt;
-     	  try
-     	    {
-     	    con = connectToDB();	//call method to connect to DB
-     	    if (con != null)
-     		{
-     			System.out.println("Connection to Data Base succeeded");
-     			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
-     		}
-     	    }
-     	    catch( SQLException e)	//catch exception
-     	    {
-     	      System.out.println("SQLException: " + e.getMessage() );
-     	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
-     	    }
+    	Statement stmt;
+   	  try
+   	    {
+   	    con = connectToDB();	//call method to connect to DB
+   	    if (con != null)
+   		{
+   			System.out.println("Connection to Data Base succeeded");
+   			ServerMain.serverController.showMessageToUI("Connection to Data Base succeeded");
+   		}
+   	    }
+   	    catch( SQLException e)	//catch exception
+   	    {
+   	      System.out.println("SQLException: " + e.getMessage() );
+   	      ServerMain.serverController.showMessageToUI("SQLException: " + e.getMessage());
+   	    }
 			stmt = con.createStatement();
 	
-     	  /*Query -set discounts for the storeID and product*/
-     	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID = " +product.getProductID()+" AND BranchID= "+storeID+"");	
-     	  if(rs.next())   //if there is a sale on this product 
-     	  {  		
-     		PreparedStatement ps = con.prepareStatement("DELETE FROM projectx.discount  WHERE ProductID=? AND BranchID=?");
-     		ps.setInt(1, product.getProductID());																			//insert parameters into the statement
-   	        ps.setInt(2, storeID);
-   	        ps.executeUpdate();
-     		return "Success";
-     	  }else return "Failed";
+   	  /*Query -set discounts for the storeID and product*/
+   	  ResultSet rs = stmt.executeQuery("SELECT * FROM projectx.discount WHERE ProductID = " +product.getProductID()+" AND BranchID= "+storeID+"");	
+   	  if(rs.next())   //if there is a sale on this product 
+   	  {  		
+   		PreparedStatement ps = con.prepareStatement("DELETE FROM projectx.discount  WHERE ProductID=? AND BranchID=?");
+   		ps.setInt(1, product.getProductID());																			//insert parameters into the statement
+ 	        ps.setInt(2, storeID);
+ 	        ps.executeUpdate();
+   		return "Success";
+   	  }else return "Failed";
     }
   /**
    * This method overrides the one in the superclass.  Called
@@ -2113,7 +2121,7 @@ public class ProjectServer extends AbstractServer
 		}
 		else if(operation.equals("addProductToCatalog"))
 		{
-			ProductEntity product = (ProductEntity)messageToSend.getMessage();
+ProductEntity product = (ProductEntity)messageToSend.getMessage();
 			
 			if(this.addToCatalog(product).equals("Success")) {
 				System.out.println("product added sucessesfuly to the catalog DB");
@@ -2254,7 +2262,7 @@ public class ProjectServer extends AbstractServer
 			int productid = (int)messageToSend.getMessage();
 			produ= this.getProduct(client,productid);	//get the product
 			messageToSend.setMessage(produ);	        //set the message for sending back to the client
-			client.sendToClient(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);            //send arrayList back to client
 		}
 		
 		else if(operation.equals("getAllProducts"))	
@@ -2271,7 +2279,7 @@ public class ProjectServer extends AbstractServer
 			ProductEntity prd = (ProductEntity)messageToSend.getMessage();
 			Reply = this.DeleteProductsFromDB(prd);
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			client.sendToClient(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);           //send arrayList back to client
 		}
 		else if(operation.equals("UpdateProduct"))	
 		{
@@ -2279,7 +2287,7 @@ public class ProjectServer extends AbstractServer
 			ArrayList<ProductEntity> p=(ArrayList<ProductEntity>)messageToSend.getMessage();
 			Reply = this.UpdateProductInDB(p.get(0),p.get(1));
 			messageToSend.setMessage(Reply);	        //set the message for sending back to the client
-			client.sendToClient(messageToSend);	            //send arrayList back to client
+			client.sendToClient(messageToSend);	           //send arrayList back to client
 		}
 		else if(operation.equals("createProduct"))
 		{
@@ -2368,7 +2376,8 @@ public class ProjectServer extends AbstractServer
 	}
 		
 	else if(operation.equals("getBlockedUsers")) {
-		ArrayList<String> ret = this.getBlockedUsers();
+		ArrayList<String> ret = new ArrayList<String>();
+		ret = this.getBlockedUsers();
 		messageToSend.setMessage(ret);
 		client.sendToClient(messageToSend);
 	}

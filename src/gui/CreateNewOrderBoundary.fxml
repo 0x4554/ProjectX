@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="409.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CreateNewOrderController">
    <children>
       <AnchorPane layoutX="-128.0" layoutY="-111.0" prefHeight="393.0" prefWidth="480.0">
          <children>
-            <Button id="itmFrmCtlgBtn" fx:id="itmFrmCtlgBtn" layoutX="179.0" layoutY="157.0" mnemonicParsing="false" onAction="#addItemFromCatalog" text="Add item from catalog" />
-            <Button id="AddSlfDfItmBtm" fx:id="AddSlfDfIPrdctBtn" layoutX="177.0" layoutY="241.0" mnemonicParsing="false" onAction="#addSelfDefinedProduct" text="Add a self defined item" />
+            <Button id="itmFrmCtlgBtn" fx:id="itmFrmCtlgBtn" layoutX="179.0" layoutY="222.0" mnemonicParsing="false" onAction="#addItemFromCatalog" text="Add item from catalog" />
+            <Button id="AddSlfDfItmBtm" fx:id="AddSlfDfIPrdctBtn" layoutX="177.0" layoutY="273.0" mnemonicParsing="false" onAction="#addSelfDefinedProduct" text="Add a self defined item" />
+            <Label layoutX="296.0" layoutY="136.0" text="Create New Order">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Button id="addCrdBtn" fx:id="addCrdBtn" layoutX="421.0" layoutY="221.0" mnemonicParsing="false" onAction="#addCard" prefHeight="31.0" prefWidth="170.0" text="Add a card" />
          </children>
       </AnchorPane>
-      <Button id="VwCrtBtn" fx:id="VwCrtBtn" layoutX="280.0" layoutY="313.0" mnemonicParsing="false" onAction="#viewCart" prefHeight="31.0" prefWidth="170.0" text="Go to cart" />
-      <Button id="addCrdBtn" fx:id="addCrdBtn" layoutX="280.0" layoutY="45.0" mnemonicParsing="false" onAction="#addCard" prefHeight="31.0" prefWidth="170.0" text="Add a card" />
-      <Button fx:id="bckTorderMn" layoutX="55.0" layoutY="313.0" mnemonicParsing="false" onAction="#backToOrderMenu" prefHeight="31.0" prefWidth="170.0" text="Back to order menu" />
+      <Button id="VwCrtBtn" fx:id="VwCrtBtn" layoutX="357.0" layoutY="337.0" mnemonicParsing="false" onAction="#viewCart" prefHeight="31.0" prefWidth="106.0" text="Go to cart" />
+      <Button fx:id="bckTorderMn" layoutX="54.0" layoutY="337.0" mnemonicParsing="false" onAction="#backToOrderMenu" prefHeight="31.0" prefWidth="170.0" text="Back to order menu" />
    </children>
 </AnchorPane>

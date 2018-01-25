@@ -176,43 +176,43 @@ public class LoginController implements Initializable {
 		{
 		case "AD":	//system administrator (system manager)
 			amc = new AdministratorMenuController();
-			amc.showAdministratorMenu();
+			amc.showMenu();
 			GeneralMessageController.showMessage("Logged in as an administrator");
 			break;
 		case "C":	//customer
 			cmc = new CustomerMenuController(this);
-			cmc.showCustomerMenu();
+			cmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a customer");
 			break;
 		case "SW":	//store worker
 			swmc = new StoreWorkerMenuController();
-			swmc.showStoreWorkerMenu();
+			swmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a store worker");
 			break;
 		case "SM":	//store manager
 			mmc=new StoreManagerMenuController();
-			mmc.showManagerMenu();
+			mmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a store manager");
 			break;
 		case "CSW":	//customer service worker
 			cswmc = new CustomerServiceWorkerMenuController();
-			cswmc.showCostumerServiceWorkerMenu();
+			cswmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service worker");
 			break;
 		case "CSM":	//chain store manager
 			csmmc = new ChainStoreManagerMenuController();
-			csmmc.showChainStoreManagerMenu();
+			csmmc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a chain store manager");
 			break;
 		case "CSE":	//customer service expert
 			csemc = new CustomerServiceExpertMenuController();
-			csemc.showCustomerServiceExpertMenu();
+			csemc.showMenu();
 			GeneralMessageController.showMessage("Logged in as a customer service expert");
 			break;
 			
 		case "CW":	//chain worker
 			cwmn = new ChainWorkerMenuController();
-			cwmn.showChainWorkerMenu();
+			cwmn.showMenu();
 			GeneralMessageController.showMessage("Logged in as a chain worker");
 			break;
 		}

@@ -103,12 +103,12 @@ public class UpdateSurveyController implements Initializable{
 	    		
 	    		if(Client.getClientConnection().getMessageFromServer().getMessage().equals("Updated")) {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showCostumerServiceWorkerMenu();
+	    			this.csemc.showMenu();
 	    			GeneralMessageController.showMessage("Questions updated successfully");
 	    		}
 	    		else {
 	    			((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    			this.csemc.showCostumerServiceWorkerMenu();
+	    			this.csemc.showMenu();
 	    			GeneralMessageController.showMessage("Update failed\nplease contact technical support and try again later");
 	    		}
 	    		
@@ -163,7 +163,7 @@ public class UpdateSurveyController implements Initializable{
 	     */
 	    public void cancelUpdate(ActionEvent event) throws IOException {
 	    	((Node)event.getSource()).getScene().getWindow().hide();		//hide current window
-	    	this.csemc.showCostumerServiceWorkerMenu();	
+	    	this.csemc.showMenu();	
 	    }
 	    
 	    
