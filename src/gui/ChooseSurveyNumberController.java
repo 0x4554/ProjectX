@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import logic.MessageToSend;
 
@@ -28,6 +29,9 @@ public class ChooseSurveyNumberController implements Initializable{
 
     @FXML
     private Button cntBtn;
+    
+    @FXML
+    private Label hidenLbl;
     
     private StoreWorkerMenuController swmc;
     
@@ -115,7 +119,7 @@ public class ChooseSurveyNumberController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
+		hidenLbl.setVisible(false);
 	}
 
 }

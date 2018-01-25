@@ -17,6 +17,6 @@
       <Label layoutX="31.0" layoutY="128.0" text="Survey number" />
       <Button fx:id="bckBtn" layoutX="121.0" layoutY="243.0" mnemonicParsing="false" onAction="#bckToPrevMnu" text="Back" />
       <Button fx:id="cntBtn" layoutX="239.0" layoutY="243.0" mnemonicParsing="false" onAction="#continueToSurvey" text="Continue" />
-      <Label layoutX="114.0" layoutY="82.0" text="*please choose survey to take" textFill="#ee1313" />
+      <Label fx:id="hidenLbl" layoutX="114.0" layoutY="82.0" text="*please choose survey to take" textFill="#ee1313" />
    </children>
 </AnchorPane>
