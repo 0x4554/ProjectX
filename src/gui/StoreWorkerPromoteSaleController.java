@@ -87,7 +87,7 @@ public class StoreWorkerPromoteSaleController {
 	@FXML
 	private ListView<ProductEntity> list;
 
-	public ObservableList<String> Type_list = FXCollections.observableArrayList();
+	public ObservableList<String> Type_list = FXCollections.observableArrayList(); 
 	ArrayList<ProductEntity> productsFromTable = new ArrayList<ProductEntity>();
 	private StoreEntity store;
 
@@ -102,14 +102,14 @@ public class StoreWorkerPromoteSaleController {
 	 * This method sets the store
 	 * 
 	 * @param store
-	 *            the store
+	 *  the store
 	 */
 	public void setStore(StoreEntity store) {
 		this.store = store;
 	}
 
 	/**
-	 * The method clear's the selection's made in the list view
+	 * The method clear's the selections made in the list view
 	 * 
 	 * @param event
 	 */
@@ -136,13 +136,12 @@ public class StoreWorkerPromoteSaleController {
 	/**
 	 * This method sets the product's details to the fields
 	 * 
-	 * @param event
-	 *            pressed on a product from the list
-	 * @throws IOException
+	 * @param event pressed on a product from the list
+	 * @throws IOException for the general message
 	 */
 	public void SetProductDetails(MouseEvent event) throws IOException {
 		ProductEntity product=new ProductEntity();
-		if(list.getSelectionModel().getSelectedItem() != null)
+		if(list.getSelectionModel().getSelectedItem() != null)//if there was a selection in the list view, set product details
 		{
 			product=list.getSelectionModel().getSelectedItem();
 			IDTxt.setText(product.getProductID().toString());
@@ -162,7 +161,7 @@ public class StoreWorkerPromoteSaleController {
 	/**
 	 * This method builds the list of products with updated prices and details
 	 * 
-	 * @throws InterruptedException
+	 * @throws InterruptedException for thread sleep
 	 */
 	public void ShowAllProduct() throws InterruptedException {
 		 ObservableList<ProductEntity> Products=FXCollections.observableArrayList();
@@ -178,20 +177,20 @@ public class StoreWorkerPromoteSaleController {
 			if(discount!=null) //If there are discounts for this store
 			{
 				Iterator<Integer> itr=discount.keySet().iterator();
-				itr=discount.keySet().iterator();                                                                             //get the key's from the hash map of discounts
+				itr=discount.keySet().iterator();                                                                 //get the key's from the hash map of discounts
 				int temp_key=0;
 				double newPrice=0;
 				
 			   /*Update store prices*/
-		    while (itr.hasNext())
+		    while (itr.hasNext()) 
 		    {	
 		    	temp_key=(int) itr.next();
 		    	for(int j=0;j<productsFromTable.size();j++)
 		    	{
-		    		if(temp_key==productsFromTable.get(j).getProductID())                                 // If there is a discount for this product then update
+		    		if(temp_key==productsFromTable.get(j).getProductID())                      // If there is a discount for this product then update
 		    		{
 		    			newPrice=discount.get(temp_key);
-		    			updatePrice(temp_key,newPrice);
+		    			updatePrice(temp_key,newPrice);                                                   //update products price sending the new price and the product id
 			        }
 		    	}
 			   }
@@ -215,17 +214,17 @@ public class StoreWorkerPromoteSaleController {
 		                    super.updateItem(product, status);
 		                    if (product != null) {
 		       
-		                    	if(product.getProductImage()!=null)
+		                    	if(product.getProductImage()!=null)//if there is an image to the product, set image
 		                    	{
 		                    		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
-		                    		ImageView v=new ImageView(j);
+		                    		ImageView v=new ImageView(j);//set image in image view
 		                    		v.setFitHeight(130);
 		                    		v.setFitWidth(130);
 		                    		VBox vb=new VBox(15);
 		                        	vb.getChildren().addAll(v);
 		                            setGraphic(vb);
 		                    	}
-		                    	if(product.getProductDominantColor().equals("none"))
+		                    	if(product.getProductDominantColor().equals("none"))//if there is a dominant color to the product set it on text
 		                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getSale()+product.getProductPrice()+"¤");
 		                    	else
 			                        setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+" ,in  "+product.getProductDominantColor()+"  color's  "+"\n        price:  "+product.getSale()+product.getProductPrice()+"¤");
@@ -241,29 +240,24 @@ public class StoreWorkerPromoteSaleController {
 
 	/**
 	 * This method loads the previous window
-	 * 
-	 * @param event
-	 *            pressed back
-	 * @throws IOException
+	 * @param event pressed "Back"
+	 * @throws IOException for the loader
 	 */
 	public void back(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = loader.load(getClass().getResource("/gui/StoreWorkerMenuBoundary.fxml").openStream());
+		Parent root = loader.load(getClass().getResource("/gui/StoreWorkerMenuBoundary.fxml").openStream());//load new window
 		Stage primaryStage = new Stage();
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Store worker main menu");
+		Scene scene = new Scene(root);                                         //set scene
+		primaryStage.setTitle("Store worker main menu");              //set title
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
 	/**
-	 * This method updates the price of the product according to the discount's promoted at the store
-	 * 
-	 * @param key
-	 *            is the product id we pulled from the discount table
-	 * @param price
-	 *            is the new price after sale on the product
+	 * This method updates the price of the product according to the discounts promoted at the store
+	 * @param key  is the product id we pulled from the discount table
+	 * @param price    is the new price after sale on the product
 	 */
 	public void updatePrice(int key, double price) {
 		for(int i=0;i<this.productsFromTable.size();i++)
@@ -273,7 +267,7 @@ public class StoreWorkerPromoteSaleController {
 			if(this.productsFromTable.get(i).getProductID()==key)//if there is a sale on the product update his price
 			{
 				this.productsFromTable.get(i).setSalePrice(price);
-				this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
+				this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");//set sale message
 				this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"¤"+"\n         Old price:  ");
 			}
 			}
@@ -282,13 +276,11 @@ public class StoreWorkerPromoteSaleController {
 
 	/**
 	 * This method handles the send message for promoting the sale
-	 * 
-	 * @param event
-	 *            pressed send message
-	 * @throws IOException
+	 * @param event  pressed send message
+	 * @throws IOException for general message
 	 */
 	public void sendMessageToCustomers(ActionEvent event) throws IOException {
-		if(!(msgTxt.getText().equals("")))
+		if(!(msgTxt.getText().equals(""))) //if there is a message to send, send it
 		{
 	      GeneralMessageController.showMessage("Message : "+msgTxt.getText()+"  has been sent to all customers");
 		}
@@ -301,19 +293,18 @@ public class StoreWorkerPromoteSaleController {
 
 	/**
 	 * This method is for deleting a discount and clearing the fields
-	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
+	 * @throws IOException for general message
+	 * @throws InterruptedException for thread sleep
+	 */ 
 	public void deletDiscount() throws IOException, InterruptedException {
 		ProductEntity product=new ProductEntity();
-		if(list.getSelectionModel().getSelectedItem()!=null)
+		if(list.getSelectionModel().getSelectedItem()!=null)//if selection was made by the user
 		{
-			product=list.getSelectionModel().getSelectedItem();
+			product=list.getSelectionModel().getSelectedItem();//get the selected product
 			
-		if(deleteDiscountInDB(product,store.getBranchID()).equals("Success"))
+		if(deleteDiscountInDB(product,store.getBranchID()).equals("Success"))//delete the product from the discounts table in the data base
 		{
-			ShowAllProduct();
+			ShowAllProduct();//show products after operation, and clear all fields
 			GeneralMessageController.showMessage("Product discount was deleted successfully");
 			NameTxt.clear();
 			PriceTxt.clear();
@@ -324,6 +315,7 @@ public class StoreWorkerPromoteSaleController {
 		}
 		else 
 		{
+			//clear all fields
 			GeneralMessageController.showMessage("Discount deletion failed");
 			NameTxt.clear();
 			PriceTxt.clear();
@@ -342,21 +334,19 @@ public class StoreWorkerPromoteSaleController {
 	}
 
 	/**
-	 * The method update's the chosen product
-	 * 
-	 * @param event
-	 *            "Update Product" button clicked
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * The method adds a product or updates the chosen product by the user
+	 * @param event  "Update Product" button clicked
+	 * @throws IOException for general message
+	 * @throws InterruptedException for thread sleep
 	 */
 	public void AddUpdateDiscount(ActionEvent event) throws IOException, InterruptedException {
 		ProductEntity product=new ProductEntity();
-		double pr;
-		if(list.getSelectionModel().getSelectedItem()!=null)
+		double pr;                 //the price entered by the user
+		if(list.getSelectionModel().getSelectedItem()!=null)//if selection was made
 		{
 			product=list.getSelectionModel().getSelectedItem();
 
-			if(!(PriceTxt.getText().equals(""))) 
+			if(!(PriceTxt.getText().equals(""))) //validate the price entered
 			{
 				try {
 					pr=Double.parseDouble(PriceTxt.getText());
@@ -378,9 +368,9 @@ public class StoreWorkerPromoteSaleController {
 				GeneralMessageController.showMessage("Please enter product new price");
 				return;
 				}
-		if(AddDiscountToProductInDB(product,store.getBranchID()).equals("Success"))
+		if(AddDiscountToProductInDB(product,store.getBranchID()).equals("Success"))//add discount to the data base
 		{
-			ShowAllProduct();
+			ShowAllProduct();//show product list after operation, and clear all fields
 			GeneralMessageController.showMessage("Product discount was Updated successfully");
 			NameTxt.clear();
 			PriceTxt.clear();
@@ -392,6 +382,7 @@ public class StoreWorkerPromoteSaleController {
 		else 
 		{
 			GeneralMessageController.showMessage("Discount Update failed");
+			//clear all fields
 			NameTxt.clear();
 			PriceTxt.clear();
 			DescriptionTxt.clear();
@@ -408,20 +399,20 @@ public class StoreWorkerPromoteSaleController {
 		}
 	}
 
+	/****************************************************************data base **********************************************************/
 	/**
 	 * This method is for deleting a discount from the DB
-	 * 
-	 * @param Product
-	 * @param storeid
-	 * @return
+	 * @param Product to delete
+	 * @param storeid the id of the store we are deleting the discount
+	 * @return message from the server
 	 */
 	public String deleteDiscountInDB(ProductEntity Product, int storeid) {
 		String msg;	
 		HashMap<ProductEntity,Integer> map=new HashMap<ProductEntity,Integer>();
-		map.put(Product, storeid);
-		MessageToSend mts=new MessageToSend(map,"DeleteDiscount");
-		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept();										//sends to server
+		map.put(Product, storeid);                                                                 //insert the store id and the product to hash map in order to send it to the server
+		MessageToSend mts=new MessageToSend(map,"DeleteDiscount");//send message to server
+		Client.getClientConnection().setDataFromUI(mts);					          //set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();									            //sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())
 			try {
 				Thread.sleep(100);
@@ -432,23 +423,20 @@ public class StoreWorkerPromoteSaleController {
 		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		 msg = (String)m.getMessage();
-		return msg;
+		return msg;//return message from server
 	}
 
 	/**
 	 * This method adds the discount to the DB
-	 * 
-	 * @param Product
-	 *            the product to update
-	 * @param storeid
-	 *            the store's id
-	 * @return
+	 * @param Product  the product to update           
+	 * @param storeid       the store's id
+	 * @return message from the server
 	 */
 	public String AddDiscountToProductInDB(ProductEntity Product, int storeid) {
 		String msg;	
 		HashMap<ProductEntity,Integer> map=new HashMap<ProductEntity,Integer>();
-		map.put(Product, storeid);
-		MessageToSend mts=new MessageToSend(map,"AddDiscount");
+		map.put(Product, storeid);                                                        //insert the store id and the product to hash map in order to send it to the server
+		MessageToSend mts=new MessageToSend(map,"AddDiscount");//send operation to server
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
 		while(!Client.getClientConnection().getConfirmationFromServer())
@@ -458,41 +446,38 @@ public class StoreWorkerPromoteSaleController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		Client.getClientConnection().setConfirmationFromServer();		 //reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		 msg = (String)m.getMessage();
-		return msg;
+		return msg;//return the message from server
 	}
 
 	/**
-	 * This method gets all teh products from the DB
-	 * 
-	 * @return
+	 * This method gets all the products from the DB
+	 * @return an array list of the products from the table
 	 * @throws InterruptedException
 	 */
 	public ArrayList<ProductEntity> getAllProducts() throws InterruptedException {
-		MessageToSend mts=new MessageToSend(null,"getAllProducts");
+		MessageToSend mts=new MessageToSend(null,"getAllProducts"); //send message to server
 		ArrayList<ProductEntity> dataFromServer = null;
-		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
-		Client.getClientConnection().accept();										//sends to server
-		while(!Client.getClientConnection().getConfirmationFromServer())			//wait until server replies
+		Client.getClientConnection().setDataFromUI(mts);				        	//set the data and the operation to send from the client to the server
+		Client.getClientConnection().accept();									        	//sends to server
+		while(!Client.getClientConnection().getConfirmationFromServer()) //wait until server replies
 			Thread.sleep(100);
-		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
+		Client.getClientConnection().setConfirmationFromServer();		       //reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		dataFromServer = (ArrayList<ProductEntity>)m.getMessage();
-		return dataFromServer;
+		return dataFromServer;   
 	}
 
 	/**
 	 * This method return the relevant discounts for the specific store in order to attach the sale's to the catalog
-	 * 
-	 * @param storeID
-	 *            is the store we want to shop from
+	 * @param storeID    is the store we want to shop from       
 	 * @return hash map of the product id and their new price
-	 * @throws InterruptedException
+	 * @throws InterruptedException for thread sleep
 	 */
 	public HashMap<Integer, Double> getDiscounts(int storeID) throws InterruptedException {
-		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");
+		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");//send message to server
 		HashMap<Integer,Double> discounts=null;
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server

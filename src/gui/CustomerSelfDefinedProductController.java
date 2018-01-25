@@ -48,20 +48,20 @@ import logic.MessageToSend;
  */
 public class CustomerSelfDefinedProductController implements Initializable {
 
-	@FXML private ComboBox<String> dmnntClrCmb;//new ComboBox<String>();
-	@FXML private ComboBox<String> prdctTypeCmb;//=new ComboBox<String>();
+	/*FXML*/
+	@FXML private ComboBox<String> dmnntClrCmb;
+	@FXML private ComboBox<String> prdctTypeCmb;
 	@FXML private Button fndPrdctBtn;
-	@FXML private ComboBox<String> MinPrcCmb;//=new ComboBox<String>();
-	@FXML private ComboBox<String> maxPrcCmb;//=new ComboBox<String>();
+	@FXML private ComboBox<String> MinPrcCmb;
+	@FXML private ComboBox<String> maxPrcCmb;
 	@FXML private Button bckBtn;
 	@FXML private ListView<ProductEntity> list;
 	@FXML private Label resultlbl;
+	@FXML private Button BackResultBtn;
 	
-	@FXML
-	private Button BackResultBtn;
 
-	private OrderEntity newOrder;
 	
+	private OrderEntity newOrder;//contains the current order
 	public ObservableList<String> listMinPrices;
 	public ObservableList<String> listMaxPrices;
 	public ObservableList<String> listDominantColors;
@@ -131,26 +131,24 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	}
 
 	/**
-	 * This method builds and displays the list
-	 * @param ResultList
-	 * @throws InterruptedException
+	 * This method builds and displays the list of products 
+	 * @param ResultList of products
+	 * @throws InterruptedException for thread sleep
 	 */
 	public void UpdateResultList(ArrayList<ProductEntity> ResultList) throws InterruptedException
 	{
-		int storeid, i=0,temp_key=0;                 
+		int storeid, temp_key=0;                 
 		double newPrice=0;
 	    Iterator<Integer> itr ;
 	    ObservableList<ProductEntity> prod=FXCollections.observableArrayList();
 	    this.ResultList=ResultList;
 	    storeid=newOrder.getStore().getBranchID();
 		HashMap<Integer, Double> discount=new HashMap<Integer,Double>();//Integer->product id-key, Double->product price is the value
-		discount=getDiscounts(storeid);                                     //get the discount for the specific store
+		discount=getDiscounts(storeid);                                                                 //get the discount for the specific store
 		
-		i=0;
-				
 		if(discount!=null) //If there are discounts for this store
 		{
-			itr=discount.keySet().iterator();                                                             //get the key's from the hash map of discounts
+			itr=discount.keySet().iterator();                                                               //get the key's from the hash map of discounts
 			
 		/*Update store prices*/
 	    while (itr.hasNext())
@@ -158,7 +156,7 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	    	temp_key=(int) itr.next();
 	    	for(int j=0;j<ResultList.size();j++)
 	    	{
-	    		if(temp_key==ResultList.get(j).getProductID())                                 // If there is a discount for this product then update
+	    		if(temp_key==ResultList.get(j).getProductID())                                 // If there is a discount for this product then update, product price
 	    		{
 	    			newPrice=discount.get(temp_key);
 	    			updatePrice(temp_key,newPrice);
@@ -187,7 +185,7 @@ public class CustomerSelfDefinedProductController implements Initializable {
                         super.updateItem(product, status);
                         if (product != null) {
                                                 	
-                        	Button addToCart =new Button("Add To Cart");
+                        	Button addToCart =new Button("Add To Cart");//add button "Add to cart" to each cell in the list view
                         	
                         	addToCart.setOnAction(new EventHandler<ActionEvent>() {//set the back button with an action event
                            	 @Override
@@ -201,8 +199,8 @@ public class CustomerSelfDefinedProductController implements Initializable {
 										}
                               }
                            });
-                        	/********************************************added all ***********************************************************/
-                        	if(product.getProductImage()!=null)
+                        
+                        	if(product.getProductImage()!=null) //if there is an image to product, set image
                         	{
                         		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
                         		ImageView v=new ImageView(j);
@@ -212,20 +210,16 @@ public class CustomerSelfDefinedProductController implements Initializable {
                         		addToCart.setMinWidth(130);
                             	vb.getChildren().addAll(v,addToCart);
                                 setGraphic(vb);
-
-                              /*****************************************************************************************************************/
                         	}
                         	else {
                         		setGraphic(addToCart);
                         	}
-                        	if(!product.getProductDominantColor().equals("none"))
+                        	if(!product.getProductDominantColor().equals("none"))//if there is dominant color to the product
                         		setText("              "+product.getProductName()+"  is a  "+product.getProductType()+",  \n          "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  colors  "+"\n              price  "+product.getSale()+product.getProductPrice()+"¤");
                         	else
                                 setText("              "+product.getProductName()+"  is a  "+product.getProductType()+",  \n          "+product.getProductDescription()+"  \n              price:  "+product.getSale()+product.getProductPrice()+"¤");
 
                             setFont(Font.font(18));
-                            
-                           
                         }
                     }
                 };
@@ -236,15 +230,15 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	}
 	
 	/**
-	 * This method add a product choose by the customer to the cart
-	 * @param product
-	 * @throws IOException 
+	 * This method adds a product chosen by the customer to the cart
+	 * @param product to add to cart
+	 * @throws IOException for general message
 	 */
 	public void AddProductToCart(ProductEntity product) throws IOException
 	{
-		if(product.getSalePrice()!=null)
+		if(product.getSalePrice()!=null)//if there is a sale on this product update sale price
 	    	product.setProductPrice(product.getSalePrice());
-		productsInOrder.add(product);
+		productsInOrder.add(product);//add product to order
 		GeneralMessageController.showMessage("Product : "+product.getProductName()+"  ,ID:  "+product.getProductID()+"\nAdded to cart");
 	}
 	/**
@@ -256,13 +250,12 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	{
 		for(int i=0;i<this.ResultList.size();i++)
 		{
-			if(this.ResultList.get(i)!=null)
+			if(this.ResultList.get(i)!=null)//id there are discounts for this store
 			{
 			if(this.ResultList.get(i).getProductID()==key)//if there is a sale on the product update his price
 			{
-				//this.ResultList.get(i).setProductPrice(price);
 				this.ResultList.get(i).setSalePrice(price);
-				this.ResultList.get(i).setSale("ON SALE-> New Price :  ");
+				this.ResultList.get(i).setSale("ON SALE-> New Price :  ");//set sale message to product
 				this.ResultList.get(i).setSale(this.ResultList.get(i).getSalePrice()+"¤"+"\n              Old price:  ");
 			}
 			}
@@ -271,10 +264,8 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	
 	/**
 	 * This method handles the back to order menu
-	 * 
-	 * @param event
-	 *            pressed back
-	 * @throws IOException
+	 * @param event pressed back
+	 * @throws IOException for loader
 	 */
 	public void backToNewOrderMenu(ActionEvent event) throws IOException {
 		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
@@ -285,13 +276,12 @@ public class CustomerSelfDefinedProductController implements Initializable {
 
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-		for(int i=0;i<this.productsInOrder.size();i++)
+		for(int i=0;i<this.productsInOrder.size();i++) //add products to the array list of the products in the order
 	       {
 	    	   newOrder.setProductsInOrder(productsInOrder.get(i));
 	       }
 		cnoc.setOrderDetails(newOrder);
 		primaryStage.setTitle("New order from " + newOrder.getStore().getBranchName());
-
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -300,11 +290,11 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	 * This method return the relevant discounts for the specific store in order to attach the sale's to the catalog
 	 * @param storeID is the store we want to shop from
 	 * @return hash map of the product id and their new price
-	 * @throws InterruptedException
+	 * @throws InterruptedException for thread sleep
 	 */
 	public HashMap<Integer,Double> getDiscounts(int storeID) throws InterruptedException
 	{
-		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");
+		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");//send message to server
 		HashMap<Integer,Double> discounts=null;
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
@@ -313,15 +303,13 @@ public class CustomerSelfDefinedProductController implements Initializable {
 		Client.getClientConnection().setConfirmationFromServer();		//reset confirmation to false
 		MessageToSend m = Client.getClientConnection().getMessageFromServer();
 		discounts = (HashMap<Integer,Double>)m.getMessage();
-		return discounts;
+		return discounts;                                                                     //return array list of discounts
 	}
 	
 	
 	/**
 	 * This method sets the new orderEntitiy
-	 * 
-	 * @param order
-	 *            the new OrderEntity
+	 * @param order  the new OrderEntity
 	 */
 	public void setOrder(OrderEntity order) {
 		this.newOrder = order;
@@ -330,7 +318,6 @@ public class CustomerSelfDefinedProductController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		//this.newOrder=newOrder;
 		setComboxes();
 	}
 

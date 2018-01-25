@@ -55,7 +55,7 @@ public class OrderFromCatalogController implements Initializable{
 	private HBox hb;
 	
     private ArrayList<ProductEntity>productsFromTable;/*The array will contain the Products inserted to the catalog*/
-    private ArrayList<ProductEntity> productsInOrder;/*The array will contain the products in the order*/
+    private ArrayList<ProductEntity> productsInOrder;   /*The array will contain the products in the order*/
     Stage primaryStage=new Stage();
     private OrderEntity newOrder;
 	CreateNewOrderController ordCon =new CreateNewOrderController();
@@ -73,16 +73,16 @@ public class OrderFromCatalogController implements Initializable{
 	/**
 	 * The method show's the catalog customized to the store that the customer choose to shop from
 	 * @param order is the instance of the order that the customer created
-	 * @throws InterruptedException
+	 * @throws InterruptedException  for thread sleep
 	 */
 	public void showCatalog(OrderEntity order) throws InterruptedException
 	{
-		int storeid, i=0,temp_key=0;               
+		int storeid,temp_key=0;               
 		double newPrice=0;
-	    Iterator<Integer> itr ;
-	    productsFromTable=new ArrayList<ProductEntity>();
+	    Iterator<Integer> itr ;                                                                           //to iterate over the discounts hash map
+	    productsFromTable=new ArrayList<ProductEntity>();                         //holds the products from the products list 
 	    ObservableList<ProductEntity> prod=FXCollections.observableArrayList();
-	    productsFromTable=getCatalog();
+	    productsFromTable=getCatalog();                                                      //insert products from the products list
 	    newOrder=order;
 	   
 	    /*Get Store discounts*/
@@ -90,11 +90,10 @@ public class OrderFromCatalogController implements Initializable{
 		HashMap<Integer, Double> discount=new HashMap<Integer,Double>();//Integer->product id-key, Double->product price is the value
 		discount=getDiscounts(storeid);                                                                 //get the discount for the specific store
 	
-		i=0;
 		
 		if(discount!=null) //If there are discounts for this store
 		{
-			itr=discount.keySet().iterator();                                                                             //get the key's from the hash map of discounts
+		itr=discount.keySet().iterator();                                                                             //get the key's from the hash map of discounts
 		/*Update store prices*/
 	    while (itr.hasNext())
 	    {	
@@ -104,10 +103,9 @@ public class OrderFromCatalogController implements Initializable{
 	    		if(temp_key==productsFromTable.get(j).getProductID())                                 // If there is a discount for this product then update
 	    		{
 	    			newPrice=discount.get(temp_key);
-	    			updatePrice(temp_key,newPrice);
+	    			updatePrice(temp_key,newPrice);                                                                   //update the prices for the products
 		        }
 	    	}
-	    	//	i++;
 		   }
 		}		
 		
@@ -132,8 +130,8 @@ public class OrderFromCatalogController implements Initializable{
                         super.updateItem(product, status);
                         if (product != null) {
                                                 	
-                        	Button addToCart =new Button("Add To Cart");
-                        	addToCart.setOnAction(new EventHandler<ActionEvent>() {//Set the back button with an action event
+                        	Button addToCart =new Button("Add To Cart");                       //add button "Add to cart" to every cell in the list view
+                        	addToCart.setOnAction(new EventHandler<ActionEvent>() {   //Set the "Add to cart" button with an action event add to cart
                            	 @Override
                            	  public void handle(ActionEvent event) {
                            		 
@@ -145,9 +143,9 @@ public class OrderFromCatalogController implements Initializable{
 										}
                               }
                            });
-                        	if(product.getProductImage()!=null)
+                        	if(product.getProductImage()!=null)//if there is an image to the product, set the image
                         	{
-                        		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));
+                        		Image j=new Image(new ByteArrayInputStream(product.getProductImage()));//convert byte array to image
                         		ImageView v=new ImageView(j);
                         		v.setFitHeight(130);
                         		v.setFitWidth(130);
@@ -159,7 +157,7 @@ public class OrderFromCatalogController implements Initializable{
                         	else {
                         		setGraphic(addToCart);
                         	}
-                        	if(product.getProductDominantColor().equals("none"))
+                        	if(product.getProductDominantColor().equals("none"))//if there is a color to the product
                         		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+",\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
                         	else 
                         		setText("        "+product.getProductName()+"  is a  "+product.getProductType()+",  \n        "+product.getProductDescription()+", in  "+product.getProductDominantColor()+"  color's  "+"  " + "\n        price:  "+product.getProductPrice()+"¤");//set text in list cell
@@ -176,18 +174,18 @@ public class OrderFromCatalogController implements Initializable{
 	
 	/**
 	 * This method return's to the previous menu
-	 * @param event
-	 * @throws IOException
+	 * @param event when "Back" button clicked
+	 * @throws IOException for the loader
 	 */
 	  public void backToOrder(ActionEvent event) throws IOException
 	{
-		((Node) event.getSource()).getScene().getWindow().hide(); //hide last window
+		((Node) event.getSource()).getScene().getWindow().hide(); //hide current window
 		FXMLLoader loader = new FXMLLoader();
 		Parent root = loader.load(getClass().getResource("/gui/CreateNewOrderBoundary.fxml").openStream());
-		CreateNewOrderController cnoc = loader.getController(); //set the controller to the FindProductBoundary to control the SearchProductGUI window
+		CreateNewOrderController cnoc = loader.getController();
 		Stage primaryStage = new Stage();
 		Scene scene = new Scene(root);
-       for(int i=0;i<this.productsInOrder.size();i++)//Transfer the products to products in order list
+       for(int i=0;i<this.productsInOrder.size();i++)//transfer the products to products list in the order 
        {
     	   newOrder.setProductsInOrder(productsInOrder.get(i));
        }
@@ -199,14 +197,14 @@ public class OrderFromCatalogController implements Initializable{
 	
 	/**
 	 * This method add's a product chosen by the customer to the cart
-	 * @param product
-	 * @throws IOException 
+	 * @param product that we want to add to the cart
+	 * @throws IOException for the loader
 	 */
 	public void AddProductToCart(ProductEntity product) throws IOException
 	{
-		if(product.getSalePrice()!=null)
+		if(product.getSalePrice()!=null)    //if there is a sale on this product, set sale
 	    	product.setProductPrice(product.getSalePrice());
-		productsInOrder.add(product);
+		productsInOrder.add(product);//add product to the order
 		GeneralMessageController.showMessage("Product : "+product.getProductName()+"  ,ID:  "+product.getProductID()+"\nAdded to cart");
 	}
 	
@@ -224,7 +222,7 @@ public class OrderFromCatalogController implements Initializable{
 			if(this.productsFromTable.get(i).getProductID()==key)//if there is a sale on the product update his price
 			{
 				this.productsFromTable.get(i).setSalePrice(price);
-				this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");
+				this.productsFromTable.get(i).setSale("ON SALE-> New Price :  ");  //set sale message to the product
 				this.productsFromTable.get(i).setSale(this.productsFromTable.get(i).getSalePrice()+"¤"+"\n              Old price:  ");
 			}
 			}
@@ -236,11 +234,11 @@ public class OrderFromCatalogController implements Initializable{
 	/**
 	 * This method gets the list of products in the catalog from the server
 	 * @return arrayList of product entity
-	 * @throws InterruptedException
+	 * @throws InterruptedException for thread sleep
 	 */
 	 public ArrayList<ProductEntity> getCatalog() throws InterruptedException
 	   {
-				MessageToSend mts=new MessageToSend(null,"getCatalog");
+				MessageToSend mts=new MessageToSend(null,"getCatalog"); //send message to server
 				ArrayList<ProductEntity> dataFromServer = null;
 				Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 				Client.getClientConnection().accept();										//sends to server
@@ -257,11 +255,11 @@ public class OrderFromCatalogController implements Initializable{
 	 * This method return the relevant discounts for the specific store in order to attach the sale's to the catalog
 	 * @param storeID is the store we want to shop from
 	 * @return hash map of the product id and their new price
-	 * @throws InterruptedException
+	 * @throws InterruptedException for thread sleep
 	 */
 	public HashMap<Integer,Double> getDiscounts(int storeID) throws InterruptedException
 	{
-		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");
+		MessageToSend mts=new MessageToSend(storeID,"getDiscounts");//send message to server
 		HashMap<Integer,Double> discounts=null;
 		Client.getClientConnection().setDataFromUI(mts);					//set the data and the operation to send from the client to the server
 		Client.getClientConnection().accept();										//sends to server
