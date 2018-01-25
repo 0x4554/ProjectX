@@ -158,7 +158,7 @@ public class ProjectServer extends AbstractServer
    */
   private String handleComplaint(ComplaintEntity complaint) throws SQLException, ClassNotFoundException
   {
-	  Statement stmt;
+	  Statement stmt,stmt2;
 	  String retMsg="";
 	
 	  try
@@ -463,13 +463,19 @@ public class ProjectServer extends AbstractServer
 	  else if (storeNameQuarter.get(1).equals("4"))
 		  askedQuarter=forthQuarter;
 	  String storeOrders = "";
+	  String AND = "AND";
+	  String WHERE = "";
 	  if(!storeNameQuarter.get(0).equals("all"))							//check if asked for all orders OR a specific store orders
 	  {
-		  storeOrders = "AND A.BranchID = (SELECT BranchID FROM projectx.store WHERE BranchName = '"+storeNameQuarter.get(0)+"') ";
+		  storeOrders = " A.BranchID = (SELECT BranchID FROM projectx.store WHERE BranchName = '"+storeNameQuarter.get(0)+"') ";
 	  }
-	  if(storeNameQuarter.get(1).equals("all"))
+	  if(storeNameQuarter.get(1).equals("all") )
 	  {
-		  rs = stmt.executeQuery("SELECT * FROM projectx.order");
+		  if(!storeNameQuarter.get(0).equals("all"))
+		  {
+			  WHERE = "WHERE";
+		  }
+		  rs = stmt.executeQuery("SELECT * FROM projectx.order A "+WHERE+storeOrders);
 	  }
 	  else
 	  {
@@ -477,7 +483,7 @@ public class ProjectServer extends AbstractServer
 	  		+ "WHERE"
 	  		+ "( monthname(A.OrderTime)= '"+askedQuarter[0]+"' OR"
 	  		+ " monthname(A.OrderTime)= '"+askedQuarter[1]+"' OR"
-	  		+ " monthname(A.OrderTime)= '"+askedQuarter[2]+"' )"+storeOrders);
+	  		+ " monthname(A.OrderTime)= '"+askedQuarter[2]+"' )"+ AND +storeOrders);
 	  }
 	  while(rs.next())
 	  {
@@ -629,8 +635,8 @@ public class ProjectServer extends AbstractServer
  * @throws ClassNotFoundException 
  * @throws SQLException 
    */
-  private String cancelOrder(Integer OrderID) throws ClassNotFoundException, SQLException
-  {
+  private String cancelOrder(ArrayList<String> OrderID_refund) throws ClassNotFoundException, SQLException
+  {			//receives an arrayList {order ID , refund amount }
 	  Statement stmt;
 	  String retMsg="";
 	  try
@@ -648,7 +654,7 @@ public class ProjectServer extends AbstractServer
 		}
 	  stmt = con.createStatement();
 	  try {
-	  stmt.executeUpdate("UPDATE projectx.order SET OrderStatus = 'cancelled' WHERE Ordernum = " + OrderID+ "");
+	  stmt.executeUpdate("UPDATE projectx.order SET OrderStatus = 'cancelled', TotalPrice = TotalPrice - "+Double.parseDouble(OrderID_refund.get(1))+", Refund = "+Double.parseDouble(OrderID_refund.get(1))  +" WHERE Ordernum = " + Integer.parseInt(OrderID_refund.get(0))+ "");
 	  }
 	  catch(Exception e)
 	  {
@@ -2185,7 +2191,7 @@ public class ProjectServer extends AbstractServer
 		}
 		else if(operation.equals("cancelOrder"))				//for store manger canceling an order
 		{
-			String retMsg = cancelOrder((Integer)messageFromClient);
+			String retMsg = cancelOrder((ArrayList<String>)messageFromClient);
 			messageToSend.setMessage(retMsg);
 			  client.sendToClient(messageToSend);
 		}

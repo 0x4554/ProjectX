@@ -50,7 +50,7 @@
          </font></Label>
       <Label layoutX="535.0" layoutY="484.0" text="Complaint filed on :" />
       <Label layoutX="535.0" layoutY="518.0" text="Time left to reply :" />
-      <Label fx:id="cmplntFldOnLable" layoutX="680.0" layoutY="484.0" text="Label" />
-      <Label fx:id="cmplntTmToRplyLbl" layoutX="680.0" layoutY="518.0" text="Label" textFill="#cd0d0d" />
+      <Label fx:id="cmplntFldOnLable" layoutX="680.0" layoutY="484.0" />
+      <Label fx:id="cmplntTmToRplyLbl" layoutX="680.0" layoutY="518.0" textFill="#cd0d0d" />
    </children>
 </AnchorPane>

@@ -54,18 +54,18 @@ public class ChainStoreManagerOrderReportContorller implements Initializable {
         {
         	for(ProductEntity product : order.getProductsInOrder())
         	{
-        		if(product.getProductType().equals("flower"))
+        		if(product.getProductType().equals("Flower Boquet"))
         			flower++;
-        		else if (product.getProductType().equals("bridal"))
+        		else if (product.getProductType().equals("Bridal"))
         			bridal++;
-        		else if (product.getProductType().equals("birthDay"))
+        		else if (product.getProductType().equals("Special"))
         			birthDay++;
         	}
         	
         }
-        dataSeries1.getData().add(new XYChart.Data("Flower", flower));
+        dataSeries1.getData().add(new XYChart.Data("Flower Boquet", flower));
         dataSeries1.getData().add(new XYChart.Data("Bridal"  , bridal));
-        dataSeries1.getData().add(new XYChart.Data("BirthDay"  , birthDay));
+        dataSeries1.getData().add(new XYChart.Data("Special"  , birthDay));
         
         chart.getData().add(dataSeries1);
         
